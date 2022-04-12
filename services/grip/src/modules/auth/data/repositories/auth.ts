@@ -15,6 +15,8 @@ import {
 } from '@stranerd/api-commons'
 import { appInstance } from '@utils/environment'
 import { UserMapper } from '../mappers/users'
+import { EmailsList } from '@utils/types/email'
+import { EventTypes, publishers } from '@utils/events'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
@@ -67,15 +69,14 @@ export class AuthRepository implements IAuthRepository {
 		// send verification mail
 		const url = `${redirectUrl}?token=${token}`
 		const emailContent = await readEmailFromPug('emails/email-verification.pug', { redirectUrl: url })
-		emailContent
 
-		/* await publishers[EventTypes.SENDMAIL].publish({
-		 to: email,
-		 subject: 'Verify Your Email',
-		 from: EmailsList.NO_REPLY,
-		 content: emailContent,
-		 data: {}
-		 }) */
+		await publishers[EventTypes.SENDMAIL].publish({
+			to: email,
+			subject: 'Verify Your Email',
+			from: EmailsList.NO_REPLY,
+			content: emailContent,
+			data: {}
+		})
 
 		return true
 	}
@@ -103,15 +104,14 @@ export class AuthRepository implements IAuthRepository {
 		// send reset password mail
 		const url = `${redirectUrl}?token=${token}`
 		const emailContent = await readEmailFromPug('emails/password-reset.pug', { redirectUrl: url })
-		emailContent
 
-		/* await publishers[EventTypes.SENDMAIL].publish({
-		 to: email,
-		 subject: 'Reset Your Password',
-		 from: EmailsList.NO_REPLY,
-		 content: emailContent,
-		 data: {}
-		 }) */
+		await publishers[EventTypes.SENDMAIL].publish({
+			to: email,
+			subject: 'Reset Your Password',
+			from: EmailsList.NO_REPLY,
+			content: emailContent,
+			data: {}
+		})
 
 		return true
 	}
