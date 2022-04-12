@@ -6,7 +6,7 @@ import {
 	makeAccessToken,
 	makeRefreshToken
 } from '@stranerd/api-commons'
-import { AuthOutput, FindUser, UserEntity } from '@modules/auth'
+import { AuthOutput, DeleteUsers, FindUser, GetUsers, UserEntity } from '@modules/auth'
 
 export const signOutUser = async (userId: string): Promise<boolean> => {
 	await deleteCachedAccessToken(userId)
@@ -40,4 +40,18 @@ export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { u
 	})
 
 	return { ...newTokens, user }
+}
+
+export const deleteUnverifiedUsers = async () => {
+	const unverifiedUsers = await getUnverifiedUsers()
+	const sevenDays = 7 * 24 * 60 * 60 * 1000
+	const olderUsers = unverifiedUsers.filter((u) => u.signedUpAt <= (Date.now() - sevenDays))
+	await DeleteUsers.execute(olderUsers.map((u) => u.id))
+}
+const getUnverifiedUsers = async () => {
+	const { results: users } = await GetUsers.execute({
+		where: [{ field: 'isVerified', value: false }],
+		all: true
+	})
+	return users
 }

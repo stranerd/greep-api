@@ -2,8 +2,9 @@ import { getNewServerInstance } from '@stranerd/api-commons'
 import { appId, appInstance, port } from '@utils/environment'
 import { EventTypes, publishers, subscribers } from '@utils/events'
 import { DelayedEvent } from '@utils/types/bull'
+import { routes } from '@application/routes'
 
-const app = getNewServerInstance([], {
+const app = getNewServerInstance(routes, {
 	onConnect: async () => {
 	},
 	onDisconnect: async () => {

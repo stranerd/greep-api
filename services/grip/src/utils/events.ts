@@ -2,11 +2,11 @@ import { CronTypes, MediaOutput } from '@stranerd/api-commons'
 import { PushNotification } from '@utils/types/push'
 import { TypedEmail } from '@utils/types/email'
 import { appInstance } from '@utils/environment'
-import { deleteUnverifiedUsers } from '@utils/modules/emails'
 import { sendNotification } from '@utils/modules/push'
-import { sendMailAndCatchError } from '@utils/modules/email'
+import { sendMailAndCatchError } from '@utils/modules/emails'
 import { GetAndDeleteAllErrors } from '@modules/emails'
 import { DeleteFile } from '@modules/storage'
+import { deleteUnverifiedUsers } from '@utils/modules/auth'
 
 export enum EventTypes {
 	SENDMAIL = 'SENDMAIL',

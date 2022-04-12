@@ -1,16 +1,36 @@
-import { DeleteUsers, GetUsers } from '@modules/auth'
+import { createTransport } from 'nodemailer'
+import { appInstance, emails, isDev } from '@utils/environment'
+import { AddError } from '@modules/emails'
+import { EmailsList, TypedEmail } from '@utils/types/email'
 
-export const deleteUnverifiedUsers = async () => {
-	const unverifiedUsers = await getUnverifiedUsers()
-	const sevenDays = 7 * 24 * 60 * 60 * 1000
-	const olderUsers = unverifiedUsers.filter((u) => u.signedUpAt <= (Date.now() - sevenDays))
-	await DeleteUsers.execute(olderUsers.map((u) => u.id))
+export const sendMail = async (email: TypedEmail) => {
+	const { to, subject, content, from = EmailsList.NO_REPLY } = email
+	const { clientId, privateKey } = emails[from]
+
+	const transporter = createTransport({
+		service: 'gmail',
+		auth: { type: 'OAuth2', user: from, serviceClient: clientId, privateKey },
+		tls: { rejectUnauthorized: false }
+	})
+	await transporter.verify()
+
+	const attachments = [] as { filename: string, path: string, cid: string }[]
+
+	await transporter.sendMail({
+		from: `Stranerd ${from}`,
+		html: content,
+		to, subject, attachments
+	})
 }
 
-const getUnverifiedUsers = async () => {
-	const { results: users } = await GetUsers.execute({
-		where: [{ field: 'isVerified', value: false }],
-		all: true
-	})
-	return users
+export const sendMailAndCatchError = async (email: TypedEmail) => {
+	try {
+		if (isDev) await appInstance.logger.info(email.to, email.content)
+		await sendMail(email)
+	} catch (e) {
+		await AddError.execute({
+			...email,
+			error: (e as Error).message
+		})
+	}
 }
