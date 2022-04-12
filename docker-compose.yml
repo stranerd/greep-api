@@ -18,19 +18,19 @@ services:
       - "/etc/traefik/accessLog.json:/etc/traefik/accessLog.json"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  grip:
+  api:
     build:
-      context: ./services/grip
+      context: ./services/api
       target: production
-    container_name: grip
-    hostname: grip
+    container_name: api
+    hostname: api
     restart: always
     depends_on:
       - mongodb
       - redis
       - rabbitmq
     volumes:
-      - './docker/public/grip/:/app/public/'
+      - './docker/public/:/app/public/'
     command: 'yarn start'
 
   mongodb:
@@ -38,8 +38,8 @@ services:
     container_name: mongodb
     hostname: mongodb
     volumes:
-      - '/data/mongo/grip/db:/data/db'
-      - '/data/mongo/grip/configdb:/data/configdb'
+      - '/data/mongo/api/db:/data/db'
+      - '/data/mongo/api/configdb:/data/configdb'
     restart: always
     command: '--quiet --bind_ip_all --replSet rs0'
 

@@ -34,21 +34,21 @@ http:
     stripRoutePrefix:
       stripPrefix:
         prefixes:
-          - "/grip"
+          - "/api"
   routers:
-    grip:
+    api:
       tls:
         certresolver: $CERT_TYPE
       rule: "Host(\`$BASE_DOMAIN\`) && PathPrefix(\`/\`)"
       middlewares:
         - stripRoutePrefix
-      service: grip
+      service: api
 
   services:
-    grip:
+    api:
       loadBalancer:
         servers:
-          - url: http://grip:8080/
+          - url: http://api:8080/
 
 api:
   insecure: true
@@ -100,19 +100,19 @@ http:
     stripRoutePrefix:
       stripPrefix:
         prefixes:
-          - "/grip"
+          - "/api"
   routers:
-    grip:
+    api:
       rule: "PathPrefix(\`/\`)"
       middlewares:
         - stripRoutePrefix
-      service: grip
+      service: api
 
   services:
-    grip:
+    api:
       loadBalancer:
         servers:
-          - url: http://grip:8080/
+          - url: http://api:8080/
 
 api:
   insecure: true

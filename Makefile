@@ -1,4 +1,4 @@
-APPS = grip
+APPS = api
 ALL_FOLDERS = ${APPS}
 args = $(filter-out $@,$(MAKECMDGOALS))
 
