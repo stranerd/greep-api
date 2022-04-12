@@ -1,0 +1,83 @@
+version: '3.8'
+services:
+  traefik:
+    build:
+      context: ./docker/traefik
+      args:
+        BASE_DOMAIN: ${BASE_DOMAIN}
+        USE_SSL: ${USE_SSL}
+    container_name: "traefik"
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/traefik/acmeStaging.json:/etc/traefik/acmeStaging.json"
+      - "/etc/traefik/acmeProduction.json:/etc/traefik/acmeProduction.json"
+      - "/etc/traefik/log.json:/etc/traefik/log.json"
+      - "/etc/traefik/accessLog.json:/etc/traefik/accessLog.json"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  grip:
+    build:
+      context: ./services/grip
+      target: production
+    container_name: grip
+    hostname: grip
+    restart: always
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+    volumes:
+      - './docker/public/grip/:/app/public/'
+    command: 'yarn start'
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    hostname: mongodb
+    volumes:
+      - '/data/mongo/grip/db:/data/db'
+      - '/data/mongo/grip/configdb:/data/configdb'
+    restart: always
+    command: '--quiet --bind_ip_all --replSet rs0'
+
+    mongodb-express:
+      image: 'mongo-express:latest'
+      container_name: mongodb-express
+      hostname: mongodb-express
+      restart: unless-stopped
+      environment:
+        - ME_CONFIG_MONGODB_SERVER=mongodb
+
+    rabbitmq:
+      build:
+        context: ./docker/rabbitmq
+      container_name: rabbitmq
+      hostname: rabbitmq
+      restart: always
+
+    redis:
+      image: 'redis:6.2.5-alpine'
+      container_name: redis
+      hostname: redis
+      restart: always
+
+    redis-commander:
+      image: 'rediscommander/redis-commander:latest'
+      container_name: redis-commander
+      hostname: redis-commander
+      restart: always
+      environment:
+        - 'REDIS_HOSTS=local:redis:6379'
+
+    rsinit:
+      build:
+        context: ./docker/mongo
+      container_name: rsinit
+      hostname: rsinit
+      depends_on:
+        - mongodb
+      restart: on-failure
+      entrypoint: 'bash ./rs.sh'
