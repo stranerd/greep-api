@@ -46,6 +46,6 @@ const Schema = new mongoose.Schema<ErrorFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now } })
 
-export const Error = mongoose.model<ErrorFromModel>('UtilsEmailsError', Schema)
+export const Error = mongoose.model<ErrorFromModel>('EmailsError', Schema)
 
 generateChangeStreams<ErrorFromModel, ErrorEntity>(Error, ErrorChangeStreamCallbacks, new ErrorMapper().mapFrom).then()

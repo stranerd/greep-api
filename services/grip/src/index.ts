@@ -1,13 +1,16 @@
-import { getNewServerInstance } from '@stranerd/api-commons'
+import { getNewServerInstance, OnJoinFn } from '@stranerd/api-commons'
 import { appId, appInstance, port } from '@utils/environment'
 import { EventTypes, publishers, subscribers } from '@utils/events'
 import { DelayedEvent } from '@utils/types/bull'
 import { routes } from '@application/routes'
+import { ResetAllUsersStatus, UpdateUserStatus } from '@modules/users'
 
 const app = getNewServerInstance(routes, {
-	onConnect: async () => {
+	onConnect: async (userId, socketId) => {
+		await UpdateUserStatus.execute({ userId, socketId, add: true })
 	},
-	onDisconnect: async () => {
+	onDisconnect: async (userId, socketId) => {
+		await UpdateUserStatus.execute({ userId, socketId, add: false })
 	}
 })
 export const getSocketEmitter = () => app.socketEmitter
@@ -20,6 +23,15 @@ const start = async () => {
 				await subscriber.subscribe()
 			})
 	)
+
+	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
+	const isOpen: OnJoinFn = async ({ channel }) => channel
+
+	getSocketEmitter().register('users/referrals', isMine)
+	getSocketEmitter().register('users/users', isOpen)
+
+	await ResetAllUsersStatus.execute()
+
 	await app.start(port)
 	await appInstance.logger.success(`${appId} api has started listening on port`, port)
 	await appInstance.job.startProcessingQueues<DelayedEvent>({
