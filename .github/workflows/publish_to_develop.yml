@@ -1,0 +1,28 @@
+name: Publish to Digital Ocean
+
+on:
+  push:
+    branches:
+      develop
+
+jobs:
+  publish-do:
+    environment: develop
+    runs-on: develop
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Fetch secrets
+        env:
+          ENV_SECRETS: ${{ secrets.ENV_SECRETS }}
+        run: echo "$ENV_SECRETS" > env.json
+      - name: Create .env Files
+        run: make copy-envs
+      - name: Docker Build
+        run: make prod-build
+      - name: Create traefik files
+        run: make make-acme
+      - name: Docker Stop Existing Run
+        run: make prod-stop
+      - name: Docker Start
+        run: make prod-start-detach
