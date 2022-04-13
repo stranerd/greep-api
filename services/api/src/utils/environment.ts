@@ -24,8 +24,7 @@ export const rabbitURI = getEnvOrFail('RABBITMQ_URI')
 export const redisURI = getEnvOrFail('REDIS_URI')
 
 Instance.initialize({
-	accessTokenKey, accessTokenTTL: 60 * 60,
-	refreshTokenKey, refreshTokenTTL: 14 * 24 * 60 * 60,
+	accessTokenKey, refreshTokenKey,
 	mongoDbURI, rabbitURI, redisURI,
 	isDev, appId,
 	bullQueueName: 'grip-task-queues',
