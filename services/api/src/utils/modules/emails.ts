@@ -17,7 +17,7 @@ export const sendMail = async (email: TypedEmail) => {
 	const attachments = [] as { filename: string, path: string, cid: string }[]
 
 	await transporter.sendMail({
-		from: `Stranerd ${from}`,
+		from: `Grip ${from}`,
 		html: content,
 		to, subject, attachments
 	})

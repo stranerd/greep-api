@@ -1,11 +1,11 @@
 #!/bin/sh
 
-CONF_PATH=/etc/traefik/traefik.yml
+CONF_PATH=/data/docker/grip/traefik/traefik.yml
 
-CERT_TYPE=production
+CERT_TYPE=staging
 
-CERT_PATH_STAGING=/etc/traefik/acmeStaging.json
-CERT_PATH_PRODUCTION=/etc/traefik/acmeProduction.json
+CERT_PATH_STAGING=/data/docker/grip/traefik/acmeStaging.json
+CERT_PATH_PRODUCTION=/data/docker/grip/traefik/acmeProduction.json
 
 if [ "$USE_SSL" = 1 ]; then
 cat > $CONF_PATH <<- EOF
@@ -21,12 +21,12 @@ entryPoints:
     address: :443
 
 accessLog:
-  filePath: /etc/traefik/accessLog.json
+  filePath: /data/docker/grip/traefik/accessLog.json
   format: json
 
 log:
   level: DEBUG
-  filePath: /etc/traefik/log.json
+  filePath: /data/docker/grip/traefik/log.json
   format: json
 
 http:
@@ -56,7 +56,7 @@ api:
 
 providers:
   file:
-    directory: /etc/traefik
+    directory: /data/docker/grip/traefik
     watch: true
 
 certificatesResolvers:
@@ -87,12 +87,12 @@ entryPoints:
     address: :80
 
 accessLog:
-  filePath: /etc/traefik/accessLog.json
+  filePath: /data/docker/grip/traefik/accessLog.json
   format: json
 
 log:
   level: DEBUG
-  filePath: /etc/traefik/log.json
+  filePath: /data/docker/grip/traefik/log.json
   format: json
 
 http:
@@ -120,7 +120,7 @@ api:
 
 providers:
   file:
-    directory: /etc/traefik
+    directory: /data/docker/grip/traefik
     watch: true
 EOF
 fi

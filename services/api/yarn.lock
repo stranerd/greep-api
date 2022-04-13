@@ -138,15 +138,14 @@
   resolved "https://registry.yarnpkg.com/@socket.io/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#568d9beae00b0d835f4f8c53fd55714986492e61"
   integrity sha512-dOlCBKnDw4iShaIsH/bxujKTM18+2TOAsYz+KSc11Am38H4q5Xw8Bbz97ZYdrVNM+um3p7w86Bvvmcn9q+5+eQ==
 
-"@stranerd/api-commons@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.1.0.tgz#7023a1d86c2f66f477d519bb0afc900f19baa47c"
-  integrity sha512-7cJPuOYP4OhLMHemvYMm0P+aeS8FRz7ZR32tSBf6GaQXLJ/1SpVKrFL22SoIO7sI8UYjtvS2BlsWubHuINN8bQ==
+"@stranerd/api-commons@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.1.1.tgz#8cb0c26e615444c707c49d89cc3d058ddb784a57"
+  integrity sha512-+ME4/XquOdK+blEERIhdqdGzHXZpM8EfgJ8j33hytYg7AHGLEUluZZT26ATnszoYD8bXhrUqGRvGauMQQsvsSw==
   dependencies:
     "@stranerd/validate" "^2.2.0"
     amqplib "^0.8.0"
     bull "^4.8.1"
-    chalk "^5.0.1"
     compression "^1.7.4"
     cors "^2.8.5"
     dotenv "^16.0.0"
@@ -761,11 +760,6 @@ chalk@^4.0.0:
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
-
-chalk@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.0.1.tgz#ca57d71e82bb534a296df63bbacc4a1c22b2a4b6"
-  integrity sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==
 
 character-parser@^2.2.0:
   version "2.2.0"

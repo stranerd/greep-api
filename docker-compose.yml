@@ -6,23 +6,21 @@ services:
       args:
         BASE_DOMAIN: ${BASE_DOMAIN}
         USE_SSL: ${USE_SSL}
-    container_name: "traefik"
     restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - "/etc/traefik/acmeStaging.json:/etc/traefik/acmeStaging.json"
-      - "/etc/traefik/acmeProduction.json:/etc/traefik/acmeProduction.json"
-      - "/etc/traefik/log.json:/etc/traefik/log.json"
-      - "/etc/traefik/accessLog.json:/etc/traefik/accessLog.json"
+      - "/data/docker/grip/traefik/acmeStaging.json:/data/docker/grip/traefik/acmeStaging.json"
+      - "/data/docker/grip/traefik/acmeProduction.json:/data/docker/grip/traefik/acmeProduction.json"
+      - "/data/docker/grip/traefik/log.json:/data/docker/grip/traefik/log.json"
+      - "/data/docker/grip/traefik/accessLog.json:/data/docker/grip/traefik/accessLog.json"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   api:
     build:
       context: ./services/api
       target: production
-    container_name: api
     hostname: api
     restart: always
     depends_on:
@@ -30,54 +28,48 @@ services:
       - redis
       - rabbitmq
     volumes:
-      - './docker/public/:/app/public/'
+      - '/data/docker/grip/files/api/:/app/public/'
     command: 'yarn start'
 
   mongodb:
     image: mongo
-    container_name: mongodb
     hostname: mongodb
     volumes:
-      - '/data/mongo/api/db:/data/db'
-      - '/data/mongo/api/configdb:/data/configdb'
+      - '/data/docker/grip/mongo/api/db:/data/db'
+      - '/data/docker/grip/mongo/api/configdb:/data/configdb'
     restart: always
     command: '--quiet --bind_ip_all --replSet rs0'
 
-    mongodb-express:
-      image: 'mongo-express:latest'
-      container_name: mongodb-express
-      hostname: mongodb-express
-      restart: unless-stopped
-      environment:
-        - ME_CONFIG_MONGODB_SERVER=mongodb
+  mongodb-express:
+    image: 'mongo-express:latest'
+    hostname: mongodb-express
+    restart: unless-stopped
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
 
-    rabbitmq:
-      build:
-        context: ./docker/rabbitmq
-      container_name: rabbitmq
-      hostname: rabbitmq
-      restart: always
+  rabbitmq:
+    build:
+      context: ./docker/rabbitmq
+    hostname: rabbitmq
+    restart: always
 
-    redis:
-      image: 'redis:6.2.5-alpine'
-      container_name: redis
-      hostname: redis
-      restart: always
+  redis:
+    image: 'redis:6.2.5-alpine'
+    hostname: redis
+    restart: always
 
-    redis-commander:
-      image: 'rediscommander/redis-commander:latest'
-      container_name: redis-commander
-      hostname: redis-commander
-      restart: always
-      environment:
-        - 'REDIS_HOSTS=local:redis:6379'
+  redis-commander:
+    image: 'rediscommander/redis-commander:latest'
+    hostname: redis-commander
+    restart: always
+    environment:
+      - 'REDIS_HOSTS=local:redis:6379'
 
-    rsinit:
-      build:
-        context: ./docker/mongo
-      container_name: rsinit
-      hostname: rsinit
-      depends_on:
-        - mongodb
-      restart: on-failure
-      entrypoint: 'bash ./rs.sh'
+  rsinit:
+    build:
+      context: ./docker/mongo
+    hostname: rsinit
+    depends_on:
+      - mongodb
+    restart: on-failure
+    entrypoint: 'bash ./rs.sh'

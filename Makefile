@@ -3,7 +3,7 @@ ALL_FOLDERS = ${APPS}
 args = $(filter-out $@,$(MAKECMDGOALS))
 
 make-acme:
-	mkdir -p /etc/traefik && touch /etc/traefik/acmeStaging.json /etc/traefik/acmeProduction.json /etc/traefik/accessLog.json /etc/traefik/log.json && chmod 600 /etc/traefik/acme*.json
+	mkdir -p /data/docker/grip/traefik && cd /data/docker/grip/traefik && touch acmeStaging.json acmeProduction.json accessLog.json log.json && chmod 600 acme*.json
 
 dev-start:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build --remove-orphans;
