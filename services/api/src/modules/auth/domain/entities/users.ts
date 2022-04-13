@@ -33,6 +33,10 @@ export class UserEntity extends BaseEntity {
 		this.lastSignedInAt = data.lastSignedInAt
 		this.signedUpAt = data.signedUpAt
 	}
+
+	get fullName () {
+		return this.firstName + ' ' + this.lastName
+	}
 }
 
 export interface UserConstructorArgs {

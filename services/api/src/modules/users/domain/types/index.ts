@@ -4,6 +4,7 @@ export type UserBio = {
 	email: string
 	firstName: string
 	lastName: string
+	fullName: string
 	description: string
 	photo: MediaOutput | null
 	coverPhoto: MediaOutput | null

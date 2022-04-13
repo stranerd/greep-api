@@ -10,12 +10,18 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 			data: {
 				firstName: after.firstName,
 				lastName: after.lastName,
+				fullName: after.fullName,
 				email: after.email,
 				description: after.description,
 				photo: after.photo,
 				coverPhoto: after.coverPhoto
 			},
 			timestamp: after.signedUpAt
+		})
+		await UpdateUserWithRoles.execute({
+			id: after.id,
+			data: after.roles,
+			timestamp: Date.now()
 		})
 		if (after.referrer) await CreateReferral.execute({
 			userId: after.referrer,
@@ -33,6 +39,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 			data: {
 				firstName: after.firstName,
 				lastName: after.lastName,
+				fullName: after.fullName,
 				email: after.email,
 				description: after.description,
 				photo: after.photo,

@@ -46,11 +46,8 @@ export class UserRepository implements IUserRepository {
 			userId,
 			{
 				$set: {
-					firstName: details.firstName,
-					lastName: details.lastName,
+					...details,
 					password: await hash(details.password),
-					photo: details.photo,
-					coverPhoto: details.coverPhoto,
 					lastSignedInAt: Date.now()
 				},
 				$addToSet: {

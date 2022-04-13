@@ -25,14 +25,14 @@ export class UserRepository implements IUserRepository {
 	async createUserWithBio (userId: string, data: UserBio, timestamp: number) {
 		await User.findByIdAndUpdate(userId, {
 			$set: { bio: data },
-			$setOnInsert: { bio: data, _id: userId, dates: { createdAt: timestamp, deletedAt: null } }
+			$setOnInsert: { _id: userId, dates: { createdAt: timestamp, deletedAt: null } }
 		}, { upsert: true })
 	}
 
 	async updateUserWithBio (userId: string, data: UserBio, _: number) {
 		await User.findByIdAndUpdate(userId, {
 			$set: { bio: data },
-			$setOnInsert: { bio: data, _id: userId }
+			$setOnInsert: { _id: userId }
 		}, { upsert: true })
 	}
 
