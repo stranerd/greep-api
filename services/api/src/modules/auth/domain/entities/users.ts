@@ -1,12 +1,12 @@
 import { AuthRoles, AuthTypes, BaseEntity, MediaOutput } from '@stranerd/api-commons'
+import { UserUpdateInput } from '../types'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
 	public readonly email: string
 	public readonly password: string
 	public readonly description: string
-	public readonly firstName: string
-	public readonly lastName: string
+	public readonly name: { first: string, middle: string, last: string }
 	public readonly photo: MediaOutput | null
 	public readonly coverPhoto: MediaOutput | null
 	public readonly isVerified: boolean
@@ -21,8 +21,7 @@ export class UserEntity extends BaseEntity {
 		this.id = data.id
 		this.email = data.email
 		this.password = data.password
-		this.firstName = data.firstName
-		this.lastName = data.lastName
+		this.name = data.name
 		this.description = data.description
 		this.photo = data.photo
 		this.coverPhoto = data.coverPhoto
@@ -34,8 +33,15 @@ export class UserEntity extends BaseEntity {
 		this.signedUpAt = data.signedUpAt
 	}
 
-	get fullName () {
-		return this.firstName + ' ' + this.lastName
+	get allNames () {
+		return {
+			...this.name,
+			full: [this.name.first, this.name.middle, this.name.last].join(' ').replaceAll('  ', ' ')
+		}
+	}
+
+	static bioKeys (): (keyof (UserUpdateInput & { email: string }))[] {
+		return ['name', 'email', 'photo', 'coverPhoto', 'description']
 	}
 }
 
@@ -45,8 +51,7 @@ export interface UserConstructorArgs {
 	password: string;
 	description: string;
 	roles: AuthRoles;
-	firstName: string;
-	lastName: string;
+	name: { first: string, middle: string, last: string }
 	photo: MediaOutput | null;
 	coverPhoto: MediaOutput | null;
 	isVerified: boolean;

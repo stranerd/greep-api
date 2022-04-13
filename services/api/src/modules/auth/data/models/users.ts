@@ -11,8 +11,7 @@ export interface UserToModel {
 	email: string
 	password: string
 	description: string
-	firstName: string
-	lastName: string
+	name: { first: string, middle: string, last: string }
 	photo: MediaOutput | null
 	coverPhoto: MediaOutput | null
 	referrer: string | null

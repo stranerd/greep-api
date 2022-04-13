@@ -1,8 +1,7 @@
 import { MediaOutput } from '@stranerd/api-commons'
 
 export interface UserUpdateInput {
-	firstName: string
-	lastName: string
+	name: { first: string, middle: string, last: string }
 	description: string
 	photo: MediaOutput | null
 	coverPhoto: MediaOutput | null
@@ -14,14 +13,9 @@ export interface RoleInput {
 	value: boolean
 }
 
-export interface RegisterInput {
+export interface RegisterInput extends UserUpdateInput {
 	email: string;
-	firstName: string;
-	lastName: string;
 	password: string;
-	description: string
-	photo: MediaOutput | null;
-	coverPhoto: MediaOutput | null;
 	referrer: string | null;
 }
 

@@ -8,9 +8,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 		await CreateUserWithBio.execute({
 			id: after.id,
 			data: {
-				firstName: after.firstName,
-				lastName: after.lastName,
-				fullName: after.fullName,
+				name: after.allNames,
 				email: after.email,
 				description: after.description,
 				photo: after.photo,
@@ -32,14 +30,11 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 		if (changes.photo && before.photo) await publishers[EventTypes.DELETEFILE].publish(before.photo)
 		if (changes.coverPhoto && before.coverPhoto) await publishers[EventTypes.DELETEFILE].publish(before.coverPhoto)
 
-		const updatedBio = changes.firstName || changes.lastName || changes.photo || changes.email || changes.description || changes.coverPhoto
-
+		const updatedBio = UserEntity.bioKeys().some((key) => changes[key])
 		if (updatedBio) await UpdateUserWithBio.execute({
 			id: after.id,
 			data: {
-				firstName: after.firstName,
-				lastName: after.lastName,
-				fullName: after.fullName,
+				name: after.allNames,
 				email: after.email,
 				description: after.description,
 				photo: after.photo,

@@ -21,18 +21,9 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		required: false,
 		default: ''
 	},
-	firstName: {
-		type: String,
-		trim: true,
-		lowercase: true,
+	name: {
+		type: mongoose.Schema.Types.Mixed,
 		required: true
-	},
-	lastName: {
-		type: String,
-		trim: true,
-		lowercase: true,
-		required: false,
-		default: ''
 	},
 	description: {
 		type: String,

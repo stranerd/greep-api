@@ -14,6 +14,7 @@ export class EmailsController {
 		const userCredential = {
 			email: req.body.email,
 			firstName: req.body.firstName,
+			middleName: req.body.middleName,
 			lastName: req.body.lastName,
 			password: req.body.password,
 			photo: req.body.photo,
@@ -31,7 +32,17 @@ export class EmailsController {
 			return Validation.isInvalid('email already in use')
 		}
 
-		const validateData = validate(userCredential, {
+		const {
+			email,
+			firstName,
+			middleName,
+			lastName,
+			password,
+			photo,
+			coverPhoto,
+			description,
+			referrer
+		} = validate(userCredential, {
 			email: { required: true, rules: [Validation.isEmail, isUniqueInDb] },
 			password: {
 				required: true,
@@ -43,10 +54,15 @@ export class EmailsController {
 			},
 			photo: { required: false, rules: [Validation.isImage] },
 			coverPhoto: { required: false, rules: [Validation.isImage] },
-			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(2)] },
-			lastName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(2)] },
+			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
+			middleName: { required: true, rules: [Validation.isString] },
+			lastName: { required: true, rules: [Validation.isString] },
 			referrer: { required: false, rules: [Validation.isString] }
 		})
+		const validateData = {
+			name: { first: firstName, middle: middleName, last: lastName },
+			email, password, photo, coverPhoto, description, referrer
+		}
 
 		const updatedUser = user
 			? await UpdateUserDetails.execute({ userId: user.id, data: validateData })

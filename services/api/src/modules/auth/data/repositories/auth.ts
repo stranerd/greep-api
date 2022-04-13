@@ -139,7 +139,10 @@ export class AuthRepository implements IAuthRepository {
 		const user = ticket.getPayload()
 		if (!user) throw new BadRequestError('Invalid token')
 
-		const [firstName = '', lastName = ''] = (user.name ?? '').split(' ')
+		const names = (user.name ?? '').split(' ')
+		const first = names[0] ?? ''
+		const middle = (names.length > 2 ? names[1] : '') ?? ''
+		const last = (names.length > 2 ? names[2] : names[3]) ?? ''
 		const email = user.email!.toLowerCase()
 
 		const userPhoto = user.picture ? {
@@ -152,8 +155,7 @@ export class AuthRepository implements IAuthRepository {
 			const userData = {
 				email, referrer,
 				authTypes: [AuthTypes.google],
-				firstName,
-				lastName,
+				name: { first, middle, last },
 				description: '',
 				isVerified: true,
 				roles: {},

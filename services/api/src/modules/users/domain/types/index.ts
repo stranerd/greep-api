@@ -2,9 +2,12 @@ import { AuthRoles, MediaOutput } from '@stranerd/api-commons'
 
 export type UserBio = {
 	email: string
-	firstName: string
-	lastName: string
-	fullName: string
+	name: {
+		first: string
+		middle: string
+		last: string
+		full: string
+	}
 	description: string
 	photo: MediaOutput | null
 	coverPhoto: MediaOutput | null
