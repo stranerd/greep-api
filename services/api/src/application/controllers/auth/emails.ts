@@ -1,11 +1,4 @@
-import {
-	AuthenticateUser,
-	FindUserByEmail,
-	RegisterUser,
-	SendVerificationEmail,
-	UpdateUserDetails,
-	VerifyEmail
-} from '@modules/auth'
+import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
 import { AuthTypes, Request, validate, Validation, ValidationError } from '@stranerd/api-commons'
 import { generateAuthOutput } from '@utils/modules/auth'
 
@@ -23,7 +16,7 @@ export class EmailsController {
 			description: req.body.description
 		}
 
-		const user = await FindUserByEmail.execute(userCredential.email)
+		const user = await AuthUsersUseCases.findUserByEmail(userCredential.email)
 
 		const isUniqueInDb = (_: string) => {
 			if (!user) return Validation.isValid()
@@ -65,8 +58,8 @@ export class EmailsController {
 		}
 
 		const updatedUser = user
-			? await UpdateUserDetails.execute({ userId: user.id, data: validateData })
-			: await RegisterUser.execute(validateData)
+			? await AuthUsersUseCases.updateDetails({ userId: user.id, data: validateData })
+			: await AuthUseCases.registerUser(validateData)
 
 		return await generateAuthOutput(updatedUser)
 	}
@@ -80,7 +73,7 @@ export class EmailsController {
 			password: { required: true, rules: [Validation.isString] }
 		})
 
-		const data = await AuthenticateUser.execute(validateData)
+		const data = await AuthUseCases.authenticateUser(validateData)
 		return await generateAuthOutput(data)
 	}
 
@@ -93,10 +86,10 @@ export class EmailsController {
 			redirectUrl: { required: true, rules: [Validation.isString] }
 		})
 
-		const user = await FindUserByEmail.execute(email)
+		const user = await AuthUsersUseCases.findUserByEmail(email)
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
 
-		return await SendVerificationEmail.execute({ email, redirectUrl })
+		return await AuthUseCases.sendVerificationMail({ email, redirectUrl })
 	}
 
 	static async verifyEmail (req: Request) {
@@ -106,7 +99,7 @@ export class EmailsController {
 			token: { required: true, rules: [Validation.isString] }
 		})
 
-		const data = await VerifyEmail.execute(token)
+		const data = await AuthUseCases.verifyEmail(token)
 		return await generateAuthOutput(data)
 	}
 }

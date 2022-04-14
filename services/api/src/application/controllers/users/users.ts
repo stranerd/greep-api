@@ -1,13 +1,13 @@
-import { FindUser, GetUsers } from '@modules/users'
+import { UsersUseCases } from '@modules/users'
 import { QueryParams, Request } from '@stranerd/api-commons'
 
 export class UsersController {
 	static async getUsers (req: Request) {
 		const query = req.query as QueryParams
-		return await GetUsers.execute(query)
+		return await UsersUseCases.getUsers(query)
 	}
 
 	static async findUser (req: Request) {
-		return await FindUser.execute(req.params.id)
+		return await UsersUseCases.findUser(req.params.id)
 	}
 }

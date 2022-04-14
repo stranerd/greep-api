@@ -1,4 +1,4 @@
-import { GoogleSignIn } from '@modules/auth'
+import { AuthUseCases } from '@modules/auth'
 import { Request, validate, Validation } from '@stranerd/api-commons'
 import { generateAuthOutput } from '@utils/modules/auth'
 
@@ -14,7 +14,7 @@ export class IdentitiesController {
 			clientId: { required: true, rules: [Validation.isString] }
 		})
 
-		const data = await GoogleSignIn.execute(validatedData)
+		const data = await AuthUseCases.googleSignIn(validatedData)
 		return await generateAuthOutput(data)
 	}
 }

@@ -1,8 +1,6 @@
 import { LocalUploaderRepository } from './data/repositories/localUploader'
-import { UploadFileUseCase } from './domain/usecases/uploadFile'
-import { DeleteFileUseCase } from './domain/usecases/deleteFile'
+import { StorageUseCase } from './domain/usecases/storage'
 
 const uploaderRepository = new LocalUploaderRepository()
 
-export const UploadFile = new UploadFileUseCase(uploaderRepository)
-export const DeleteFile = new DeleteFileUseCase(uploaderRepository)
+export const StorageUseCases = new StorageUseCase(uploaderRepository)

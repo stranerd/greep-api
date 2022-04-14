@@ -1,16 +1,18 @@
 import { IErrorRepository } from '../irepositories/errors'
-import { BaseUseCase } from '@stranerd/api-commons'
-import { ErrorEntity } from '../entities/errors'
+import { ErrorToModel } from '../../data/models/errors'
 
-export class GetAndDeleteAllErrorsUseCase extends BaseUseCase<void, ErrorEntity[]> {
+export class EmailsUseCase {
 	private repository: IErrorRepository
 
 	constructor (repository: IErrorRepository) {
-		super()
 		this.repository = repository
 	}
 
-	async execute () {
+	async addError (data: ErrorToModel) {
+		return await this.repository.add(data)
+	}
+
+	async getAndDeleteAllErrors () {
 		return await this.repository.getAndDeleteAll()
 	}
 }

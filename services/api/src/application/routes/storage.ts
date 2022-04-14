@@ -1,5 +1,5 @@
 import { makeController, Route, StatusCodes, StorageFile, validate, Validation } from '@stranerd/api-commons'
-import { UploadFile } from '@modules/storage'
+import { StorageUseCases } from '@modules/storage'
 
 const uploadFile: Route = {
 	path: '/storage/file',
@@ -17,7 +17,7 @@ const uploadFile: Route = {
 					}]
 				}
 			})
-			const res = await UploadFile.call(data.path, data.file)
+			const res = await StorageUseCases.upload(data.path, data.file)
 			return {
 				status: StatusCodes.Ok,
 				result: res
@@ -43,7 +43,7 @@ const uploadFiles: Route = {
 				}
 			})
 			const res = await Promise.all(
-				data.files.map(async (f) => await UploadFile.call(data.path, f))
+				data.files.map(async (f) => await StorageUseCases.upload(data.path, f))
 			)
 			return {
 				status: StatusCodes.Ok,

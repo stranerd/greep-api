@@ -6,7 +6,7 @@ import {
 	makeAccessToken,
 	makeRefreshToken
 } from '@stranerd/api-commons'
-import { AuthOutput, DeleteUsers, FindUser, GetUsers, UserEntity } from '@modules/auth'
+import { AuthOutput, AuthUsersUseCases, UserEntity } from '@modules/auth'
 
 export const signOutUser = async (userId: string): Promise<boolean> => {
 	await deleteCachedAccessToken(userId)
@@ -28,7 +28,7 @@ export const generateAuthOutput = async (user: UserEntity): Promise<AuthOutput &
 export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { user: UserEntity }> => {
 	let user = null as any
 	const newTokens = await exchangeOldForNewTokens(tokens, async (id: string) => {
-		user = await FindUser.execute(id)
+		user = await AuthUsersUseCases.findUser(id)
 		if (!user) throw new BadRequestError('No account with such id exists')
 
 		return {
@@ -46,10 +46,10 @@ export const deleteUnverifiedUsers = async () => {
 	const unverifiedUsers = await getUnverifiedUsers()
 	const sevenDays = 7 * 24 * 60 * 60 * 1000
 	const olderUsers = unverifiedUsers.filter((u) => u.signedUpAt <= (Date.now() - sevenDays))
-	await DeleteUsers.execute(olderUsers.map((u) => u.id))
+	await AuthUsersUseCases.deleteUsers(olderUsers.map((u) => u.id))
 }
 const getUnverifiedUsers = async () => {
-	const { results: users } = await GetUsers.execute({
+	const { results: users } = await AuthUsersUseCases.getUsers({
 		where: [{ field: 'isVerified', value: false }],
 		all: true
 	})

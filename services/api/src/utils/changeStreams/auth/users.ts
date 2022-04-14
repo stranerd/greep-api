@@ -1,11 +1,11 @@
 import { ChangeStreamCallbacks } from '@stranerd/api-commons'
 import { UserEntity, UserFromModel } from '@modules/auth'
-import { CreateReferral, CreateUserWithBio, UpdateUserWithBio, UpdateUserWithRoles } from '@modules/users'
+import { ReferralsUseCases, UsersUseCases } from '@modules/users'
 import { EventTypes, publishers } from '@utils/events'
 
 export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {
-		await CreateUserWithBio.execute({
+		await UsersUseCases.createUserWithBio({
 			id: after.id,
 			data: {
 				name: after.allNames,
@@ -16,12 +16,12 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 			},
 			timestamp: after.signedUpAt
 		})
-		await UpdateUserWithRoles.execute({
+		await UsersUseCases.updateUserWithRoles({
 			id: after.id,
 			data: after.roles,
 			timestamp: Date.now()
 		})
-		if (after.referrer) await CreateReferral.execute({
+		if (after.referrer) await ReferralsUseCases.createReferral({
 			userId: after.referrer,
 			referred: after.id
 		})
@@ -31,7 +31,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 		if (changes.coverPhoto && before.coverPhoto) await publishers[EventTypes.DELETEFILE].publish(before.coverPhoto)
 
 		const updatedBio = UserEntity.bioKeys().some((key) => changes[key])
-		if (updatedBio) await UpdateUserWithBio.execute({
+		if (updatedBio) await UsersUseCases.updateUserWithBio({
 			id: after.id,
 			data: {
 				name: after.allNames,
@@ -44,13 +44,13 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 		})
 
 		const updatedRoles = changes.roles
-		if (updatedRoles) await UpdateUserWithRoles.execute({
+		if (updatedRoles) await UsersUseCases.updateUserWithRoles({
 			id: after.id,
 			data: after.roles,
 			timestamp: Date.now()
 		})
 
-		if (changes.referrer && after.referrer) await CreateReferral.execute({
+		if (changes.referrer && after.referrer) await ReferralsUseCases.createReferral({
 			userId: after.referrer,
 			referred: after.id
 		})

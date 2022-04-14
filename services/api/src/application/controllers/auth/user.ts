@@ -1,4 +1,4 @@
-import { FindUser, FindUserByEmail, UpdateUserProfile, UpdateUserRole } from '@modules/auth'
+import { AuthUsersUseCases } from '@modules/auth'
 import { NotFoundError, Request, validate, Validation, verifyAccessToken } from '@stranerd/api-commons'
 import { signOutUser } from '@utils/modules/auth'
 import { superAdminEmail } from '@utils/environment'
@@ -6,7 +6,7 @@ import { superAdminEmail } from '@utils/environment'
 export class UserController {
 	static async findUser (req: Request) {
 		const userId = req.authUser!.id
-		return await FindUser.execute(userId)
+		return await AuthUsersUseCases.findUser(userId)
 	}
 
 	static async updateUser (req: Request) {
@@ -31,7 +31,7 @@ export class UserController {
 			photo, coverPhoto, description
 		}
 
-		return await UpdateUserProfile.execute({ userId, data: validateData })
+		return await AuthUsersUseCases.updateProfile({ userId, data: validateData })
 	}
 
 	static async updateUserRole (req: Request) {
@@ -45,7 +45,7 @@ export class UserController {
 			userId: { required: true, rules: [Validation.isString] }
 		})
 
-		return await UpdateUserRole.execute(validateData)
+		return await AuthUsersUseCases.updateRole(validateData)
 	}
 
 	static async signout (req: Request) {
@@ -54,10 +54,10 @@ export class UserController {
 	}
 
 	static async superAdmin (_: Request) {
-		const user = await FindUserByEmail.execute(superAdminEmail)
+		const user = await AuthUsersUseCases.findUserByEmail(superAdminEmail)
 		if (!user) throw new NotFoundError()
 		const res = await Promise.all(
-			['isAdmin', 'isSuperAdmin'].map(async (role) => await UpdateUserRole.execute({
+			['isAdmin', 'isSuperAdmin'].map(async (role) => await AuthUsersUseCases.updateRole({
 				role,
 				userId: user.id,
 				value: true

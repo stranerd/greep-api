@@ -2,8 +2,8 @@ import { CronTypes, MediaOutput } from '@stranerd/api-commons'
 import { TypedEmail } from '@utils/types/email'
 import { appInstance } from '@utils/environment'
 import { sendMailAndCatchError } from '@utils/modules/emails'
-import { GetAndDeleteAllErrors } from '@modules/emails'
-import { DeleteFile } from '@modules/storage'
+import { EmailsUseCases } from '@modules/emails'
+import { StorageUseCases } from '@modules/storage'
 import { deleteUnverifiedUsers } from '@utils/modules/auth'
 
 export enum EventTypes {
@@ -46,7 +46,7 @@ export const subscribers = {
 	[EventTypes.TASKSCRON]: eventBus.createSubscriber<Events[EventTypes.TASKSCRON]>(EventTypes.TASKSCRON, async (data) => {
 		if (data.type === CronTypes.halfHourly) await appInstance.job.retryAllFailedJobs()
 		if (data.type === CronTypes.hourly) {
-			const errors = await GetAndDeleteAllErrors.execute()
+			const errors = await EmailsUseCases.getAndDeleteAllErrors()
 			await Promise.all(
 				errors.map(async (error) => {
 					await sendMailAndCatchError(error as unknown as TypedEmail)
@@ -56,7 +56,7 @@ export const subscribers = {
 		if (data.type === CronTypes.daily) await deleteUnverifiedUsers()
 	}),
 	[EventTypes.DELETEFILE]: eventBus.createSubscriber<Events[EventTypes.DELETEFILE]>(EventTypes.DELETEFILE, async (data) => {
-		if (data?.path) await DeleteFile.call(data.path)
+		if (data?.path) await StorageUseCases.delete(data.path)
 	})
 }
 
