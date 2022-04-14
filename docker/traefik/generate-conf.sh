@@ -1,11 +1,11 @@
 #!/bin/sh
 
-CONF_PATH=/data/docker/grip/traefik/traefik.yml
+CONF_PATH=/etc/traefik/traefik.yml
 
 CERT_TYPE=staging
 
-CERT_PATH_STAGING=/data/docker/grip/traefik/acmeStaging.json
-CERT_PATH_PRODUCTION=/data/docker/grip/traefik/acmeProduction.json
+CERT_PATH_STAGING=/etc/traefik/acmeStaging.json
+CERT_PATH_PRODUCTION=/etc/traefik/acmeProduction.json
 
 if [ "$USE_SSL" = 1 ]; then
 cat > $CONF_PATH <<- EOF
@@ -21,12 +21,12 @@ entryPoints:
     address: :443
 
 accessLog:
-  filePath: /data/docker/grip/traefik/accessLog.json
+  filePath: /etc/traefik/accessLog.json
   format: json
 
 log:
   level: DEBUG
-  filePath: /data/docker/grip/traefik/log.json
+  filePath: /etc/traefik/log.json
   format: json
 
 http:
@@ -39,7 +39,7 @@ http:
     api:
       tls:
         certresolver: $CERT_TYPE
-      rule: "Host(\`$BASE_DOMAIN\`) && PathPrefix(\`/\`)"
+      rule: "Host(\`$BASE_DOMAIN\`) && PathPrefix(\`/api/\`)"
       middlewares:
         - stripRoutePrefix
       service: api
@@ -56,7 +56,7 @@ api:
 
 providers:
   file:
-    directory: /data/docker/grip/traefik
+    directory: /etc/traefik
     watch: true
 
 certificatesResolvers:
@@ -87,12 +87,12 @@ entryPoints:
     address: :80
 
 accessLog:
-  filePath: /data/docker/grip/traefik/accessLog.json
+  filePath: /etc/traefik/accessLog.json
   format: json
 
 log:
   level: DEBUG
-  filePath: /data/docker/grip/traefik/log.json
+  filePath: /etc/traefik/log.json
   format: json
 
 http:
@@ -103,7 +103,7 @@ http:
           - "/api"
   routers:
     api:
-      rule: "PathPrefix(\`/\`)"
+      rule: "PathPrefix(\`/api/\`)"
       middlewares:
         - stripRoutePrefix
       service: api
@@ -120,7 +120,7 @@ api:
 
 providers:
   file:
-    directory: /data/docker/grip/traefik
+    directory: /etc/traefik
     watch: true
 EOF
 fi

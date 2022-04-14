@@ -2,14 +2,16 @@ APPS = api
 ALL_FOLDERS = ${APPS}
 args = $(filter-out $@,$(MAKECMDGOALS))
 
-make-acme:
-	mkdir -p /data/docker/grip/traefik && cd /data/docker/grip/traefik && touch acmeStaging.json acmeProduction.json accessLog.json log.json && chmod 600 acme*.json
+SETUP_FOLDER = /data/docker/grip/traefik
+SETUP = mkdir -p $(SETUP_FOLDER) &&\
+	touch $(SETUP_FOLDER)/acmeStaging.json $(SETUP_FOLDER)/acmeProduction.json $(SETUP_FOLDER)/accessLog.json $(SETUP_FOLDER)/log.json &&\
+	chmod 600 $(SETUP_FOLDER)/acme*.json
 
 dev-start:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build --remove-orphans;
+	$(SETUP) && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build --remove-orphans;
 
 dev-start-detach:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d --remove-orphans;
+	$(SETUP) && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d --remove-orphans;
 
 dev-stop:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans;
@@ -21,10 +23,10 @@ prod-build:
 	docker-compose -f docker-compose.yml build;
 
 prod-start:
-	docker-compose -f docker-compose.yml up --remove-orphans;
+	$(SETUP) && docker-compose -f docker-compose.yml up --remove-orphans;
 
 prod-start-detach:
-	docker-compose -f docker-compose.yml up -d --remove-orphans;
+	$(SETUP) && docker-compose -f docker-compose.yml up -d --remove-orphans;
 
 prod-stop:
 	docker-compose -f docker-compose.yml down --remove-orphans;

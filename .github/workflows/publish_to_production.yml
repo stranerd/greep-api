@@ -20,8 +20,6 @@ jobs:
         run: make copy-envs
       - name: Docker Build
         run: make prod-build
-      - name: Create traefik files
-        run: make make-acme
       - name: Docker Stop Existing Run
         run: make prod-stop
       - name: Docker Start

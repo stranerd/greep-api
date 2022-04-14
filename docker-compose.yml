@@ -11,10 +11,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - "/data/docker/grip/traefik/acmeStaging.json:/data/docker/grip/traefik/acmeStaging.json"
-      - "/data/docker/grip/traefik/acmeProduction.json:/data/docker/grip/traefik/acmeProduction.json"
-      - "/data/docker/grip/traefik/log.json:/data/docker/grip/traefik/log.json"
-      - "/data/docker/grip/traefik/accessLog.json:/data/docker/grip/traefik/accessLog.json"
+      - "/data/docker/grip/traefik/acmeStaging.json:/etc/traefik/acmeStaging.json"
+      - "/data/docker/grip/traefik/acmeProduction.json:/etc/traefik/acmeProduction.json"
+      - "/data/docker/grip/traefik/log.json:/etc/traefik/log.json"
+      - "/data/docker/grip/traefik/accessLog.json:/etc/traefik/accessLog.json"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   api:
@@ -35,8 +35,8 @@ services:
     image: mongo
     hostname: mongodb
     volumes:
-      - '/data/docker/grip/mongo/api/db:/data/db'
-      - '/data/docker/grip/mongo/api/configdb:/data/configdb'
+      - '/data/docker/grip/mongo/db:/data/db'
+      - '/data/docker/grip/mongo/configdb:/data/configdb'
     restart: always
     command: '--quiet --bind_ip_all --replSet rs0'
 
