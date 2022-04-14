@@ -1,6 +1,5 @@
 import { IAuthRepository } from '../../domain/i-repositories/auth'
 import { Credential, PasswordResetInput } from '../../domain/types'
-import { OAuth2Client } from 'google-auth-library'
 import User from '../mongooseModels/users'
 import { UserFromModel, UserToModel } from '../models/users'
 import { hash, hashCompare } from '@utils/hash'
@@ -17,6 +16,7 @@ import { appInstance } from '@utils/environment'
 import { UserMapper } from '../mappers/users'
 import { EmailsList } from '@utils/types/email'
 import { EventTypes, publishers } from '@utils/events'
+import axios from 'axios'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
@@ -127,50 +127,46 @@ export class AuthRepository implements IAuthRepository {
 		return this.mapper.mapFrom(user)!
 	}
 
-	async googleSignIn (tokenId: string, clientId: string, referrer: string | null) {
-		const client = new OAuth2Client(clientId)
+	async googleSignIn (idToken: string, referrer: string | null) {
+		const authUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`
+		const { data } = await axios.get(authUrl).catch((err) => {
+			const message = err?.response?.data?.error?.message
+			throw new BadRequestError(message ? 'Invalid id token' : 'Something unexpected happened')
+		})
 
-		const ticket = await client.verifyIdToken({
-			idToken: tokenId,
-			audience: clientId
-		}).catch(() => null)
-		if (!ticket) throw new BadRequestError('Invalid token')
-
-		const user = ticket.getPayload()
-		if (!user) throw new BadRequestError('Invalid token')
-
-		const names = (user.name ?? '').split(' ')
+		const names = (data.name ?? '').split(' ')
 		const first = names[0] ?? ''
 		const middle = (names.length > 2 ? names[1] : '') ?? ''
-		const last = (names.length > 2 ? names[2] : names[3]) ?? ''
-		const email = user.email!.toLowerCase()
-
-		const userPhoto = user.picture ? {
-			link: user.picture
+		const last = (names.length > 1 ? names.reverse()[0] : '') ?? ''
+		const email = data.email!.toLowerCase()
+		const photo = data.picture ? {
+			link: data.picture
 		} as unknown as MediaOutput : null
 
-		const userData = await User.findOne({ email })
+		return this.authorizeSocial(AuthTypes.google, {
+			email, photo, name: { first, middle, last }, referrer
+		})
+	}
 
-		if (!userData) {
-			const userData = {
-				email, referrer,
-				authTypes: [AuthTypes.google],
-				name: { first, middle, last },
-				description: '',
-				isVerified: true,
-				roles: {},
-				password: '',
-				photo: userPhoto,
-				coverPhoto: null
-			}
-			return await this.addNewUser(userData, AuthTypes.google)
-		}
+	private async authorizeSocial (type: AuthTypes, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'referrer'>) {
+		const userData = await User.findOne({ email: data.email })
 
-		const credentials: Credential = {
+		if (!userData) return await this.addNewUser({
+			name: data.name,
+			email: data.email,
+			photo: data.photo,
+			referrer: data.referrer,
+			authTypes: [type],
+			description: '',
+			password: '',
+			coverPhoto: null,
+			isVerified: true
+		}, type)
+
+		return await this.authenticateUser({
 			email: userData.email,
 			password: ''
-		}
-		return await this.authenticateUser(credentials, false, AuthTypes.google)
+		}, false, type)
 	}
 
 	private async signInUser (user: UserFromModel & mongoose.Document<any, any, UserFromModel>, type: AuthTypes) {

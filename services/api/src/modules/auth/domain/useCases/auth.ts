@@ -14,8 +14,8 @@ export class AuthUseCase {
 		return await this.repository.authenticateUser(params, true, AuthTypes.email)
 	}
 
-	async googleSignIn (input: { idToken: string, clientId: string, referrer: string }) {
-		return await this.repository.googleSignIn(input.idToken, input.clientId, input.referrer)
+	async googleSignIn (input: { idToken: string, referrer: string }) {
+		return await this.repository.googleSignIn(input.idToken, input.referrer)
 	}
 
 	async registerUser (params: RegisterInput) {

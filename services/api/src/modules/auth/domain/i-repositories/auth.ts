@@ -16,5 +16,5 @@ export interface IAuthRepository {
 
 	resetPassword (input: PasswordResetInput): Promise<UserEntity>
 
-	googleSignIn (tokenId: string, clientId: string, referrer: string | null): Promise<UserEntity>
+	googleSignIn (tokenId: string, referrer: string | null): Promise<UserEntity>
 }
