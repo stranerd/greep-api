@@ -28,6 +28,7 @@ export class TransactionsController {
 		const isBalance = req.body.data?.type === TransactionType.balance
 		const isTrip = req.body.data?.type === TransactionType.trip
 
+		const bodyAmount = req.body.amount
 		const {
 			amount,
 			description,
@@ -39,7 +40,7 @@ export class TransactionsController {
 			paidAmount,
 			paymentType
 		} = validate({
-			amount: req.body.amount,
+			amount: bodyAmount,
 			description: req.body.description,
 			recordedAt: req.body.recordedAt,
 			type: req.body.data?.type,
@@ -67,7 +68,7 @@ export class TransactionsController {
 			},
 			paidAmount: {
 				required: false,
-				rules: [Validation.isRequiredIfX(isTrip), Validation.isNumber, Validation.isLessThanX(req.body.amount)]
+				rules: [Validation.isRequiredIfX(isTrip), Validation.isNumber, Validation.isLessThanX(bodyAmount)]
 			},
 			paymentType: {
 				required: false,
@@ -82,8 +83,10 @@ export class TransactionsController {
 		if (isBalance) {
 			const parent = await TransactionsUseCases.find({ id: parentId, userId: driverId })
 			if (!parent) throw new BadRequestError('parent transaction not found')
+			if (parent.driverId !== driverId) throw new BadRequestError('parent transaction isn\'t yours')
 			if (parent.data.type !== TransactionType.trip) throw new BadRequestError('parent transaction is not a trip type')
 			if (parent.data.debt === 0) throw new BadRequestError('parent transaction is settled already')
+			if (parent.data.debt < amount) throw new BadRequestError('amount is greater than the debt to settle')
 		}
 
 		return await TransactionsUseCases.create({

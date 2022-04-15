@@ -3,6 +3,7 @@ import { TransactionMapper } from '../mappers/transactions'
 import { Transaction } from '../mongooseModels/transactions'
 import { parseQueryParams, QueryParams } from '@stranerd/api-commons'
 import { TransactionFromModel, TransactionToModel } from '../models/transactions'
+import { TransactionType } from '../../domain/types'
 
 export class TransactionRepository implements ITransactionRepository {
 	private static instance: TransactionRepository
@@ -38,6 +39,14 @@ export class TransactionRepository implements ITransactionRepository {
 
 	async delete ({ id, managerId }: { id: string, managerId: string }) {
 		const transaction = await Transaction.findOneAndDelete({ _id: id, managerId })
+		return !!transaction
+	}
+
+	async updateTripDebt ({ id, driverId, amount }: { id: string, driverId: string, amount: number }) {
+		const transaction = await Transaction.findOneAndUpdate(
+			{ _id: id, driverId, 'data.type': TransactionType.trip, 'data.debt': { $gte: amount } },
+			{ $inc: { 'data.debt': 0 - amount } },
+			{ new: true })
 		return !!transaction
 	}
 }
