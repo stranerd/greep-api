@@ -28,6 +28,8 @@ const start = async () => {
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
 	getSocketEmitter().register('users/referrals', isMine)
+	getSocketEmitter().register('users/customers', isMine)
+	getSocketEmitter().register('users/transactions', isMine)
 	getSocketEmitter().register('users/users', isOpen)
 
 	await UsersUseCases.resetAllUsersStatus()

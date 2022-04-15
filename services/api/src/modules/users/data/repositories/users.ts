@@ -14,7 +14,7 @@ export class UserRepository implements IUserRepository {
 		return UserRepository.instance
 	}
 
-	async getUsers (query) {
+	async get (query) {
 		const data = await parseQueryParams<UserFromModel>(User, query)
 		return {
 			...data,
@@ -36,7 +36,7 @@ export class UserRepository implements IUserRepository {
 		}, { upsert: true })
 	}
 
-	async findUser (userId: string) {
+	async find (userId: string) {
 		const user = await User.findById(userId)
 		return this.mapper.mapFrom(user)
 	}

@@ -13,7 +13,7 @@ export class CustomerRepository implements ICustomerRepository {
 		return CustomerRepository.instance
 	}
 
-	async getCustomers (query) {
+	async get (query) {
 		const data = await parseQueryParams<CustomerFromModel>(Customer, query)
 		return {
 			...data,
@@ -21,8 +21,8 @@ export class CustomerRepository implements ICustomerRepository {
 		}
 	}
 
-	async findCustomer (customerId: string) {
-		const customer = await Customer.findById(customerId)
+	async find ({ id, userId }: { id: string, userId: string }) {
+		const customer = await Customer.findOne({ _id: id, driverId: userId })
 		return this.mapper.mapFrom(customer)
 	}
 

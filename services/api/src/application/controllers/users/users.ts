@@ -4,11 +4,11 @@ import { BadRequestError, QueryParams, Request, validate, Validation } from '@st
 export class UsersController {
 	static async getUsers (req: Request) {
 		const query = req.query as QueryParams
-		return await UsersUseCases.getUsers(query)
+		return await UsersUseCases.get(query)
 	}
 
 	static async findUser (req: Request) {
-		return await UsersUseCases.findUser(req.params.id)
+		return await UsersUseCases.find(req.params.id)
 	}
 
 	static async addDriver (req: Request) {
@@ -25,7 +25,7 @@ export class UsersController {
 				}]
 			}
 		})
-		const driver = await UsersUseCases.findUser(data.driverId)
+		const driver = await UsersUseCases.find(data.driverId)
 		if (!driver) throw new BadRequestError('driver not found')
 		return UsersUseCases.addDriver({ ...data, managerId: req.authUser!.id })
 	}
@@ -44,7 +44,7 @@ export class UsersController {
 				}]
 			}
 		})
-		const driver = await UsersUseCases.findUser(data.driverId)
+		const driver = await UsersUseCases.find(data.driverId)
 		if (!driver) throw new BadRequestError('driver not found')
 		return UsersUseCases.updateDriverCommission({ ...data, managerId: req.authUser!.id })
 	}

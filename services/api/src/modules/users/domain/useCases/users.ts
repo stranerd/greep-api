@@ -9,16 +9,16 @@ export class UsersUseCase {
 		this.repository = repo
 	}
 
-	async findUser (id: string) {
-		return await this.repository.findUser(id)
+	async find (id: string) {
+		return await this.repository.find(id)
 	}
 
 	async createUserWithBio (params: { id: string, data: UserBio, timestamp: number }) {
 		return await this.repository.createUserWithBio(params.id, params.data, params.timestamp)
 	}
 
-	async getUsers (query: QueryParams) {
-		return await this.repository.getUsers(query)
+	async get (query: QueryParams) {
+		return await this.repository.get(query)
 	}
 
 	async markUserAsDeleted (params: { id: string, timestamp: number }) {
@@ -44,7 +44,7 @@ export class UsersUseCase {
 	async addDriver (data: { managerId: string, driverId: string, commission: number }) {
 		return await this.repository.addDriver(data.managerId, data.driverId, data.commission)
 	}
-	
+
 	async updateDriverCommission (data: { managerId: string, driverId: string, commission: number }) {
 		return await this.repository.updateDriverCommission(data.managerId, data.driverId, data.commission)
 	}

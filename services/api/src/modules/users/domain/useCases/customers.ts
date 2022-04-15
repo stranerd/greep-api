@@ -8,12 +8,12 @@ export class CustomersUseCase {
 		this.repository = repo
 	}
 
-	async findCustomer (id: string) {
-		return await this.repository.findCustomer(id)
+	async find (data: { id: string, userId: string }) {
+		return await this.repository.find(data)
 	}
 
-	async getCustomers (query: QueryParams) {
-		return await this.repository.getCustomers(query)
+	async get (query: QueryParams) {
+		return await this.repository.get(query)
 	}
 
 	async updateTrip (data: { driverId: string, name: string, count: number }) {

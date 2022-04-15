@@ -4,10 +4,11 @@ import { QueryParams, Request } from '@stranerd/api-commons'
 export class CustomersController {
 	static async getCustomers (req: Request) {
 		const query = req.query as QueryParams
-		return await CustomersUseCases.getCustomers(query)
+		query.auth = [{ field: 'driverId', value: req.authUser!.id }]
+		return await CustomersUseCases.get(query)
 	}
 
 	static async findCustomer (req: Request) {
-		return await CustomersUseCases.findCustomer(req.params.id)
+		return await CustomersUseCases.find({ id: req.params.id, userId: req.authUser!.id })
 	}
 }

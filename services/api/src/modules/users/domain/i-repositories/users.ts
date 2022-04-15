@@ -3,7 +3,7 @@ import { UserBio, UserRoles } from '../types'
 import { QueryParams, QueryResults } from '@stranerd/api-commons'
 
 export interface IUserRepository {
-	getUsers (query: QueryParams): Promise<QueryResults<UserEntity>>
+	get (query: QueryParams): Promise<QueryResults<UserEntity>>
 
 	createUserWithBio (userId: string, data: UserBio, timestamp: number): Promise<void>
 
@@ -13,7 +13,7 @@ export interface IUserRepository {
 
 	markUserAsDeleted (userId: string, timestamp: number): Promise<void>
 
-	findUser (userId: string): Promise<UserEntity | null>
+	find (userId: string): Promise<UserEntity | null>
 
 	updateUserStatus (userId: string, socketId: string, add: boolean): Promise<boolean>
 

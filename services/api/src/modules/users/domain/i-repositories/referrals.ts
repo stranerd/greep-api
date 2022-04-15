@@ -3,9 +3,9 @@ import { ReferralToModel } from '../../data/models/referrals'
 import { QueryParams, QueryResults } from '@stranerd/api-commons'
 
 export interface IReferralRepository {
-	findReferral (data: { userId: string, id: string }): Promise<ReferralEntity | null>
+	find (data: { userId: string, id: string }): Promise<ReferralEntity | null>
 
-	createReferral (data: ReferralToModel): Promise<ReferralEntity>
+	create (data: ReferralToModel): Promise<ReferralEntity>
 
-	getReferrals (query: QueryParams): Promise<QueryResults<ReferralEntity>>
+	get (query: QueryParams): Promise<QueryResults<ReferralEntity>>
 }

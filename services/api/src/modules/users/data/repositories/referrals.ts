@@ -13,7 +13,7 @@ export class ReferralRepository implements IReferralRepository {
 		return ReferralRepository.instance
 	}
 
-	async getReferrals (query: QueryParams) {
+	async get (query: QueryParams) {
 		const data = await parseQueryParams<ReferralFromModel>(Referral, query)
 		return {
 			...data,
@@ -21,12 +21,12 @@ export class ReferralRepository implements IReferralRepository {
 		}
 	}
 
-	async findReferral (data: { userId: string, id: string }) {
+	async find (data: { userId: string, id: string }) {
 		const referral = await Referral.findOne({ _id: data.id, userId: data.userId })
 		return this.mapper.mapFrom(referral)
 	}
 
-	async createReferral (data: ReferralToModel) {
+	async create (data: ReferralToModel) {
 		const referral = await new Referral(data).save()
 		return this.mapper.mapFrom(referral)!
 	}

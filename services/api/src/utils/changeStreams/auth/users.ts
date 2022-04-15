@@ -21,7 +21,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 			data: after.roles,
 			timestamp: Date.now()
 		})
-		if (after.referrer) await ReferralsUseCases.createReferral({
+		if (after.referrer) await ReferralsUseCases.create({
 			userId: after.referrer,
 			referred: after.id
 		})
@@ -50,7 +50,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 			timestamp: Date.now()
 		})
 
-		if (changes.referrer && after.referrer) await ReferralsUseCases.createReferral({
+		if (changes.referrer && after.referrer) await ReferralsUseCases.create({
 			userId: after.referrer,
 			referred: after.id
 		})
