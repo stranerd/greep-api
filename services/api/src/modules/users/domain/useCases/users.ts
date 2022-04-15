@@ -1,5 +1,5 @@
 import { IUserRepository } from '../i-repositories/users'
-import { UserBio, UserRoles } from '@modules/users'
+import { UserBio, UserRoles } from '../types'
 import { QueryParams } from '@stranerd/api-commons'
 
 export class UsersUseCase {

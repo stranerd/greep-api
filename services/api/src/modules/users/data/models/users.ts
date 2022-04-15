@@ -1,7 +1,7 @@
 import { UserBio, UserDates, UserDrivers, UserManager, UserRoles, UserStatus } from '../../domain/types'
 
 export interface UserFromModel extends UserToModel {
-	_id: string;
+	_id: string
 }
 
 export interface UserToModel {
