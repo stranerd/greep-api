@@ -6,6 +6,7 @@ services:
       args:
         BASE_DOMAIN: ${BASE_DOMAIN}
         USE_SSL: ${USE_SSL}
+        PORT: ${PORT}
     restart: always
     ports:
       - "80:80"

@@ -35,7 +35,7 @@ const start = async () => {
 	await UsersUseCases.resetAllUsersStatus()
 
 	await app.start(port)
-	await appInstance.logger.success(`${appId} api has started listening on port`, port)
+	await appInstance.logger.success(`${appId} service has started listening on port`, port)
 	await appInstance.job.startProcessingQueues<DelayedEvent>({
 		onDelayed: async (data) => {
 			await publishers[EventTypes.TASKSDELAYED].publish(data)

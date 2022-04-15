@@ -17,6 +17,7 @@ if (fs.existsSync('env.json')) {
 	// For all services
 	paths.forEach((path) => {
 		const entries = Object.entries({
+			...(envs['root'] ?? {}),
 			...(envs['general'] ?? {}),
 			...(envs[path] ?? {})
 		}).map(([key, value]) => ([key, typeof value === 'object' ? JSON.stringify(value) : value]))

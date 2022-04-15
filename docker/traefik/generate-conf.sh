@@ -48,7 +48,7 @@ http:
     api:
       loadBalancer:
         servers:
-          - url: http://api:8080/
+          - url: http://api:$PORT/
 
 api:
   insecure: true
@@ -112,7 +112,7 @@ http:
     api:
       loadBalancer:
         servers:
-          - url: http://api:8080/
+          - url: http://api:$PORT/
 
 api:
   insecure: true
