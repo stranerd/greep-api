@@ -40,6 +40,19 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
+		path: '/users/users/drivers/update',
+		method: 'post',
+		controllers: [
+			requireAuthUser,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateDriverCommission(req)
+				}
+			})
+		]
+	},
+	{
 		path: '/users/users/drivers/remove',
 		method: 'post',
 		controllers: [

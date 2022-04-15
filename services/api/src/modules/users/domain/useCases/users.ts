@@ -44,6 +44,10 @@ export class UsersUseCase {
 	async addDriver (data: { managerId: string, driverId: string, commission: number }) {
 		return await this.repository.addDriver(data.managerId, data.driverId, data.commission)
 	}
+	
+	async updateDriverCommission (data: { managerId: string, driverId: string, commission: number }) {
+		return await this.repository.updateDriverCommission(data.managerId, data.driverId, data.commission)
+	}
 
 	async removeDriver (data: { managerId: string, driverId: string }) {
 		return await this.repository.removeDriver(data.managerId, data.driverId)

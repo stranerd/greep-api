@@ -30,6 +30,25 @@ export class UsersController {
 		return UsersUseCases.addDriver({ ...data, managerId: req.authUser!.id })
 	}
 
+	static async updateDriverCommission (req: Request) {
+		const data = validate({
+			driverId: req.body.driverId,
+			commission: req.body.driverId
+		}, {
+			driverId: { required: true, rules: [Validation.isString] },
+			commission: {
+				required: true,
+				rules: [Validation.isNumber, (value: number) => {
+					const isValid = 0 <= value && value <= 1
+					return isValid ? Validation.isValid() : Validation.isInvalid('must be a number between 0 and 1')
+				}]
+			}
+		})
+		const driver = await UsersUseCases.findUser(data.driverId)
+		if (!driver) throw new BadRequestError('driver not found')
+		return UsersUseCases.updateDriverCommission({ ...data, managerId: req.authUser!.id })
+	}
+
 	static async removeDriver (req: Request) {
 		const data = validate({
 			driverId: req.body.driverId

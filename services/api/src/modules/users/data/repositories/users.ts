@@ -87,6 +87,25 @@ export class UserRepository implements IUserRepository {
 		return res
 	}
 
+	async updateDriverCommission (managerId: string, driverId: string, commission: number) {
+		const session = await mongoose.startSession()
+		let res = false
+		await session.withTransaction(async (session) => {
+			const manager = await User.findOneAndUpdate(
+				{ _id: managerId, 'drivers.driverId': driverId },
+				{ $set: { 'drivers.$.commission': commission } },
+				{ session })
+			const driver = await User.findOneAndUpdate(
+				{ _id: driverId, 'manager.managerId': managerId },
+				{ $set: { 'manager.commission': commission } },
+				{ session })
+			res = !!manager && !!driver
+			return res
+		})
+		await session.endSession()
+		return res
+	}
+
 	async removeDriver (managerId: string, driverId: string) {
 		const session = await mongoose.startSession()
 		let res = false
