@@ -1,2 +1,2 @@
 export * from './cannotModifyMyRole'
-export * from './isAdminInSpecifiedApp'
+export * from './isAdmin'

@@ -1,6 +1,6 @@
 import { makeController, requireAuthUser, Route, StatusCodes } from '@stranerd/api-commons'
 import { UserController } from '../../controllers/auth'
-import { cannotModifyMyRole, isAdminInSpecifiedApp } from '../../middlewares'
+import { cannotModifyMyRole, isAdmin } from '../../middlewares'
 
 const getUserDetails: Route = {
 	path: '/auth/user',
@@ -34,13 +34,12 @@ const updateUserRole: Route = {
 	path: '/auth/user/roles',
 	method: 'post',
 	controllers: [
-		requireAuthUser, isAdminInSpecifiedApp, cannotModifyMyRole,
+		requireAuthUser, isAdmin, cannotModifyMyRole,
 		makeController(async (req) => {
 			return {
 				status: StatusCodes.Ok,
 				result: await UserController.updateUserRole(req)
 			}
-
 		})
 	]
 }
