@@ -9,8 +9,7 @@ export interface UserUpdateInput {
 
 export interface RoleInput {
 	userId: string
-	role: string
-	value: boolean
+	roles: Record<string, boolean>
 }
 
 export interface RegisterInput extends UserUpdateInput {

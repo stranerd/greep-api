@@ -62,15 +62,15 @@ export class UserRepository implements IUserRepository {
 
 	}
 
-	async updateUserRole (roleInput: RoleInput) {
-		await User.findByIdAndUpdate(roleInput.userId, {
-			$set: {
-				[`roles.${roleInput.role}`]: roleInput.value
-			}
+	async updateUserRole ({ userId, roles }: RoleInput) {
+		const set = Object.fromEntries(Object.entries(roles).filter((role) => role[1]).map((role) => [`roles.${role[0]}`, role[1]]))
+		const unset = Object.fromEntries(Object.entries(roles).filter((role) => !role[1]).map((role) => [`roles.${role[0]}`, role[1]]))
+		const user = await User.findByIdAndUpdate(userId, {
+			$set: set, $unset: unset
 		})
 		// clear accessToken
-		await deleteCachedAccessToken(roleInput.userId)
-		return true
+		await deleteCachedAccessToken(userId)
+		return !!user
 	}
 
 	async updatePassword (userId: string, password: string) {

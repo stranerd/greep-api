@@ -2,6 +2,7 @@ import { AuthUsersUseCases } from '@modules/auth'
 import { NotFoundError, Request, validate, Validation, verifyAccessToken } from '@stranerd/api-commons'
 import { signOutUser } from '@utils/modules/auth'
 import { superAdminEmail } from '@utils/environment'
+import { SupportedAuthRoles } from '@utils/types/auth'
 
 export class UserController {
 	static async findUser (req: Request) {
@@ -35,17 +36,22 @@ export class UserController {
 	}
 
 	static async updateUserRole (req: Request) {
-		const validateData = validate({
+		const { role, userId, value } = validate({
 			role: req.body.role,
 			userId: req.body.userId,
 			value: req.body.value
 		}, {
-			role: { required: true, rules: [Validation.isString] },
+			role: {
+				required: true,
+				rules: [Validation.isString, Validation.arrayContainsX(Object.values<string>(SupportedAuthRoles), (cur, val) => cur === val)]
+			},
 			value: { required: true, rules: [Validation.isBoolean] },
 			userId: { required: true, rules: [Validation.isString] }
 		})
 
-		return await AuthUsersUseCases.updateRole(validateData)
+		return await AuthUsersUseCases.updateRole({
+			userId, roles: { [role]: value }
+		})
 	}
 
 	static async signout (req: Request) {
@@ -56,13 +62,12 @@ export class UserController {
 	static async superAdmin (_: Request) {
 		const user = await AuthUsersUseCases.findUserByEmail(superAdminEmail)
 		if (!user) throw new NotFoundError()
-		const res = await Promise.all(
-			['isAdmin', 'isSuperAdmin'].map(async (role) => await AuthUsersUseCases.updateRole({
-				role,
-				userId: user.id,
-				value: true
-			}))
-		)
-		return res.every((r) => r)
+		return await AuthUsersUseCases.updateRole({
+			userId: user.id,
+			roles: {
+				[SupportedAuthRoles.isAdmin]: true,
+				isSuperAdmin: true
+			}
+		})
 	}
 }
