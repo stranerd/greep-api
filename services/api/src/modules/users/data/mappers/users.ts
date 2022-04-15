@@ -9,6 +9,8 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			bio: param.bio,
 			dates: param.dates,
 			roles: param.roles,
+			drivers: param.drivers,
+			manager: param.manager,
 			status: param.status
 		})
 	}
@@ -18,6 +20,8 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			bio: param.bio,
 			dates: param.dates,
 			roles: param.roles,
+			manager: param.manager,
+			drivers: param.drivers,
 			status: param.status
 		}
 	}

@@ -24,3 +24,13 @@ export type UserStatus = {
 	connections: string[]
 	lastUpdatedAt: number
 }
+
+export type UserDrivers = {
+	driverId: string
+	commission: number
+}[]
+
+export type UserManager = {
+	managerId: string
+	commission: number
+}

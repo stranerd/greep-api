@@ -2,7 +2,7 @@ import { IUserRepository } from '../../domain/i-repositories/users'
 import { UserBio, UserRoles } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
-import { parseQueryParams } from '@stranerd/api-commons'
+import { mongoose, parseQueryParams } from '@stranerd/api-commons'
 import { UserFromModel } from '../models/users'
 
 export class UserRepository implements IUserRepository {
@@ -66,5 +66,43 @@ export class UserRepository implements IUserRepository {
 			$set: { 'status.connections': [] }
 		})
 		return !!res.acknowledged
+	}
+
+	async addDriver (managerId: string, driverId: string, commission: number) {
+		const session = await mongoose.startSession()
+		let res = false
+		await session.withTransaction(async (session) => {
+			const manager = await User.findOneAndUpdate(
+				{ _id: managerId, 'drivers.driverId': { $ne: driverId } },
+				{ $addToSet: { drivers: { driverId, commission } } },
+				{ session })
+			const driver = await User.findOneAndUpdate(
+				{ _id: driverId, manager: null },
+				{ $set: { manager: { managerId, commission } } },
+				{ session })
+			res = !!manager && !!driver
+			return res
+		})
+		await session.endSession()
+		return res
+	}
+
+	async removeDriver (managerId: string, driverId: string) {
+		const session = await mongoose.startSession()
+		let res = false
+		await session.withTransaction(async (session) => {
+			const manager = await User.findOneAndUpdate(
+				{ _id: managerId, 'drivers.driverId': driverId },
+				{ $pull: { drivers: { driverId } } },
+				{ session })
+			const driver = await User.findOneAndUpdate(
+				{ _id: driverId, 'manager.managerId': managerId },
+				{ $set: { manager: null } },
+				{ session })
+			res = !!manager && !!driver
+			return res
+		})
+		await session.endSession()
+		return res
 	}
 }

@@ -1,4 +1,4 @@
-import { makeController, Route, StatusCodes } from '@stranerd/api-commons'
+import { makeController, requireAuthUser, Route, StatusCodes } from '@stranerd/api-commons'
 import { UsersController } from '../../controllers/users/users'
 
 export const usersRoutes: Route[] = [
@@ -22,6 +22,32 @@ export const usersRoutes: Route[] = [
 				return {
 					status: StatusCodes.Ok,
 					result: await UsersController.findUser(req)
+				}
+			})
+		]
+	},
+	{
+		path: '/users/users/drivers/add',
+		method: 'post',
+		controllers: [
+			requireAuthUser,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.addDriver(req)
+				}
+			})
+		]
+	},
+	{
+		path: '/users/users/drivers/remove',
+		method: 'post',
+		controllers: [
+			requireAuthUser,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.removeDriver(req)
 				}
 			})
 		]

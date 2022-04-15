@@ -18,4 +18,8 @@ export interface IUserRepository {
 	updateUserStatus (userId: string, socketId: string, add: boolean): Promise<boolean>
 
 	resetAllUsersStatus (): Promise<boolean>
+
+	addDriver (managerId: string, driverId: string, commission: number): Promise<boolean>
+
+	removeDriver (managerId: string, driverId: string): Promise<boolean>
 }

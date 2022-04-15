@@ -41,6 +41,16 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 			required: false,
 			default: 0
 		}
+	},
+	drivers: {
+		type: [mongoose.Schema.Types.Mixed] as unknown as UserFromModel['drivers'],
+		required: false,
+		default: []
+	},
+	manager: {
+		type: mongoose.Schema.Types.Mixed as unknown as UserFromModel['manager'],
+		required: false,
+		default: null
 	}
 }, { minimize: false })
 

@@ -40,4 +40,12 @@ export class UsersUseCase {
 	async updateUserWithRoles (params: { id: string, data: UserRoles, timestamp: number }) {
 		return await this.repository.updateUserWithRoles(params.id, params.data, params.timestamp)
 	}
+
+	async addDriver (data: { managerId: string, driverId: string, commission: number }) {
+		return await this.repository.addDriver(data.managerId, data.driverId, data.commission)
+	}
+
+	async removeDriver (data: { managerId: string, driverId: string }) {
+		return await this.repository.removeDriver(data.managerId, data.driverId)
+	}
 }
