@@ -110,10 +110,10 @@
   resolved "https://registry.yarnpkg.com/@socket.io/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#568d9beae00b0d835f4f8c53fd55714986492e61"
   integrity sha512-dOlCBKnDw4iShaIsH/bxujKTM18+2TOAsYz+KSc11Am38H4q5Xw8Bbz97ZYdrVNM+um3p7w86Bvvmcn9q+5+eQ==
 
-"@stranerd/api-commons@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.1.1.tgz#8cb0c26e615444c707c49d89cc3d058ddb784a57"
-  integrity sha512-+ME4/XquOdK+blEERIhdqdGzHXZpM8EfgJ8j33hytYg7AHGLEUluZZT26ATnszoYD8bXhrUqGRvGauMQQsvsSw==
+"@stranerd/api-commons@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.2.0.tgz#eb461ccc07a416f84e02593b6f7c466c547bf9d4"
+  integrity sha512-ibtsGuK/wXzCqtP410PNXudWCHwqogo7FnXtZ+Kut2+Wk01qdqGJekJvaAPctRVBnJDa96m14EahpuI1DVLmTw==
   dependencies:
     "@stranerd/validate" "^2.2.0"
     amqplib "^0.8.0"
