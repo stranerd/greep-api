@@ -4,6 +4,8 @@ import { signOutUser } from '@utils/modules/auth'
 import { superAdminEmail } from '@utils/environment'
 import { SupportedAuthRoles } from '@utils/types/auth'
 
+const roles = Object.values<string>(SupportedAuthRoles).filter((key) => key !== SupportedAuthRoles.isSuperAdmin)
+
 export class UserController {
 	static async findUser (req: Request) {
 		const userId = req.authUser!.id
@@ -43,7 +45,7 @@ export class UserController {
 		}, {
 			role: {
 				required: true,
-				rules: [Validation.isString, Validation.arrayContainsX(Object.values<string>(SupportedAuthRoles), (cur, val) => cur === val)]
+				rules: [Validation.isString, Validation.arrayContainsX(roles, (cur, val) => cur === val)]
 			},
 			value: { required: true, rules: [Validation.isBoolean] },
 			userId: { required: true, rules: [Validation.isString] }
@@ -66,7 +68,7 @@ export class UserController {
 			userId: user.id,
 			roles: {
 				[SupportedAuthRoles.isAdmin]: true,
-				isSuperAdmin: true
+				[SupportedAuthRoles.isSuperAdmin]: true
 			}
 		})
 	}

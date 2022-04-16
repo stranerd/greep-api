@@ -6,7 +6,7 @@ import {
 	makeAccessToken,
 	makeRefreshToken
 } from '@stranerd/api-commons'
-import { AuthOutput, AuthUsersUseCases, UserEntity } from '@modules/auth'
+import { AuthOutput, AuthUserEntity, AuthUsersUseCases } from '@modules/auth'
 
 export const signOutUser = async (userId: string): Promise<boolean> => {
 	await deleteCachedAccessToken(userId)
@@ -14,7 +14,7 @@ export const signOutUser = async (userId: string): Promise<boolean> => {
 	return true
 }
 
-export const generateAuthOutput = async (user: UserEntity): Promise<AuthOutput & { user: UserEntity }> => {
+export const generateAuthOutput = async (user: AuthUserEntity): Promise<AuthOutput & { user: AuthUserEntity }> => {
 	const accessToken = await makeAccessToken({
 		id: user.id,
 		roles: user.roles,
@@ -25,8 +25,8 @@ export const generateAuthOutput = async (user: UserEntity): Promise<AuthOutput &
 	return { accessToken, refreshToken, user }
 }
 
-export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { user: UserEntity }> => {
-	let user = null as any
+export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { user: AuthUserEntity }> => {
+	let user = null as null | AuthUserEntity
 	const newTokens = await exchangeOldForNewTokens(tokens, async (id: string) => {
 		user = await AuthUsersUseCases.findUser(id)
 		if (!user) throw new BadRequestError('No account with such id exists')
@@ -39,7 +39,7 @@ export const getNewTokens = async (tokens: AuthOutput): Promise<AuthOutput & { u
 		}
 	})
 
-	return { ...newTokens, user }
+	return { ...newTokens, user: user! }
 }
 
 export const deleteUnverifiedUsers = async () => {

@@ -1,9 +1,9 @@
 import { ChangeStreamCallbacks } from '@stranerd/api-commons'
-import { UserEntity, UserFromModel } from '@modules/auth'
+import { AuthUserEntity, UserFromModel } from '@modules/auth'
 import { ReferralsUseCases, UsersUseCases } from '@modules/users'
 import { EventTypes, publishers } from '@utils/events'
 
-export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, UserEntity> = {
+export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, AuthUserEntity> = {
 	created: async ({ after }) => {
 		await UsersUseCases.createUserWithBio({
 			id: after.id,
@@ -30,7 +30,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Use
 		if (changes.photo && before.photo) await publishers[EventTypes.DELETEFILE].publish(before.photo)
 		if (changes.coverPhoto && before.coverPhoto) await publishers[EventTypes.DELETEFILE].publish(before.coverPhoto)
 
-		const updatedBio = UserEntity.bioKeys().some((key) => changes[key])
+		const updatedBio = AuthUserEntity.bioKeys().some((key) => changes[key])
 		if (updatedBio) await UsersUseCases.updateUserWithBio({
 			id: after.id,
 			data: {

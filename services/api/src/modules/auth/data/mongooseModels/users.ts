@@ -1,7 +1,7 @@
 import { generateChangeStreams, mongoose } from '@stranerd/api-commons'
 import { UserFromModel } from '../models/users'
 import { UserChangeStreamCallbacks } from '@utils/changeStreams/auth/users'
-import { UserEntity } from '../../domain/entities/users'
+import { AuthUserEntity } from '../../domain/entities/users'
 import { UserMapper } from '../mappers/users'
 
 const UserSchema = new mongoose.Schema<UserFromModel>({
@@ -76,6 +76,6 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 
 export const User = mongoose.model<UserFromModel>('AuthUser', UserSchema)
 
-generateChangeStreams<UserFromModel, UserEntity>(User, UserChangeStreamCallbacks, new UserMapper().mapFrom).then()
+generateChangeStreams<UserFromModel, AuthUserEntity>(User, UserChangeStreamCallbacks, new UserMapper().mapFrom).then()
 
 export default User
