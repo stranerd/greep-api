@@ -11,8 +11,6 @@ export class EmailsController {
 			lastName: req.body.lastName,
 			password: req.body.password,
 			photo: req.body.photo,
-			coverPhoto: req.body.coverPhoto,
-			referrer: req.body.referrer,
 			description: req.body.description
 		}
 
@@ -32,9 +30,7 @@ export class EmailsController {
 			lastName,
 			password,
 			photo,
-			coverPhoto,
-			description,
-			referrer
+			description
 		} = validate(userCredential, {
 			email: { required: true, rules: [Validation.isEmail, isUniqueInDb] },
 			password: {
@@ -46,15 +42,13 @@ export class EmailsController {
 				rules: [Validation.isString]
 			},
 			photo: { required: false, rules: [Validation.isImage] },
-			coverPhoto: { required: false, rules: [Validation.isImage] },
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 			middleName: { required: true, rules: [Validation.isString] },
-			lastName: { required: true, rules: [Validation.isString] },
-			referrer: { required: false, rules: [Validation.isString] }
+			lastName: { required: true, rules: [Validation.isString] }
 		})
 		const validateData = {
 			name: { first: firstName, middle: middleName, last: lastName },
-			email, password, photo, coverPhoto, description, referrer
+			email, password, photo, description
 		}
 
 		const updatedUser = user

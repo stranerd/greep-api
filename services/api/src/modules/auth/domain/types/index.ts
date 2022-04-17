@@ -4,7 +4,6 @@ export interface UserUpdateInput {
 	name: { first: string, middle: string, last: string }
 	description: string
 	photo: MediaOutput | null
-	coverPhoto: MediaOutput | null
 }
 
 export interface RoleInput {
@@ -15,7 +14,6 @@ export interface RoleInput {
 export interface RegisterInput extends UserUpdateInput {
 	email: string;
 	password: string;
-	referrer: string | null;
 }
 
 export interface PasswordResetInput {

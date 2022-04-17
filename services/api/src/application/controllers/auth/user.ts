@@ -14,24 +14,22 @@ export class UserController {
 
 	static async updateUser (req: Request) {
 		const userId = req.authUser!.id
-		const { firstName, middleName, lastName, photo, coverPhoto, description } = validate({
+		const { firstName, middleName, lastName, photo, description } = validate({
 			firstName: req.body.firstName,
 			middleName: req.body.middleName,
 			lastName: req.body.lastName,
 			description: req.body.description,
-			photo: req.body.photo,
-			coverPhoto: req.body.coverPhoto
+			photo: req.body.photo
 		}, {
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 			middleName: { required: true, rules: [Validation.isString] },
 			lastName: { required: true, rules: [Validation.isString] },
 			description: { required: true, rules: [Validation.isString] },
-			photo: { required: false, rules: [Validation.isImage] },
-			coverPhoto: { required: false, rules: [Validation.isImage] }
+			photo: { required: false, rules: [Validation.isImage] }
 		})
 		const validateData = {
 			name: { first: firstName, middle: middleName, last: lastName },
-			photo, coverPhoto, description
+			photo, description
 		}
 
 		return await AuthUsersUseCases.updateProfile({ userId, data: validateData })

@@ -6,12 +6,10 @@ export class IdentitiesController {
 	static async googleSignIn (req: Request) {
 		const validatedData = validate({
 			accessToken: req.body.accessToken,
-			idToken: req.body.idToken,
-			referrer: req.body.referrer
+			idToken: req.body.idToken
 		}, {
 			accessToken: { required: true, rules: [Validation.isString] },
-			idToken: { required: true, rules: [Validation.isString] },
-			referrer: { required: false, rules: [Validation.isString] }
+			idToken: { required: true, rules: [Validation.isString] }
 		})
 
 		const data = await AuthUseCases.googleSignIn(validatedData)

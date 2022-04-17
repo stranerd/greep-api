@@ -9,11 +9,9 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly description: string
 	public readonly name: { first: string, middle: string, last: string }
 	public readonly photo: MediaOutput | null
-	public readonly coverPhoto: MediaOutput | null
 	public readonly isVerified: boolean
 	public readonly authTypes: AuthTypes[]
 	public readonly roles: AuthRoles
-	public readonly referrer: string | null
 	public readonly lastSignedInAt: number
 	public readonly signedUpAt: number
 
@@ -25,10 +23,8 @@ export class AuthUserEntity extends BaseEntity {
 		this.name = data.name
 		this.description = data.description
 		this.photo = data.photo
-		this.coverPhoto = data.coverPhoto
 		this.isVerified = data.isVerified
 		this.authTypes = data.authTypes
-		this.referrer = data.referrer
 		this.roles = data.roles ?? {}
 		this.lastSignedInAt = data.lastSignedInAt
 		this.signedUpAt = data.signedUpAt
@@ -42,7 +38,7 @@ export class AuthUserEntity extends BaseEntity {
 	}
 
 	static bioKeys (): (keyof (UserUpdateInput & { email: string }))[] {
-		return ['name', 'email', 'photo', 'coverPhoto', 'description']
+		return ['name', 'email', 'photo', 'description']
 	}
 }
 
@@ -54,10 +50,8 @@ interface UserConstructorArgs {
 	roles: AuthRoles;
 	name: { first: string, middle: string, last: string }
 	photo: MediaOutput | null;
-	coverPhoto: MediaOutput | null;
 	isVerified: boolean;
 	authTypes: AuthTypes[];
-	referrer: string | null;
 	lastSignedInAt: number;
 	signedUpAt: number
 }

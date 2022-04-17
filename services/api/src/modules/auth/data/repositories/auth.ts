@@ -127,7 +127,7 @@ export class AuthRepository implements IAuthRepository {
 		return this.mapper.mapFrom(user)!
 	}
 
-	async googleSignIn (idToken: string, referrer: string | null) {
+	async googleSignIn (idToken: string) {
 		const authUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`
 		const { data } = await axios.get(authUrl).catch((err) => {
 			const message = err?.response?.data?.error?.message
@@ -144,22 +144,20 @@ export class AuthRepository implements IAuthRepository {
 		} as unknown as MediaOutput : null
 
 		return this.authorizeSocial(AuthTypes.google, {
-			email, photo, name: { first, middle, last }, referrer
+			email, photo, name: { first, middle, last }
 		})
 	}
 
-	private async authorizeSocial (type: AuthTypes, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'referrer'>) {
+	private async authorizeSocial (type: AuthTypes, data: Pick<UserToModel, 'email' | 'name' | 'photo'>) {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
 			name: data.name,
 			email: data.email,
 			photo: data.photo,
-			referrer: data.referrer,
 			authTypes: [type],
 			description: '',
 			password: '',
-			coverPhoto: null,
 			isVerified: true
 		}, type)
 

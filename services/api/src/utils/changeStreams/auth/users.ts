@@ -1,6 +1,6 @@
 import { ChangeStreamCallbacks } from '@stranerd/api-commons'
 import { AuthUserEntity, UserFromModel } from '@modules/auth'
-import { ReferralsUseCases, UsersUseCases } from '@modules/users'
+import { UsersUseCases } from '@modules/users'
 import { EventTypes, publishers } from '@utils/events'
 
 export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, AuthUserEntity> = {
@@ -11,8 +11,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Aut
 				name: after.allNames,
 				email: after.email,
 				description: after.description,
-				photo: after.photo,
-				coverPhoto: after.coverPhoto
+				photo: after.photo
 			},
 			timestamp: after.signedUpAt
 		})
@@ -21,14 +20,9 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Aut
 			data: after.roles,
 			timestamp: Date.now()
 		})
-		if (after.referrer) await ReferralsUseCases.create({
-			userId: after.referrer,
-			referred: after.id
-		})
 	},
 	updated: async ({ before, after, changes }) => {
 		if (changes.photo && before.photo) await publishers[EventTypes.DELETEFILE].publish(before.photo)
-		if (changes.coverPhoto && before.coverPhoto) await publishers[EventTypes.DELETEFILE].publish(before.coverPhoto)
 
 		const updatedBio = AuthUserEntity.bioKeys().some((key) => changes[key])
 		if (updatedBio) await UsersUseCases.updateUserWithBio({
@@ -37,8 +31,7 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Aut
 				name: after.allNames,
 				email: after.email,
 				description: after.description,
-				photo: after.photo,
-				coverPhoto: after.coverPhoto
+				photo: after.photo
 			},
 			timestamp: Date.now()
 		})
@@ -49,14 +42,8 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Aut
 			data: after.roles,
 			timestamp: Date.now()
 		})
-
-		if (changes.referrer && after.referrer) await ReferralsUseCases.create({
-			userId: after.referrer,
-			referred: after.id
-		})
 	},
 	deleted: async ({ before }) => {
 		if (before.photo) await publishers[EventTypes.DELETEFILE].publish(before.photo)
-		if (before.coverPhoto) await publishers[EventTypes.DELETEFILE].publish(before.coverPhoto)
 	}
 }

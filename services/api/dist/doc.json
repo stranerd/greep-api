@@ -601,5 +601,53 @@
             ],
             "additionalProperties": false
         }
-    }
+    },
+    "swagger": "2.0",
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Hello World",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/auth/emails/signup": {
+            "post": {
+                "description": "Signup with email to the application",
+                "tags": [
+                    "Auth"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/email"
+                    },
+                    {
+                        "$ref": "#/parameters/password"
+                    },
+                    {
+                        "$ref": "#/parameters/firstName"
+                    },
+                    {
+                        "$ref": "#/parameters/middleName"
+                    },
+                    {
+                        "$ref": "#/parameters/lastName"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "signup",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthOutput"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {},
+    "channels": {},
+    "tags": []
 }

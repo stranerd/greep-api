@@ -36,11 +36,6 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		required: false,
 		default: null
 	},
-	coverPhoto: {
-		type: mongoose.Schema.Types.Mixed,
-		required: false,
-		default: null
-	},
 	isVerified: {
 		type: Boolean,
 		required: false,
@@ -57,11 +52,7 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		required: false,
 		default: {} as unknown as UserFromModel['roles']
 	},
-	referrer: {
-		type: String,
-		required: false,
-		default: null
-	},
+
 	lastSignedInAt: {
 		type: Number,
 		required: false,

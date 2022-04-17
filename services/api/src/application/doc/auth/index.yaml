@@ -1,0 +1,80 @@
+tags:
+  Auth:
+    name: Auth
+    description: all endpoints having anything to do with authentication
+
+definitions:
+  AuthOutput:
+    type: object
+    required:
+      - accessToken
+      - requestToken
+      - user
+    properties:
+      accessToken:
+        type: string
+      requestToken:
+        type: string
+      user:
+        $ref: '#/definitions/AuthUserEntity'
+
+parameters:
+  auth:
+    email:
+      name: email
+      description: User's email address.
+      in: formData
+      required: true
+      type: string
+    firstName:
+      name: firstName
+      description: User's first name.
+      in: formData
+      required: true
+      type: string
+      minLength: 1
+    description:
+      name: description
+      description: User's profile description.
+      in: formData
+      required: true
+      type: string
+    middleName:
+      name: middleName
+      description: User's middle name.
+      in: formData
+      required: true
+      type: string
+    lastName:
+      name: lastName
+      description: User's last name.
+      in: formData
+      required: true
+      type: string
+    password:
+      name: password
+      description: User password.
+      in: formData
+      required: true
+      type: string
+      minLength: 8
+      maxLength: 16
+    photo:
+      name: photo
+      description: User profile picture.
+      in: formData
+      required: false
+      schema:
+        $ref: '#/definitions/MediaOutput'
+    redirectUrl:
+      name: redirectUrl
+      description: The url that gets attached in the mail for the user to redirect to.
+      in: formData
+      required: true
+      type: string
+    token:
+      name: token
+      description: The token used to identify a user's email. It is usually send along in the query params of a redirect url.
+      in: formData
+      required: true
+      type: string

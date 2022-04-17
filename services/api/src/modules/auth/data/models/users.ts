@@ -14,8 +14,6 @@ export interface UserToModel {
 	description: string
 	name: { first: string, middle: string, last: string }
 	photo: MediaOutput | null
-	coverPhoto: MediaOutput | null
-	referrer: string | null
 	isVerified: boolean
 	authTypes: AuthTypes[]
 }

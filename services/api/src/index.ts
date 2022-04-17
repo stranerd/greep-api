@@ -27,7 +27,6 @@ const start = async () => {
 	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
-	getSocketEmitter().register('users/referrals', isMine)
 	getSocketEmitter().register('users/customers', isMine)
 	getSocketEmitter().register('users/transactions', isMine)
 	getSocketEmitter().register('users/users', isOpen)

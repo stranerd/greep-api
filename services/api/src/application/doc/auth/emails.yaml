@@ -1,0 +1,51 @@
+/auth/emails/signup:
+  post:
+    description: Signup with email to the application
+    tags: [ Auth ]
+    parameters:
+      - $ref: '#/parameters/auth/firstName'
+      - $ref: '#/parameters/auth/middleName'
+      - $ref: '#/parameters/auth/lastName'
+      - $ref: '#/parameters/auth/description'
+      - $ref: '#/parameters/auth/email'
+      - $ref: '#/parameters/auth/photo'
+      - $ref: '#/parameters/auth/password'
+    responses:
+      200:
+        schema:
+          type: object
+          $ref: '#/definitions/AuthOutput'
+/auth/emails/signin:
+  post:
+    description: Signin with email and password to the application
+    tags: [ Auth ]
+    parameters:
+      - $ref: '#/parameters/auth/email'
+      - $ref: '#/parameters/auth/password'
+    responses:
+      200:
+        schema:
+          type: object
+          $ref: '#/definitions/AuthOutput'
+/auth/emails/verify/mail:
+  post:
+    description: Send verification email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the verify endpoint
+    tags: [ Auth ]
+    parameters:
+      - $ref: '#/parameters/auth/email'
+      - $ref: '#/parameters/auth/redirectUrl'
+    responses:
+      200:
+        schema:
+          type: boolean
+/auth/emails/verify:
+  post:
+    description: Verify the email that corresponds to the token attached in the request body
+    tags: [ Auth ]
+    parameters:
+      - $ref: '#/parameters/auth/token'
+    responses:
+      200:
+        schema:
+          type: object
+          $ref: '#/definitions/AuthOutput'
