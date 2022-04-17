@@ -1,6 +1,7 @@
 import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
 import { AuthTypes, Request, validate, Validation, ValidationError } from '@stranerd/api-commons'
 import { generateAuthOutput } from '@utils/modules/auth'
+import { isMedia } from '@utils/hash'
 
 export class EmailsController {
 	static async signup (req: Request) {
@@ -41,7 +42,7 @@ export class EmailsController {
 				required: true,
 				rules: [Validation.isString]
 			},
-			photo: { required: false, rules: [Validation.isImage] },
+			photo: { required: false, rules: [isMedia, Validation.isImage] },
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 			middleName: { required: true, rules: [Validation.isString] },
 			lastName: { required: true, rules: [Validation.isString] }

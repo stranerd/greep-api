@@ -3,6 +3,7 @@ import { NotFoundError, Request, validate, Validation, verifyAccessToken } from 
 import { signOutUser } from '@utils/modules/auth'
 import { superAdminEmail } from '@utils/environment'
 import { SupportedAuthRoles } from '@utils/types/auth'
+import { isMedia } from '@utils/hash'
 
 const roles = Object.values<string>(SupportedAuthRoles).filter((key) => key !== SupportedAuthRoles.isSuperAdmin)
 
@@ -25,7 +26,7 @@ export class UserController {
 			middleName: { required: true, rules: [Validation.isString] },
 			lastName: { required: true, rules: [Validation.isString] },
 			description: { required: true, rules: [Validation.isString] },
-			photo: { required: false, rules: [Validation.isImage] }
+			photo: { required: false, rules: [isMedia, Validation.isImage] }
 		})
 		const validateData = {
 			name: { first: firstName, middle: middleName, last: lastName },
