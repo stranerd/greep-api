@@ -28,8 +28,6 @@ services:
 
   redis-commander:
     restart: unless-stopped
-    environment:
-      - 'REDIS_HOSTS=local:redis:6379'
     ports:
       - '83:8081'
 
