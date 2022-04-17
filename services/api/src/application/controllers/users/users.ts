@@ -19,10 +19,7 @@ export class UsersController {
 			driverId: { required: true, rules: [Validation.isString] },
 			commission: {
 				required: true,
-				rules: [Validation.isNumber, (value: number) => {
-					const isValid = 0 <= value && value <= 1
-					return isValid ? Validation.isValid() : Validation.isInvalid('must be a number between 0 and 1')
-				}]
+				rules: [Validation.isNumber, Validation.isMoreThanOrEqualToX(0), Validation.isLessThanOrEqualToX(1)]
 			}
 		})
 		const driver = await UsersUseCases.find(data.driverId)
@@ -38,10 +35,7 @@ export class UsersController {
 			driverId: { required: true, rules: [Validation.isString] },
 			commission: {
 				required: true,
-				rules: [Validation.isNumber, (value: number) => {
-					const isValid = 0 <= value && value <= 1
-					return isValid ? Validation.isValid() : Validation.isInvalid('must be a number between 0 and 1')
-				}]
+				rules: [Validation.isNumber, Validation.isMoreThanOrEqualToX(0), Validation.isLessThanOrEqualToX(1)]
 			}
 		})
 		const driver = await UsersUseCases.find(data.driverId)

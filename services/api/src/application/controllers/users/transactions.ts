@@ -68,7 +68,7 @@ export class TransactionsController {
 			},
 			paidAmount: {
 				required: false,
-				rules: [Validation.isRequiredIfX(isTrip), Validation.isNumber, Validation.isLessThanX(bodyAmount)]
+				rules: [Validation.isRequiredIfX(isTrip), Validation.isNumber, Validation.isLessThanOrEqualToX(bodyAmount)]
 			},
 			paymentType: {
 				required: false,
