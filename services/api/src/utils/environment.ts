@@ -27,7 +27,7 @@ Instance.initialize({
 	accessTokenKey, refreshTokenKey,
 	mongoDbURI, rabbitURI, redisURI,
 	isDev, appId,
-	bullQueueName: 'grip-task-queues',
-	rabbitColumnName: 'Grip'
+	bullQueueName: 'greep-task-queues',
+	rabbitColumnName: 'Greep'
 })
 export const appInstance = Instance.getInstance()

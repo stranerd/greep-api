@@ -12,10 +12,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - "/data/docker/grip/traefik/acmeStaging.json:/etc/traefik/acmeStaging.json"
-      - "/data/docker/grip/traefik/acmeProduction.json:/etc/traefik/acmeProduction.json"
-      - "/data/docker/grip/traefik/log.json:/etc/traefik/log.json"
-      - "/data/docker/grip/traefik/accessLog.json:/etc/traefik/accessLog.json"
+      - "/data/docker/greep/traefik/acmeStaging.json:/etc/traefik/acmeStaging.json"
+      - "/data/docker/greep/traefik/acmeProduction.json:/etc/traefik/acmeProduction.json"
+      - "/data/docker/greep/traefik/log.json:/etc/traefik/log.json"
+      - "/data/docker/greep/traefik/accessLog.json:/etc/traefik/accessLog.json"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   api:
@@ -29,15 +29,15 @@ services:
       - redis
       - rabbitmq
     volumes:
-      - '/data/docker/grip/files/api/:/app/public/'
+      - '/data/docker/greep/files/api/:/app/public/'
     command: 'yarn start'
 
   mongodb:
     image: mongo
     hostname: mongodb
     volumes:
-      - '/data/docker/grip/mongo/db:/data/db'
-      - '/data/docker/grip/mongo/configdb:/data/configdb'
+      - '/data/docker/greep/mongo/db:/data/db'
+      - '/data/docker/greep/mongo/configdb:/data/configdb'
     restart: always
     command: '--quiet --bind_ip_all --replSet rs0'
 
