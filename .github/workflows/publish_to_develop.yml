@@ -8,7 +8,7 @@ on:
 jobs:
   publish-do:
     environment: develop
-    runs-on: develop
+    runs-on: development
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master

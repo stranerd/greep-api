@@ -17,7 +17,7 @@ dev-stop:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans
 
 dev-watch-logs:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs
 
 prod-build:
 	docker-compose -f docker-compose.yml build
@@ -32,7 +32,7 @@ prod-stop:
 	docker-compose -f docker-compose.yml down --remove-orphans
 
 prod-watch-logs:
-	docker-compose -f docker-compose.yml logs -f
+	docker-compose -f docker-compose.yml logs
 
 install-all:
 	$(foreach folder, $(ALL_FOLDERS), yarn --cwd ./services/$(folder) &&) echo
