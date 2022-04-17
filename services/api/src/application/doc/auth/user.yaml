@@ -1,37 +1,73 @@
-/auth/passwords/update:
-  post:
-    description: Update user's password
-    tags: [ Auth/Passwords ]
-    parameters:
-      - $ref: '#/parameters/auth/password'
-        name: oldPassword
-      - $ref: '#/parameters/auth/password'
-        description: New password for user
+/auth/user:
+  get:
+    description: Get auth user's profile
+    tags: [ Auth/User ]
+    security:
+      - AccessTokenAuth: [ ]
     responses:
       200:
         schema:
           type: object
-          $ref: '#/definitions/AuthOutput'
-/auth/passwords/reset/mail:
-  post:
-    description: Send reset email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the reset endpoint
-    tags: [ Auth/Passwords ]
+          $ref: '#/definitions/AuthUserEntity'
+  put:
+    description: Update auth user's profile
+    tags: [ Auth/User ]
+    security:
+      - AccessTokenAuth: [ ]
     parameters:
-      - $ref: '#/parameters/auth/email'
-      - $ref: '#/parameters/auth/redirectUrl'
+      - $ref: '#/parameters/auth/firstName'
+      - $ref: '#/parameters/auth/middleName'
+      - $ref: '#/parameters/auth/lastName'
+      - $ref: '#/parameters/auth/description'
+      - $ref: '#/parameters/auth/photo'
+    responses:
+      200:
+        schema:
+          type: object
+          $ref: '#/definitions/AuthUserEntity'
+/auth/user/superAdmin:
+  get:
+    description: A trusted email is saved on the db in case a malicious admin decides to unset other admins roles. Calling this endpoint will set the superAdmin role on the account assoicaited with the role. Only that mail is allowed to have the superAdmin role
+    tags: [ Auth/User ]
     responses:
       200:
         schema:
           type: boolean
-/auth/passwords/reset:
+/auth/user/role:
   post:
-    description: Reset the password of the email that corresponds to the token attached in the request body
-    tags: [ Auth/Passwords ]
+    description: Add/Remove role from a user
+    tags: [ Auth/User ]
+    security:
+      - AccessTokenAuth: [ ]
     parameters:
-      - $ref: '#/parameters/auth/password'
-      - $ref: '#/parameters/auth/token'
+      - name: userId
+        description: The id of the user to update their role. You cant update your own role
+        in: formData
+        required: true
+        type: string
+      - name: role
+        description: The role to set/unset on the user. Must be a key in user roles except isSuperAdmin
+        in: formData
+        required: true
+        type: string
+        enum:
+          - isAdmin
+      - name: value
+        description: Set/unset role on user
+        in: formData
+        required: true
+        type: boolean
     responses:
       200:
         schema:
-          type: object
-          $ref: '#/definitions/AuthOutput'
+          type: boolean
+/auth/user/signout:
+  post:
+    description: Sign out auth user and delete their tokens from db/cache
+    tags: [ Auth/User ]
+    security:
+      - AccessTokenAuth: [ ]
+    responses:
+      200:
+        schema:
+          type: boolean

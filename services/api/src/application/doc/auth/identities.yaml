@@ -1,16 +1,14 @@
 /auth/identities/google:
   post:
     description: Signup with google token. After successful google auth on client, an idToken and accessToken is generated for the user. Send them in the body of this request
-    tags: [ Auth ]
+    tags: [ Auth/Identities ]
     parameters:
-      idToken:
-        name: idToken
+      - name: idToken
         description: Generated on the client after successful google auth.
         in: formData
         required: true
         type: string
-      accessToken:
-        name: accessToken
+      - name: accessToken
         description: Generated on the client after successful google auth.
         in: formData
         required: true

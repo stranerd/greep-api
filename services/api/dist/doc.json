@@ -49,16 +49,6 @@
                         }
                     ]
                 },
-                "coverPhoto": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/MediaOutput"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
                 "isVerified": {
                     "type": "boolean"
                 },
@@ -71,12 +61,6 @@
                 "roles": {
                     "$ref": "#/definitions/AuthRoles"
                 },
-                "referrer": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
                 "lastSignedInAt": {
                     "type": "number"
                 },
@@ -86,7 +70,6 @@
             },
             "required": [
                 "authTypes",
-                "coverPhoto",
                 "description",
                 "email",
                 "hash",
@@ -96,7 +79,6 @@
                 "name",
                 "password",
                 "photo",
-                "referrer",
                 "roles",
                 "signedUpAt"
             ],
@@ -258,38 +240,6 @@
                 "id",
                 "name",
                 "trips"
-            ],
-            "additionalProperties": false
-        },
-        "ReferralEntity": {
-            "type": "object",
-            "properties": {
-                "hash": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "referred": {
-                    "type": "string"
-                },
-                "userId": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "number"
-                },
-                "updatedAt": {
-                    "type": "number"
-                }
-            },
-            "required": [
-                "createdAt",
-                "hash",
-                "id",
-                "referred",
-                "updatedAt",
-                "userId"
             ],
             "additionalProperties": false
         },
@@ -504,24 +454,13 @@
                             "type": "null"
                         }
                     ]
-                },
-                "coverPhoto": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/MediaOutput"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
                 }
             },
             "required": [
                 "email",
                 "name",
                 "description",
-                "photo",
-                "coverPhoto"
+                "photo"
             ],
             "additionalProperties": false
         },
@@ -600,50 +539,467 @@
                 "commission"
             ],
             "additionalProperties": false
+        },
+        "AuthOutput": {
+            "type": "object",
+            "required": [
+                "accessToken",
+                "requestToken",
+                "user"
+            ],
+            "properties": {
+                "accessToken": {
+                    "type": "string"
+                },
+                "requestToken": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/AuthUserEntity"
+                }
+            }
         }
     },
     "swagger": "2.0",
     "openapi": "3.0.0",
     "info": {
-        "title": "Hello World",
-        "version": "1.0.0"
+        "title": "Greep",
+        "version": "1.0.0",
+        "description": "The Greep API"
     },
     "paths": {
         "/auth/emails/signup": {
             "post": {
                 "description": "Signup with email to the application",
                 "tags": [
-                    "Auth"
-                ],
-                "produces": [
-                    "application/json"
+                    "Auth/Emails"
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/email"
+                        "$ref": "#/parameters/auth/firstName"
                     },
                     {
-                        "$ref": "#/parameters/password"
+                        "$ref": "#/parameters/auth/middleName"
                     },
                     {
-                        "$ref": "#/parameters/firstName"
+                        "$ref": "#/parameters/auth/lastName"
                     },
                     {
-                        "$ref": "#/parameters/middleName"
+                        "$ref": "#/parameters/auth/description"
                     },
                     {
-                        "$ref": "#/parameters/lastName"
+                        "$ref": "#/parameters/auth/email"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/photo"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/password"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "signup",
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/AuthOutput"
                         }
                     }
                 }
+            }
+        },
+        "/auth/emails/signin": {
+            "post": {
+                "description": "Signin with email and password to the application",
+                "tags": [
+                    "Auth/Emails"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/auth/email"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/password"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/emails/verify/mail": {
+            "post": {
+                "description": "Send verification email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the verify endpoint",
+                "tags": [
+                    "Auth/Emails"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/auth/email"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/redirectUrl"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/emails/verify": {
+            "post": {
+                "description": "Verify the email that corresponds to the token attached in the request body",
+                "tags": [
+                    "Auth/Emails"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/auth/token"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/identities/google": {
+            "post": {
+                "description": "Signup with google token. After successful google auth on client, an idToken and accessToken is generated for the user. Send them in the body of this request",
+                "tags": [
+                    "Auth/Identities"
+                ],
+                "parameters": [
+                    {
+                        "name": "idToken",
+                        "description": "Generated on the client after successful google auth.",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "accessToken",
+                        "description": "Generated on the client after successful google auth.",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/passwords/update": {
+            "post": {
+                "description": "Update auth user's password",
+                "tags": [
+                    "Auth/Passwords"
+                ],
+                "security": [
+                    {
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/auth/password",
+                        "name": "oldPassword"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/password",
+                        "description": "New password for user"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/passwords/reset/mail": {
+            "post": {
+                "description": "Send reset email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the reset endpoint",
+                "tags": [
+                    "Auth/Passwords"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/auth/email"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/redirectUrl"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/passwords/reset": {
+            "post": {
+                "description": "Reset the password of the email that corresponds to the token attached in the request body",
+                "tags": [
+                    "Auth/Passwords"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/auth/password"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/token"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/user": {
+            "get": {
+                "description": "Get auth user's profile",
+                "tags": [
+                    "Auth/User"
+                ],
+                "security": [
+                    {
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthUserEntity"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update auth user's profile",
+                "tags": [
+                    "Auth/User"
+                ],
+                "security": [
+                    {
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/auth/firstName"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/middleName"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/lastName"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/description"
+                    },
+                    {
+                        "$ref": "#/parameters/auth/photo"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/AuthUserEntity"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/user/superAdmin": {
+            "get": {
+                "description": "A trusted email is saved on the db in case a malicious admin decides to unset other admins roles. Calling this endpoint will set the superAdmin role on the account assoicaited with the role. Only that mail is allowed to have the superAdmin role",
+                "tags": [
+                    "Auth/User"
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/user/role": {
+            "post": {
+                "description": "Add/Remove role from a user",
+                "tags": [
+                    "Auth/User"
+                ],
+                "security": [
+                    {
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet",
+                                "userId": {
+                                    "name": "userId",
+                                    "description": "The id of the user to update their role. You cant update your own role",
+                                    "in": "body",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                "role": {
+                                    "name": "role",
+                                    "description": "The role to set/unset on the user. Must be a key in user roles except isSuperAdmin",
+                                    "in": "formData",
+                                    "required": true,
+                                    "type": "string",
+                                    "enum": [
+                                        "isAdmin"
+                                    ]
+                                },
+                                "value": {
+                                    "name": "value",
+                                    "description": "Set/unset role on user",
+                                    "in": "formData",
+                                    "required": true,
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/user/signout": {
+            "post": {
+                "description": "Sign out auth user and delete their tokens from db/cache",
+                "tags": [
+                    "Auth/User"
+                ],
+                "security": [
+                    {
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "auth": {
+            "email": {
+                "name": "email",
+                "description": "User's email address.",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            "firstName": {
+                "name": "firstName",
+                "description": "User's first name.",
+                "in": "formData",
+                "required": true,
+                "type": "string",
+                "minLength": 1
+            },
+            "description": {
+                "name": "description",
+                "description": "User's profile description.",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            "middleName": {
+                "name": "middleName",
+                "description": "User's middle name.",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            "lastName": {
+                "name": "lastName",
+                "description": "User's last name.",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            "password": {
+                "name": "password",
+                "description": "User password.",
+                "in": "formData",
+                "required": true,
+                "type": "string",
+                "minLength": 8,
+                "maxLength": 16
+            },
+            "photo": {
+                "name": "photo",
+                "description": "User profile picture.",
+                "in": "formData",
+                "required": false,
+                "schema": {
+                    "$ref": "#/definitions/MediaOutput"
+                }
+            },
+            "redirectUrl": {
+                "name": "redirectUrl",
+                "description": "The url that gets attached in the mail for the user to redirect to.",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            "token": {
+                "name": "token",
+                "description": "The token used to identify a user's email. It is usually send along in the query params of a redirect url.",
+                "in": "formData",
+                "required": true,
+                "type": "string"
             }
         }
     },

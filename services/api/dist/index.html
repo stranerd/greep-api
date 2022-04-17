@@ -1,197 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/img/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/css/bundle.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/css/style.css">
-    <style>:root {--color-base: #0e87f8; --color-base-light: #0e87f8; --color-text: #FFF;}</style>
-    <title>Hello World (1.0.0)</title>
-    <style>
-        aside * {z-index: 2;}
-        aside div {position: relative;}
-        aside::before {
-            content: ' ';
-            display: block;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 320px;
-            height: 100vh;
-            z-index: 1;
-            opacity: 0.2;
-            background-image: linear-gradient(to bottom, #888, rgba(0, 0, 0, 0.8)), url(https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/img/patterns/5.svg);
-            background-position: 50% 0;
-            background-size: 500px auto;
-        }
-        .main-loader {
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: white;
-        }
-        .main-loader img {
-            position: relative;
-            width: 150px;
-            top: calc(50% - 10px);
-            left: calc(50% - 75px);
-        }
-        .search-result a > strong, .search-result a > span {display: inline-block;}
-
-        @media all and (max-width: 1350px) and (min-width: 1050px) {
-            aside::before { width: 300px; }
-        }
-
-        @media all and (max-width: 1050px) {
-            aside::before { width: 0; }
-        }
-    </style>
-    <script>
-        setTimeout(() => {
-            document.querySelector('.main-loader').style.display = 'none';
-        }, 3000);
-    </script>
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/css/base.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/css/style.css">
+    <title>Greep (1.0.0)</title>
     
-    <style>
-      aside .uk-nav .uk-parent > a::after {
-        background-image: url('data:image/svg+xml;base64;utf8,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMTIuNzI3MDAwNiwzLjY4NjYzNjc5IEMxMy4xMDYyMTk3LDMuMjg1MTI1NDMgMTMuMDg4MTQ4MiwyLjY1MjIxODQgMTIuNjg2NjM2OCwyLjI3Mjk5OTM3IEMxMi4yODUxMjU0LDEuODkzNzgwMzQgMTEuNjUyMjE4NCwxLjkxMTg1MTg1IDExLjI3Mjk5OTQsMi4zMTMzNjMyMSBMMi43NzI2ODg4NiwxMS4zMTMzNjMyIEMyLjQwODcxMDk5LDExLjY5ODczNzUgMi40MDg2ODY4LDEyLjMwMTE3NDkgMi43NzI2MzM3MywxMi42ODY1Nzg0IEwxMS4yNzI5NDQyLDIxLjY4ODAyNjQgQzExLjY1MjEzMSwyMi4wODk1NjgyIDEyLjI4NTAzNjYsMjIuMTA3NjkwNSAxMi42ODY1Nzg0LDIxLjcyODUwMzggQzEzLjA4ODEyMDIsMjEuMzQ5MzE3IDEzLjEwNjI0MjYsMjAuNzE2NDExNCAxMi43MjcwNTU4LDIwLjMxNDg2OTYgTDQuODc1MTUxOTYsMTIuMDAwMDU1MiBMMTIuNzI3MDAwNiwzLjY4NjYzNjc5IFoiLz48L3N2Zz4=');
-      }
-
-      aside .uk-nav .uk-parent.uk-open > a::after {
-          background-image: url('data:image/svg+xml;base64;utf8,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAyNS45MyAyNS45MyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMjUuMzk3LDQuNTU0aC0yLjA0MmwtOS45NzQsMTIuNjQ0Yy0wLjEwMSwwLjEyNC0wLjI1NiwwLjE5Ny0wLjQxNiwwLjE5N2MtMC4xNjQsMC0wLjMxNS0wLjA3My0wLjQxOS0wLjE5N0wyLjU3NSw0LjU1NCAgICAgICAgSDAuNTMyYy0wLjIwNiwwLTAuMzkyLDAuMTE1LTAuNDc5LDAuMjk5Yy0wLjA5LDAuMTg0LTAuMDY0LDAuNDAzLDAuMDYsMC41NjFsMTIuNDM1LDE1Ljc2MmMwLjEwNCwwLjEyNSwwLjI1NSwwLjIsMC40MTksMC4yICAgICAgICBjMC4xNiwwLDAuMzE1LTAuMDc1LDAuNDE2LTAuMkwyNS44MTYsNS40MTNjMC4xMjgtMC4xNTcsMC4xNDgtMC4zNzcsMC4wNTgtMC41NjFDMjUuNzg5LDQuNjY5LDI1LjYwMSw0LjU1NCwyNS4zOTcsNC41NTR6Ii8+PC9zdmc+');
-      }
-
-      aside .uk-nav .uk-nav-sub .uk-parent > a::after {
-          background-image: url('data:image/svg+xml;base64;utf8,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAyNS45MyAyNS45MyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMjUuMzk3LDQuNTU0aC0yLjA0MmwtOS45NzQsMTIuNjQ0Yy0wLjEwMSwwLjEyNC0wLjI1NiwwLjE5Ny0wLjQxNiwwLjE5N2MtMC4xNjQsMC0wLjMxNS0wLjA3My0wLjQxOS0wLjE5N0wyLjU3NSw0LjU1NCAgICAgICAgSDAuNTMyYy0wLjIwNiwwLTAuMzkyLDAuMTE1LTAuNDc5LDAuMjk5Yy0wLjA5LDAuMTg0LTAuMDY0LDAuNDAzLDAuMDYsMC41NjFsMTIuNDM1LDE1Ljc2MmMwLjEwNCwwLjEyNSwwLjI1NSwwLjIsMC40MTksMC4yICAgICAgICBjMC4xNiwwLDAuMzE1LTAuMDc1LDAuNDE2LTAuMkwyNS44MTYsNS40MTNjMC4xMjgtMC4xNTcsMC4xNDgtMC4zNzcsMC4wNTgtMC41NjFDMjUuNzg5LDQuNjY5LDI1LjYwMSw0LjU1NCwyNS4zOTcsNC41NTR6Ii8+PC9zdmc+');
-      }
-    </style>
-    
-  
+    <style>:root {--base-color: #0e87f8; --text-color: #FFF;}</style>
 </head>
-<body>
-    <div class="main-loader">
-        <img src="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/img/loader.gif" />
+
+<body class="doc full-width-doc sticky-nav-doc onepage-doc" data-spy="scroll" data-target=".navbar" data-offset="-120">
+    <div id="preloader">
+        <div id="ctn-preloader" class="ctn-preloader">
+            <div class="round_spinner" style="background-color: var(--base-color);">
+                <div class="spinner"></div>
+                <div class="text">
+                    <img src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/img/logo.png" alt="logo" width="90%" style="max-height: 200px;">
+                </div>
+            </div>
+            <h2 class="head">Greep (1.0.0)</h2>
+        </div>
     </div>
-    <header>
-        <!-- Left Hamburger menu, only visible in small devices  -->
-        <a class="btn-left-menu" uk-icon="menu"></a>
 
-        <!-- Header links started -->
-        <div class="links">
+    <div class="body_wrapper sticky_menu">
+        <nav class="navbar navbar-expand-lg menu_one" id="stickyTwo" style="background: var(--base-color); height: 80px;">
+            <div class="container-fluid pl-60 pr-60">
+                <a class="navbar-brand" href="index.html">
+                    <img src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/img/logo.png" alt="logo" style="height: 62px; max-width: 200px;">
+                </a>
+                <div class="navbar-zama-section">
+                    
+                    
+                </div>
+                <button class="navbar-toggler collapsed">
+                    <span class="menu_toggle">
+                        <span class="hamburger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                        <span class="hamburger-cross">
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </span>
+                </button>
+                <div class="search_form">
+                    <input type="text" class="zama-search-txt form-control" placeholder="Search" style="opacity: 0;" />
+                    <button type="button" class="zama-search-open-btn"><i class="icon_search"></i></button>
+                    <button type="button" class="zama-search-close-btn" style="display: none;"><i style="font-size: 18px;" class="icon_close"></i></button>
+                    <div class="zama-search-result" style="display: none;"></div>
+                </div>
+            </div>
+        </nav>
+        <section class="doc_documentation_area onepage_doc_area" id="sticky_doc">
+            <div class="overlay_bg"></div>
+            <div class="container-fluid pl-60 pr-60">
+                <div class="row doc-container">
+                    <div class="col-lg-3 doc_mobile_menu doc-sidebar display_none">
+                        <aside class="doc_left_sidebarlist">
+                            <h3 class="nav_title" style="border-radius: 8px 8px 0 0;"></h3>
+                            <div class="scroll">
+                                <ul class="list-unstyled nav-sidebar doc-nav">
+                                    
+    <li class="nav-item">
+        <a href="#Auth-Emails-35DEB" class="nav-link">Auth/Emails</a>
+        <ul class="list-unstyled dropdown_nav">
             
-            
-        </div>
-        <!-- Header links ended -->
-
-        <!-- Search started -->
-        <div class="search">
-            <!-- Search input form -->
-            <form class="uk-search uk-search-default">
-                <span class="uk-search-icon-flip" uk-search-icon></span>
-                <input class="uk-search-input" type="search" placeholder="Search ...">
-            </form>
-
-            <!-- Search result started -->
-            <div class="search-result"><div></div></div>
-            <!-- Search result ended -->
-        </div>
-        <!-- Search ended -->
-
-        <!-- Right side hamburger menu used, only visible in small screens -->
-        <a class="btn-right-menu" uk-icon="more-vertical"></a>
-        <div uk-dropdown="mode: click; pos: bottom-right">
-            <ul class="uk-nav uk-dropdown-nav main-menu-items"></ul>
-        </div>
-    </header>
-
-    <!-- Left sidebar started -->
-    <aside>
-        <a href="#" class="logo">
-            <img src="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/img/logo.png" />
-        </a>
-
-        <!-- Sidebar top section navigation started -->
-        <div class="nav-top">
-            <ul class="uk-nav-default uk-nav-parent-icon" uk-nav uk-scrollspy-nav="closest: li; scroll: false; offset: 80;">
-                <!-- Multi-items left sidebar menu item -->
-                
-    <li class="uk-parent">
-        <a>Users</a>
-        <ul class="uk-nav-sub">
-            
-  <li>
-    <a href="#Users-Login-post-login"><span class="api-method api-method-post">post</span> /login</a>
+  <li class="nav-item">
+      <a href="#Auth-Emails-post-auth-emails-signup" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/emails/signup</span>
+      </a>
   </li>
 
-  <li>
-    <a href="#Users-get-users"><span class="api-method api-method-get">get</span> /users</a>
+  <li class="nav-item">
+      <a href="#Auth-Emails-post-auth-emails-signin" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/emails/signin</span>
+      </a>
   </li>
 
-        </ul>
-    </li>
-  
-    <li class="uk-parent">
-        <a>Login</a>
-        <ul class="uk-nav-sub">
-            
-  <li>
-    <a href="#Users-Login-post-login"><span class="api-method api-method-post">post</span> /login</a>
+  <li class="nav-item">
+      <a href="#Auth-Emails-post-auth-emails-verify-mail" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/emails/verify/mail</span>
+      </a>
   </li>
 
-        </ul>
-    </li>
-  
-  <li>
-    <a>Accounts</a>
-  </li>
-
-    <li class="uk-parent">
-        <a>Default Paths</a>
-        <ul class="uk-nav-sub">
-            
-  <li>
-    <a href="#get"><span class="api-method api-method-get">get</span> /</a>
+  <li class="nav-item">
+      <a href="#Auth-Emails-post-auth-emails-verify" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/emails/verify</span>
+      </a>
   </li>
 
         </ul>
+        <span class="icon">
+            <i class="icon_plus"></i>
+            <i class="icon_minus-06"></i>
+        </span>
     </li>
   
-            </ul>
-            <p class="credit">
+    <li class="nav-item">
+        <a href="#Auth-Identities-7QRpK" class="nav-link">Auth/Identities</a>
+        <ul class="list-unstyled dropdown_nav">
+            
+  <li class="nav-item">
+      <a href="#Auth-Identities-post-auth-identities-google" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/identities/google</span>
+      </a>
+  </li>
+
+        </ul>
+        <span class="icon">
+            <i class="icon_plus"></i>
+            <i class="icon_minus-06"></i>
+        </span>
+    </li>
+  
+    <li class="nav-item">
+        <a href="#Auth-Passwords-8dznU" class="nav-link">Auth/Passwords</a>
+        <ul class="list-unstyled dropdown_nav">
+            
+  <li class="nav-item">
+      <a href="#Auth-Passwords-post-auth-passwords-update" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/passwords/update</span>
+      </a>
+  </li>
+
+  <li class="nav-item">
+      <a href="#Auth-Passwords-post-auth-passwords-reset-mail" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/passwords/reset/mail</span>
+      </a>
+  </li>
+
+  <li class="nav-item">
+      <a href="#Auth-Passwords-post-auth-passwords-reset" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/passwords/reset</span>
+      </a>
+  </li>
+
+        </ul>
+        <span class="icon">
+            <i class="icon_plus"></i>
+            <i class="icon_minus-06"></i>
+        </span>
+    </li>
+  
+    <li class="nav-item">
+        <a href="#Auth-User-f5U5L" class="nav-link">Auth/User</a>
+        <ul class="list-unstyled dropdown_nav">
+            
+  <li class="nav-item">
+      <a href="#Auth-User-get-auth-user" class="nav-link">
+          <span><span class="api-method api-method-get">get</span> /auth/user</span>
+      </a>
+  </li>
+
+  <li class="nav-item">
+      <a href="#Auth-User-put-auth-user" class="nav-link">
+          <span><span class="api-method api-method-put">put</span> /auth/user</span>
+      </a>
+  </li>
+
+  <li class="nav-item">
+      <a href="#Auth-User-get-auth-user-superAdmin" class="nav-link">
+          <span><span class="api-method api-method-get">get</span> /auth/user/superAdmin</span>
+      </a>
+  </li>
+
+  <li class="nav-item">
+      <a href="#Auth-User-post-auth-user-role" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/user/role</span>
+      </a>
+  </li>
+
+  <li class="nav-item">
+      <a href="#Auth-User-post-auth-user-signout" class="nav-link">
+          <span><span class="api-method api-method-post">post</span> /auth/user/signout</span>
+      </a>
+  </li>
+
+        </ul>
+        <span class="icon">
+            <i class="icon_plus"></i>
+            <i class="icon_minus-06"></i>
+        </span>
+    </li>
+  
+                                </ul>
+                            </div>
+                            <p class="credit">
     Powered by <a href="https://asfand-dev.github.io/api-html/" target="_blank">API-HTML</a>
   </p>
-        </div>
-        <!-- Sidebar top section navigation ended -->
-    </aside>
-    <!-- Left sidebar ended -->
-
-    <main>
-        <!-- Tag name or apis chunk header name  -->
-        <h1 id="project-name"><a href="#project-name">Hello World (1.0.0)</a></h1>
-        <p class="project-details"></p>
-        <div class="encoding-type">
+                        </aside>
+                    </div>
+                    <div class="col-lg-9 col-md-12">
+                        <div class="documentation_info">
+                            <article class="documentation_body pt-0">
+                                <div class="shortcode_title">
+                                    <h2>
+                                        Greep (1.0.0)
+                                        <span class="encoding-type">
     <a class="encoding-type-name">swagger 2</a>
-    <a class="encoding-type-file" href="#" title="#" target="_blank">Source url</a>
-  </div>
-        <hr class="api-divider uk-divider-icon" />
-        
-        
-    <h2 style="margin-bottom: 40px;"><a href="#">Users</a></h2>
-    <div class=path><h3 id=Users-Login-post-login><a href=#Users-Login-post-login></a></h3><p></p><p>Login to the application</p><br><p></p><div uk-alert class=path-url><span class="api-method api-method-post uk-label">post</span> <span class=root>...</span> <span class=link data-copy=.../login uk-tooltip="Click to copy">/login</span> <a class=api-path-try-btn data-id=Users-Login-post-login>Try out</a></div><ul class=path-tabs uk-tab><li class=uk-active><a href=# data-tab=request>Request</a></li><li><a href=# data-tab=response>Response</a></li><li><a href=# data-tab=coding>Coding</a></li></ul><div class="tab path-tab path-tab-request"><p>formData</p><div class=blocks><div class=blocks-block><div class=blocks-block-info-col><span>password</span> <span class="attr red">required</span></div><div class=blocks-block-desc-col><span class=keyword>string</span><br><span class="gray details">User's password.</span><div class=request-box-details></div></div></div></div></div><div class="tab path-tab path-tab-response" style="display: none;"><h4>200</h4><div class=blocks><div class=blocks-block><div class=blocks-block-desc-col style="padding: 0 5px;"><span class="gray details"><p>login</p><br></span><br><div class=request-box-details><ul uk-tab style="margin-bottom: 5px;"><li class=uk-active><a href=# class=btn-model-example>Example Value</a></li><li><a href=# class=btn-model-definition>Model</a></li></ul><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">username <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">path </b><i class=object-type>string</i></span></li></ul></div></div></div></div></div></div></div><div class="tab path-tab path-tab-coding" style="display: none;"><ul class="uk-flex-right code-tabs" uk-tab><li class=uk-active><a href=# data-tab=curl>cURL</a></li><li><a href=# data-tab=javascript>JavaScript</a></li><li><a href=# data-tab=node>Node</a></li><li><a href=# data-tab=python>Python</a></li></ul><div class="tab-code tab-code-curl"><pre><code class=bash>curl --request POST \
-  --url .../login \
+    <a class="encoding-type-file" href="#" target="_blank">source</a>
+  </span>
+                                    </h2>
+                                    <p><p>The Greep API</p>
+</p>
+                                </div>
+                                <div class="border_bottom"></div>
+                            </article>
+
+                            
+                            
+    <article class="documentation_body doc-section pt-0" id="Auth-Emails-35DEB">
+        <div class="shortcode_info" id="Auth-Emails-35DEB-tabs">
+            <div class="tab_shortcode">
+                <h3>Auth/Emails</h3>
+                <h4 class=s_title id=Auth-Emails-post-auth-emails-signup></h4><p class=mb-30></p><p>Signup with email to the application</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/emails/signup</span> </span><span class=api-path-try-btn data-id=Auth-Emails-post-auth-emails-signup>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Emails-post-auth-emails-signup-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Emails-post-auth-emails-signup-request-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-signup-request role=tab aria-controls=Auth-Emails-post-auth-emails-signup-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Emails-post-auth-emails-signup-response-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-signup-response role=tab aria-controls=Auth-Emails-post-auth-emails-signup-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Emails-post-auth-emails-signup-code-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-signup-code role=tab aria-controls=Auth-Emails-post-auth-emails-signup-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Emails-post-auth-emails-signup-request role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-signup-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>firstName <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's first name.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>middleName <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's middle name.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>lastName <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's last name.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>description <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's profile description.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>email <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's email address.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>photo <span class=request-box-optional>OPTIONAL</span></div><div class=request-box-details><p class=request-box-type></p><p class=request-box-description>User profile picture.</p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "name": "",
+    "type": "",
+    "size": "",
+    "path": "",
+    "timestamp": "",
+    "link": ""
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">type <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">size <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">path <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">timestamp <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">link <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string,null</i></span></li></ul></div></div></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>password <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User password.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-signup-response role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-signup-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "accessToken": "",
+    "requestToken": "",
+    "user": {
+        "hash": "",
+        "id": "",
+        "email": "",
+        "password": "",
+        "description": "",
+        "name": {
+            "first": "",
+            "middle": "",
+            "last": ""
+        },
+        "photo": "",
+        "isVerified": "",
+        "authTypes": [
+            {}
+        ],
+        "roles": {
+            "isAdmin": "",
+            "isSuperAdmin": ""
+        },
+        "lastSignedInAt": "",
+        "signedUpAt": ""
+    }
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">accessToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">requestToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">user <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul></ul></li><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-signup-code role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-signup-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/emails/signup \
   --header 'Content-Type: application/x-www-form-urlencoded' \
-  --form 'password=Something'</code></pre></div><div class="tab-code tab-code-javascript" style="display: none"><pre><code class=javascript>fetch('.../login', { 
+  --form 'firstName=Something' \
+  --form 'middleName=Something' \
+  --form 'lastName=Something' \
+  --form 'description=Something' \
+  --form 'email=Something' \
+  --form 'photo=' \
+  --form 'password=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/emails/signup', { 
     method: 'POST', 
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"
     }, 
-    body: 'password=Something', 
+    body: 'firstName=Something&middleName=Something&lastName=Something&description=Something&email=Something&photo=&password=Something', 
 }) 
 .then(e => e.json()) 
 .then((data) => { 
@@ -199,12 +274,12 @@
 }) 
 .catch((error) => { 
     console.log('Request failed', error); 
-});</code></pre></div><div class="tab-code tab-code-node" style="display: none"><pre><code class=javascript>const request = require('request');
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
  
 const options = { 
     method: 'POST', 
-    url: '.../login', 
-    qs: {"password": "Something"}, 
+    url: '.../auth/emails/signup', 
+    qs: {"firstName": "Something","middleName": "Something","lastName": "Something","description": "Something","email": "Something","photo": "","password": "Something"}, 
     headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
 };
  
@@ -212,60 +287,60 @@ request(options, function (error, response, body) {
     if (error) throw new Error(error);
  
     console.log(body); 
-});</code></pre></div><div class="tab-code tab-code-python" style="display: none"><pre><code class=python>import requests
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
 
-url = ".../login"
+url = ".../auth/emails/signup"
 
 headers = {
     "Content-Type": "application/x-www-form-urlencoded"
 }
 
 body = {
+    "firstName": "Something",
+    "middleName": "Something",
+    "lastName": "Something",
+    "description": "Something",
+    "email": "Something",
+    "photo": "",
     "password": "Something"
 }
 
-response = requests.POST(url, headers=headers)</code></pre></div></div></div><hr class="api-divider" /><div class=path><h3 id=Users-get-users><a href=#Users-get-users></a></h3><p></p><p>Returns users</p><br><p></p><div uk-alert class=path-url><span class="api-method api-method-get uk-label">get</span> <span class=root>...</span> <span class=link data-copy=.../users uk-tooltip="Click to copy">/users</span> <a class=api-path-try-btn data-id=Users-get-users>Try out</a></div><ul class=path-tabs uk-tab><li class=uk-active><a href=# data-tab=request>Request</a></li><li><a href=# data-tab=response>Response</a></li><li><a href=# data-tab=coding>Coding</a></li></ul><div class="tab path-tab path-tab-request"><div style="padding: 20px 0px;color:#b5b3b3;">No parameters</div></div><div class="tab path-tab path-tab-response" style="display: none;"><h4>200</h4><div class=blocks><div class=blocks-block><div class=blocks-block-desc-col style="padding: 0 5px;"><span class="gray details"><p>users</p><br></span><br><div class=request-box-details><ul uk-tab style="margin-bottom: 5px;"><li class=uk-active><a href=# class=btn-model-example>Example Value</a></li><li><a href=# class=btn-model-definition>Model</a></li></ul><div class=model-definition style="display: none;"><div class=wtree>undefined</div></div></div></div></div></div></div><div class="tab path-tab path-tab-coding" style="display: none;"><ul class="uk-flex-right code-tabs" uk-tab><li class=uk-active><a href=# data-tab=curl>cURL</a></li><li><a href=# data-tab=javascript>JavaScript</a></li><li><a href=# data-tab=node>Node</a></li><li><a href=# data-tab=python>Python</a></li></ul><div class="tab-code tab-code-curl"><pre><code class=bash>curl --request GET \
-  --url .../users</code></pre></div><div class="tab-code tab-code-javascript" style="display: none"><pre><code class=javascript>fetch('.../users', { 
-    method: 'GET', 
-}) 
-.then(e => e.json()) 
-.then((data) => { 
-    console.log('Request succeeded with JSON response', data); 
-}) 
-.catch((error) => { 
-    console.log('Request failed', error); 
-});</code></pre></div><div class="tab-code tab-code-node" style="display: none"><pre><code class=javascript>const request = require('request');
- 
-const options = { 
-    method: 'GET', 
-    url: '.../users', 
-};
- 
-request(options, function (error, response, body) { 
-    if (error) throw new Error(error);
- 
-    console.log(body); 
-});</code></pre></div><div class="tab-code tab-code-python" style="display: none"><pre><code class=python>import requests
-
-url = ".../users"
-
-headers = {
-
-}
-
-response = requests.GET(url, headers=headers)</code></pre></div></div></div>
-    <hr class="api-divider uk-divider-icon" />
-  
-    <h2 style="margin-bottom: 40px;"><a href="#">Login</a></h2>
-    <div class=path><h3 id=Users-Login-post-login><a href=#Users-Login-post-login></a></h3><p></p><p>Login to the application</p><br><p></p><div uk-alert class=path-url><span class="api-method api-method-post uk-label">post</span> <span class=root>...</span> <span class=link data-copy=.../login uk-tooltip="Click to copy">/login</span> <a class=api-path-try-btn data-id=Users-Login-post-login>Try out</a></div><ul class=path-tabs uk-tab><li class=uk-active><a href=# data-tab=request>Request</a></li><li><a href=# data-tab=response>Response</a></li><li><a href=# data-tab=coding>Coding</a></li></ul><div class="tab path-tab path-tab-request"><p>formData</p><div class=blocks><div class=blocks-block><div class=blocks-block-info-col><span>password</span> <span class="attr red">required</span></div><div class=blocks-block-desc-col><span class=keyword>string</span><br><span class="gray details">User's password.</span><div class=request-box-details></div></div></div></div></div><div class="tab path-tab path-tab-response" style="display: none;"><h4>200</h4><div class=blocks><div class=blocks-block><div class=blocks-block-desc-col style="padding: 0 5px;"><span class="gray details"><p>login</p><br></span><br><div class=request-box-details><ul uk-tab style="margin-bottom: 5px;"><li class=uk-active><a href=# class=btn-model-example>Example Value</a></li><li><a href=# class=btn-model-definition>Model</a></li></ul><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">username <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">path </b><i class=object-type>string</i></span></li></ul></div></div></div></div></div></div></div><div class="tab path-tab path-tab-coding" style="display: none;"><ul class="uk-flex-right code-tabs" uk-tab><li class=uk-active><a href=# data-tab=curl>cURL</a></li><li><a href=# data-tab=javascript>JavaScript</a></li><li><a href=# data-tab=node>Node</a></li><li><a href=# data-tab=python>Python</a></li></ul><div class="tab-code tab-code-curl"><pre><code class=bash>curl --request POST \
-  --url .../login \
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-Emails-post-auth-emails-signin></h4><p class=mb-30></p><p>Signin with email and password to the application</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/emails/signin</span> </span><span class=api-path-try-btn data-id=Auth-Emails-post-auth-emails-signin>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Emails-post-auth-emails-signin-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Emails-post-auth-emails-signin-request-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-signin-request role=tab aria-controls=Auth-Emails-post-auth-emails-signin-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Emails-post-auth-emails-signin-response-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-signin-response role=tab aria-controls=Auth-Emails-post-auth-emails-signin-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Emails-post-auth-emails-signin-code-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-signin-code role=tab aria-controls=Auth-Emails-post-auth-emails-signin-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Emails-post-auth-emails-signin-request role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-signin-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>email <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's email address.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>password <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User password.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-signin-response role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-signin-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "accessToken": "",
+    "requestToken": "",
+    "user": {
+        "hash": "",
+        "id": "",
+        "email": "",
+        "password": "",
+        "description": "",
+        "name": {
+            "first": "",
+            "middle": "",
+            "last": ""
+        },
+        "photo": "",
+        "isVerified": "",
+        "authTypes": [
+            {}
+        ],
+        "roles": {
+            "isAdmin": "",
+            "isSuperAdmin": ""
+        },
+        "lastSignedInAt": "",
+        "signedUpAt": ""
+    }
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">accessToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">requestToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">user <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul></ul></li><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-signin-code role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-signin-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/emails/signin \
   --header 'Content-Type: application/x-www-form-urlencoded' \
-  --form 'password=Something'</code></pre></div><div class="tab-code tab-code-javascript" style="display: none"><pre><code class=javascript>fetch('.../login', { 
+  --form 'email=Something' \
+  --form 'password=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/emails/signin', { 
     method: 'POST', 
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"
     }, 
-    body: 'password=Something', 
+    body: 'email=Something&password=Something', 
 }) 
 .then(e => e.json()) 
 .then((data) => { 
@@ -273,12 +348,12 @@ response = requests.GET(url, headers=headers)</code></pre></div></div></div>
 }) 
 .catch((error) => { 
     console.log('Request failed', error); 
-});</code></pre></div><div class="tab-code tab-code-node" style="display: none"><pre><code class=javascript>const request = require('request');
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
  
 const options = { 
     method: 'POST', 
-    url: '.../login', 
-    qs: {"password": "Something"}, 
+    url: '.../auth/emails/signin', 
+    qs: {"email": "Something","password": "Something"}, 
     headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
 };
  
@@ -286,28 +361,433 @@ request(options, function (error, response, body) {
     if (error) throw new Error(error);
  
     console.log(body); 
-});</code></pre></div><div class="tab-code tab-code-python" style="display: none"><pre><code class=python>import requests
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
 
-url = ".../login"
+url = ".../auth/emails/signin"
 
 headers = {
     "Content-Type": "application/x-www-form-urlencoded"
 }
 
 body = {
+    "email": "Something",
     "password": "Something"
 }
 
-response = requests.POST(url, headers=headers)</code></pre></div></div></div>
-    <hr class="api-divider uk-divider-icon" />
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-Emails-post-auth-emails-verify-mail></h4><p class=mb-30></p><p>Send verification email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the verify endpoint</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/emails/verify/mail</span> </span><span class=api-path-try-btn data-id=Auth-Emails-post-auth-emails-verify-mail>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Emails-post-auth-emails-verify-mail-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Emails-post-auth-emails-verify-mail-request-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-verify-mail-request role=tab aria-controls=Auth-Emails-post-auth-emails-verify-mail-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Emails-post-auth-emails-verify-mail-response-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-verify-mail-response role=tab aria-controls=Auth-Emails-post-auth-emails-verify-mail-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Emails-post-auth-emails-verify-mail-code-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-verify-mail-code role=tab aria-controls=Auth-Emails-post-auth-emails-verify-mail-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Emails-post-auth-emails-verify-mail-request role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-verify-mail-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>email <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's email address.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>redirectUrl <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>The url that gets attached in the mail for the user to redirect to.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-verify-mail-response role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-verify-mail-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-verify-mail-code role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-verify-mail-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/emails/verify/mail \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --form 'email=Something' \
+  --form 'redirectUrl=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/emails/verify/mail', { 
+    method: 'POST', 
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, 
+    body: 'email=Something&redirectUrl=Something', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/emails/verify/mail', 
+    qs: {"email": "Something","redirectUrl": "Something"}, 
+    headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/emails/verify/mail"
+
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+body = {
+    "email": "Something",
+    "redirectUrl": "Something"
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-Emails-post-auth-emails-verify></h4><p class=mb-30></p><p>Verify the email that corresponds to the token attached in the request body</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/emails/verify</span> </span><span class=api-path-try-btn data-id=Auth-Emails-post-auth-emails-verify>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Emails-post-auth-emails-verify-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Emails-post-auth-emails-verify-request-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-verify-request role=tab aria-controls=Auth-Emails-post-auth-emails-verify-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Emails-post-auth-emails-verify-response-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-verify-response role=tab aria-controls=Auth-Emails-post-auth-emails-verify-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Emails-post-auth-emails-verify-code-tab data-toggle=tab href=#Auth-Emails-post-auth-emails-verify-code role=tab aria-controls=Auth-Emails-post-auth-emails-verify-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Emails-post-auth-emails-verify-request role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-verify-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>token <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>The token used to identify a user's email. It is usually send along in the query params of a redirect url.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-verify-response role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-verify-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "accessToken": "",
+    "requestToken": "",
+    "user": {
+        "hash": "",
+        "id": "",
+        "email": "",
+        "password": "",
+        "description": "",
+        "name": {
+            "first": "",
+            "middle": "",
+            "last": ""
+        },
+        "photo": "",
+        "isVerified": "",
+        "authTypes": [
+            {}
+        ],
+        "roles": {
+            "isAdmin": "",
+            "isSuperAdmin": ""
+        },
+        "lastSignedInAt": "",
+        "signedUpAt": ""
+    }
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">accessToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">requestToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">user <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul></ul></li><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Emails-post-auth-emails-verify-code role=tabpanel aria-labelledby=Auth-Emails-post-auth-emails-verify-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/emails/verify \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --form 'token=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/emails/verify', { 
+    method: 'POST', 
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, 
+    body: 'token=Something', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/emails/verify', 
+    qs: {"token": "Something"}, 
+    headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/emails/verify"
+
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+body = {
+    "token": "Something"
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div>
+            </div>
+            <div class="border_bottom"></div>
+        </div>
+    </article>
   
-    <h2 style="margin-bottom: 40px;"><a href="#">Accounts</a></h2>
-    
-    <hr class="api-divider uk-divider-icon" />
+    <article class="documentation_body doc-section pt-0" id="Auth-Identities-7QRpK">
+        <div class="shortcode_info" id="Auth-Identities-7QRpK-tabs">
+            <div class="tab_shortcode">
+                <h3>Auth/Identities</h3>
+                <h4 class=s_title id=Auth-Identities-post-auth-identities-google></h4><p class=mb-30></p><p>Signup with google token. After successful google auth on client, an idToken and accessToken is generated for the user. Send them in the body of this request</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/identities/google</span> </span><span class=api-path-try-btn data-id=Auth-Identities-post-auth-identities-google>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Identities-post-auth-identities-google-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Identities-post-auth-identities-google-request-tab data-toggle=tab href=#Auth-Identities-post-auth-identities-google-request role=tab aria-controls=Auth-Identities-post-auth-identities-google-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Identities-post-auth-identities-google-response-tab data-toggle=tab href=#Auth-Identities-post-auth-identities-google-response role=tab aria-controls=Auth-Identities-post-auth-identities-google-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Identities-post-auth-identities-google-code-tab data-toggle=tab href=#Auth-Identities-post-auth-identities-google-code role=tab aria-controls=Auth-Identities-post-auth-identities-google-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Identities-post-auth-identities-google-request role=tabpanel aria-labelledby=Auth-Identities-post-auth-identities-google-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>idToken <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>Generated on the client after successful google auth.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>accessToken <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>Generated on the client after successful google auth.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Identities-post-auth-identities-google-response role=tabpanel aria-labelledby=Auth-Identities-post-auth-identities-google-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "accessToken": "",
+    "requestToken": "",
+    "user": {
+        "hash": "",
+        "id": "",
+        "email": "",
+        "password": "",
+        "description": "",
+        "name": {
+            "first": "",
+            "middle": "",
+            "last": ""
+        },
+        "photo": "",
+        "isVerified": "",
+        "authTypes": [
+            {}
+        ],
+        "roles": {
+            "isAdmin": "",
+            "isSuperAdmin": ""
+        },
+        "lastSignedInAt": "",
+        "signedUpAt": ""
+    }
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">accessToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">requestToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">user <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul></ul></li><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Identities-post-auth-identities-google-code role=tabpanel aria-labelledby=Auth-Identities-post-auth-identities-google-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/identities/google \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --form 'idToken=Something' \
+  --form 'accessToken=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/identities/google', { 
+    method: 'POST', 
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, 
+    body: 'idToken=Something&accessToken=Something', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/identities/google', 
+    qs: {"idToken": "Something","accessToken": "Something"}, 
+    headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/identities/google"
+
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+body = {
+    "idToken": "Something",
+    "accessToken": "Something"
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div>
+            </div>
+            <div class="border_bottom"></div>
+        </div>
+    </article>
   
-    <h2 style="margin-bottom: 40px;"><a href="#">Default Paths</a></h2>
-    <div class=path><h3 id=get><a href=#get></a></h3><p></p><p>Welcome to swagger-jsdoc!</p><br><p></p><div uk-alert class=path-url><span class="api-method api-method-get uk-label">get</span> <span class=root>...</span> <span class=link data-copy=.../ uk-tooltip="Click to copy">/</span> <a class=api-path-try-btn data-id=get>Try out</a></div><ul class=path-tabs uk-tab><li class=uk-active><a href=# data-tab=request>Request</a></li><li><a href=# data-tab=response>Response</a></li><li><a href=# data-tab=coding>Coding</a></li></ul><div class="tab path-tab path-tab-request"><div style="padding: 20px 0px;color:#b5b3b3;">No parameters</div></div><div class="tab path-tab path-tab-response" style="display: none;"><h4>200</h4><div class=blocks><div class=blocks-block><div class=blocks-block-desc-col style="padding: 0 5px;"><span class="gray details"><p>Returns a mysterious string.</p><br></span><br><div class=request-box-details><ul uk-tab style="margin-bottom: 5px;"><li class=uk-active><a href=# class=btn-model-example>Example Value</a></li><li><a href=# class=btn-model-definition>Model</a></li></ul><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul></ul></div></div></div></div></div></div></div><div class="tab path-tab path-tab-coding" style="display: none;"><ul class="uk-flex-right code-tabs" uk-tab><li class=uk-active><a href=# data-tab=curl>cURL</a></li><li><a href=# data-tab=javascript>JavaScript</a></li><li><a href=# data-tab=node>Node</a></li><li><a href=# data-tab=python>Python</a></li></ul><div class="tab-code tab-code-curl"><pre><code class=bash>curl --request GET \
-  --url .../</code></pre></div><div class="tab-code tab-code-javascript" style="display: none"><pre><code class=javascript>fetch('.../', { 
+    <article class="documentation_body doc-section pt-0" id="Auth-Passwords-8dznU">
+        <div class="shortcode_info" id="Auth-Passwords-8dznU-tabs">
+            <div class="tab_shortcode">
+                <h3>Auth/Passwords</h3>
+                <h4 class=s_title id=Auth-Passwords-post-auth-passwords-update></h4><p class=mb-30></p><p>Update auth user's password</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/passwords/update</span> </span><span class=api-path-try-btn data-id=Auth-Passwords-post-auth-passwords-update>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Passwords-post-auth-passwords-update-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Passwords-post-auth-passwords-update-request-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-update-request role=tab aria-controls=Auth-Passwords-post-auth-passwords-update-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Passwords-post-auth-passwords-update-response-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-update-response role=tab aria-controls=Auth-Passwords-post-auth-passwords-update-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Passwords-post-auth-passwords-update-code-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-update-code role=tab aria-controls=Auth-Passwords-post-auth-passwords-update-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Passwords-post-auth-passwords-update-request role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-update-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>password <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User password.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>password <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User password.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Passwords-post-auth-passwords-update-response role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-update-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "accessToken": "",
+    "requestToken": "",
+    "user": {
+        "hash": "",
+        "id": "",
+        "email": "",
+        "password": "",
+        "description": "",
+        "name": {
+            "first": "",
+            "middle": "",
+            "last": ""
+        },
+        "photo": "",
+        "isVerified": "",
+        "authTypes": [
+            {}
+        ],
+        "roles": {
+            "isAdmin": "",
+            "isSuperAdmin": ""
+        },
+        "lastSignedInAt": "",
+        "signedUpAt": ""
+    }
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">accessToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">requestToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">user <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul></ul></li><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Passwords-post-auth-passwords-update-code role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-update-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/passwords/update \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --form 'password=Something' \
+  --form 'password=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/passwords/update', { 
+    method: 'POST', 
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, 
+    body: 'password=Something&password=Something', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/passwords/update', 
+    qs: {"password": "Something","password": "Something"}, 
+    headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/passwords/update"
+
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+body = {
+    "password": "Something",
+    "password": "Something"
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-Passwords-post-auth-passwords-reset-mail></h4><p class=mb-30></p><p>Send reset email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the reset endpoint</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/passwords/reset/mail</span> </span><span class=api-path-try-btn data-id=Auth-Passwords-post-auth-passwords-reset-mail>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Passwords-post-auth-passwords-reset-mail-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Passwords-post-auth-passwords-reset-mail-request-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-reset-mail-request role=tab aria-controls=Auth-Passwords-post-auth-passwords-reset-mail-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Passwords-post-auth-passwords-reset-mail-response-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-reset-mail-response role=tab aria-controls=Auth-Passwords-post-auth-passwords-reset-mail-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Passwords-post-auth-passwords-reset-mail-code-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-reset-mail-code role=tab aria-controls=Auth-Passwords-post-auth-passwords-reset-mail-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Passwords-post-auth-passwords-reset-mail-request role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-reset-mail-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>email <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's email address.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>redirectUrl <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>The url that gets attached in the mail for the user to redirect to.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Passwords-post-auth-passwords-reset-mail-response role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-reset-mail-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Passwords-post-auth-passwords-reset-mail-code role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-reset-mail-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/passwords/reset/mail \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --form 'email=Something' \
+  --form 'redirectUrl=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/passwords/reset/mail', { 
+    method: 'POST', 
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, 
+    body: 'email=Something&redirectUrl=Something', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/passwords/reset/mail', 
+    qs: {"email": "Something","redirectUrl": "Something"}, 
+    headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/passwords/reset/mail"
+
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+body = {
+    "email": "Something",
+    "redirectUrl": "Something"
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-Passwords-post-auth-passwords-reset></h4><p class=mb-30></p><p>Reset the password of the email that corresponds to the token attached in the request body</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/passwords/reset</span> </span><span class=api-path-try-btn data-id=Auth-Passwords-post-auth-passwords-reset>Try Out</span></p><ul class="nav nav-tabs" id=Auth-Passwords-post-auth-passwords-reset-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-Passwords-post-auth-passwords-reset-request-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-reset-request role=tab aria-controls=Auth-Passwords-post-auth-passwords-reset-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-Passwords-post-auth-passwords-reset-response-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-reset-response role=tab aria-controls=Auth-Passwords-post-auth-passwords-reset-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-Passwords-post-auth-passwords-reset-code-tab data-toggle=tab href=#Auth-Passwords-post-auth-passwords-reset-code role=tab aria-controls=Auth-Passwords-post-auth-passwords-reset-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-Passwords-post-auth-passwords-reset-request role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-reset-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>password <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User password.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>token <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>The token used to identify a user's email. It is usually send along in the query params of a redirect url.</p><p></p></div></div></div></div><div class="tab-pane fade" id=Auth-Passwords-post-auth-passwords-reset-response role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-reset-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "accessToken": "",
+    "requestToken": "",
+    "user": {
+        "hash": "",
+        "id": "",
+        "email": "",
+        "password": "",
+        "description": "",
+        "name": {
+            "first": "",
+            "middle": "",
+            "last": ""
+        },
+        "photo": "",
+        "isVerified": "",
+        "authTypes": [
+            {}
+        ],
+        "roles": {
+            "isAdmin": "",
+            "isSuperAdmin": ""
+        },
+        "lastSignedInAt": "",
+        "signedUpAt": ""
+    }
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">accessToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">requestToken <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">user <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul></ul></li><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-Passwords-post-auth-passwords-reset-code role=tabpanel aria-labelledby=Auth-Passwords-post-auth-passwords-reset-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/passwords/reset \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --form 'password=Something' \
+  --form 'token=Something'</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/passwords/reset', { 
+    method: 'POST', 
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, 
+    body: 'password=Something&token=Something', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/passwords/reset', 
+    qs: {"password": "Something","token": "Something"}, 
+    headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/passwords/reset"
+
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+body = {
+    "password": "Something",
+    "token": "Something"
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div>
+            </div>
+            <div class="border_bottom"></div>
+        </div>
+    </article>
+  
+    <article class="documentation_body doc-section pt-0" id="Auth-User-f5U5L">
+        <div class="shortcode_info" id="Auth-User-f5U5L-tabs">
+            <div class="tab_shortcode">
+                <h3>Auth/User</h3>
+                <h4 class=s_title id=Auth-User-get-auth-user></h4><p class=mb-30></p><p>Get auth user's profile</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-get">get</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/user</span> </span><span class=api-path-try-btn data-id=Auth-User-get-auth-user>Try Out</span></p><ul class="nav nav-tabs" id=Auth-User-get-auth-user-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-User-get-auth-user-request-tab data-toggle=tab href=#Auth-User-get-auth-user-request role=tab aria-controls=Auth-User-get-auth-user-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-User-get-auth-user-response-tab data-toggle=tab href=#Auth-User-get-auth-user-response role=tab aria-controls=Auth-User-get-auth-user-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-User-get-auth-user-code-tab data-toggle=tab href=#Auth-User-get-auth-user-code role=tab aria-controls=Auth-User-get-auth-user-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-User-get-auth-user-request role=tabpanel aria-labelledby=Auth-User-get-auth-user-request-tab></div><div class="tab-pane fade" id=Auth-User-get-auth-user-response role=tabpanel aria-labelledby=Auth-User-get-auth-user-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "hash": "",
+    "id": "",
+    "email": "",
+    "password": "",
+    "description": "",
+    "name": {
+        "first": "",
+        "middle": "",
+        "last": ""
+    },
+    "photo": "",
+    "isVerified": "",
+    "authTypes": [
+        {}
+    ],
+    "roles": {
+        "isAdmin": "",
+        "isSuperAdmin": ""
+    },
+    "lastSignedInAt": "",
+    "signedUpAt": ""
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-User-get-auth-user-code role=tabpanel aria-labelledby=Auth-User-get-auth-user-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request GET \
+  --url .../auth/user</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/user', { 
     method: 'GET', 
 }) 
 .then(e => e.json()) 
@@ -316,40 +796,225 @@ response = requests.POST(url, headers=headers)</code></pre></div></div></div>
 }) 
 .catch((error) => { 
     console.log('Request failed', error); 
-});</code></pre></div><div class="tab-code tab-code-node" style="display: none"><pre><code class=javascript>const request = require('request');
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
  
 const options = { 
     method: 'GET', 
-    url: '.../', 
+    url: '.../auth/user', 
 };
  
 request(options, function (error, response, body) { 
     if (error) throw new Error(error);
  
     console.log(body); 
-});</code></pre></div><div class="tab-code tab-code-python" style="display: none"><pre><code class=python>import requests
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
 
-url = ".../"
+url = ".../auth/user"
 
 headers = {
 
 }
 
-response = requests.GET(url, headers=headers)</code></pre></div></div></div>
-    <hr class="api-divider uk-divider-icon" />
+response = requests.GET(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-User-put-auth-user></h4><p class=mb-30></p><p>Update auth user's profile</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-put">put</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/user</span> </span><span class=api-path-try-btn data-id=Auth-User-put-auth-user>Try Out</span></p><ul class="nav nav-tabs" id=Auth-User-put-auth-user-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-User-put-auth-user-request-tab data-toggle=tab href=#Auth-User-put-auth-user-request role=tab aria-controls=Auth-User-put-auth-user-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-User-put-auth-user-response-tab data-toggle=tab href=#Auth-User-put-auth-user-response role=tab aria-controls=Auth-User-put-auth-user-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-User-put-auth-user-code-tab data-toggle=tab href=#Auth-User-put-auth-user-code role=tab aria-controls=Auth-User-put-auth-user-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-User-put-auth-user-request role=tabpanel aria-labelledby=Auth-User-put-auth-user-request-tab><p class=request-name>formData</p><div class=request-box><div class=request-box-value><div class=request-box-name>firstName <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's first name.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>middleName <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's middle name.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>lastName <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's last name.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>description <span class=request-box-required>REQUIRED</span></div><div class=request-box-details><p class=request-box-type>string</p><p class=request-box-description>User's profile description.</p><p></p></div></div><div class=border_bottom></div><div class=request-box-value><div class=request-box-name>photo <span class=request-box-optional>OPTIONAL</span></div><div class=request-box-details><p class=request-box-type></p><p class=request-box-description>User profile picture.</p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "name": "",
+    "type": "",
+    "size": "",
+    "path": "",
+    "timestamp": "",
+    "link": ""
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">type <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">size <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">path <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">timestamp <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">link <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string,null</i></span></li></ul></div></div></div></div></div></div><div class="tab-pane fade" id=Auth-User-put-auth-user-response role=tabpanel aria-labelledby=Auth-User-put-auth-user-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{
+    "hash": "",
+    "id": "",
+    "email": "",
+    "password": "",
+    "description": "",
+    "name": {
+        "first": "",
+        "middle": "",
+        "last": ""
+    },
+    "photo": "",
+    "isVerified": "",
+    "authTypes": [
+        {}
+    ],
+    "roles": {
+        "isAdmin": "",
+        "isSuperAdmin": ""
+    },
+    "lastSignedInAt": "",
+    "signedUpAt": ""
+}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul><li><span><b style="display: flex;">hash <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">id <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">email <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">password <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">description <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">name <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">first <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">middle <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li><li><span><b style="display: flex;">last <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>string</i></span></li></ul></li><li><span><b style="display: flex;">photo <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>undefined</i></span></li><li><span><b style="display: flex;">isVerified <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>boolean</i></span></li><ul></ul><li><span><b style="display: flex;">roles <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>object</i> <i>Additional Properties: false</i></span><ul><li><span><b style="display: flex;">isAdmin </b><i class=object-type>boolean</i></span></li><li><span><b style="display: flex;">isSuperAdmin </b><i class=object-type>boolean</i></span></li></ul></li><li><span><b style="display: flex;">lastSignedInAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li><li><span><b style="display: flex;">signedUpAt <i class=red style="margin-left: 2px;">*</i></b> <i class=object-type>number</i></span></li></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-User-put-auth-user-code role=tabpanel aria-labelledby=Auth-User-put-auth-user-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request PUT \
+  --url .../auth/user \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --form 'firstName=Something' \
+  --form 'middleName=Something' \
+  --form 'lastName=Something' \
+  --form 'description=Something' \
+  --form 'photo='</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/user', { 
+    method: 'PUT', 
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, 
+    body: 'firstName=Something&middleName=Something&lastName=Something&description=Something&photo=', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'PUT', 
+    url: '.../auth/user', 
+    qs: {"firstName": "Something","middleName": "Something","lastName": "Something","description": "Something","photo": ""}, 
+    headers: {"Content-Type": "application/x-www-form-urlencoded"}, 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/user"
+
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+
+body = {
+    "firstName": "Something",
+    "middleName": "Something",
+    "lastName": "Something",
+    "description": "Something",
+    "photo": ""
+}
+
+response = requests.PUT(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-User-get-auth-user-superAdmin></h4><p class=mb-30></p><p>A trusted email is saved on the db in case a malicious admin decides to unset other admins roles. Calling this endpoint will set the superAdmin role on the account assoicaited with the role. Only that mail is allowed to have the superAdmin role</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-get">get</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/user/superAdmin</span> </span><span class=api-path-try-btn data-id=Auth-User-get-auth-user-superAdmin>Try Out</span></p><ul class="nav nav-tabs" id=Auth-User-get-auth-user-superAdmin-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-User-get-auth-user-superAdmin-request-tab data-toggle=tab href=#Auth-User-get-auth-user-superAdmin-request role=tab aria-controls=Auth-User-get-auth-user-superAdmin-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-User-get-auth-user-superAdmin-response-tab data-toggle=tab href=#Auth-User-get-auth-user-superAdmin-response role=tab aria-controls=Auth-User-get-auth-user-superAdmin-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-User-get-auth-user-superAdmin-code-tab data-toggle=tab href=#Auth-User-get-auth-user-superAdmin-code role=tab aria-controls=Auth-User-get-auth-user-superAdmin-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-User-get-auth-user-superAdmin-request role=tabpanel aria-labelledby=Auth-User-get-auth-user-superAdmin-request-tab></div><div class="tab-pane fade" id=Auth-User-get-auth-user-superAdmin-response role=tabpanel aria-labelledby=Auth-User-get-auth-user-superAdmin-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-User-get-auth-user-superAdmin-code role=tabpanel aria-labelledby=Auth-User-get-auth-user-superAdmin-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request GET \
+  --url .../auth/user/superAdmin</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/user/superAdmin', { 
+    method: 'GET', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'GET', 
+    url: '.../auth/user/superAdmin', 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/user/superAdmin"
+
+headers = {
+
+}
+
+response = requests.GET(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-User-post-auth-user-role></h4><p class=mb-30></p><p>Add/Remove role from a user</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/user/role</span> </span><span class=api-path-try-btn data-id=Auth-User-post-auth-user-role>Try Out</span></p><ul class="nav nav-tabs" id=Auth-User-post-auth-user-role-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-User-post-auth-user-role-request-tab data-toggle=tab href=#Auth-User-post-auth-user-role-request role=tab aria-controls=Auth-User-post-auth-user-role-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-User-post-auth-user-role-response-tab data-toggle=tab href=#Auth-User-post-auth-user-role-response role=tab aria-controls=Auth-User-post-auth-user-role-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-User-post-auth-user-role-code-tab data-toggle=tab href=#Auth-User-post-auth-user-role-code role=tab aria-controls=Auth-User-post-auth-user-role-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-User-post-auth-user-role-request role=tabpanel aria-labelledby=Auth-User-post-auth-user-role-request-tab></div><div class="tab-pane fade" id=Auth-User-post-auth-user-role-response role=tabpanel aria-labelledby=Auth-User-post-auth-user-role-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-User-post-auth-user-role-code role=tabpanel aria-labelledby=Auth-User-post-auth-user-role-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/user/role</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/user/role', { 
+    method: 'POST', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/user/role', 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/user/role"
+
+headers = {
+
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div><h4 class=s_title id=Auth-User-post-auth-user-signout></h4><p class=mb-30></p><p>Sign out auth user and delete their tokens from db/cache</p><br><p></p><p class="api-path mb-30"><span style=""><span class="api-method api-method-post">post</span> <span class=api-path-root>...</span> <span class=api-path-name>/auth/user/signout</span> </span><span class=api-path-try-btn data-id=Auth-User-post-auth-user-signout>Try Out</span></p><ul class="nav nav-tabs" id=Auth-User-post-auth-user-signout-tabs role=tablist><li class=nav-item><a class="nav-link active" id=Auth-User-post-auth-user-signout-request-tab data-toggle=tab href=#Auth-User-post-auth-user-signout-request role=tab aria-controls=Auth-User-post-auth-user-signout-request aria-selected=true><i class="fas fa-arrow-alt-circle-right" style="color: #00BCD4;"></i> Request</a></li><li class=nav-item><a class=nav-link id=Auth-User-post-auth-user-signout-response-tab data-toggle=tab href=#Auth-User-post-auth-user-signout-response role=tab aria-controls=Auth-User-post-auth-user-signout-response aria-selected=false><i class="fas fa-arrow-alt-circle-left" style="color: #4CAF50;"></i> Response</a></li><li class="nav-item coding-section"><a class=nav-link id=Auth-User-post-auth-user-signout-code-tab data-toggle=tab href=#Auth-User-post-auth-user-signout-code role=tab aria-controls=Auth-User-post-auth-user-signout-code aria-selected=false><i class="fas fa-code" style="color: #009688;"></i> Coding</a></li></ul><div class=tab-content id=myTabContents><div class="tab-pane fade show active" id=Auth-User-post-auth-user-signout-request role=tabpanel aria-labelledby=Auth-User-post-auth-user-signout-request-tab></div><div class="tab-pane fade" id=Auth-User-post-auth-user-signout-response role=tabpanel aria-labelledby=Auth-User-post-auth-user-signout-response-tab><div class=request-box-value><div class=request-box-name>200</div><div class=request-box-details><p class=request-box-description></p><p><span style="font-weight: bold;" class=btn-model-example>Example Value</span> <span style="color: lightgray;">| </span><span class=btn-model-definition>Model</span></p><div class="highlight model-example"><pre><code class=language-javascript data-lang=javascript>{}</code></pre></div><div class=model-definition style="display: none;"><div class=wtree><ul></ul></div></div></div></div></div><div class="tab-pane fade" id=Auth-User-post-auth-user-signout-code role=tabpanel aria-labelledby=Auth-User-post-auth-user-signout-code-tab><div class=zama-code><div class=zama-code-buttons><span class="zama-code-button active" data-name=curl><i class="fa fa-terminal" style="color: #0b3551;font-size: 16px;"></i> <span>cURL</span> </span><span class=zama-code-button data-name=javascript><i class="fab fa-node-js" style="color: #e9d44d"></i> <span>JavaScript</span> </span><span class=zama-code-button data-name=node><i class="fab fa-node" style="color: #3b823c;"></i> <span>Node</span> </span><span class=zama-code-button data-name=python><i class="fab fa-python" style="color: #007f91"></i> <span>Python</span></span></div><div class=zama-code-view><div class="highlight curl"><pre><code class=language-bash data-lang=bash>curl --request POST \
+  --url .../auth/user/signout</code></pre></div><div class="highlight javascript" style="display: none;"><pre><code class=language-javascript data-lang=javascript>fetch('.../auth/user/signout', { 
+    method: 'POST', 
+}) 
+.then(e => e.json()) 
+.then((data) => { 
+    console.log('Request succeeded with JSON response', data); 
+}) 
+.catch((error) => { 
+    console.log('Request failed', error); 
+});</code></pre></div><div class="highlight node" style="display: none;"><pre><code class=language-javascript data-lang=javascript>const request = require('request');
+ 
+const options = { 
+    method: 'POST', 
+    url: '.../auth/user/signout', 
+};
+ 
+request(options, function (error, response, body) { 
+    if (error) throw new Error(error);
+ 
+    console.log(body); 
+});</code></pre></div><div class="highlight python" style="display: none;"><pre><code class=language-python data-lang=python>import requests
+
+url = ".../auth/user/signout"
+
+headers = {
+
+}
+
+response = requests.POST(url, headers=headers)</code></pre></div></div></div></div></div>
+            </div>
+            <div class="border_bottom"></div>
+        </div>
+    </article>
   
-    </main>
-
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
     
     
     
-
-    <script>window.color = {base: '#0e87f8', text: '#FFF'};</script>
-    <script id="pathsObjectScript">window.pathsObject = {"auths":[],"rootUrl":"...","paths":[{"requests":[{"items":[{"name":"password","description":"User's password.","required":true,"type":"string"}],"title":"formData"}],"responses":[{"name":"200","description":"<p>login</p>\n","headers":[],"modelExample":"{}"}],"pathName":"/login","methodName":"post","tags":["Users","Login"],"produces":["application/json"],"id":"Users-Login-post-login","description":"<p>Login to the application</p>\n","summary":""},{"requests":[],"responses":[{"name":"200","description":"<p>users</p>\n","headers":[]}],"pathName":"/users","methodName":"get","tags":["Users"],"produces":["application/json"],"id":"Users-get-users","description":"<p>Returns users</p>\n","summary":""},{"requests":[{"items":[{"name":"password","description":"User's password.","required":true,"type":"string"}],"title":"formData"}],"responses":[{"name":"200","description":"<p>login</p>\n","headers":[],"modelExample":"{}"}],"pathName":"/login","methodName":"post","tags":["Users","Login"],"produces":["application/json"],"id":"Users-Login-post-login","description":"<p>Login to the application</p>\n","summary":""},{"requests":[],"responses":[{"name":"200","description":"<p>Returns a mysterious string.</p>\n","headers":[],"modelExample":"{}"}],"pathName":"/","methodName":"get","id":"get","description":"<p>Welcome to swagger-jsdoc!</p>\n","summary":""}]}; window.ASSETS_ROOT = 'https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/';</script>
-    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/js/bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/js/single.api.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.14/themes/compact/assets/js/popup.api.js" id="popupScript"></script>
+    <a id="back-to-top" title="Back to Top"></a>
+    <script>window.pathsObject = {"auths":[],"rootUrl":"...","paths":[{"requests":[{"items":[{"name":"firstName","description":"User's first name.","required":true,"type":"string","minLength":1},{"name":"middleName","description":"User's middle name.","required":true,"type":"string"},{"name":"lastName","description":"User's last name.","required":true,"type":"string"},{"name":"description","description":"User's profile description.","required":true,"type":"string"},{"name":"email","description":"User's email address.","required":true,"type":"string"},{"name":"photo","description":"User profile picture.","required":false,"modelExample":"{\n    \"name\": \"\",\n    \"type\": \"\",\n    \"size\": \"\",\n    \"path\": \"\",\n    \"timestamp\": \"\",\n    \"link\": \"\"\n}"},{"name":"password","description":"User password.","required":true,"type":"string","minLength":8,"maxLength":16}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"accessToken\": \"\",\n    \"requestToken\": \"\",\n    \"user\": {\n        \"hash\": \"\",\n        \"id\": \"\",\n        \"email\": \"\",\n        \"password\": \"\",\n        \"description\": \"\",\n        \"name\": {\n            \"first\": \"\",\n            \"middle\": \"\",\n            \"last\": \"\"\n        },\n        \"photo\": \"\",\n        \"isVerified\": \"\",\n        \"authTypes\": [\n            {}\n        ],\n        \"roles\": {\n            \"isAdmin\": \"\",\n            \"isSuperAdmin\": \"\"\n        },\n        \"lastSignedInAt\": \"\",\n        \"signedUpAt\": \"\"\n    }\n}"}],"pathName":"/auth/emails/signup","methodName":"post","tags":["Auth/Emails"],"id":"Auth-Emails-post-auth-emails-signup","description":"<p>Signup with email to the application</p>\n","summary":""},{"requests":[{"items":[{"name":"email","description":"User's email address.","required":true,"type":"string"},{"name":"password","description":"User password.","required":true,"type":"string","minLength":8,"maxLength":16}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"accessToken\": \"\",\n    \"requestToken\": \"\",\n    \"user\": {\n        \"hash\": \"\",\n        \"id\": \"\",\n        \"email\": \"\",\n        \"password\": \"\",\n        \"description\": \"\",\n        \"name\": {\n            \"first\": \"\",\n            \"middle\": \"\",\n            \"last\": \"\"\n        },\n        \"photo\": \"\",\n        \"isVerified\": \"\",\n        \"authTypes\": [\n            {}\n        ],\n        \"roles\": {\n            \"isAdmin\": \"\",\n            \"isSuperAdmin\": \"\"\n        },\n        \"lastSignedInAt\": \"\",\n        \"signedUpAt\": \"\"\n    }\n}"}],"pathName":"/auth/emails/signin","methodName":"post","tags":["Auth/Emails"],"id":"Auth-Emails-post-auth-emails-signin","description":"<p>Signin with email and password to the application</p>\n","summary":""},{"requests":[{"items":[{"name":"email","description":"User's email address.","required":true,"type":"string"},{"name":"redirectUrl","description":"The url that gets attached in the mail for the user to redirect to.","required":true,"type":"string"}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{}"}],"pathName":"/auth/emails/verify/mail","methodName":"post","tags":["Auth/Emails"],"id":"Auth-Emails-post-auth-emails-verify-mail","description":"<p>Send verification email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the verify endpoint</p>\n","summary":""},{"requests":[{"items":[{"name":"token","description":"The token used to identify a user's email. It is usually send along in the query params of a redirect url.","required":true,"type":"string"}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"accessToken\": \"\",\n    \"requestToken\": \"\",\n    \"user\": {\n        \"hash\": \"\",\n        \"id\": \"\",\n        \"email\": \"\",\n        \"password\": \"\",\n        \"description\": \"\",\n        \"name\": {\n            \"first\": \"\",\n            \"middle\": \"\",\n            \"last\": \"\"\n        },\n        \"photo\": \"\",\n        \"isVerified\": \"\",\n        \"authTypes\": [\n            {}\n        ],\n        \"roles\": {\n            \"isAdmin\": \"\",\n            \"isSuperAdmin\": \"\"\n        },\n        \"lastSignedInAt\": \"\",\n        \"signedUpAt\": \"\"\n    }\n}"}],"pathName":"/auth/emails/verify","methodName":"post","tags":["Auth/Emails"],"id":"Auth-Emails-post-auth-emails-verify","description":"<p>Verify the email that corresponds to the token attached in the request body</p>\n","summary":""},{"requests":[{"items":[{"name":"idToken","description":"Generated on the client after successful google auth.","required":true,"type":"string"},{"name":"accessToken","description":"Generated on the client after successful google auth.","required":true,"type":"string"}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"accessToken\": \"\",\n    \"requestToken\": \"\",\n    \"user\": {\n        \"hash\": \"\",\n        \"id\": \"\",\n        \"email\": \"\",\n        \"password\": \"\",\n        \"description\": \"\",\n        \"name\": {\n            \"first\": \"\",\n            \"middle\": \"\",\n            \"last\": \"\"\n        },\n        \"photo\": \"\",\n        \"isVerified\": \"\",\n        \"authTypes\": [\n            {}\n        ],\n        \"roles\": {\n            \"isAdmin\": \"\",\n            \"isSuperAdmin\": \"\"\n        },\n        \"lastSignedInAt\": \"\",\n        \"signedUpAt\": \"\"\n    }\n}"}],"pathName":"/auth/identities/google","methodName":"post","tags":["Auth/Identities"],"id":"Auth-Identities-post-auth-identities-google","description":"<p>Signup with google token. After successful google auth on client, an idToken and accessToken is generated for the user. Send them in the body of this request</p>\n","summary":""},{"requests":[{"items":[{"name":"password","description":"User password.","required":true,"type":"string","minLength":8,"maxLength":16},{"name":"password","description":"User password.","required":true,"type":"string","minLength":8,"maxLength":16}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"accessToken\": \"\",\n    \"requestToken\": \"\",\n    \"user\": {\n        \"hash\": \"\",\n        \"id\": \"\",\n        \"email\": \"\",\n        \"password\": \"\",\n        \"description\": \"\",\n        \"name\": {\n            \"first\": \"\",\n            \"middle\": \"\",\n            \"last\": \"\"\n        },\n        \"photo\": \"\",\n        \"isVerified\": \"\",\n        \"authTypes\": [\n            {}\n        ],\n        \"roles\": {\n            \"isAdmin\": \"\",\n            \"isSuperAdmin\": \"\"\n        },\n        \"lastSignedInAt\": \"\",\n        \"signedUpAt\": \"\"\n    }\n}"}],"pathName":"/auth/passwords/update","methodName":"post","tags":["Auth/Passwords"],"id":"Auth-Passwords-post-auth-passwords-update","description":"<p>Update auth user's password</p>\n","summary":""},{"requests":[{"items":[{"name":"email","description":"User's email address.","required":true,"type":"string"},{"name":"redirectUrl","description":"The url that gets attached in the mail for the user to redirect to.","required":true,"type":"string"}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{}"}],"pathName":"/auth/passwords/reset/mail","methodName":"post","tags":["Auth/Passwords"],"id":"Auth-Passwords-post-auth-passwords-reset-mail","description":"<p>Send reset email to the email attached in the request body. A token is attached to the query params of the redirectUrl and sent along. Extract the token and use it for the reset endpoint</p>\n","summary":""},{"requests":[{"items":[{"name":"password","description":"User password.","required":true,"type":"string","minLength":8,"maxLength":16},{"name":"token","description":"The token used to identify a user's email. It is usually send along in the query params of a redirect url.","required":true,"type":"string"}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"accessToken\": \"\",\n    \"requestToken\": \"\",\n    \"user\": {\n        \"hash\": \"\",\n        \"id\": \"\",\n        \"email\": \"\",\n        \"password\": \"\",\n        \"description\": \"\",\n        \"name\": {\n            \"first\": \"\",\n            \"middle\": \"\",\n            \"last\": \"\"\n        },\n        \"photo\": \"\",\n        \"isVerified\": \"\",\n        \"authTypes\": [\n            {}\n        ],\n        \"roles\": {\n            \"isAdmin\": \"\",\n            \"isSuperAdmin\": \"\"\n        },\n        \"lastSignedInAt\": \"\",\n        \"signedUpAt\": \"\"\n    }\n}"}],"pathName":"/auth/passwords/reset","methodName":"post","tags":["Auth/Passwords"],"id":"Auth-Passwords-post-auth-passwords-reset","description":"<p>Reset the password of the email that corresponds to the token attached in the request body</p>\n","summary":""},{"requests":[],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"hash\": \"\",\n    \"id\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"description\": \"\",\n    \"name\": {\n        \"first\": \"\",\n        \"middle\": \"\",\n        \"last\": \"\"\n    },\n    \"photo\": \"\",\n    \"isVerified\": \"\",\n    \"authTypes\": [\n        {}\n    ],\n    \"roles\": {\n        \"isAdmin\": \"\",\n        \"isSuperAdmin\": \"\"\n    },\n    \"lastSignedInAt\": \"\",\n    \"signedUpAt\": \"\"\n}"}],"pathName":"/auth/user","methodName":"get","tags":["Auth/User"],"id":"Auth-User-get-auth-user","description":"<p>Get auth user's profile</p>\n","summary":""},{"requests":[{"items":[{"name":"firstName","description":"User's first name.","required":true,"type":"string","minLength":1},{"name":"middleName","description":"User's middle name.","required":true,"type":"string"},{"name":"lastName","description":"User's last name.","required":true,"type":"string"},{"name":"description","description":"User's profile description.","required":true,"type":"string"},{"name":"photo","description":"User profile picture.","required":false,"modelExample":"{\n    \"name\": \"\",\n    \"type\": \"\",\n    \"size\": \"\",\n    \"path\": \"\",\n    \"timestamp\": \"\",\n    \"link\": \"\"\n}"}],"title":"formData"}],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{\n    \"hash\": \"\",\n    \"id\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"description\": \"\",\n    \"name\": {\n        \"first\": \"\",\n        \"middle\": \"\",\n        \"last\": \"\"\n    },\n    \"photo\": \"\",\n    \"isVerified\": \"\",\n    \"authTypes\": [\n        {}\n    ],\n    \"roles\": {\n        \"isAdmin\": \"\",\n        \"isSuperAdmin\": \"\"\n    },\n    \"lastSignedInAt\": \"\",\n    \"signedUpAt\": \"\"\n}"}],"pathName":"/auth/user","methodName":"put","tags":["Auth/User"],"id":"Auth-User-put-auth-user","description":"<p>Update auth user's profile</p>\n","summary":""},{"requests":[],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{}"}],"pathName":"/auth/user/superAdmin","methodName":"get","tags":["Auth/User"],"id":"Auth-User-get-auth-user-superAdmin","description":"<p>A trusted email is saved on the db in case a malicious admin decides to unset other admins roles. Calling this endpoint will set the superAdmin role on the account assoicaited with the role. Only that mail is allowed to have the superAdmin role</p>\n","summary":""},{"requests":[],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{}"}],"pathName":"/auth/user/role","methodName":"post","tags":["Auth/User"],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet","userId":{"name":"userId","description":"The id of the user to update their role. You cant update your own role","in":"body","required":true,"type":"string"},"role":{"name":"role","description":"The role to set/unset on the user. Must be a key in user roles except isSuperAdmin","in":"formData","required":true,"type":"string","enum":["isAdmin"]},"value":{"name":"value","description":"Set/unset role on user","in":"formData","required":true,"type":"boolean"}}}}},"id":"Auth-User-post-auth-user-role","description":"<p>Add/Remove role from a user</p>\n","summary":""},{"requests":[],"responses":[{"name":"200","description":"","headers":[],"modelExample":"{}"}],"pathName":"/auth/user/signout","methodName":"post","tags":["Auth/User"],"id":"Auth-User-post-auth-user-signout","description":"<p>Sign out auth user and delete their tokens from db/cache</p>\n","summary":""}]}; window.ASSETS_ROOT = 'https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/';</script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/pre-loader.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/bootstrap/js/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/bootstrap/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/parallaxie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/TweenMax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/anchor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/wow/wow.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/prism/prism.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/niceselectpicker/jquery.nice-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/mcustomscrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/magnify-pop/jquery.magnific-popup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/tooltipster/js/tooltipster.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/plugins/font-size/js/rv-jquery-fontsize-2.0.3.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/onpage-menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/popup.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/api-html@1.1.1/themes/basic/assets/js/main.js"></script>
     
 </body>
 </html>
