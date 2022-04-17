@@ -4,7 +4,7 @@ args = $(filter-out $@,$(MAKECMDGOALS))
 
 SETUP_FOLDER = /data/docker/greep/traefik
 SETUP = mkdir -p $(SETUP_FOLDER) &&\
-	touch $(SETUP_FOLDER)/acmeStaging.json $(SETUP_FOLDER)/acmeProduction.json $(SETUP_FOLDER)/accessLog.json $(SETUP_FOLDER)/log.json &&\
+	touch $(SETUP_FOLDER)/acmeStaging.json $(SETUP_FOLDER)/acmeProduction.json &&\
 	chmod 600 $(SETUP_FOLDER)/acme*.json
 
 dev-start:

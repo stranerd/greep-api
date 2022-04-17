@@ -14,8 +14,6 @@ services:
     volumes:
       - "/data/docker/greep/traefik/acmeStaging.json:/etc/traefik/acmeStaging.json"
       - "/data/docker/greep/traefik/acmeProduction.json:/etc/traefik/acmeProduction.json"
-      - "/data/docker/greep/traefik/log.json:/etc/traefik/log.json"
-      - "/data/docker/greep/traefik/accessLog.json:/etc/traefik/accessLog.json"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   api:
