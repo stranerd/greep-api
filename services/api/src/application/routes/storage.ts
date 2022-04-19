@@ -6,7 +6,7 @@ const uploadFile: Route = {
 	method: 'post',
 	controllers: [
 		makeController(async (req) => {
-			const file = req.files[0]
+			const file = req.files.file?.[0]
 			const { path } = req.body
 			const data = validate({ path, file }, {
 				path: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
@@ -31,7 +31,7 @@ const uploadFiles: Route = {
 	method: 'post',
 	controllers: [
 		makeController(async (req) => {
-			const files = req.files
+			const files = req.files.file ?? []
 			const data = validate({ path: req.body.path, files }, {
 				path: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 				files: {
