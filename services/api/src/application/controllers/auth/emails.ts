@@ -1,7 +1,8 @@
 import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
 import { AuthTypes, Request, validate, Validation, ValidationError } from '@stranerd/api-commons'
 import { generateAuthOutput } from '@utils/modules/auth'
-import { isMedia } from '@utils/hash'
+import { isNotTruncated } from '@utils/hash'
+import { StorageUseCases } from '@modules/storage'
 
 export class EmailsController {
 	static async signup (req: Request) {
@@ -11,7 +12,7 @@ export class EmailsController {
 			middleName: req.body.middleName,
 			lastName: req.body.lastName,
 			password: req.body.password,
-			photo: req.body.photo,
+			photo: req.files.photo?.[0] ?? null,
 			description: req.body.description
 		}
 
@@ -30,7 +31,7 @@ export class EmailsController {
 			middleName,
 			lastName,
 			password,
-			photo,
+			photo: userPhoto,
 			description
 		} = validate(userCredential, {
 			email: { required: true, rules: [Validation.isEmail, isUniqueInDb] },
@@ -42,11 +43,12 @@ export class EmailsController {
 				required: true,
 				rules: [Validation.isString]
 			},
-			photo: { required: false, rules: [isMedia, Validation.isImage] },
+			photo: { required: false, rules: [isNotTruncated, Validation.isImage] },
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 			middleName: { required: true, rules: [Validation.isString] },
 			lastName: { required: true, rules: [Validation.isString] }
 		})
+		const photo = userPhoto ? await StorageUseCases.upload('profiles', userPhoto) : null
 		const validateData = {
 			name: { first: firstName, middle: middleName, last: lastName },
 			email, password, photo, description

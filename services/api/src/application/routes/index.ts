@@ -1,11 +1,9 @@
 import { makeController, Route, StatusCodes } from '@stranerd/api-commons'
 import { appId } from '@utils/environment'
-import storageRoutes from './storage'
 import authRoutes from './auth'
 import usersRoutes from './users'
 
 export const routes: Route[] = [
-	...storageRoutes,
 	...authRoutes,
 	...usersRoutes,
 	{

@@ -3,7 +3,8 @@ import { NotFoundError, Request, validate, Validation, verifyAccessToken } from 
 import { signOutUser } from '@utils/modules/auth'
 import { superAdminEmail } from '@utils/environment'
 import { SupportedAuthRoles } from '@utils/types/auth'
-import { isMedia } from '@utils/hash'
+import { isNotTruncated } from '@utils/hash'
+import { StorageUseCases } from '@modules/storage'
 
 const roles = Object.values<string>(SupportedAuthRoles).filter((key) => key !== SupportedAuthRoles.isSuperAdmin)
 
@@ -15,25 +16,30 @@ export class UserController {
 
 	static async updateUser (req: Request) {
 		const userId = req.authUser!.id
-		const { firstName, middleName, lastName, photo, description } = validate({
+		const uploadedPhoto = req.files.photo?.[0]
+		const changedPhoto = !!uploadedPhoto || req.body.photo === null
+		const data = validate({
 			firstName: req.body.firstName,
 			middleName: req.body.middleName,
 			lastName: req.body.lastName,
 			description: req.body.description,
-			photo: req.body.photo
+			photo: uploadedPhoto as any
 		}, {
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 			middleName: { required: true, rules: [Validation.isString] },
 			lastName: { required: true, rules: [Validation.isString] },
 			description: { required: true, rules: [Validation.isString] },
-			photo: { required: false, rules: [isMedia, Validation.isImage] }
+			photo: { required: false, rules: [isNotTruncated, Validation.isImage] }
 		})
+		const { firstName, middleName, lastName, description } = data
+		if (uploadedPhoto) data.photo = await StorageUseCases.upload('profiles', uploadedPhoto)
+
 		const validateData = {
 			name: { first: firstName, middle: middleName, last: lastName },
-			photo, description
+			description, ...(changedPhoto ? { photo: data.photo } : {})
 		}
 
-		return await AuthUsersUseCases.updateProfile({ userId, data: validateData })
+		return await AuthUsersUseCases.updateProfile({ userId, data: validateData as any })
 	}
 
 	static async updateUserRole (req: Request) {
