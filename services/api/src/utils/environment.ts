@@ -1,6 +1,7 @@
 import { getEnvOrFail, Instance } from '@stranerd/api-commons'
 import { EmailsList } from '@utils/types/email'
 
+export const baseDomain = getEnvOrFail('BASE_DOMAIN')
 export const environment = getEnvOrFail('ENVIRONMENT')
 export const isDev = environment === 'local'
 

@@ -2,7 +2,7 @@ import { IUploaderRepository } from '../../domain/irepositories/uploader'
 import { dirname, join, resolve } from 'path'
 import fs from 'fs'
 import { MediaInput } from '../models/media'
-import { environment } from '@utils/environment'
+import { appId, baseDomain, environment } from '@utils/environment'
 
 export class LocalUploaderRepository implements IUploaderRepository {
 	async delete (path: string) {
@@ -20,12 +20,13 @@ export class LocalUploaderRepository implements IUploaderRepository {
 		const folder = dirname(mediaPath)
 		if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true })
 		fs.writeFileSync(mediaPath, media.data)
+		path = encodeURI(`/${path}`)
 		return {
 			name: media.name,
 			type: media.type,
 			size: media.size,
-			path: encodeURI(`/${path}`), timestamp,
-			link: null
+			path, timestamp,
+			link: `${baseDomain}/${appId}/${path}`
 		}
 	}
 }
