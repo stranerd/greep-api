@@ -2,7 +2,7 @@
 
 CONF_PATH=/etc/traefik/traefik.yml
 
-CERT_TYPE=staging
+CERT_TYPE=production
 
 CERT_PATH_STAGING=/etc/traefik/acmeStaging.json
 CERT_PATH_PRODUCTION=/etc/traefik/acmeProduction.json
