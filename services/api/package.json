@@ -5,7 +5,7 @@
 	"main": "lib/index.js",
 	"scripts": {
 		"start": "node lib/index.js",
-		"build": "tsc --build && resolve-tspaths",
+		"build": "tsc --build --force && resolve-tspaths",
 		"dev": "ts-node-dev -r tsconfig-paths/register --transpile-only src/index.ts",
 		"lint": "eslint src/ --ext .ts,.js --fix",
 		"doc": "ts-node-dev src/utils/doc.ts dist/doc.json && api-html -f dist/doc.json -o dist/doc-options.json"
@@ -14,7 +14,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@stranerd/api-commons": "^3.7.0",
+		"@stranerd/api-commons": "^3.7.1",
 		"axios": "^0.26.1",
 		"nodemailer": "^6.7.3"
 	},
