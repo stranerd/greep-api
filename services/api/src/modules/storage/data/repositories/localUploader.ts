@@ -20,7 +20,7 @@ export class LocalUploaderRepository implements IUploaderRepository {
 		const folder = dirname(mediaPath)
 		if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true })
 		fs.writeFileSync(mediaPath, media.data)
-		path = encodeURI(`/${path}`)
+		path = encodeURI(path)
 		return {
 			name: media.name,
 			type: media.type,
