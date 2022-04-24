@@ -2,11 +2,11 @@ import { IAuthRepository } from '../../domain/i-repositories/auth'
 import { Credential, PasswordResetInput } from '../../domain/types'
 import User from '../mongooseModels/users'
 import { UserFromModel, UserToModel } from '../models/users'
-import { hash, hashCompare } from '@utils/hash'
 import {
 	AuthTypes,
 	BadRequestError,
 	getRandomValue,
+	Hash,
 	MediaOutput,
 	mongoose,
 	readEmailFromPug,
@@ -36,7 +36,7 @@ export class AuthRepository implements IAuthRepository {
 
 	async addNewUser (data: UserToModel, type: AuthTypes) {
 		data.email = data.email.toLowerCase()
-		if (data.password) data.password = await hash(data.password)
+		if (data.password) data.password = await Hash.hash(data.password)
 		const userData = await new User(data).save()
 		return this.signInUser(userData, type)
 	}
@@ -48,7 +48,7 @@ export class AuthRepository implements IAuthRepository {
 
 		const match = passwordValidate
 			? user.authTypes.includes(AuthTypes.email)
-				? await hashCompare(details.password, user.password)
+				? await Hash.compare(details.password, user.password)
 				: false
 			: true
 
@@ -121,7 +121,7 @@ export class AuthRepository implements IAuthRepository {
 		const userEmail = await appInstance.cache.get('password-reset-token-' + input.token)
 		if (!userEmail) throw new BadRequestError('Invalid token')
 
-		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { password: await hash(input.password) } }, { new: true })
+		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { password: await Hash.hash(input.password) } }, { new: true })
 		if (!user) throw new BadRequestError('No account with saved email exists')
 
 		return this.mapper.mapFrom(user)!

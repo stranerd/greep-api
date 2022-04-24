@@ -14,13 +14,11 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@stranerd/api-commons": "^3.5.0",
+		"@stranerd/api-commons": "^3.6.0",
 		"axios": "^0.26.1",
-		"bcryptjs": "^2.4.3",
 		"nodemailer": "^6.7.3"
 	},
 	"devDependencies": {
-		"@types/bcryptjs": "^2.4.2",
 		"@types/node": "^17.0.24",
 		"@typescript-eslint/eslint-plugin": "^5.19.0",
 		"@typescript-eslint/parser": "^5.19.0",

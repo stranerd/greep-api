@@ -147,13 +147,14 @@
   resolved "https://registry.yarnpkg.com/@socket.io/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#568d9beae00b0d835f4f8c53fd55714986492e61"
   integrity sha512-dOlCBKnDw4iShaIsH/bxujKTM18+2TOAsYz+KSc11Am38H4q5Xw8Bbz97ZYdrVNM+um3p7w86Bvvmcn9q+5+eQ==
 
-"@stranerd/api-commons@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.5.0.tgz#b1fcd27ac1af9c5ef848829b1d63970f65dc6b67"
-  integrity sha512-ictH5Ei99BfzsuE+3m2E2SlRNJhj8/ZJlLGGP4hsFxHBBoDLKC4dcxFX+1GT9mvCiG/1i8YhM8Dfz2C7vDRIAw==
+"@stranerd/api-commons@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.6.0.tgz#76cc4cd0659bdbcc00fcc153912967849dc0fa84"
+  integrity sha512-GxO1qljkeopDH8jNvvQnKjl/Cb9tfyNcdR640hkU/UeG555sWIAAmgsqeJPwMst34eT92lvGgFe0VUDnN2qdWQ==
   dependencies:
     "@stranerd/validate" "^2.3.0"
     amqplib "^0.8.0"
+    bcryptjs "^2.4.3"
     bull "^4.8.1"
     compression "^1.7.4"
     cors "^2.8.5"
@@ -176,11 +177,6 @@
   integrity sha512-sOuNPe78p3HL8tATh2JbLflddNkka09S40fo8o13K+tB/t9Gwg3R+Bz27dyW7apsSbx6Wvfs0enivUjdoVk3sQ==
   dependencies:
     url-regex-safe "^3.0.0"
-
-"@types/bcryptjs@^2.4.2":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
-  integrity sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==
 
 "@types/component-emitter@^1.2.10":
   version "1.2.10"

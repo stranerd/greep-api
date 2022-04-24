@@ -3,7 +3,6 @@ import { NotFoundError, Request, validate, Validation, verifyAccessToken } from 
 import { signOutUser } from '@utils/modules/auth'
 import { superAdminEmail } from '@utils/environment'
 import { SupportedAuthRoles } from '@utils/types/auth'
-import { isNotTruncated } from '@utils/hash'
 import { StorageUseCases } from '@modules/storage'
 
 const roles = Object.values<string>(SupportedAuthRoles).filter((key) => key !== SupportedAuthRoles.isSuperAdmin)
@@ -29,7 +28,7 @@ export class UserController {
 			middleName: { required: true, rules: [Validation.isString] },
 			lastName: { required: true, rules: [Validation.isString] },
 			description: { required: true, rules: [Validation.isString] },
-			photo: { required: false, rules: [isNotTruncated, Validation.isImage] }
+			photo: { required: false, rules: [Validation.isNotTruncated, Validation.isImage] }
 		})
 		const { firstName, middleName, lastName, description } = data
 		if (uploadedPhoto) data.photo = await StorageUseCases.upload('profiles', uploadedPhoto)

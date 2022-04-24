@@ -2,9 +2,15 @@ import { IUserRepository } from '../../domain/i-repositories/users'
 import { RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
-import { AuthTypes, deleteCachedAccessToken, NotFoundError, parseQueryParams, QueryParams } from '@stranerd/api-commons'
+import {
+	AuthTypes,
+	deleteCachedAccessToken,
+	Hash,
+	NotFoundError,
+	parseQueryParams,
+	QueryParams
+} from '@stranerd/api-commons'
 import User from '../mongooseModels/users'
-import { hash } from '@utils/hash'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
@@ -47,7 +53,7 @@ export class UserRepository implements IUserRepository {
 			{
 				$set: {
 					...details,
-					password: await hash(details.password),
+					password: await Hash.hash(details.password),
 					lastSignedInAt: Date.now()
 				},
 				$addToSet: {
@@ -75,7 +81,7 @@ export class UserRepository implements IUserRepository {
 
 	async updatePassword (userId: string, password: string) {
 		const user = await User.findByIdAndUpdate(userId, {
-			$set: { password: await hash(password) },
+			$set: { password: await Hash.hash(password) },
 			$addToSet: { authTypes: AuthTypes.email }
 		})
 		return !!user
