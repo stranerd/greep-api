@@ -1,5 +1,5 @@
 import { CustomersUseCases } from '@modules/users'
-import { QueryParams, Request } from '@stranerd/api-commons'
+import { NotFoundError, QueryParams, Request } from '@stranerd/api-commons'
 
 export class CustomersController {
 	static async getCustomers (req: Request) {
@@ -9,6 +9,8 @@ export class CustomersController {
 	}
 
 	static async findCustomer (req: Request) {
-		return await CustomersUseCases.find({ id: req.params.id, userId: req.authUser!.id })
+		const customer = await CustomersUseCases.find({ id: req.params.id, userId: req.authUser!.id })
+		if (!customer) throw new NotFoundError()
+		return customer
 	}
 }

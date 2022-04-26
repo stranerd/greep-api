@@ -6,7 +6,7 @@ import { StorageUseCases } from '@modules/storage'
 export class EmailsController {
 	static async signup (req: Request) {
 		const userCredential = {
-			email: req.body.email,
+			email: req.body.email ?? '',
 			firstName: req.body.firstName,
 			middleName: req.body.middleName,
 			lastName: req.body.lastName,

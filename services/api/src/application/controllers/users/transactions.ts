@@ -2,6 +2,7 @@ import { PaymentType, TransactionsUseCases, TransactionType, UsersUseCases } fro
 import {
 	BadRequestError,
 	NotAuthorizedError,
+	NotFoundError,
 	QueryKeys,
 	QueryParams,
 	Request,
@@ -18,9 +19,11 @@ export class TransactionsController {
 	}
 
 	static async findTransaction (req: Request) {
-		return await TransactionsUseCases.find({
+		const transaction = await TransactionsUseCases.find({
 			id: req.params.id, userId: req.authUser!.id
 		})
+		if (!transaction) throw new NotFoundError()
+		return transaction
 	}
 
 	static async createTransaction (req: Request) {

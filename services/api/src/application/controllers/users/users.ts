@@ -1,5 +1,5 @@
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, validate, Validation } from '@stranerd/api-commons'
+import { BadRequestError, NotFoundError, QueryParams, Request, validate, Validation } from '@stranerd/api-commons'
 
 export class UsersController {
 	static async getUsers (req: Request) {
@@ -8,7 +8,9 @@ export class UsersController {
 	}
 
 	static async findUser (req: Request) {
-		return await UsersUseCases.find(req.params.id)
+		const user = await UsersUseCases.find(req.params.id)
+		if (!user) throw new NotFoundError()
+		return user
 	}
 
 	static async addDriver (req: Request) {
