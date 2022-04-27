@@ -61,21 +61,21 @@ export class TransactionsController {
 				rules: [Validation.isString, Validation.arrayContainsX(Object.values(TransactionType), (cur, val) => cur === val)]
 			},
 			name: {
-				required: false,
-				rules: [Validation.isRequiredIfX(isExpense), Validation.isString, Validation.isLongerThanX(0)]
+				required: isExpense,
+				rules: [Validation.isString, Validation.isLongerThanX(0)]
 			},
-			parentId: { required: false, rules: [Validation.isRequiredIfX(isBalance), Validation.isString] },
+			parentId: { required: isBalance, rules: [Validation.isString] },
 			customerName: {
-				required: false,
-				rules: [Validation.isRequiredIfX(isTrip), Validation.isString, Validation.isLongerThanX(0)]
+				required: isTrip,
+				rules: [Validation.isString, Validation.isLongerThanX(0)]
 			},
 			paidAmount: {
-				required: false,
-				rules: [Validation.isRequiredIfX(isTrip), Validation.isNumber, Validation.isLessThanOrEqualToX(bodyAmount)]
+				required: isTrip,
+				rules: [Validation.isNumber, Validation.isLessThanOrEqualToX(bodyAmount)]
 			},
 			paymentType: {
-				required: false,
-				rules: [Validation.isRequiredIfX(isTrip), Validation.isString, Validation.arrayContainsX(Object.values(PaymentType), (cur, val) => cur === val)]
+				required: isTrip,
+				rules: [Validation.isString, Validation.arrayContainsX(Object.values(PaymentType), (cur, val) => cur === val)]
 			}
 		})
 
