@@ -16,7 +16,7 @@ export class UsersController {
 	static async addDriver (req: Request) {
 		const data = validate({
 			driverId: req.body.driverId,
-			commission: req.body.driverId
+			commission: req.body.commission
 		}, {
 			driverId: { required: true, rules: [Validation.isString] },
 			commission: {
@@ -32,7 +32,7 @@ export class UsersController {
 	static async updateDriverCommission (req: Request) {
 		const data = validate({
 			driverId: req.body.driverId,
-			commission: req.body.driverId
+			commission: req.body.commission
 		}, {
 			driverId: { required: true, rules: [Validation.isString] },
 			commission: {
