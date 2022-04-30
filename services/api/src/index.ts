@@ -32,10 +32,10 @@ const start = async () => {
 	getSocketEmitter().register('users/users', isOpen)
 
 	await UsersUseCases.resetAllUsersStatus()
-	await startJobs()
 
 	await app.start(port)
 	await appInstance.logger.success(`${appId} service has started listening on port`, port)
+	await startJobs()
 }
 
 start().then()
