@@ -1,9 +1,9 @@
 import { getNewServerInstance, OnJoinFn } from '@stranerd/api-commons'
 import { appId, appInstance, port } from '@utils/environment'
-import { EventTypes, publishers, subscribers } from '@utils/events'
-import { DelayedEvent } from '@utils/types/bull'
+import { subscribers } from '@utils/events'
 import { routes } from '@application/routes'
 import { UsersUseCases } from '@modules/users'
+import { startJobs } from '@utils/jobs'
 
 const app = getNewServerInstance(routes, {
 	onConnect: async (userId, socketId) => {
@@ -32,17 +32,10 @@ const start = async () => {
 	getSocketEmitter().register('users/users', isOpen)
 
 	await UsersUseCases.resetAllUsersStatus()
+	await startJobs()
 
 	await app.start(port)
 	await appInstance.logger.success(`${appId} service has started listening on port`, port)
-	await appInstance.job.startProcessingQueues<DelayedEvent>({
-		onDelayed: async (data) => {
-			await publishers[EventTypes.TASKSDELAYED].publish(data)
-		},
-		onCron: async (type) => {
-			await publishers[EventTypes.TASKSCRON].publish({ type })
-		}
-	})
 }
 
 start().then()
