@@ -44,7 +44,6 @@ export const subscribers = {
 		await sendMailAndCatchError(data)
 	}),
 	[EventTypes.TASKSCRON]: eventBus.createSubscriber<Events[EventTypes.TASKSCRON]>(EventTypes.TASKSCRON, async (data) => {
-		if (data.type === CronTypes.halfHourly) await appInstance.job.retryAllFailedJobs()
 		if (data.type === CronTypes.hourly) {
 			const errors = await EmailsUseCases.getAndDeleteAllErrors()
 			await Promise.all(
@@ -52,6 +51,7 @@ export const subscribers = {
 					await sendMailAndCatchError(error as unknown as TypedEmail)
 				})
 			)
+			await appInstance.job.retryAllFailedJobs()
 		}
 		if (data.type === CronTypes.daily) await deleteUnverifiedUsers()
 	}),
