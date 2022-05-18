@@ -72,13 +72,14 @@ export class UserRepository implements IUserRepository {
 		const session = await mongoose.startSession()
 		let res = false
 		await session.withTransaction(async (session) => {
-			const manager = await User.findOneAndUpdate(
-				{ _id: managerId, 'drivers.driverId': { $ne: driverId } },
-				{ $addToSet: { drivers: { driverId, commission } } },
-				{ session })
 			const driver = await User.findOneAndUpdate(
 				{ _id: driverId, manager: null },
 				{ $set: { manager: { managerId, commission } } },
+				{ session })
+			if (!driver) return false
+			const manager = await User.findOneAndUpdate(
+				{ _id: managerId, 'drivers.driverId': { $ne: driverId } },
+				{ $addToSet: { drivers: { driverId, commission } } },
 				{ session })
 			res = !!manager && !!driver
 			return res
@@ -91,13 +92,14 @@ export class UserRepository implements IUserRepository {
 		const session = await mongoose.startSession()
 		let res = false
 		await session.withTransaction(async (session) => {
-			const manager = await User.findOneAndUpdate(
-				{ _id: managerId, 'drivers.driverId': driverId },
-				{ $set: { 'drivers.$.commission': commission } },
-				{ session })
 			const driver = await User.findOneAndUpdate(
 				{ _id: driverId, 'manager.managerId': managerId },
 				{ $set: { 'manager.commission': commission } },
+				{ session })
+			if (!driver) return false
+			const manager = await User.findOneAndUpdate(
+				{ _id: managerId, 'drivers.driverId': driverId },
+				{ $set: { 'drivers.$.commission': commission } },
 				{ session })
 			res = !!manager && !!driver
 			return res
@@ -110,13 +112,14 @@ export class UserRepository implements IUserRepository {
 		const session = await mongoose.startSession()
 		let res = false
 		await session.withTransaction(async (session) => {
-			const manager = await User.findOneAndUpdate(
-				{ _id: managerId, 'drivers.driverId': driverId },
-				{ $pull: { drivers: { driverId } } },
-				{ session })
 			const driver = await User.findOneAndUpdate(
 				{ _id: driverId, 'manager.managerId': managerId },
 				{ $set: { manager: null } },
+				{ session })
+			if (!driver) return false
+			const manager = await User.findOneAndUpdate(
+				{ _id: managerId, 'drivers.driverId': driverId },
+				{ $pull: { drivers: { driverId } } },
 				{ session })
 			res = !!manager && !!driver
 			return res
