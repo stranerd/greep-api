@@ -25,6 +25,7 @@ export class LocalUploaderRepository implements IUploaderRepository {
 			name: media.name,
 			type: media.type,
 			size: media.size,
+			duration: media.duration,
 			path, timestamp,
 			link: `${baseDomain}/${appId}/${path}`
 		}
