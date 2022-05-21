@@ -146,12 +146,12 @@
   resolved "https://registry.yarnpkg.com/@socket.io/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#568d9beae00b0d835f4f8c53fd55714986492e61"
   integrity sha512-dOlCBKnDw4iShaIsH/bxujKTM18+2TOAsYz+KSc11Am38H4q5Xw8Bbz97ZYdrVNM+um3p7w86Bvvmcn9q+5+eQ==
 
-"@stranerd/api-commons@^3.14.0":
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.14.0.tgz#3e894a2e4fe22e3690411ef9f565f721aa9379b0"
-  integrity sha512-pTsZTiCynIbH4epqQC8PusdGsCm8Huk7JzIbTU0h4m4qKvZA7SKt36pnhiihMIrSMALZ06IaXfBz8CBx4WnLRg==
+"@stranerd/api-commons@^3.15.0":
+  version "3.15.0"
+  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.15.0.tgz#1346f205cd22af0cdca8f99aa1101d8df7ca3509"
+  integrity sha512-Fri2bhEg2xi1m1hujWhPVLKpj2flyPy/UWfFsz+VLhBrhZjZ00iMoFWgsvRwik2OwUD/NFylap4TrqUGE+XhTQ==
   dependencies:
-    "@stranerd/validate" "^3.1.0"
+    "@stranerd/validate" "^3.3.0"
     amqplib "^0.9.0"
     bcryptjs "^2.4.3"
     bull "^4.8.3"
@@ -171,10 +171,10 @@
     redis "^4.1.0"
     socket.io "4.5.1"
 
-"@stranerd/validate@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@stranerd/validate/-/validate-3.1.0.tgz#84d9abdefc505423102203a849e1be71a83c1fb8"
-  integrity sha512-0/BqruXnSlDFfa6BHyY/w5AZ/+ujHBxHwoDy2x88lIbLwzRZrbBpSMUZZhpyeaP8z9sLMsdPy6odNSe2ESjlxQ==
+"@stranerd/validate@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@stranerd/validate/-/validate-3.3.0.tgz#0d43befc0f80cbd7d69e2903be6aa242870e6df1"
+  integrity sha512-yI8vTZtmqfKMCWGUL2GABXzRzb8KRqfUsMYLb5Bj3EZh+mGOVUYRygyE74mpZQnKsOczgkwxFXJlrpoFjY78Rw==
   dependencies:
     url-regex-safe "^3.0.0"
 
