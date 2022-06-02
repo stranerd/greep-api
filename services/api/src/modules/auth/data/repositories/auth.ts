@@ -57,19 +57,15 @@ export class AuthRepository implements IAuthRepository {
 		return this.signInUser(user, type)
 	}
 
-	async sendVerificationMail (email: string, redirectUrl: string) {
-		const user = await User.findOne({ email: email.toLowerCase() })
-		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
-
-		const token = getRandomValue(40)
+	async sendVerificationMail (email: string) {
+		email = email.toLowerCase()
+		const token = getRandomValue(8).toUpperCase()
 
 		// save to cache
-		await appInstance.cache.set('verification-token-' + token, user.email, TOKENS_TTL_IN_SECS)
+		await appInstance.cache.set('email-verification-token-' + token, email, TOKENS_TTL_IN_SECS)
 
 		// send verification mail
-		const url = `${redirectUrl}?token=${token}`
-		const emailContent = await readEmailFromPug('emails/email-verification.pug', { redirectUrl: url })
-
+		const emailContent = await readEmailFromPug('emails/sendOTP.pug', { token })
 		await publishers[EventTypes.SENDMAIL].publish({
 			to: email,
 			subject: 'Verify Your Email',
@@ -83,7 +79,7 @@ export class AuthRepository implements IAuthRepository {
 
 	async verifyEmail (token: string) {
 		// check token in cache
-		const userEmail = await appInstance.cache.get('verification-token-' + token)
+		const userEmail = await appInstance.cache.get('email-verification-token-' + token)
 		if (!userEmail) throw new BadRequestError('Invalid token')
 
 		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { isVerified: true } }, { new: true })
@@ -92,19 +88,15 @@ export class AuthRepository implements IAuthRepository {
 		return this.mapper.mapFrom(user)!
 	}
 
-	async sendPasswordResetMail (email: string, redirectUrl: string) {
-		const user = await User.findOne({ email: email.toLowerCase() })
-		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
-
-		const token = getRandomValue(40)
+	async sendPasswordResetMail (email: string) {
+		email = email.toLowerCase()
+		const token = getRandomValue(8).toUpperCase()
 
 		// save to cache
-		await appInstance.cache.set('password-reset-token-' + token, user.email, TOKENS_TTL_IN_SECS)
+		await appInstance.cache.set('password-reset-token-' + token, email, TOKENS_TTL_IN_SECS)
 
 		// send reset password mail
-		const url = `${redirectUrl}?token=${token}`
-		const emailContent = await readEmailFromPug('emails/password-reset.pug', { redirectUrl: url })
-
+		const emailContent = await readEmailFromPug('emails/sendOTP.pug', { token })
 		await publishers[EventTypes.SENDMAIL].publish({
 			to: email,
 			subject: 'Reset Your Password',

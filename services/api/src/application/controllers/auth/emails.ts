@@ -74,18 +74,16 @@ export class EmailsController {
 	}
 
 	static async sendVerificationMail (req: Request) {
-		const { email, redirectUrl } = validate({
-			email: req.body.email,
-			redirectUrl: req.body.redirectUrl
+		const { email } = validate({
+			email: req.body.email
 		}, {
-			email: { required: true, rules: [Validation.isEmail] },
-			redirectUrl: { required: true, rules: [Validation.isString] }
+			email: { required: true, rules: [Validation.isEmail] }
 		})
 
 		const user = await AuthUsersUseCases.findUserByEmail(email)
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
 
-		return await AuthUseCases.sendVerificationMail({ email, redirectUrl })
+		return await AuthUseCases.sendVerificationMail(user.email)
 	}
 
 	static async verifyEmail (req: Request) {
