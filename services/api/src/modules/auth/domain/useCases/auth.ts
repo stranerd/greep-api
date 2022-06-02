@@ -32,12 +32,12 @@ export class AuthUseCase {
 		return await this.repository.resetPassword(input)
 	}
 
-	async sendPasswordResetMail (input: { email: string, redirectUrl: string }) {
-		return await this.repository.sendPasswordResetMail(input.email, input.redirectUrl)
+	async sendPasswordResetMail (email: string) {
+		return await this.repository.sendPasswordResetMail(email)
 	}
 
-	async sendVerificationMail (input: { email: string, redirectUrl: string }) {
-		return await this.repository.sendVerificationMail(input.email, input.redirectUrl)
+	async sendVerificationMail (email: string) {
+		return await this.repository.sendVerificationMail(email)
 	}
 
 	async verifyEmail (token: string) {

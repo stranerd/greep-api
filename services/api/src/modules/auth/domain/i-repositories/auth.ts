@@ -8,11 +8,11 @@ export interface IAuthRepository {
 
 	authenticateUser (details: Credential, passwordValidate: boolean, type: AuthTypes): Promise<AuthUserEntity>
 
-	sendVerificationMail (email: string, redirectUrl: string): Promise<boolean>
+	sendVerificationMail (email: string): Promise<boolean>
 
 	verifyEmail (token: string): Promise<AuthUserEntity>
 
-	sendPasswordResetMail (email: string, redirectUrl: string): Promise<boolean>
+	sendPasswordResetMail (email: string): Promise<boolean>
 
 	resetPassword (input: PasswordResetInput): Promise<AuthUserEntity>
 
