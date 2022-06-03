@@ -7,11 +7,9 @@ export type UserBio = {
 	email: string
 	name: {
 		first: string
-		middle: string
 		last: string
 		full: string
 	}
-	description: string
 	photo: MediaOutput | null
 }
 

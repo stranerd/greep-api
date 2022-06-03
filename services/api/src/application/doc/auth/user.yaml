@@ -16,9 +16,7 @@
       - AccessTokenAuth: [ ]
     parameters:
       - $ref: '#/parameters/auth/firstName'
-      - $ref: '#/parameters/auth/middleName'
       - $ref: '#/parameters/auth/lastName'
-      - $ref: '#/parameters/auth/description'
       - $ref: '#/parameters/auth/photo'
     responses:
       200:

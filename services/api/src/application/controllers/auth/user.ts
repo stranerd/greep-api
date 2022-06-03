@@ -19,23 +19,19 @@ export class UserController {
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 		const data = validate({
 			firstName: req.body.firstName,
-			middleName: req.body.middleName,
 			lastName: req.body.lastName,
-			description: req.body.description,
 			photo: uploadedPhoto as any
 		}, {
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
-			middleName: { required: true, rules: [Validation.isString] },
 			lastName: { required: true, rules: [Validation.isString] },
-			description: { required: true, rules: [Validation.isString] },
 			photo: { required: false, rules: [Validation.isNotTruncated, Validation.isImage] }
 		})
-		const { firstName, middleName, lastName, description } = data
+		const { firstName, lastName } = data
 		if (uploadedPhoto) data.photo = await StorageUseCases.upload('profiles', uploadedPhoto)
 
 		const validateData = {
-			name: { first: firstName, middle: middleName, last: lastName },
-			description, ...(changedPhoto ? { photo: data.photo } : {})
+			name: { first: firstName, last: lastName },
+			...(changedPhoto ? { photo: data.photo } : {})
 		}
 
 		return await AuthUsersUseCases.updateProfile({ userId, data: validateData as any })

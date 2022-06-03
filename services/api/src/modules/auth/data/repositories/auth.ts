@@ -128,7 +128,6 @@ export class AuthRepository implements IAuthRepository {
 
 		const names = (data.name ?? '').split(' ')
 		const first = names[0] ?? ''
-		const middle = (names.length > 2 ? names[1] : '') ?? ''
 		const last = (names.length > 1 ? names.reverse()[0] : '') ?? ''
 		const email = data.email!.toLowerCase()
 		const photo = data.picture ? {
@@ -136,7 +135,7 @@ export class AuthRepository implements IAuthRepository {
 		} as unknown as MediaOutput : null
 
 		return this.authorizeSocial(AuthTypes.google, {
-			email, photo, name: { first, middle, last }
+			email, photo, name: { first, last }
 		})
 	}
 
@@ -148,7 +147,6 @@ export class AuthRepository implements IAuthRepository {
 			email: data.email,
 			photo: data.photo,
 			authTypes: [type],
-			description: '',
 			password: '',
 			isVerified: true
 		}, type)

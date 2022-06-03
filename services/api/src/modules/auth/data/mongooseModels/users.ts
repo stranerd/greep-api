@@ -25,12 +25,6 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		type: mongoose.Schema.Types.Mixed,
 		required: true
 	},
-	description: {
-		type: String,
-		trim: true,
-		required: false,
-		default: ''
-	},
 	photo: {
 		type: mongoose.Schema.Types.Mixed,
 		required: false,
