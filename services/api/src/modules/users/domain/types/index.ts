@@ -34,3 +34,8 @@ export type UserManager = {
 	managerId: string
 	commission: number
 }
+
+export type UserManagerRequests = {
+	managerId: string
+	commission: number
+}[]

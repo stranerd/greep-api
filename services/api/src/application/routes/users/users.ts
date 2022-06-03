@@ -27,6 +27,19 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
+		path: '/users/users/managers/accept',
+		method: 'post',
+		controllers: [
+			requireAuthUser,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.acceptManager(req)
+				}
+			})
+		]
+	},
+	{
 		path: '/users/users/drivers/add',
 		method: 'post',
 		controllers: [

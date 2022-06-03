@@ -41,8 +41,12 @@ export class UsersUseCase {
 		return await this.repository.updateUserWithRoles(params.id, params.data, params.timestamp)
 	}
 
-	async addDriver (data: { managerId: string, driverId: string, commission: number }) {
-		return await this.repository.addDriver(data.managerId, data.driverId, data.commission)
+	async requestAddDriver (data: { managerId: string, driverId: string, commission: number, add: boolean }) {
+		return await this.repository.requestAddDriver(data.managerId, data.driverId, data.commission, data.add)
+	}
+
+	async acceptManager (data: { managerId: string, driverId: string, commission: number, accept: boolean }) {
+		return await this.repository.acceptManager(data.managerId, data.driverId, data.commission, data.accept)
 	}
 
 	async updateDriverCommission (data: { managerId: string, driverId: string, commission: number }) {

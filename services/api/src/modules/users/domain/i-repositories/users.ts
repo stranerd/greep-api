@@ -19,7 +19,9 @@ export interface IUserRepository {
 
 	resetAllUsersStatus (): Promise<boolean>
 
-	addDriver (managerId: string, driverId: string, commission: number): Promise<boolean>
+	requestAddDriver (managerId: string, driverId: string, commission: number, add: boolean): Promise<boolean>
+
+	acceptManager (managerId: string, driverId: string, commission: number, accept: boolean): Promise<boolean>
 
 	updateDriverCommission (managerId: string, driverId: string, commission: number): Promise<boolean>
 

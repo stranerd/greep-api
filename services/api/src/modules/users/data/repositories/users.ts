@@ -68,20 +68,35 @@ export class UserRepository implements IUserRepository {
 		return !!res.acknowledged
 	}
 
-	async addDriver (managerId: string, driverId: string, commission: number) {
+	async requestAddDriver (managerId: string, driverId: string, commission: number, add: boolean) {
+		const driver = await User.findOneAndUpdate(
+			{ _id: driverId, manager: null },
+			{ [add ? '$push' : '$pull']: { managerId, commission } })
+		return !!driver
+	}
+
+	async acceptManager (managerId: string, driverId: string, commission: number, accept: boolean) {
 		const session = await mongoose.startSession()
 		let res = false
 		await session.withTransaction(async (session) => {
-			const driver = await User.findOneAndUpdate(
-				{ _id: driverId, manager: null },
-				{ $set: { manager: { managerId, commission } } },
-				{ session })
-			if (!driver) return false
-			const manager = await User.findOneAndUpdate(
-				{ _id: managerId, 'drivers.driverId': { $ne: driverId } },
-				{ $addToSet: { drivers: { driverId, commission } } },
-				{ session })
-			res = !!manager && !!driver
+			if (!accept) {
+				const driver = await User.findOneAndUpdate(
+					{ _id: driverId, manager: null },
+					{ $pull: { managerRequests: { managerId, commission } } },
+					{ session })
+				res = !!driver
+			} else {
+				const driver = await User.findOneAndUpdate(
+					{ _id: driverId, manager: null },
+					{ $set: { manager: { managerId, commission }, managerRequests: [] } },
+					{ session })
+				if (!driver) return false
+				const manager = await User.findOneAndUpdate(
+					{ _id: managerId, 'drivers.driverId': { $ne: driverId } },
+					{ $addToSet: { drivers: { driverId, commission } } },
+					{ session })
+				res = !!manager && !!driver
+			}
 			return res
 		})
 		await session.endSession()

@@ -14,19 +14,56 @@ export class UsersController {
 	}
 
 	static async addDriver (req: Request) {
-		const data = validate({
+		const authUserId = req.authUser!.id
+		const { driverId, add, commission } = validate({
 			driverId: req.body.driverId,
-			commission: req.body.commission
+			commission: req.body.commission,
+			add: req.body.add
 		}, {
 			driverId: { required: true, rules: [Validation.isString] },
+			add: { required: true, rules: [Validation.isBoolean] },
 			commission: {
 				required: true,
 				rules: [Validation.isNumber, Validation.isMoreThanOrEqualToX(0), Validation.isLessThanOrEqualToX(1)]
 			}
 		})
-		const driver = await UsersUseCases.find(data.driverId)
-		if (!driver) throw new BadRequestError('driver not found')
-		return UsersUseCases.addDriver({ ...data, managerId: req.authUser!.id })
+
+		if (add) {
+			const manager = await UsersUseCases.find(authUserId)
+			if (!manager) throw new BadRequestError('profile not found')
+			if (manager.manager) throw new BadRequestError('someone else can\'t drive for you when you have a manager')
+
+			const driver = await UsersUseCases.find(driverId)
+			if (!driver) throw new BadRequestError('driver not found')
+			if (driver.manager) throw new BadRequestError('driver already has a manager')
+			const request = driver.managerRequests.find((r) => r.managerId === authUserId)
+			if (request) throw new BadRequestError('you have already requested to become this driver\'s manager')
+		}
+
+		return UsersUseCases.requestAddDriver({ driverId, add, commission, managerId: authUserId })
+	}
+
+	static async acceptManager (req: Request) {
+		const authUserId = req.authUser!.id
+		const { managerId, accept } = validate({
+			managerId: req.body.managerId,
+			accept: req.body.accept
+		}, {
+			managerId: { required: true, rules: [Validation.isString] },
+			accept: { required: true, rules: [Validation.isBoolean] }
+		})
+
+		const driver = await UsersUseCases.find(authUserId)
+		if (!driver) throw new BadRequestError('profile not found')
+		if (driver.manager) throw new BadRequestError('you already have a manager')
+		const request = driver.managerRequests.find((r) => r.managerId === managerId)
+		if (!request) throw new BadRequestError('no request from managerId found')
+
+		const manager = await UsersUseCases.find(managerId)
+		if (!manager) throw new BadRequestError('manager not found')
+		if (manager.manager) throw new BadRequestError('manager is already driving for someone else')
+
+		return UsersUseCases.acceptManager({ managerId, accept, driverId: authUserId, commission: request.commission })
 	}
 
 	static async updateDriverCommission (req: Request) {
