@@ -24,7 +24,7 @@ export class UserController {
 		}, {
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 			lastName: { required: true, rules: [Validation.isString] },
-			photo: { required: false, rules: [Validation.isNotTruncated, Validation.isImage] }
+			photo: { required: true, nullable: true, rules: [Validation.isNotTruncated, Validation.isImage] }
 		})
 		const { firstName, lastName } = data
 		if (uploadedPhoto) data.photo = await StorageUseCases.upload('profiles', uploadedPhoto)

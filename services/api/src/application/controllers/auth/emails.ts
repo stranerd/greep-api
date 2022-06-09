@@ -34,7 +34,7 @@ export class EmailsController {
 				required: true,
 				rules: [Validation.isString, Validation.isLongerThanX(7), Validation.isShorterThanX(17)]
 			},
-			photo: { required: false, rules: [Validation.isNotTruncated, Validation.isImage] },
+			photo: { required: true, nullable: true, rules: [Validation.isNotTruncated, Validation.isImage] },
 			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
 			lastName: { required: true, rules: [Validation.isString] }
 		})

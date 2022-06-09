@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		default: []
 	},
 	managerRequests: {
-		type: [String],
+		type: [mongoose.Schema.Types.Mixed] as unknown as UserFromModel['managerRequests'],
 		required: false,
 		default: []
 	},

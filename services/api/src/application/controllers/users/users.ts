@@ -40,7 +40,7 @@ export class UsersController {
 			if (request) throw new BadRequestError('you have already requested to become this driver\'s manager')
 		}
 
-		return UsersUseCases.requestAddDriver({ driverId, add, commission, managerId: authUserId })
+		return await UsersUseCases.requestAddDriver({ driverId, add, commission, managerId: authUserId })
 	}
 
 	static async acceptManager (req: Request) {
@@ -63,7 +63,12 @@ export class UsersController {
 		if (!manager) throw new BadRequestError('manager not found')
 		if (manager.manager) throw new BadRequestError('manager is already driving for someone else')
 
-		return UsersUseCases.acceptManager({ managerId, accept, driverId: authUserId, commission: request.commission })
+		return await UsersUseCases.acceptManager({
+			managerId,
+			accept,
+			driverId: authUserId,
+			commission: request.commission
+		})
 	}
 
 	static async updateDriverCommission (req: Request) {
@@ -79,7 +84,7 @@ export class UsersController {
 		})
 		const driver = await UsersUseCases.find(data.driverId)
 		if (!driver) throw new BadRequestError('driver not found')
-		return UsersUseCases.updateDriverCommission({ ...data, managerId: req.authUser!.id })
+		return await UsersUseCases.updateDriverCommission({ ...data, managerId: req.authUser!.id })
 	}
 
 	static async removeDriver (req: Request) {
@@ -88,6 +93,6 @@ export class UsersController {
 		}, {
 			driverId: { required: true, rules: [Validation.isString] }
 		})
-		return UsersUseCases.removeDriver({ ...data, managerId: req.authUser!.id })
+		return await UsersUseCases.removeDriver({ ...data, managerId: req.authUser!.id })
 	}
 }

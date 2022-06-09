@@ -71,7 +71,7 @@ export class UserRepository implements IUserRepository {
 	async requestAddDriver (managerId: string, driverId: string, commission: number, add: boolean) {
 		const driver = await User.findOneAndUpdate(
 			{ _id: driverId, manager: null },
-			{ [add ? '$push' : '$pull']: { managerId, commission } })
+			{ [add ? '$push' : '$pull']: { managerRequests: { managerId, commission } } })
 		return !!driver
 	}
 
