@@ -1,5 +1,5 @@
 import { BaseEntity } from '@stranerd/api-commons'
-import { TransactionData } from '../types'
+import { TransactionData, TransactionType } from '../types'
 
 export class TransactionEntity extends BaseEntity {
 	public readonly id: string
@@ -33,6 +33,11 @@ export class TransactionEntity extends BaseEntity {
 		this.recordedAt = recordedAt
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
+	}
+
+	getDebt () {
+		if (this.data.type !== TransactionType.trip) return 0
+		return this.data.totalAmount - this.amount
 	}
 }
 

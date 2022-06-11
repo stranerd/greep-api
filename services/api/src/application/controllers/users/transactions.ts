@@ -1,4 +1,4 @@
-import { PaymentType, TransactionsUseCases, TransactionType, UsersUseCases } from '@modules/users'
+import { CustomersUseCases, PaymentType, TransactionsUseCases, TransactionType, UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
 	NotAuthorizedError,
@@ -38,9 +38,9 @@ export class TransactionsController {
 			recordedAt,
 			type,
 			name,
-			parentId,
+			customerId,
 			customerName,
-			paidAmount,
+			totalAmount,
 			paymentType
 		} = validate({
 			amount: bodyAmount,
@@ -48,8 +48,8 @@ export class TransactionsController {
 			recordedAt: req.body.recordedAt,
 			type: req.body.data?.type,
 			name: req.body.data?.name,
-			parentId: req.body.data?.parentId,
-			paidAmount: req.body.data?.paidAmount,
+			customerId: req.body.data?.customerId,
+			totalAmount: req.body.data?.totalAmount,
 			customerName: req.body.data?.customerName,
 			paymentType: req.body.data?.paymentType
 		}, {
@@ -64,14 +64,14 @@ export class TransactionsController {
 				required: isExpense,
 				rules: [Validation.isString, Validation.isLongerThanX(0)]
 			},
-			parentId: { required: isBalance, rules: [Validation.isString] },
+			customerId: { required: isBalance, rules: [Validation.isString] },
 			customerName: {
 				required: isTrip,
 				rules: [Validation.isString, Validation.isLongerThanX(0)]
 			},
-			paidAmount: {
+			totalAmount: {
 				required: isTrip,
-				rules: [Validation.isNumber, Validation.isLessThanOrEqualToX(bodyAmount)]
+				rules: [Validation.isNumber]
 			},
 			paymentType: {
 				required: isTrip,
@@ -84,24 +84,19 @@ export class TransactionsController {
 		if (!driver) throw new BadRequestError('profile not found')
 
 		if (isBalance) {
-			const parent = await TransactionsUseCases.find({ id: parentId, userId: driverId })
-			if (!parent) throw new BadRequestError('parent transaction not found')
-			if (parent.driverId !== driverId) throw new BadRequestError('parent transaction isn\'t yours')
-			if (parent.data.type !== TransactionType.trip) throw new BadRequestError('parent transaction is not a trip type')
-			if (parent.data.debt === 0) throw new BadRequestError('parent transaction is settled already')
-			if (parent.data.debt < amount) throw new BadRequestError('amount is greater than the debt to settle')
+			const customer = await CustomersUseCases.find({ id: customerId, userId: driverId })
+			if (!customer) throw new BadRequestError('customer not found')
 		}
 
 		return await TransactionsUseCases.create({
 			amount, description, recordedAt, driverId, managerId: driver.manager?.managerId ?? driverId,
 			data: isExpense ? { type, name } :
-				isBalance ? { type, parentId } :
+				isBalance ? { type, customerId } :
 					isTrip ? {
 						type,
 						customerName,
-						paidAmount,
-						paymentType,
-						debt: amount - paidAmount
+						totalAmount,
+						paymentType
 					} : ({} as any)
 		})
 	}

@@ -28,8 +28,4 @@ export class TransactionsUseCase {
 	async find (input: { userId: string, id: string }) {
 		return await this.repository.find(input)
 	}
-
-	async updateTripDebt (input: { id: string, driverId: string, amount: number }) {
-		return await this.repository.updateTripDebt(input)
-	}
 }

@@ -12,6 +12,4 @@ export interface ITransactionRepository {
 	update (data: { id: string, managerId: string, data: Partial<TransactionToModel> }): Promise<TransactionEntity | null>
 
 	delete (data: { id: string, managerId: string }): Promise<boolean>
-
-	updateTripDebt (data: { id: string, driverId: string, amount: number }): Promise<boolean>
 }

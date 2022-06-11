@@ -29,6 +29,7 @@ export class UsersController {
 		})
 
 		if (add) {
+			if (driverId === authUserId) throw new BadRequestError('you can\'t add yourself as a driver. Just record transactions automatically')
 			const manager = await UsersUseCases.find(authUserId)
 			if (!manager) throw new BadRequestError('profile not found')
 			if (manager.manager) throw new BadRequestError('someone else can\'t drive for you when you have a manager')
@@ -53,6 +54,7 @@ export class UsersController {
 			accept: { required: true, rules: [Validation.isBoolean] }
 		})
 
+		if (accept && managerId === authUserId) throw new BadRequestError('you can\'t add yourself as a driver. Just record transactions automatically')
 		const driver = await UsersUseCases.find(authUserId)
 		if (!driver) throw new BadRequestError('profile not found')
 		if (driver.manager) throw new BadRequestError('you already have a manager')
