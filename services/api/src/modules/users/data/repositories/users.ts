@@ -142,4 +142,15 @@ export class UserRepository implements IUserRepository {
 		await session.endSession()
 		return res
 	}
+
+	async updatePushTokens (userId: string, tokens: string[], add: boolean) {
+		if (add) await User.updateMany(
+			{ pushTokens: { $in: tokens }, _id: { $ne: userId } },
+			{ $pull: { pushTokens: { $in: tokens } } }
+		)
+		const user = await User.findByIdAndUpdate(userId, {
+			[add ? '$addToSet' : '$pull']: { pushTokens: { [add ? '$each' : '$in']: tokens } }
+		}, { new: true })
+		return !!user
+	}
 }

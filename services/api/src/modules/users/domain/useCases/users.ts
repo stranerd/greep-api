@@ -56,4 +56,8 @@ export class UsersUseCase {
 	async removeDriver (data: { managerId: string, driverId: string }) {
 		return await this.repository.removeDriver(data.managerId, data.driverId)
 	}
+
+	async updatePushTokens (data: { userId: string, tokens: string[], add: boolean }) {
+		return await this.repository.updatePushTokens(data.userId, data.tokens, data.add)
+	}
 }

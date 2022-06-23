@@ -10,8 +10,19 @@ export class UserEntity extends BaseEntity {
 	public readonly drivers: UserDrivers
 	public readonly manager: UserManager | null
 	public readonly managerRequests: UserManagerRequests
+	public readonly pushTokens: string[]
 
-	constructor ({ id, bio, roles, dates, status, drivers, manager, managerRequests }: UserConstructorArgs) {
+	constructor ({
+		             id,
+		             bio,
+		             roles,
+		             dates,
+		             status,
+		             drivers,
+		             manager,
+		             managerRequests,
+		             pushTokens
+	             }: UserConstructorArgs) {
 		super()
 		this.id = id
 		this.bio = bio ?? {}
@@ -21,6 +32,7 @@ export class UserEntity extends BaseEntity {
 		this.drivers = drivers
 		this.manager = manager
 		this.managerRequests = managerRequests
+		this.pushTokens = pushTokens
 	}
 
 	isAdmin () {
@@ -37,4 +49,5 @@ type UserConstructorArgs = {
 	drivers: UserDrivers
 	manager: UserManager | null
 	managerRequests: UserManagerRequests
+	pushTokens: string[]
 }

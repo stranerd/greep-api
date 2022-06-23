@@ -97,4 +97,15 @@ export class UsersController {
 		})
 		return await UsersUseCases.removeDriver({ ...data, managerId: req.authUser!.id })
 	}
+
+	static async push (req: Request) {
+		const { token, add } = validate({
+			token: req.body.token,
+			add: req.body.add
+		}, {
+			token: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
+			add: { required: true, rules: [Validation.isBoolean] }
+		})
+		return await UsersUseCases.updatePushTokens({ userId: req.authUser!.id, tokens: [token], add })
+	}
 }

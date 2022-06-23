@@ -20,4 +20,5 @@ export interface UserToModel {
 	drivers: UserDrivers
 	manager: UserManager | null
 	managerRequests: UserManagerRequests
+	pushTokens: string[]
 }

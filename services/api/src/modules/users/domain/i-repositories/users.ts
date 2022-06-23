@@ -26,4 +26,6 @@ export interface IUserRepository {
 	updateDriverCommission (managerId: string, driverId: string, commission: number): Promise<boolean>
 
 	removeDriver (managerId: string, driverId: string): Promise<boolean>
+
+	updatePushTokens (userId: string, tokens: string[], add: boolean): Promise<boolean>
 }

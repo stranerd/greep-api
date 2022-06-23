@@ -77,5 +77,19 @@ export const usersRoutes: Route[] = [
 				}
 			})
 		]
+	},
+	{
+		path: '/users/users/push/tokens',
+		method: 'post',
+		controllers: [
+			requireAuthUser,
+			makeController(async (req) => {
+
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.push(req)
+				}
+			})
+		]
 	}
 ]

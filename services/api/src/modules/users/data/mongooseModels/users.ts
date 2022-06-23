@@ -52,6 +52,11 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		required: false,
 		default: []
 	},
+	pushTokens: {
+		type: [String],
+		required: false,
+		default: []
+	},
 	manager: {
 		type: mongoose.Schema.Types.Mixed as unknown as UserFromModel['manager'],
 		required: false,
