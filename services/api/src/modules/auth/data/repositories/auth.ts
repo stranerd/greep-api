@@ -81,6 +81,7 @@ export class AuthRepository implements IAuthRepository {
 		// check token in cache
 		const userEmail = await appInstance.cache.get('email-verification-token-' + token)
 		if (!userEmail) throw new BadRequestError('Invalid token')
+		await appInstance.cache.delete('email-verification-token-' + token)
 
 		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { isVerified: true } }, { new: true })
 		if (!user) throw new BadRequestError('No account with saved email exists')
@@ -112,6 +113,7 @@ export class AuthRepository implements IAuthRepository {
 		// check token in cache
 		const userEmail = await appInstance.cache.get('password-reset-token-' + input.token)
 		if (!userEmail) throw new BadRequestError('Invalid token')
+		await appInstance.cache.delete('password-reset-token-' + input.token)
 
 		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { password: await Hash.hash(input.password) } }, { new: true })
 		if (!user) throw new BadRequestError('No account with saved email exists')
