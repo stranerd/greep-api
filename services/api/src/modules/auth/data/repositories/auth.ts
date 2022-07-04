@@ -5,10 +5,10 @@ import { UserFromModel, UserToModel } from '../models/users'
 import {
 	AuthTypes,
 	BadRequestError,
-	getRandomValue,
 	Hash,
 	MediaOutput,
 	mongoose,
+	Random,
 	readEmailFromPug,
 	ValidationError
 } from '@stranerd/api-commons'
@@ -59,7 +59,7 @@ export class AuthRepository implements IAuthRepository {
 
 	async sendVerificationMail (email: string) {
 		email = email.toLowerCase()
-		const token = getRandomValue(8).toUpperCase()
+		const token = Random.number(1e5, 1e6).toString()
 
 		// save to cache
 		await appInstance.cache.set('email-verification-token-' + token, email, TOKENS_TTL_IN_SECS)
@@ -90,7 +90,7 @@ export class AuthRepository implements IAuthRepository {
 
 	async sendPasswordResetMail (email: string) {
 		email = email.toLowerCase()
-		const token = getRandomValue(8).toUpperCase()
+		const token = Random.number(1e5, 1e6).toString()
 
 		// save to cache
 		await appInstance.cache.set('password-reset-token-' + token, email, TOKENS_TTL_IN_SECS)
