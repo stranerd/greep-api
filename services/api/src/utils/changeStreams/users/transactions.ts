@@ -1,5 +1,11 @@
 import { ChangeStreamCallbacks } from '@stranerd/api-commons'
-import { CustomersUseCases, TransactionEntity, TransactionFromModel, TransactionType } from '@modules/users'
+import {
+	CustomersUseCases,
+	TransactionEntity,
+	TransactionFromModel,
+	TransactionsUseCases,
+	TransactionType
+} from '@modules/users'
 import { getSocketEmitter } from '@index'
 
 export const TransactionChangeStreamCallbacks: ChangeStreamCallbacks<TransactionFromModel, TransactionEntity> = {
@@ -9,14 +15,11 @@ export const TransactionChangeStreamCallbacks: ChangeStreamCallbacks<Transaction
 		await getSocketEmitter().emitCreated(`users/transactions/${after.id}/${after.driverId}`, after)
 		await getSocketEmitter().emitCreated(`users/transactions/${after.id}/${after.managerId}`, after)
 
-		if (after.data.type === TransactionType.balance) {
-			const customer = await CustomersUseCases.find({ id: after.data.customerId, userId: after.driverId })
-			if (customer) await CustomersUseCases.updateDebt({
-				driverId: after.driverId,
-				name: customer.name,
-				count: -after.amount
-			})
-		}
+		if (after.data.type === TransactionType.balance) await TransactionsUseCases.updateTripDebt({
+			id: after.data.parentId,
+			driverId: after.driverId,
+			amount: after.amount
+		})
 
 		if (after.data.type === TransactionType.trip) {
 			await CustomersUseCases.updateTrip({
@@ -24,18 +27,25 @@ export const TransactionChangeStreamCallbacks: ChangeStreamCallbacks<Transaction
 				name: after.data.customerName,
 				count: 1
 			})
-			if (after.getDebt() > 0) await CustomersUseCases.updateDebt({
+			if (after.data.debt !== 0) await CustomersUseCases.updateDebt({
 				driverId: after.driverId,
 				name: after.data.customerName,
-				count: after.getDebt()
+				count: after.data.debt
 			})
 		}
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await getSocketEmitter().emitUpdated(`users/transactions/${after.driverId}`, after)
 		await getSocketEmitter().emitUpdated(`users/transactions/${after.managerId}`, after)
 		await getSocketEmitter().emitUpdated(`users/transactions/${after.id}/${after.driverId}`, after)
 		await getSocketEmitter().emitUpdated(`users/transactions/${after.id}/${after.managerId}`, after)
+
+		const debtChanged = after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt
+		if (debtChanged) await CustomersUseCases.updateDebt({
+			driverId: after.driverId,
+			name: after.data.customerName,
+			count: after.data.debt - before.data.debt
+		})
 	},
 	deleted: async ({ before }) => {
 		await getSocketEmitter().emitDeleted(`users/transactions/${before.driverId}`, before)
@@ -49,20 +59,17 @@ export const TransactionChangeStreamCallbacks: ChangeStreamCallbacks<Transaction
 				name: before.data.customerName,
 				count: -1
 			})
-			if (before.getDebt() > 0) await CustomersUseCases.updateDebt({
+			if (before.data.debt !== 0) await CustomersUseCases.updateDebt({
 				driverId: before.driverId,
 				name: before.data.customerName,
-				count: -before.getDebt()
+				count: -before.data.debt
 			})
 		}
 
-		if (before.data.type === TransactionType.balance) {
-			const customer = await CustomersUseCases.find({ id: before.data.customerId, userId: before.driverId })
-			if (customer) await CustomersUseCases.updateDebt({
-				driverId: before.driverId,
-				name: customer.name,
-				count: before.amount
-			})
-		}
+		if (before.data.type === TransactionType.balance) await TransactionsUseCases.updateTripDebt({
+			id: before.data.parentId,
+			driverId: before.driverId,
+			amount: -before.amount
+		})
 	}
 }

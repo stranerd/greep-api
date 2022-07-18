@@ -28,7 +28,7 @@ services:
       - rabbitmq
     volumes:
       - '/c/data/docker/greep/files/api/:/app/public/'
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn start'
+    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- node lib/index.js'
 
   mongodb:
     image: mongo

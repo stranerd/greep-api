@@ -18,12 +18,13 @@ type TripType = {
 	type: TransactionType.trip
 	customerName: string
 	paymentType: PaymentType
-	totalAmount: number
+	paidAmount: number
+	debt: number
 }
 
 type BalanceType = {
 	type: TransactionType.balance
-	customerId: string
+	parentId: string
 }
 
 export type TransactionData = ExpenseType | TripType | BalanceType
