@@ -53,7 +53,7 @@ providers:
 certificatesResolvers:
   staging:
     acme:
-      email: kevin@stranerd.com
+      email: no-reply@stranerd.com
       storage: $CERT_PATH_STAGING
       caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       httpChallenge:
@@ -61,7 +61,7 @@ certificatesResolvers:
 
   production:
     acme:
-      email: kevin@stranerd.com
+      email: no-reply@stranerd.com
       storage: $CERT_PATH_PRODUCTION
       caServer: "https://acme-v02.api.letsencrypt.org/directory"
       httpChallenge:
