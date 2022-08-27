@@ -47,5 +47,6 @@ export const deleteUnverifiedUsers = async () => {
 		],
 		all: true
 	})
-	await AuthUsersUseCases.deleteUsers(unverifiedUsers.map((u) => u.id))
+	unverifiedUsers
+	// await AuthUsersUseCases.deleteUsers(unverifiedUsers.map((u) => u.id))
 }
