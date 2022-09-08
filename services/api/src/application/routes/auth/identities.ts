@@ -1,5 +1,5 @@
 import { makeController, Route, StatusCodes } from '@stranerd/api-commons'
-import { IdentitiesController } from '../../controllers/auth'
+import { IdentitiesController } from '../../controllers/auth/identities'
 
 const googleSignIn: Route = {
 	path: '/auth/identities/google',

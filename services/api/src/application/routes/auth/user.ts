@@ -1,5 +1,5 @@
 import { makeController, requireAuthUser, Route, StatusCodes } from '@stranerd/api-commons'
-import { UserController } from '../../controllers/auth'
+import { UserController } from '../../controllers/auth/user'
 import { cannotModifyMyRole, isAdmin } from '../../middlewares'
 
 const getUserDetails: Route = {
