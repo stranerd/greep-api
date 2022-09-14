@@ -1,6 +1,6 @@
 import { AuthTypes, BaseEntity, MediaOutput } from '@stranerd/api-commons'
 import { UserUpdateInput } from '../types'
-import { AuthRoles } from '@utils/types/auth'
+import { AuthRoles } from '@utils/types'
 
 export class AuthUserEntity extends BaseEntity {
 	public readonly id: string

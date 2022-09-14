@@ -2,7 +2,7 @@ import { CronTypes } from '@stranerd/api-commons'
 import { appInstance } from '@utils/environment'
 import { EmailsUseCases } from '@modules/emails'
 import { sendMailAndCatchError } from '@utils/modules/emails'
-import { TypedEmail } from '@utils/types/email'
+import { TypedEmail } from '@utils/types'
 import { deleteUnverifiedUsers } from '@utils/modules/auth'
 
 export const startJobs = async () => {

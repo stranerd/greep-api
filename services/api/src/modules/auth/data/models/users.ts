@@ -1,5 +1,5 @@
 import { AuthTypes, MediaOutput } from '@stranerd/api-commons'
-import { AuthRoles } from '@utils/types/auth'
+import { AuthRoles } from '@utils/types'
 
 export interface UserFromModel extends UserToModel {
 	_id: string

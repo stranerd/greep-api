@@ -14,7 +14,7 @@ import {
 } from '@stranerd/api-commons'
 import { appInstance } from '@utils/environment'
 import { UserMapper } from '../mappers/users'
-import { EmailsList } from '@utils/types/email'
+import { EmailsList } from '@utils/types'
 import { EventTypes, publishers } from '@utils/events'
 import axios from 'axios'
 

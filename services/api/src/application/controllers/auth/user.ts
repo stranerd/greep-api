@@ -2,7 +2,7 @@ import { AuthUsersUseCases } from '@modules/auth'
 import { NotFoundError, Request, validate, Validation, verifyAccessToken } from '@stranerd/api-commons'
 import { signOutUser } from '@utils/modules/auth'
 import { superAdminEmail } from '@utils/environment'
-import { SupportedAuthRoles } from '@utils/types/auth'
+import { SupportedAuthRoles } from '@utils/types'
 import { StorageUseCases } from '@modules/storage'
 
 const roles = Object.values<string>(SupportedAuthRoles).filter((key) => key !== SupportedAuthRoles.isSuperAdmin)

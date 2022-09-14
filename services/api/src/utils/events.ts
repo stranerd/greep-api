@@ -1,5 +1,5 @@
 import { MediaOutput } from '@stranerd/api-commons'
-import { TypedEmail } from '@utils/types/email'
+import { TypedEmail } from '@utils/types'
 import { appInstance } from '@utils/environment'
 import { sendMailAndCatchError } from '@utils/modules/emails'
 import { StorageUseCases } from '@modules/storage'

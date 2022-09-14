@@ -1,5 +1,5 @@
 import { MediaOutput } from '@stranerd/api-commons'
-import { AuthRoles } from '@utils/types/auth'
+import { AuthRoles } from '@utils/types'
 
 export * from './transactions'
 
