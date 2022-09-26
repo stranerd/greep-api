@@ -1,5 +1,6 @@
-import { makeController, requireAuthUser, Route, StatusCodes } from '@stranerd/api-commons'
+import { makeController, Route, StatusCodes } from '@stranerd/api-commons'
 import { UsersController } from '../../controllers/users/users'
+import { isAuthenticated } from '@application/middlewares'
 
 export const usersRoutes: Route[] = [
 	{
@@ -30,7 +31,7 @@ export const usersRoutes: Route[] = [
 		path: '/users/users/managers/accept',
 		method: 'post',
 		controllers: [
-			requireAuthUser,
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -43,7 +44,7 @@ export const usersRoutes: Route[] = [
 		path: '/users/users/drivers/add',
 		method: 'post',
 		controllers: [
-			requireAuthUser,
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -56,7 +57,7 @@ export const usersRoutes: Route[] = [
 		path: '/users/users/drivers/update',
 		method: 'post',
 		controllers: [
-			requireAuthUser,
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -69,7 +70,7 @@ export const usersRoutes: Route[] = [
 		path: '/users/users/drivers/remove',
 		method: 'post',
 		controllers: [
-			requireAuthUser,
+			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
@@ -82,7 +83,7 @@ export const usersRoutes: Route[] = [
 		path: '/users/users/push/tokens',
 		method: 'post',
 		controllers: [
-			requireAuthUser,
+			isAuthenticated,
 			makeController(async (req) => {
 
 				return {

@@ -1,5 +1,24 @@
-import { BadRequestError, makeMiddleware, NotAuthenticatedError, NotAuthorizedError } from '@stranerd/api-commons'
+import {
+	BadRequestError,
+	makeMiddleware,
+	NotAuthenticatedError,
+	NotAuthorizedError,
+	requireAuthUser,
+	requireRefreshUser
+} from '@stranerd/api-commons'
 import { SupportedAuthRoles } from '@utils/types'
+
+export const isAuthenticated = makeMiddleware(
+	async (request) => {
+		await requireAuthUser(request)
+	}
+)
+
+export const hasRefreshToken = makeMiddleware(
+	async (request) => {
+		await requireRefreshUser(request)
+	}
+)
 
 export const cannotModifyMyRole = makeMiddleware(
 	async (request) => {
