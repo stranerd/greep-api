@@ -1,4 +1,13 @@
-import { UserBio, UserDates, UserDrivers, UserManager, UserManagerRequests, UserRoles, UserStatus } from '../types'
+import {
+	EmbeddedUser,
+	UserBio,
+	UserDates,
+	UserDrivers,
+	UserManager,
+	UserManagerRequests,
+	UserRoles,
+	UserStatus
+} from '../types'
 import { BaseEntity } from '@stranerd/api-commons'
 
 export class UserEntity extends BaseEntity {
@@ -37,6 +46,14 @@ export class UserEntity extends BaseEntity {
 
 	isAdmin () {
 		return this.roles['isAdmin'] ?? false
+	}
+
+	getEmbedded (): EmbeddedUser {
+		return {
+			id: this.id,
+			bio: this.bio,
+			roles: this.roles
+		}
 	}
 }
 

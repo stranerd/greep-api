@@ -39,3 +39,9 @@ export type UserManagerRequests = {
 	managerId: string
 	commission: number
 }[]
+
+export type EmbeddedUser = {
+	id: string
+	bio: UserBio
+	roles: UserRoles
+}
