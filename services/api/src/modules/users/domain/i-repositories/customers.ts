@@ -8,5 +8,5 @@ export interface ICustomerRepository {
 
 	updateDebt (data: { driverId: string, name: string, count: number }): Promise<boolean>
 
-	find (data: { id: string, userId: string }): Promise<CustomerEntity | null>
+	find (id: string): Promise<CustomerEntity | null>
 }

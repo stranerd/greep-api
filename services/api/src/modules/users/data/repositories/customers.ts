@@ -21,8 +21,8 @@ export class CustomerRepository implements ICustomerRepository {
 		}
 	}
 
-	async find ({ id, userId }: { id: string, userId: string }) {
-		const customer = await Customer.findOne({ _id: id, driverId: userId })
+	async find (id: string) {
+		const customer = await Customer.findById(id)
 		return this.mapper.mapFrom(customer)
 	}
 

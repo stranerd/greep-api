@@ -19,10 +19,8 @@ export class TransactionsController {
 	}
 
 	static async findTransaction (req: Request) {
-		const transaction = await TransactionsUseCases.find({
-			id: req.params.id, userId: req.authUser!.id
-		})
-		if (!transaction) throw new NotFoundError()
+		const transaction = await TransactionsUseCases.find(req.params.id)
+		if (!transaction || ![transaction.managerId, transaction.driverId].includes(req.authUser!.id)) throw new NotFoundError()
 		return transaction
 	}
 
@@ -87,7 +85,7 @@ export class TransactionsController {
 		if (!driver) throw new BadRequestError('profile not found')
 
 		if (isBalance) {
-			const parent = await TransactionsUseCases.find({ id: parentId, userId: driverId })
+			const parent = await TransactionsUseCases.find(parentId)
 			if (!parent) throw new BadRequestError('parent transaction not found')
 			if (parent.driverId !== driverId) throw new BadRequestError('parent transaction isn\'t yours')
 			if (parent.data.type !== TransactionType.trip) throw new BadRequestError('parent transaction is not a trip')

@@ -9,8 +9,8 @@ export class CustomersController {
 	}
 
 	static async findCustomer (req: Request) {
-		const customer = await CustomersUseCases.find({ id: req.params.id, userId: req.authUser!.id })
-		if (!customer) throw new NotFoundError()
+		const customer = await CustomersUseCases.find(req.params.id)
+		if (!customer || customer.driverId !== req.authUser!.id) throw new NotFoundError()
 		return customer
 	}
 }

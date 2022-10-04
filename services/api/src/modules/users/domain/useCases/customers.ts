@@ -8,8 +8,8 @@ export class CustomersUseCase {
 		this.repository = repo
 	}
 
-	async find (data: { id: string, userId: string }) {
-		return await this.repository.find(data)
+	async find (id: string) {
+		return await this.repository.find(id)
 	}
 
 	async get (query: QueryParams) {

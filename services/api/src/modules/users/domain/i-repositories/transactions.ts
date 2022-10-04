@@ -3,7 +3,7 @@ import { TransactionToModel } from '../../data/models/transactions'
 import { QueryParams, QueryResults } from '@stranerd/api-commons'
 
 export interface ITransactionRepository {
-	find (data: { userId: string, id: string }): Promise<TransactionEntity | null>
+	find (id: string): Promise<TransactionEntity | null>
 
 	create (data: TransactionToModel): Promise<TransactionEntity>
 

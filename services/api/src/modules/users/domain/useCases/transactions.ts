@@ -25,8 +25,8 @@ export class TransactionsUseCase {
 		return await this.repository.get(input)
 	}
 
-	async find (input: { userId: string, id: string }) {
-		return await this.repository.find(input)
+	async find (id: string) {
+		return await this.repository.find(id)
 	}
 
 	async updateTripDebt (input: { id: string, driverId: string, amount: number }) {
