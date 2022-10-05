@@ -10,13 +10,13 @@ import {
 	mongoose,
 	Random,
 	readEmailFromPug,
+	signinWithGoogle,
 	ValidationError
 } from '@stranerd/api-commons'
 import { appInstance } from '@utils/environment'
 import { UserMapper } from '../mappers/users'
 import { EmailsList } from '@utils/types'
 import { EventTypes, publishers } from '@utils/events'
-import axios from 'axios'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
@@ -122,26 +122,20 @@ export class AuthRepository implements IAuthRepository {
 	}
 
 	async googleSignIn (idToken: string) {
-		const authUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`
-		const { data } = await axios.get(authUrl).catch((err) => {
-			const message = err?.response?.data?.error
-			throw new BadRequestError(message ? 'Invalid id token' : 'Something unexpected happened')
-		})
-
-		const names = (data.name ?? '').split(' ')
-		const first = names[0] ?? ''
-		const last = names.length > 1 ? names.at(-1) ?? '' : ''
+		const data = await signinWithGoogle(idToken)
 		const email = data.email!.toLowerCase()
+
 		const photo = data.picture ? {
 			link: data.picture
 		} as unknown as MediaOutput : null
 
 		return this.authorizeSocial(AuthTypes.google, {
-			email, photo, name: { first, last }
+			email, photo, name: { first: data.first_name, last : data.last_name},
+			isVerified: data.email_verified === 'true'
 		})
 	}
 
-	private async authorizeSocial (type: AuthTypes, data: Pick<UserToModel, 'email' | 'name' | 'photo'>) {
+	private async authorizeSocial (type: AuthTypes, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
@@ -150,7 +144,7 @@ export class AuthRepository implements IAuthRepository {
 			photo: data.photo,
 			authTypes: [type],
 			password: '',
-			isVerified: true
+			isVerified: data.isVerified
 		}, type)
 
 		return await this.authenticateUser({
