@@ -10,6 +10,7 @@ import {
 	mongoose,
 	Random,
 	readEmailFromPug,
+	signinWithApple,
 	signinWithGoogle,
 	ValidationError
 } from '@stranerd/api-commons'
@@ -130,7 +131,22 @@ export class AuthRepository implements IAuthRepository {
 		} as unknown as MediaOutput : null
 
 		return this.authorizeSocial(AuthTypes.google, {
-			email, photo, name: { first: data.first_name, last : data.last_name},
+			email, photo, name: { first: data.first_name, last: data.last_name },
+			isVerified: data.email_verified === 'true'
+		})
+	}
+
+	async appleSignIn ({
+		                   idToken,
+		                   firstName,
+		                   lastName
+	                   }: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
+		const data = await signinWithApple(idToken)
+		const email = data.email?.toLowerCase()
+		if (!email) throw new BadRequestError('can\'t access your email. Signin another way')
+
+		return this.authorizeSocial(AuthTypes.google, {
+			email, photo: null, name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
 			isVerified: data.email_verified === 'true'
 		})
 	}

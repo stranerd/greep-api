@@ -48,6 +48,10 @@ export class UserEntity extends BaseEntity {
 		return this.roles['isAdmin'] ?? false
 	}
 
+	isDeleted () {
+		return this.dates.deletedAt !== null
+	}
+
 	getEmbedded (): EmbeddedUser {
 		return {
 			id: this.id,

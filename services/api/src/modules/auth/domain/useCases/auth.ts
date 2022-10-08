@@ -18,6 +18,10 @@ export class AuthUseCase {
 		return await this.repository.googleSignIn(input.idToken)
 	}
 
+	async appleSignIn (input: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
+		return await this.repository.appleSignIn(input)
+	}
+
 	async registerUser (params: RegisterInput) {
 		const userModel: UserToModel = {
 			...params,

@@ -17,4 +17,6 @@ export interface IAuthRepository {
 	resetPassword (input: PasswordResetInput): Promise<AuthUserEntity>
 
 	googleSignIn (tokenId: string): Promise<AuthUserEntity>
+
+	appleSignIn (data: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }): Promise<AuthUserEntity>
 }

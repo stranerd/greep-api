@@ -15,5 +15,5 @@ export interface IUserRepository {
 
 	updatePassword (userId: string, password: string): Promise<boolean>
 
-	deleteUsers (userIds: string[]): Promise<void>
+	deleteUsers (userIds: string[]): Promise<boolean>
 }

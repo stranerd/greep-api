@@ -39,7 +39,8 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async deleteUsers (userIds: string[]) {
-		await User.deleteMany({ _id: { $in: userIds } })
+		const res = await User.deleteMany({ _id: { $in: userIds } })
+		return res.acknowledged
 	}
 
 	async updateUserProfile (userId: string, data: UserUpdateInput) {

@@ -42,6 +42,8 @@ export const UserChangeStreamCallbacks: ChangeStreamCallbacks<UserFromModel, Aut
 		})
 	},
 	deleted: async ({ before }) => {
-		if (before.photo) await publishers[EventTypes.DELETEFILE].publish(before.photo)
+		await UsersUseCases.markUserAsDeleted({
+			id: before.id, timestamp: Date.now()
+		})
 	}
 }
