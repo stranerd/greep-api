@@ -1,18 +1,10 @@
 import { UsersUseCases } from '@modules/users'
-import {
-	BadRequestError,
-	Conditions,
-	NotFoundError,
-	QueryParams,
-	Request,
-	validate,
-	Validation
-} from '@stranerd/api-commons'
+import { BadRequestError, NotFoundError, QueryParams, Request, validate, Validation } from '@stranerd/api-commons'
 
 export class UsersController {
 	static async getUsers (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'dates.deletedAt', value: null, condition: Conditions.ne }]
+		query.auth = [{ field: 'dates.deletedAt', value: null }]
 		return await UsersUseCases.get(query)
 	}
 
