@@ -194,10 +194,10 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz#96116f2a912e0c02817345b3c10751069920d553"
   integrity sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==
 
-"@stranerd/api-commons@^3.18.2":
-  version "3.18.2"
-  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.18.2.tgz#62047e835d857f7584eae26bc84279584490c956"
-  integrity sha512-VgOMflmU12rtlWYkCrD64dhZ9WNXApHGHQP6LkAw74n03zXvPKL/4pgbvPVDGT0YmHRcY6DOReM8k7rvvo7gRA==
+"@stranerd/api-commons@^3.18.3":
+  version "3.18.3"
+  resolved "https://registry.yarnpkg.com/@stranerd/api-commons/-/api-commons-3.18.3.tgz#a78ca58e772295215436acade951b45a09c7c3c9"
+  integrity sha512-IhUgJ0iEqD2Amm0XTLmsZCUaD+QFz3f40r77+G9D1FUMuyBL4wnWkhcqqZtvy6kK05SM8Jf50QPNtg20IzyUOQ==
   dependencies:
     "@stranerd/validate" "^3.4.0"
     amqplib "^0.10.3"
