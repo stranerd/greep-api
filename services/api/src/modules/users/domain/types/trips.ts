@@ -1,7 +1,8 @@
 export enum TripStatus {
 	gottenTrip = 'gottenTrip',
 	startedTrip = 'startedTrip',
-	endedTrip = 'endedTrip'
+	endedTrip = 'endedTrip',
+	detailed = 'detailed'
 }
 
 export type TripData = {

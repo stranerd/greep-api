@@ -1,13 +1,17 @@
 import { ITripRepository } from '../../domain/i-repositories/trips'
 import { TripMapper } from '../mappers/trips'
 import { Trip } from '../mongooseModels/trips'
-import { parseQueryParams, QueryParams } from '@stranerd/api-commons'
+import { mongoose, parseQueryParams, QueryParams } from '@stranerd/api-commons'
 import { TripFromModel, TripToModel } from '../models/trips'
 import { TripStatus } from '../../domain/types'
+import { TransactionToModel } from '../models/transactions'
+import { TransactionMapper } from '../mappers/transactions'
+import { Transaction } from '@modules/users/data/mongooseModels/transactions'
 
 export class TripRepository implements ITripRepository {
 	private static instance: TripRepository
 	private mapper = new TripMapper()
+	private transactionMapper = new TransactionMapper()
 
 	static getInstance (): TripRepository {
 		if (!TripRepository.instance) TripRepository.instance = new TripRepository()
@@ -29,11 +33,10 @@ export class TripRepository implements ITripRepository {
 
 	async create (data: TripToModel) {
 		data[`data.${data.status}`] = data.data[data.status]
-		if (data.data) { // @ts-ignore
-			delete data.data
-		}
+		// @ts-ignore
+		if (data.data) delete data.data
 		const trip = await Trip.findOneAndUpdate(
-			{ driverId: data.driverId, status: { $ne: TripStatus.endedTrip } },
+			{ driverId: data.driverId, status: { $ne: TripStatus.detailed } },
 			{ $setOnInsert: data },
 			{ new: true, upsert: true }
 		)
@@ -45,5 +48,20 @@ export class TripRepository implements ITripRepository {
 		if (data.data) delete data.data
 		const trip = await Trip.findOneAndUpdate({ _id: id, driverId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(trip)
+	}
+
+	async detail ({ id, driverId, data }: { id: string, driverId: string, data: TransactionToModel }) {
+		let res = null as any
+		const session = await mongoose.startSession()
+		await session.withTransaction(async (session) => {
+			const trip = this.mapper.mapFrom(await Trip.findOneAndUpdate({
+				_id: id, driverId, status: { $ne: TripStatus.detailed }
+			}, { $set: { status: TripStatus.detailed } }, { session }))
+			if (!trip) return null
+			res = await new Transaction(data).save()
+			return res
+		})
+		await session.endSession()
+		return this.transactionMapper.mapFrom(res)
 	}
 }

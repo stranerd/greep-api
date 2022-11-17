@@ -5,11 +5,7 @@ import { Error } from '../mongooseModels/errors'
 
 export class ErrorRepository implements IErrorRepository {
 	private static instance: ErrorRepository
-	private mapper: ErrorMapper
-
-	private constructor () {
-		this.mapper = new ErrorMapper()
-	}
+	private mapper = new ErrorMapper()
 
 	static getInstance () {
 		if (!ErrorRepository.instance) ErrorRepository.instance = new ErrorRepository()

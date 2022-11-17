@@ -1,4 +1,11 @@
-import { TripStatus, TripsUseCases, UsersUseCases } from '@modules/users'
+import {
+	PaymentType,
+	TransactionsUseCases,
+	TransactionType,
+	TripStatus,
+	TripsUseCases,
+	UsersUseCases
+} from '@modules/users'
 import {
 	BadRequestError,
 	NotAuthorizedError,
@@ -86,5 +93,48 @@ export class TripsController {
 
 		if (updated) return updated
 		throw new NotAuthorizedError()
+	}
+
+	static async detailTrip (req: Request) {
+		const {
+			amount,
+			description,
+			recordedAt,
+			customerName,
+			paidAmount,
+			paymentType
+		} = validate({
+			amount: req.body.amount,
+			description: req.body.description,
+			recordedAt: req.body.recordedAt,
+			paidAmount: req.body.data?.paidAmount,
+			customerName: req.body.data?.customerName,
+			paymentType: req.body.data?.paymentType
+		}, {
+			amount: { required: true, rules: [Validation.isNumber, Validation.isMoreThanX(0)] },
+			description: { required: true, rules: [Validation.isString] },
+			recordedAt: { required: true, rules: [Validation.isNumber, Validation.isMoreThanX(0)] },
+			customerName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
+			paidAmount: { required: true, rules: [Validation.isNumber] },
+			paymentType: {
+				required: true,
+				rules: [Validation.isString, Validation.arrayContainsX(Object.values(PaymentType), (cur, val) => cur === val)]
+			}
+		})
+
+		const trip = await TripsUseCases.find(req.params.id)
+		if (!trip || trip.driverId !== req.authUser!.id) throw new NotAuthorizedError()
+
+		return await TransactionsUseCases.create({
+			amount, description, recordedAt, driverId: trip.driverId, managerId: trip.managerId,
+			data: {
+				type: TransactionType.trip,
+				tripId: trip.id,
+				customerName,
+				paidAmount,
+				debt: amount - paidAmount,
+				paymentType
+			}
+		})
 	}
 }

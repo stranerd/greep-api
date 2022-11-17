@@ -22,13 +22,8 @@ import { EventTypes, publishers } from '@utils/events'
 const TOKENS_TTL_IN_SECS = 60 * 60
 
 export class AuthRepository implements IAuthRepository {
-
 	private static instance: AuthRepository
 	private mapper = new UserMapper()
-
-	private constructor () {
-		this.mapper = new UserMapper()
-	}
 
 	static getInstance () {
 		if (!AuthRepository.instance) AuthRepository.instance = new AuthRepository()

@@ -16,6 +16,7 @@ export enum PaymentType {
 
 type TripType = {
 	type: TransactionType.trip
+	tripId: string
 	customerName: string
 	paymentType: PaymentType
 	paidAmount: number

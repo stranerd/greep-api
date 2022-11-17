@@ -14,11 +14,7 @@ import User from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
-	private mapper: UserMapper
-
-	private constructor () {
-		this.mapper = new UserMapper()
-	}
+	private mapper = new UserMapper()
 
 	static getInstance (): UserRepository {
 		if (!UserRepository.instance) UserRepository.instance = new UserRepository()
