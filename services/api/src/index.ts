@@ -29,6 +29,7 @@ const start = async () => {
 
 	getSocketEmitter().register('users/customers', isMine)
 	getSocketEmitter().register('users/transactions', isMine)
+	getSocketEmitter().register('users/trips', isMine)
 	getSocketEmitter().register('users/users', isOpen)
 
 	await UsersUseCases.resetAllUsersStatus()
