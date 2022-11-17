@@ -55,7 +55,7 @@ export class TripRepository implements ITripRepository {
 		const session = await mongoose.startSession()
 		await session.withTransaction(async (session) => {
 			const trip = this.mapper.mapFrom(await Trip.findOneAndUpdate({
-				_id: id, driverId, status: { $ne: TripStatus.detailed }
+				_id: id, driverId, status: TripStatus.ended
 			}, { $set: { status: TripStatus.detailed } }, { session }))
 			if (!trip) return null
 			res = await new Transaction(data).save()

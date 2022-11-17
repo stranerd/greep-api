@@ -1,7 +1,7 @@
 export enum TripStatus {
-	gottenTrip = 'gottenTrip',
-	startedTrip = 'startedTrip',
-	endedTrip = 'endedTrip',
+	gotten = 'gotten',
+	started = 'started',
+	ended = 'ended',
 	detailed = 'detailed'
 }
 

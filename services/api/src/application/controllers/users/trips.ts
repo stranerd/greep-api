@@ -1,11 +1,4 @@
-import {
-	PaymentType,
-	TransactionsUseCases,
-	TransactionType,
-	TripStatus,
-	TripsUseCases,
-	UsersUseCases
-} from '@modules/users'
+import { PaymentType, TransactionType, TripStatus, TripsUseCases, UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
 	NotAuthorizedError,
@@ -14,7 +7,8 @@ import {
 	QueryParams,
 	Request,
 	validate,
-	Validation
+	Validation,
+	ValidationError
 } from '@stranerd/api-commons'
 
 const isValidCoords = (val: any) => {
@@ -42,8 +36,8 @@ export class TripsController {
 
 	static async createTrip (req: Request) {
 		const { coords, location } = validate({
-			coords: req.body.data?.coords,
-			location: req.body.data?.location
+			coords: req.body.coords,
+			location: req.body.location
 		}, {
 			coords: { required: true, rules: [isValidCoords] },
 			location: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] }
@@ -55,30 +49,32 @@ export class TripsController {
 
 		return await TripsUseCases.create({
 			driverId, managerId: driver.manager?.managerId ?? driverId,
-			status: TripStatus.gottenTrip,
+			status: TripStatus.gotten,
 			data: {
-				[TripStatus.gottenTrip]: { timestamp: Date.now(), coords, location }
+				[TripStatus.gotten]: { timestamp: Date.now(), coords, location }
 			}
 		})
 	}
 
-	static async updateTrip (req: Request) {
-		const { status, coords, location } = validate({
-			status: req.body.status,
-			coords: req.body.data?.coords,
-			location: req.body.data?.location
+	static async updateTrip (req: Request, status: TripStatus) {
+		const { coords, location } = validate({
+			coords: req.body.coords,
+			location: req.body.location
 		}, {
-			status: {
-				required: true, rules: [Validation.arrayContainsX(
-					Object.keys(TripStatus).filter((c) => c !== TripStatus.gottenTrip),
-					(cur, val) => cur === val)]
-			},
 			coords: { required: true, rules: [isValidCoords] },
 			location: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] }
 		})
 
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip) throw new BadRequestError('trip not found')
+		const supportedStatus = {
+			[TripStatus.started]: TripStatus.gotten,
+			[TripStatus.ended]: TripStatus.started
+		}
+		if (supportedStatus[status] !== trip.status) throw new ValidationError([{
+			field: 'status',
+			messages: ['can\'t update this trip with: ' + status]
+		}])
 
 		const updated = await TripsUseCases.update({
 			id: trip.id, driverId: req.authUser!.id,
@@ -88,7 +84,6 @@ export class TripsController {
 					[status]: { timestamp: Date.now(), coords, location }
 				}
 			}
-
 		})
 
 		if (updated) return updated
@@ -125,16 +120,21 @@ export class TripsController {
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || trip.driverId !== req.authUser!.id) throw new NotAuthorizedError()
 
-		return await TransactionsUseCases.create({
-			amount, description, recordedAt, driverId: trip.driverId, managerId: trip.managerId,
+		const transaction = await TripsUseCases.detail({
+			id: trip.id, driverId: trip.driverId,
 			data: {
-				type: TransactionType.trip,
-				tripId: trip.id,
-				customerName,
-				paidAmount,
-				debt: amount - paidAmount,
-				paymentType
+				amount, description, recordedAt, driverId: trip.driverId, managerId: trip.managerId,
+				data: {
+					type: TransactionType.trip,
+					tripId: trip.id,
+					customerName,
+					paidAmount,
+					debt: amount - paidAmount,
+					paymentType
+				}
 			}
 		})
+		if (transaction) return transaction
+		throw new NotAuthorizedError()
 	}
 }

@@ -9,7 +9,9 @@ export class CustomerMapper extends BaseMapper<CustomerFromModel, CustomerToMode
 			name: param.name,
 			driverId: param.driverId,
 			debt: param.debt,
-			trips: param.trips
+			trips: param.trips,
+			createdAt: param.createdAt,
+			updatedAt: param.updatedAt
 		})
 	}
 

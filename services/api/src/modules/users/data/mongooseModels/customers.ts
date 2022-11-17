@@ -26,8 +26,18 @@ const CustomerSchema = new mongoose.Schema<CustomerFromModel>({
 		type: Number,
 		required: false,
 		default: 0
+	},
+	createdAt: {
+		type: Number,
+		required: false,
+		default: Date.now
+	},
+	updatedAt: {
+		type: Number,
+		required: false,
+		default: Date.now
 	}
-}, { minimize: false })
+}, { timestamps: { currentTime: Date.now }, minimize: false })
 
 export const Customer = mongoose.model<CustomerFromModel>('UsersCustomer', CustomerSchema)
 
