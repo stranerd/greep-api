@@ -1,4 +1,4 @@
-APPS = api
+APPS = admin api
 ALL_FOLDERS = ${APPS}
 args = $(filter-out $@,$(MAKECMDGOALS))
 

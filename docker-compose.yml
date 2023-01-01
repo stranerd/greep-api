@@ -30,6 +30,18 @@ services:
       - '/c/data/docker/greep/files/api/:/app/public/'
     command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- node lib/index.js'
 
+  admin:
+    build:
+      context: ./services/admin
+      target: production
+    hostname: admin
+    restart: always
+    depends_on:
+      - api
+    volumes:
+      - '/c/data/docker/greep/files/api/:/app/public/'
+    command: 'yarn start'
+
   mongodb:
     image: 'mongo:6.0.1'
     hostname: mongodb

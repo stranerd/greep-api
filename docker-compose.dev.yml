@@ -8,6 +8,15 @@ services:
       - "./services/api/src:/app/src:ro"
     command: "sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn dev"
 
+  admin:
+    restart: unless-stopped
+    build:
+      target: base
+    volumes:
+      - "./services/api/build:/app/build"
+      - "./services/api/src:/app/src:ro"
+    command: "yarn dev"
+
   mongodb:
     ports:
       - '27017:27017'
