@@ -29,7 +29,7 @@ export class CustomerRepository implements ICustomerRepository {
 	async updateTrip ({ driverId, name, count }: { driverId: string, name: string, count: number }) {
 		const customer = await Customer.findOneAndUpdate({ driverId, name }, {
 			$setOnInsert: { driverId, name },
-			$inc: { trip: count }
+			$inc: { trips: count }
 		}, { upsert: true, new: true })
 		return !!customer
 	}

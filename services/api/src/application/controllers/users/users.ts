@@ -8,9 +8,20 @@ export class UsersController {
 		return await UsersUseCases.get(query)
 	}
 
+	static async getUsersAdmin (req: Request) {
+		const query = req.query as QueryParams
+		return await UsersUseCases.get(query)
+	}
+
 	static async findUser (req: Request) {
 		const user = await UsersUseCases.find(req.params.id)
 		if (!user || user.isDeleted()) throw new NotFoundError()
+		return user
+	}
+
+	static async findUserAdmin (req: Request) {
+		const user = await UsersUseCases.find(req.params.id)
+		if (!user) throw new NotFoundError()
 		return user
 	}
 
@@ -38,6 +49,7 @@ export class UsersController {
 			const driver = await UsersUseCases.find(driverId)
 			if (!driver || driver.isDeleted()) throw new BadRequestError('driver not found')
 			if (driver.manager) throw new BadRequestError('driver already has a manager')
+			if (driver.managerRequests.length) throw new BadRequestError('driver already has a pending request')
 			const request = driver.managerRequests.find((r) => r.managerId === authUserId)
 			if (request) throw new BadRequestError('you have already requested to become this driver\'s manager')
 		}
