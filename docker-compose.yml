@@ -38,9 +38,7 @@ services:
     restart: always
     depends_on:
       - api
-    volumes:
-      - '/c/data/docker/greep/files/api/:/app/public/'
-    command: 'yarn start'
+    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn start'
 
   mongodb:
     image: 'mongo:6.0.1'

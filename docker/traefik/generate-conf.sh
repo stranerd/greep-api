@@ -34,12 +34,23 @@ http:
       middlewares:
         - stripRoutePrefix
       service: api
+    admin:
+      tls:
+        certresolver: $CERT_TYPE
+      rule: "Host(\`$BASE_DOMAIN\`) && PathPrefix(\`/admin/\`)"
+      middlewares:
+        - stripRoutePrefix
+      service: admin
 
   services:
     api:
       loadBalancer:
         servers:
           - url: http://api:$PORT/
+    admin:
+      loadBalancer:
+        servers:
+          - url: http://admin:$PORT/
 
 api:
   insecure: true
@@ -89,12 +100,21 @@ http:
       middlewares:
         - stripRoutePrefix
       service: api
+    admin:
+      rule: "PathPrefix(\`/admin/\`)"
+      middlewares:
+        - stripRoutePrefix
+      service: admin
 
   services:
     api:
       loadBalancer:
         servers:
           - url: http://api:$PORT/
+    admin:
+      loadBalancer:
+        servers:
+          - url: http://admin:$PORT/
 
 api:
   insecure: true

@@ -13,9 +13,11 @@ services:
     build:
       target: base
     volumes:
-      - "./services/api/build:/app/build"
-      - "./services/api/src:/app/src:ro"
-    command: "yarn dev"
+      - "./services/admin/build:/app/build"
+      - "./services/admin/src:/app/src:ro"
+    ports:
+      - "22000:22000"
+    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn dev'
 
   mongodb:
     ports:

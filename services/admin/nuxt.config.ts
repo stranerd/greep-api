@@ -3,6 +3,7 @@ import { resolve } from 'path'
 
 export default defineNuxtConfig({
 	app: {
+		baseURL: '/admin/',
 		head: {
 			title: 'Greep'
 		}
@@ -35,6 +36,11 @@ export default defineNuxtConfig({
 				sass: {
 					additionalData: '@import "@/assets/styles/globals.sass"'
 				}
+			}
+		},
+		server: {
+			hmr: {
+				clientPort: 22000
 			}
 		}
 	}
