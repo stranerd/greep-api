@@ -111,7 +111,10 @@ export class AuthRepository implements IAuthRepository {
 		if (!userEmail) throw new BadRequestError('Invalid token')
 		await appInstance.cache.delete('password-reset-token-' + input.token)
 
-		const user = await User.findOneAndUpdate({ email: userEmail }, { $set: { password: await Hash.hash(input.password) } }, { new: true })
+		const user = await User.findOneAndUpdate({ email: userEmail }, {
+			$set: { password: await Hash.hash(input.password) },
+			$addToSet: { authTypes: AuthTypes.email }
+		}, { new: true })
 		if (!user) throw new BadRequestError('No account with saved email exists')
 
 		return this.mapper.mapFrom(user)!

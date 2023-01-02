@@ -75,13 +75,13 @@ export const useAuth = () => {
 	const signout = async () => {
 		await AuthUseCases.sessionSignout()
 		await setAuthUser(null)
-		if (isClient()) window.location.assign('/auth/signin')
+		if (isClient()) window.location.assign('/admin/auth/signin')
 	}
 
 	const deleteAccount = async () => {
 		await AuthUseCases.deleteAccount()
 		await setAuthUser(null)
-		if (isClient()) window.location.assign('/auth/signin')
+		if (isClient()) window.location.assign('/admin/auth/signin')
 	}
 
 	return {
