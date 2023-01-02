@@ -32,7 +32,7 @@ import { computed, defineComponent, PropType } from 'vue'
 import { Media, UploadedFile } from '@modules/core'
 import { useFileInputCallback } from '@app/hooks/core/forms'
 
-const DEFAULT_PROFILE_PHOTO = '/images/avatars/user_profile.svg'
+const DEFAULT_PROFILE_PHOTO = '/admin/images/avatars/user_profile.svg'
 export default defineComponent({
 	name: 'Avatar',
 	props: {
