@@ -1,4 +1,4 @@
-import { TransactionsUseCases, TransactionType, UsersUseCases } from '@modules/users'
+import { PaymentType, TransactionsUseCases, TransactionType, UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
 	NotAuthorizedError,
@@ -25,6 +25,7 @@ export class TransactionsController {
 	}
 
 	static async createTransaction (req: Request) {
+		const isTrip = req.body.data?.type === TransactionType.trip
 		const isExpense = req.body.data?.type === TransactionType.expense
 		const isBalance = req.body.data?.type === TransactionType.balance
 
@@ -34,14 +35,20 @@ export class TransactionsController {
 			recordedAt,
 			type,
 			name,
-			parentId
+			parentId,
+			customerName,
+			paidAmount,
+			paymentType
 		} = validate({
 			amount: req.body.amount,
 			description: req.body.description,
 			recordedAt: req.body.recordedAt,
 			type: req.body.data?.type,
 			name: req.body.data?.name,
-			parentId: req.body.data?.parentId
+			parentId: req.body.data?.parentId,
+			paidAmount: req.body.data?.paidAmount,
+			customerName: req.body.data?.customerName,
+			paymentType: req.body.data?.paymentType
 		}, {
 			amount: {
 				required: true,
@@ -57,7 +64,19 @@ export class TransactionsController {
 				required: isExpense,
 				rules: [Validation.isString, Validation.isLongerThanX(0)]
 			},
-			parentId: { required: isBalance, rules: [Validation.isString] }
+			parentId: { required: isBalance, rules: [Validation.isString] },
+			customerName: {
+				required: isTrip,
+				rules: [Validation.isString, Validation.isLongerThanX(0)]
+			},
+			paidAmount: {
+				required: isTrip,
+				rules: [Validation.isNumber]
+			},
+			paymentType: {
+				required: isTrip,
+				rules: [Validation.isString, Validation.arrayContainsX(Object.values(PaymentType), (cur, val) => cur === val)]
+			}
 		})
 
 		const driverId = req.authUser!.id
@@ -75,7 +94,15 @@ export class TransactionsController {
 
 		return await TransactionsUseCases.create({
 			amount, description, recordedAt, driverId, managerId: driver.manager?.managerId ?? driverId,
-			data: isExpense ? { type, name } : isBalance ? { type, parentId } : ({} as any)
+			data: isExpense ? { type, name } :
+				isBalance ? { type, parentId } :
+					isTrip ? {
+						type, tripId: null,
+						customerName,
+						paidAmount,
+						debt: amount - paidAmount,
+						paymentType
+					} : ({} as any)
 		})
 	}
 
