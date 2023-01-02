@@ -16,8 +16,6 @@ jobs:
         env:
           ENV_SECRETS: ${{ secrets.ENV_SECRETS }}
         run: echo "$ENV_SECRETS" > env.json
-      - name: Create .env Files
-        run: make copy-envs
       - name: Docker Build
         run: make prod-build
       - name: Docker Stop Existing Run
