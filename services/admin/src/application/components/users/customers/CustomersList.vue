@@ -5,8 +5,10 @@
 		</h2>
 		<div v-for="customer in customers" :key="customer.hash" class="flex items-center gap-1">
 			<span class="text-lg">{{ customer.name }}</span>
-			(<span>{{ customer.trips }} trips</span>
-			<span v-if="customer.debt">- {{ customer.debt }}</span>)
+			<span>
+				( {{ customer.trips }} {{ pluralize(customer.trips, 'trip', 'trips') }}
+				{{ customer.debt ? ` | ${ customer.debt }` : '' }})
+			</span>
 		</div>
 	</div>
 </template>
@@ -14,6 +16,7 @@
 <script lang="ts" setup>
 import { UserEntity } from '@modules/users'
 import { useCustomersList } from '@app/hooks/users/customers'
+import { pluralize } from '@utils/commons'
 
 const props = defineProps({
 	user: {
