@@ -50,5 +50,5 @@ export const useCustomersList = (userId: string) => {
 		await listener.close()
 	})
 
-	return { ...globalObj }
+	return { ...globalObj[userId] }
 }

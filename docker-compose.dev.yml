@@ -9,16 +9,13 @@ services:
     command: "sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn dev"
 
   admin:
-    restart: unless-stopped
+    restart: on-failure
     build:
       target: base
     volumes:
       - "./services/admin/build:/app/build"
       - "./services/admin/src:/app/src:ro"
-    ports:
-      - "$PORT:$PORT"
-      - "22000:22000"
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn dev'
+    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- echo "Start dev server on your machine"'
 
   mongodb:
     ports:

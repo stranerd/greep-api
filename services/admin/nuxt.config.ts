@@ -37,11 +37,6 @@ export default defineNuxtConfig({
 					additionalData: '@import "@/assets/styles/globals.sass"'
 				}
 			}
-		},
-		server: {
-			hmr: {
-				clientPort: 22000
-			}
 		}
 	}
 })

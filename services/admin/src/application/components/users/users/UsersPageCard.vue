@@ -49,6 +49,7 @@
 					</div>
 				</div>
 			</div>
+			<CustomersList :user="user" />
 		</div>
 	</div>
 </template>
@@ -60,6 +61,7 @@ import { formatTime } from '@utils/dates'
 import { useAdminsList } from '@app/hooks/users/roles/admins'
 import { useAuth } from '@app/hooks/auth/auth'
 import { useSessionSignout } from '@app/hooks/auth/session'
+import CustomersList from '@app/components/users/customers/CustomersList.vue'
 
 const props = defineProps({
 	user: {
