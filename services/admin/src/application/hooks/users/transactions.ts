@@ -7,13 +7,14 @@ const globalObj = {} as Record<string, {
 	transactions: Ref<TransactionEntity[]>,
 	fetched: Ref<boolean>,
 	hasMore: Ref<boolean>,
+	count: Ref<number>,
 	searchMode: Ref<boolean>,
 	searchValue: Ref<string>,
 	searchResults: Ref<TransactionEntity[]>
 } & ReturnType<typeof useErrorHandler> & ReturnType<typeof useLoadingHandler>>
 
 export const useTransactionsList = (userId: string) => {
-	const listener = useListener(async () => await TransactionsUseCases.listen({
+	const listener = useListener(async () => await TransactionsUseCases.listen(userId, {
 		created: async (entity) => {
 			addToArray(globalObj[userId].transactions.value, entity, (e) => e.id, (e) => e.createdAt)
 		},
@@ -30,6 +31,7 @@ export const useTransactionsList = (userId: string) => {
 		transactions: ref([]),
 		fetched: ref(false),
 		hasMore: ref(false),
+		count: ref(0),
 		searchMode: ref(false),
 		searchValue: ref(''),
 		searchResults: ref([]),
@@ -41,8 +43,9 @@ export const useTransactionsList = (userId: string) => {
 		await globalObj[userId].setError('')
 		try {
 			await globalObj[userId].setLoading(true)
-			const transactions = await TransactionsUseCases.get(globalObj[userId].transactions.value.at(-1)?.createdAt)
+			const transactions = await TransactionsUseCases.get(userId, globalObj[userId].transactions.value.at(-1)?.createdAt)
 			globalObj[userId].hasMore.value = !!transactions.pages.next
+			if (!globalObj[userId].fetched.value) globalObj[userId].count.value = transactions.docs.total
 			transactions.results.forEach((u) => addToArray(globalObj[userId].transactions.value, u, (e) => e.id, (e) => e.createdAt))
 			globalObj[userId].fetched.value = true
 		} catch (error) {
@@ -71,7 +74,7 @@ export const useTransactionsList = (userId: string) => {
 		await globalObj[userId].setError('')
 		try {
 			await globalObj[userId].setLoading(true)
-			globalObj[userId].searchResults.value = await TransactionsUseCases.search(searchValue)
+			globalObj[userId].searchResults.value = await TransactionsUseCases.search(userId, searchValue)
 		} catch (error) {
 			await globalObj[userId].setError(error)
 		}

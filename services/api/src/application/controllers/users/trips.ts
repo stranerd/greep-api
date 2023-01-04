@@ -28,9 +28,20 @@ export class TripsController {
 		return await TripsUseCases.get(query)
 	}
 
+	static async getTripsAdmin (req: Request) {
+		const query = req.query as QueryParams
+		return await TripsUseCases.get(query)
+	}
+
 	static async findTrip (req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || ![trip.managerId, trip.driverId].includes(req.authUser!.id)) throw new NotFoundError()
+		return trip
+	}
+
+	static async findTripAdmin (req: Request) {
+		const trip = await TripsUseCases.find(req.params.id)
+		if (!trip) throw new NotFoundError()
 		return trip
 	}
 

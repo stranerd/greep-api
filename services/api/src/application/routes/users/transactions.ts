@@ -1,8 +1,34 @@
 import { makeController, Route, StatusCodes } from '@stranerd/api-commons'
 import { TransactionsController } from '../../controllers/users/transactions'
-import { isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticated } from '@application/middlewares'
 
 export const transactionsRoutes: Route[] = [
+	{
+		path: '/users/transactions/admin',
+		method: 'get',
+		controllers: [
+			isAdmin,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TransactionsController.getTransactionsAdmin(req)
+				}
+			})
+		]
+	},
+	{
+		path: '/users/transactions/admin/:id',
+		method: 'get',
+		controllers: [
+			isAdmin,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TransactionsController.findTransactionAdmin(req)
+				}
+			})
+		]
+	},
 	{
 		path: '/users/transactions/',
 		method: 'get',

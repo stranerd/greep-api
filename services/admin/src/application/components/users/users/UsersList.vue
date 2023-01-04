@@ -4,10 +4,10 @@
 			<h1 class="text-3xl">
 				Users
 			</h1>
-			<p>{{ formatNumber(users.length) }} of {{ formatNumber(count) }} users fetched</p>
+			<span v-if="!searchMode">{{ formatNumber(users.length) }} of {{ formatNumber(count) }} users</span>
 		</div>
 		<form v-if="users.length" class="flex items-center gap-4" @submit.prevent="search">
-			<input v-model.trim="searchValue" class="flex-1" placeholder="Search" type="search">
+			<input v-model.trim="searchValue" class="flex-1" placeholder="Search for users" type="search">
 			<button type="submit">
 				<Icon icon="SEARCH" />
 			</button>

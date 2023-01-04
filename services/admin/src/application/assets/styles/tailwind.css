@@ -51,6 +51,6 @@
 	}
 
 	.card-list {
-		@apply flex flex-col gap-4 lg:gap-6;
+		@apply w-full flex flex-col gap-4 lg:gap-6;
 	}
 }

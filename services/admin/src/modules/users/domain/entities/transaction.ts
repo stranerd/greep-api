@@ -1,4 +1,4 @@
-import { TransactionData } from '../types'
+import { TransactionData, TransactionType } from '../types'
 import { BaseEntity } from '@modules/core'
 
 type TransactionConstructorArgs = {
@@ -37,5 +37,17 @@ export class TransactionEntity extends BaseEntity {
 		this.recordedAt = recordedAt
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
+	}
+
+	get isTrip () {
+		return this.data.type === TransactionType.trip
+	}
+
+	get isExpense () {
+		return this.data.type === TransactionType.expense
+	}
+
+	get isBalance () {
+		return this.data.type === TransactionType.balance
 	}
 }

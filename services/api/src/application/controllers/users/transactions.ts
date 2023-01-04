@@ -18,9 +18,20 @@ export class TransactionsController {
 		return await TransactionsUseCases.get(query)
 	}
 
+	static async getTransactionsAdmin (req: Request) {
+		const query = req.query as QueryParams
+		return await TransactionsUseCases.get(query)
+	}
+
 	static async findTransaction (req: Request) {
 		const transaction = await TransactionsUseCases.find(req.params.id)
 		if (!transaction || ![transaction.managerId, transaction.driverId].includes(req.authUser!.id)) throw new NotFoundError()
+		return transaction
+	}
+
+	static async findTransactionAdmin (req: Request) {
+		const transaction = await TransactionsUseCases.find(req.params.id)
+		if (!transaction) throw new NotFoundError()
 		return transaction
 	}
 
