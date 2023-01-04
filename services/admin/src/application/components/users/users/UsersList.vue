@@ -6,9 +6,15 @@
 			</h1>
 			<p>{{ formatNumber(users.length) }} of {{ formatNumber(count) }} users fetched</p>
 		</div>
-		<UsersListCard v-for="user in users" :key="user.hash" :user="user" />
+		<form v-if="users.length" class="flex items-center gap-4" @submit.prevent="search">
+			<input v-model.trim="searchValue" class="flex-1" placeholder="Search" type="search">
+			<button type="submit">
+				<Icon icon="SEARCH" />
+			</button>
+		</form>
+		<UsersListCard v-for="user in (searchMode ? searchResults : users)" :key="user.hash" :user="user" />
 		<BlockLoading v-if="loading" />
-		<LoadMore v-if="hasMore" :load="fetchOlderUsers" />
+		<LoadMore v-if="hasMore && !searchMode" :load="fetchOlderUsers" />
 	</div>
 </template>
 
@@ -16,5 +22,15 @@
 import { useUsersList } from '@app/hooks/users/list'
 import { formatNumber } from '@utils/commons'
 
-const { users, count, loading, hasMore, fetchOlderUsers } = useUsersList()
+const {
+	users,
+	count,
+	loading,
+	hasMore,
+	fetchOlderUsers,
+	searchMode,
+	searchValue,
+	searchResults,
+	search
+} = useUsersList()
 </script>

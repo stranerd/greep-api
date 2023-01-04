@@ -7,6 +7,9 @@ const globalObj = {
 	users: ref([] as UserEntity[]),
 	fetched: ref(false),
 	hasMore: ref(false),
+	searchMode: ref(false),
+	searchValue: ref(''),
+	searchResults: ref([] as UserEntity[]),
 	count: ref(0),
 	...useErrorHandler(),
 	...useLoadingHandler()
@@ -53,5 +56,23 @@ export const useUsersList = () => {
 		await listener.close()
 	})
 
-	return { ...globalObj, fetchOlderUsers }
+	const search = async () => {
+		const searchValue = globalObj.searchValue.value
+		if (!searchValue) return
+		globalObj.searchMode.value = true
+		await globalObj.setError('')
+		try {
+			await globalObj.setLoading(true)
+			globalObj.searchResults.value = await UsersUseCases.search(searchValue)
+		} catch (error) {
+			await globalObj.setError(error)
+		}
+		await globalObj.setLoading(false)
+	}
+
+	watch(globalObj.searchValue, () => {
+		if (!globalObj.searchValue.value) globalObj.searchMode.value = false
+	})
+
+	return { ...globalObj, fetchOlderUsers, search }
 }

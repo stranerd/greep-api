@@ -16,6 +16,7 @@ services:
       - "./services/admin/build:/app/build"
       - "./services/admin/src:/app/src:ro"
     ports:
+      - "$PORT:$PORT"
       - "22000:22000"
     command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn dev'
 
