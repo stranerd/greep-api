@@ -49,8 +49,6 @@
 					</div>
 				</div>
 			</div>
-			<UsersCustomersList :user="user" />
-			<UsersTransactionsList :user="user" class="card" />
 		</div>
 	</div>
 </template>

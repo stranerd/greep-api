@@ -1,6 +1,10 @@
 <template>
 	<BlockLoading v-if="loading" />
-	<UsersPageCard v-else-if="user" :key="user.hash" :user="user" />
+	<div v-else-if="user" class="flex flex-col gap-6">
+		<UsersPageCard :key="user.hash" :user="user" />
+		<UsersCustomersList :user="user" />
+		<UsersTransactionsList :user="user" class="card" />
+	</div>
 	<NotFound v-else title="User not found" />
 </template>
 
