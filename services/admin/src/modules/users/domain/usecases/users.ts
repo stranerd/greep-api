@@ -25,25 +25,12 @@ export class UsersUseCase {
 		return await this.repository.get(condition)
 	}
 
-	async getAllAdmins () {
-		return await this.repository.get({
-			where: [{ field: 'roles.isAdmin', value: true }]
-		})
-	}
-
 	async getUsersInList (ids: string[]) {
 		const users = await this.repository.get({
 			where: [{ field: 'id', value: ids, condition: Conditions.in }],
 			all: true
 		})
 		return users.results
-	}
-
-	async listenToAllAdmins (listener: Listeners<UserEntity>) {
-		return await this.repository.listenToMany({
-			where: [{ field: 'roles.isAdmin', value: true }],
-			all: true
-		}, listener, (entity) => entity.roles.isAdmin)
 	}
 
 	async listenToOne (id: string, listeners: Listeners<UserEntity>) {

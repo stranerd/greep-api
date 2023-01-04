@@ -58,7 +58,7 @@
 import { UserEntity } from '@modules/users'
 import { useUserManagerAndDrivers } from '@app/hooks/users'
 import { formatTime } from '@utils/dates'
-import { useAdminsList } from '@app/hooks/users/roles/admins'
+import { useAdminsList } from '@app/hooks/users/admins'
 import { useAuth } from '@app/hooks/auth/auth'
 import { useSessionSignout } from '@app/hooks/auth/session'
 import CustomersList from '@app/components/users/customers/CustomersList.vue'
