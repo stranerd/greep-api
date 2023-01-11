@@ -41,7 +41,7 @@ services:
     command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn start'
 
   mongodb:
-    image: 'mongo:6.0.1'
+    image: 'mongo:6.0.3'
     hostname: mongodb
     volumes:
       - '/c/data/docker/greep/mongo/db:/data/db'
