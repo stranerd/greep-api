@@ -24,8 +24,6 @@ services:
 
   mongodb-express:
     restart: unless-stopped
-    depends_on:
-      - mongodb
     ports:
       - '81:8081'
 
@@ -39,8 +37,6 @@ services:
 
   redis-commander:
     restart: unless-stopped
-    depends_on:
-      - redis
     ports:
       - '83:8081'
 
