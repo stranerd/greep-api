@@ -1,11 +1,11 @@
 import {
+	AuthRole,
 	makeMiddleware,
 	NotAuthenticatedError,
 	NotAuthorizedError,
 	requireAuthUser,
 	requireRefreshUser
 } from '@stranerd/api-commons'
-import { AuthRole } from '@utils/types'
 
 export const isAuthenticatedButIgnoreVerified = makeMiddleware(
 	async (request) => {

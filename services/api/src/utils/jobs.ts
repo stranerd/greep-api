@@ -1,8 +1,7 @@
-import { CronTypes } from '@stranerd/api-commons'
+import { CronTypes, Email } from '@stranerd/api-commons'
 import { appInstance } from '@utils/environment'
 import { EmailsUseCases } from '@modules/emails'
 import { sendMailAndCatchError } from '@utils/modules/emails'
-import { TypedEmail } from '@utils/types'
 import { deleteUnverifiedUsers } from '@utils/modules/auth'
 
 export const startJobs = async () => {
@@ -21,7 +20,7 @@ export const startJobs = async () => {
 				const errors = await EmailsUseCases.getAndDeleteAllErrors()
 				await Promise.all(
 					errors.map(async (error) => {
-						await sendMailAndCatchError(error as unknown as TypedEmail)
+						await sendMailAndCatchError(error as unknown as Email)
 					})
 				)
 				await appInstance.job.retryAllFailedJobs()

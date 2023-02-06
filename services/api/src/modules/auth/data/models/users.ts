@@ -1,5 +1,4 @@
-import { AuthTypes, MediaOutput } from '@stranerd/api-commons'
-import { AuthRoles } from '@utils/types'
+import { AuthTypes, AuthRoles, Enum, MediaOutput } from '@stranerd/api-commons'
 
 export interface UserFromModel extends UserToModel {
 	_id: string
@@ -14,5 +13,5 @@ export interface UserToModel {
 	name: { first: string, last: string }
 	photo: MediaOutput | null
 	isVerified: boolean
-	authTypes: AuthTypes[]
+	authTypes: Enum<typeof AuthTypes>[]
 }

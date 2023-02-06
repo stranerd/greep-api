@@ -5,6 +5,8 @@ import { UserFromModel, UserToModel } from '../models/users'
 import {
 	AuthTypes,
 	BadRequestError,
+	EmailsList,
+	Enum,
 	Hash,
 	MediaOutput,
 	mongoose,
@@ -16,8 +18,7 @@ import {
 } from '@stranerd/api-commons'
 import { appInstance } from '@utils/environment'
 import { UserMapper } from '../mappers/users'
-import { EmailsList } from '@utils/types'
-import { EventTypes, publishers } from '@utils/events'
+import { publishers } from '@utils/events'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
@@ -30,14 +31,14 @@ export class AuthRepository implements IAuthRepository {
 		return AuthRepository.instance
 	}
 
-	async addNewUser (data: UserToModel, type: AuthTypes) {
+	async addNewUser (data: UserToModel, type: Enum<typeof AuthTypes>) {
 		data.email = data.email.toLowerCase()
 		if (data.password) data.password = await Hash.hash(data.password)
 		const userData = await new User(data).save()
 		return this.signInUser(userData, type)
 	}
 
-	async authenticateUser (details: Credential, passwordValidate: boolean, type: AuthTypes) {
+	async authenticateUser (details: Credential, passwordValidate: boolean, type: Enum<typeof AuthTypes>) {
 		details.email = details.email.toLowerCase()
 		const user = await User.findOne({ email: details.email })
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
@@ -62,7 +63,7 @@ export class AuthRepository implements IAuthRepository {
 
 		// send verification mail
 		const emailContent = await readEmailFromPug('emails/sendOTP.pug', { token })
-		await publishers[EventTypes.SENDMAIL].publish({
+		await publishers.SENDMAIL.publish({
 			to: email,
 			subject: 'Verify Your Email',
 			from: EmailsList.NO_REPLY,
@@ -94,7 +95,7 @@ export class AuthRepository implements IAuthRepository {
 
 		// send reset password mail
 		const emailContent = await readEmailFromPug('emails/sendOTP.pug', { token })
-		await publishers[EventTypes.SENDMAIL].publish({
+		await publishers.SENDMAIL.publish({
 			to: email,
 			subject: 'Reset Your Password',
 			from: EmailsList.NO_REPLY,
@@ -151,7 +152,7 @@ export class AuthRepository implements IAuthRepository {
 		})
 	}
 
-	private async authorizeSocial (type: AuthTypes, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
+	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
@@ -169,7 +170,7 @@ export class AuthRepository implements IAuthRepository {
 		}, false, type)
 	}
 
-	private async signInUser (user: UserFromModel & mongoose.Document<any, any, UserFromModel>, type: AuthTypes) {
+	private async signInUser (user: UserFromModel & mongoose.Document<any, any, UserFromModel>, type: Enum<typeof AuthTypes>) {
 		const userUpdated = await User.findByIdAndUpdate(user._id, {
 			$set: { lastSignedInAt: Date.now() },
 			$addToSet: { authTypes: [type] }
