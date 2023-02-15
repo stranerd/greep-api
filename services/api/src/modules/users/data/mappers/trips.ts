@@ -1,9 +1,9 @@
-import { BaseMapper } from '@stranerd/api-commons'
+import { BaseMapper } from 'equipped'
 import { TripEntity } from '../../domain/entities/trips'
 import { TripFromModel, TripToModel } from '../models/trips'
 
 export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntity> {
-	mapFrom (param: TripFromModel | null) {
+	mapFrom(param: TripFromModel | null) {
 		return !param ? null : new TripEntity({
 			id: param._id.toString(),
 			managerId: param.managerId,
@@ -15,7 +15,7 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 		})
 	}
 
-	mapTo (param: TripEntity) {
+	mapTo(param: TripEntity) {
 		return {
 			managerId: param.managerId,
 			driverId: param.driverId,

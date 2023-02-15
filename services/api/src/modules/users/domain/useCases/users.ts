@@ -1,6 +1,6 @@
 import { IUserRepository } from '../i-repositories/users'
 import { UserBio, UserRoles } from '../types'
-import { QueryParams } from '@stranerd/api-commons'
+import { QueryParams } from 'equipped'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -9,55 +9,55 @@ export class UsersUseCase {
 		this.repository = repo
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		return await this.repository.find(id)
 	}
 
-	async createUserWithBio (params: { id: string, data: UserBio, timestamp: number }) {
+	async createUserWithBio(params: { id: string, data: UserBio, timestamp: number }) {
 		return await this.repository.createUserWithBio(params.id, params.data, params.timestamp)
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		return await this.repository.get(query)
 	}
 
-	async markUserAsDeleted (params: { id: string, timestamp: number }) {
+	async markUserAsDeleted(params: { id: string, timestamp: number }) {
 		return await this.repository.markUserAsDeleted(params.id, params.timestamp)
 	}
 
-	async resetAllUsersStatus () {
+	async resetAllUsersStatus() {
 		return await this.repository.resetAllUsersStatus()
 	}
 
-	async updateUserStatus (input: { userId: string, socketId: string, add: boolean }) {
+	async updateUserStatus(input: { userId: string, socketId: string, add: boolean }) {
 		return await this.repository.updateUserStatus(input.userId, input.socketId, input.add)
 	}
 
-	async updateUserWithBio (params: { id: string, data: UserBio, timestamp: number }) {
+	async updateUserWithBio(params: { id: string, data: UserBio, timestamp: number }) {
 		return await this.repository.updateUserWithBio(params.id, params.data, params.timestamp)
 	}
 
-	async updateUserWithRoles (params: { id: string, data: UserRoles, timestamp: number }) {
+	async updateUserWithRoles(params: { id: string, data: UserRoles, timestamp: number }) {
 		return await this.repository.updateUserWithRoles(params.id, params.data, params.timestamp)
 	}
 
-	async requestAddDriver (data: { managerId: string, driverId: string, commission: number, add: boolean }) {
+	async requestAddDriver(data: { managerId: string, driverId: string, commission: number, add: boolean }) {
 		return await this.repository.requestAddDriver(data.managerId, data.driverId, data.commission, data.add)
 	}
 
-	async acceptManager (data: { managerId: string, driverId: string, commission: number, accept: boolean }) {
+	async acceptManager(data: { managerId: string, driverId: string, commission: number, accept: boolean }) {
 		return await this.repository.acceptManager(data.managerId, data.driverId, data.commission, data.accept)
 	}
 
-	async updateDriverCommission (data: { managerId: string, driverId: string, commission: number }) {
+	async updateDriverCommission(data: { managerId: string, driverId: string, commission: number }) {
 		return await this.repository.updateDriverCommission(data.managerId, data.driverId, data.commission)
 	}
 
-	async removeDriver (data: { managerId: string, driverId: string }) {
+	async removeDriver(data: { managerId: string, driverId: string }) {
 		return await this.repository.removeDriver(data.managerId, data.driverId)
 	}
 
-	async updatePushTokens (data: { userId: string, tokens: string[], add: boolean }) {
+	async updatePushTokens(data: { userId: string, tokens: string[], add: boolean }) {
 		return await this.repository.updatePushTokens(data.userId, data.tokens, data.add)
 	}
 }

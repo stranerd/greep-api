@@ -1,4 +1,4 @@
-import { BaseEntity } from '@stranerd/api-commons'
+import { BaseEntity } from 'equipped'
 import { TripData, TripStatus } from '../types'
 
 export class TripEntity extends BaseEntity {

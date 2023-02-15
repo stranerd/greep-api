@@ -1,4 +1,3 @@
-import { ChangeStreamCallbacks } from '@stranerd/api-commons'
 import {
 	CustomersUseCases,
 	TransactionEntity,
@@ -6,14 +5,15 @@ import {
 	TransactionsUseCases,
 	TransactionType
 } from '@modules/users'
-import { getSocketEmitter } from '@index'
+import { appInstance } from '@utils/environment'
+import { ChangeStreamCallbacks } from 'equipped'
 
 export const TransactionChangeStreamCallbacks: ChangeStreamCallbacks<TransactionFromModel, TransactionEntity> = {
 	created: async ({ after }) => {
-		await getSocketEmitter().emitCreated(`users/transactions/${after.driverId}`, after)
-		await getSocketEmitter().emitCreated(`users/transactions/${after.managerId}`, after)
-		await getSocketEmitter().emitCreated(`users/transactions/${after.id}/${after.driverId}`, after)
-		await getSocketEmitter().emitCreated(`users/transactions/${after.id}/${after.managerId}`, after)
+		await appInstance.listener.created(`users/transactions/${after.driverId}`, after)
+		await appInstance.listener.created(`users/transactions/${after.managerId}`, after)
+		await appInstance.listener.created(`users/transactions/${after.id}/${after.driverId}`, after)
+		await appInstance.listener.created(`users/transactions/${after.id}/${after.managerId}`, after)
 
 		if (after.data.type === TransactionType.balance) await TransactionsUseCases.updateTripDebt({
 			id: after.data.parentId,
@@ -35,10 +35,10 @@ export const TransactionChangeStreamCallbacks: ChangeStreamCallbacks<Transaction
 		}
 	},
 	updated: async ({ after, before }) => {
-		await getSocketEmitter().emitUpdated(`users/transactions/${after.driverId}`, after)
-		await getSocketEmitter().emitUpdated(`users/transactions/${after.managerId}`, after)
-		await getSocketEmitter().emitUpdated(`users/transactions/${after.id}/${after.driverId}`, after)
-		await getSocketEmitter().emitUpdated(`users/transactions/${after.id}/${after.managerId}`, after)
+		await appInstance.listener.updated(`users/transactions/${after.driverId}`, after)
+		await appInstance.listener.updated(`users/transactions/${after.managerId}`, after)
+		await appInstance.listener.updated(`users/transactions/${after.id}/${after.driverId}`, after)
+		await appInstance.listener.updated(`users/transactions/${after.id}/${after.managerId}`, after)
 
 		const debtChanged = after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt
 		if (debtChanged) await CustomersUseCases.updateDebt({
@@ -48,10 +48,10 @@ export const TransactionChangeStreamCallbacks: ChangeStreamCallbacks<Transaction
 		})
 	},
 	deleted: async ({ before }) => {
-		await getSocketEmitter().emitDeleted(`users/transactions/${before.driverId}`, before)
-		await getSocketEmitter().emitDeleted(`users/transactions/${before.managerId}`, before)
-		await getSocketEmitter().emitDeleted(`users/transactions/${before.id}/${before.driverId}`, before)
-		await getSocketEmitter().emitDeleted(`users/transactions/${before.id}/${before.managerId}`, before)
+		await appInstance.listener.deleted(`users/transactions/${before.driverId}`, before)
+		await appInstance.listener.deleted(`users/transactions/${before.managerId}`, before)
+		await appInstance.listener.deleted(`users/transactions/${before.id}/${before.driverId}`, before)
+		await appInstance.listener.deleted(`users/transactions/${before.id}/${before.managerId}`, before)
 
 		if (before.data.type === TransactionType.trip) {
 			await CustomersUseCases.updateTrip({

@@ -9,24 +9,24 @@ import {
 	NotFoundError,
 	parseQueryParams,
 	QueryParams
-} from '@stranerd/api-commons'
+} from 'equipped'
 import User from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
 	private mapper = new UserMapper()
 
-	static getInstance (): UserRepository {
+	static getInstance(): UserRepository {
 		if (!UserRepository.instance) UserRepository.instance = new UserRepository()
 		return UserRepository.instance
 	}
 
-	async findUser (id: string) {
+	async findUser(id: string) {
 		const user = await User.findById(id)
 		return this.mapper.mapFrom(user)
 	}
 
-	async getUsers (query: QueryParams) {
+	async getUsers(query: QueryParams) {
 		const data = await parseQueryParams<UserFromModel>(User, query)
 		return {
 			...data,
@@ -34,17 +34,17 @@ export class UserRepository implements IUserRepository {
 		}
 	}
 
-	async deleteUsers (userIds: string[]) {
+	async deleteUsers(userIds: string[]) {
 		const res = await User.deleteMany({ _id: { $in: userIds } })
 		return res.acknowledged
 	}
 
-	async updateUserProfile (userId: string, data: UserUpdateInput) {
+	async updateUserProfile(userId: string, data: UserUpdateInput) {
 		const user = await User.findOneAndUpdate({ _id: userId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(user)!
 	}
 
-	async updateDetails (userId: string, details: RegisterInput) {
+	async updateDetails(userId: string, details: RegisterInput) {
 		const user = await User.findByIdAndUpdate(
 			userId,
 			{
@@ -65,7 +65,7 @@ export class UserRepository implements IUserRepository {
 
 	}
 
-	async updateUserRole ({ userId, roles }: RoleInput) {
+	async updateUserRole({ userId, roles }: RoleInput) {
 		const set = Object.fromEntries(Object.entries(roles).filter((role) => role[1]).map((role) => [`roles.${role[0]}`, role[1]]))
 		const unset = Object.fromEntries(Object.entries(roles).filter((role) => !role[1]).map((role) => [`roles.${role[0]}`, role[1]]))
 		const user = await User.findByIdAndUpdate(userId, {
@@ -76,7 +76,7 @@ export class UserRepository implements IUserRepository {
 		return !!user
 	}
 
-	async updatePassword (userId: string, password: string) {
+	async updatePassword(userId: string, password: string) {
 		const user = await User.findByIdAndUpdate(userId, {
 			$set: { password: await Hash.hash(password) },
 			$addToSet: { authTypes: AuthTypes.email }

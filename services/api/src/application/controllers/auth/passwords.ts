@@ -1,13 +1,13 @@
 import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
 import { generateAuthOutput } from '@utils/modules/auth'
-import { BadRequestError, Hash, Request, validate, Validation, ValidationError } from '@stranerd/api-commons'
+import { BadRequestError, Hash, Request, validate, Validation, ValidationError } from 'equipped'
 
 export class PasswordsController {
-	static async sendResetMail (req: Request) {
+	static async sendResetMail(req: Request) {
 		const { email } = validate({
 			email: req.body.email
 		}, {
-			email: { required: true, rules: [Validation.isEmail] }
+			email: { required: true, rules: [Validation.isEmail()] }
 		})
 
 		const user = await AuthUsersUseCases.findUserByEmail(email)
@@ -16,15 +16,15 @@ export class PasswordsController {
 		return await AuthUseCases.sendPasswordResetMail(user.email)
 	}
 
-	static async resetPassword (req: Request) {
+	static async resetPassword(req: Request) {
 		const validateData = validate({
 			token: req.body.token,
 			password: req.body.password
 		}, {
-			token: { required: true, rules: [Validation.isString] },
+			token: { required: true, rules: [Validation.isString()] },
 			password: {
 				required: true,
-				rules: [Validation.isString, Validation.isLongerThanX(7), Validation.isShorterThanX(17)]
+				rules: [Validation.isString(), Validation.isMinOf(8), Validation.isMaxOf(16)]
 			}
 		})
 
@@ -32,16 +32,16 @@ export class PasswordsController {
 		return await generateAuthOutput(data)
 	}
 
-	static async updatePassword (req: Request) {
+	static async updatePassword(req: Request) {
 		const userId = req.authUser!.id
 		const { oldPassword, password } = validate({
 			oldPassword: req.body.oldPassword,
 			password: req.body.password
 		}, {
-			oldPassword: { required: true, rules: [Validation.isString] },
+			oldPassword: { required: true, rules: [Validation.isString()] },
 			password: {
 				required: true,
-				rules: [Validation.isString, Validation.isLongerThanX(7), Validation.isShorterThanX(17)]
+				rules: [Validation.isString(), Validation.isMinOf(8), Validation.isMaxOf(16)]
 			}
 		})
 

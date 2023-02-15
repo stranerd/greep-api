@@ -1,9 +1,9 @@
-import { BaseMapper } from '@stranerd/api-commons'
+import { BaseMapper } from 'equipped'
 import { AuthUserEntity } from '../../domain/entities/users'
 import { UserFromModel, UserToModel } from '../models/users'
 
 export class UserMapper extends BaseMapper<UserFromModel, UserToModel, AuthUserEntity> {
-	mapFrom (param: UserFromModel | null) {
+	mapFrom(param: UserFromModel | null) {
 		return !param ? null : new AuthUserEntity({
 			id: param._id.toString(),
 			email: param.email,
@@ -18,7 +18,7 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, AuthUserE
 		})
 	}
 
-	mapTo (param: AuthUserEntity) {
+	mapTo(param: AuthUserEntity) {
 		return {
 			email: param.email,
 			password: param.password,

@@ -1,12 +1,12 @@
 import { CustomerEntity } from '../entities/customers'
-import { QueryParams, QueryResults } from '@stranerd/api-commons'
+import { QueryParams, QueryResults } from 'equipped'
 
 export interface ICustomerRepository {
-	get (query: QueryParams): Promise<QueryResults<CustomerEntity>>
+	get(query: QueryParams): Promise<QueryResults<CustomerEntity>>
 
-	updateTrip (data: { driverId: string, name: string, count: number }): Promise<boolean>
+	updateTrip(data: { driverId: string, name: string, count: number }): Promise<boolean>
 
-	updateDebt (data: { driverId: string, name: string, count: number }): Promise<boolean>
+	updateDebt(data: { driverId: string, name: string, count: number }): Promise<boolean>
 
-	find (id: string): Promise<CustomerEntity | null>
+	find(id: string): Promise<CustomerEntity | null>
 }

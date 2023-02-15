@@ -8,7 +8,7 @@ import {
 	UserRoles,
 	UserStatus
 } from '../types'
-import { BaseEntity } from '@stranerd/api-commons'
+import { BaseEntity } from 'equipped'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -22,16 +22,16 @@ export class UserEntity extends BaseEntity {
 	public readonly pushTokens: string[]
 
 	constructor ({
-		             id,
-		             bio,
-		             roles,
-		             dates,
-		             status,
-		             drivers,
-		             manager,
-		             managerRequests,
-		             pushTokens
-	             }: UserConstructorArgs) {
+		id,
+		bio,
+		roles,
+		dates,
+		status,
+		drivers,
+		manager,
+		managerRequests,
+		pushTokens
+	}: UserConstructorArgs) {
 		super()
 		this.id = id
 		this.bio = bio ?? {}
@@ -44,15 +44,15 @@ export class UserEntity extends BaseEntity {
 		this.pushTokens = pushTokens
 	}
 
-	isAdmin () {
+	isAdmin() {
 		return this.roles['isAdmin'] ?? false
 	}
 
-	isDeleted () {
+	isDeleted() {
 		return this.dates.deletedAt !== null
 	}
 
-	getEmbedded (): EmbeddedUser {
+	getEmbedded(): EmbeddedUser {
 		return {
 			id: this.id,
 			bio: this.bio,

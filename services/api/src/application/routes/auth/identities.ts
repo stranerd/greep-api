@@ -1,4 +1,4 @@
-import { makeController, Route, StatusCodes } from '@stranerd/api-commons'
+import { makeController, Route, StatusCodes } from 'equipped'
 import { IdentitiesController } from '../../controllers/auth/identities'
 
 const googleSignIn: Route = {

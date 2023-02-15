@@ -1,4 +1,4 @@
-import { generateChangeStreams, mongoose } from '@stranerd/api-commons'
+import { generateChangeStreams, mongoose } from 'equipped'
 import { CustomerFromModel } from '../models/customers'
 import { CustomerChangeStreamCallbacks } from '@utils/changeStreams/users/customers'
 import { CustomerEntity } from '../../domain/entities/customers'

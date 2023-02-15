@@ -1,18 +1,18 @@
 import { AuthUsersUseCases } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
-import { AuthRole, BadRequestError, NotFoundError, Request, validate, Validation, verifyAccessToken } from '@stranerd/api-commons'
+import { AuthRole, BadRequestError, NotFoundError, Request, validate, Validation, verifyAccessToken } from 'equipped'
 import { superAdminEmail } from '@utils/environment'
 import { signOutUser } from '@utils/modules/auth'
 
 const roles = Object.values(AuthRole).filter((key) => key !== AuthRole.isSuperAdmin)
 
 export class UserController {
-	static async findUser (req: Request) {
+	static async findUser(req: Request) {
 		const userId = req.authUser!.id
 		return await AuthUsersUseCases.findUser(userId)
 	}
 
-	static async updateUser (req: Request) {
+	static async updateUser(req: Request) {
 		const userId = req.authUser!.id
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
@@ -21,9 +21,9 @@ export class UserController {
 			lastName: req.body.lastName,
 			photo: uploadedPhoto as any
 		}, {
-			firstName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
-			lastName: { required: true, rules: [Validation.isString] },
-			photo: { required: true, nullable: true, rules: [Validation.isNotTruncated, Validation.isImage] }
+			firstName: { required: true, rules: [Validation.isString(), Validation.isMinOf(1)] },
+			lastName: { required: true, rules: [Validation.isString()] },
+			photo: { required: true, nullable: true, rules: [Validation.isNotTruncated(), Validation.isImage()] }
 		})
 		const { firstName, lastName } = data
 		if (uploadedPhoto) data.photo = await StorageUseCases.upload('profiles', uploadedPhoto)
@@ -36,7 +36,7 @@ export class UserController {
 		return await AuthUsersUseCases.updateProfile({ userId, data: validateData as any })
 	}
 
-	static async updateUserRole (req: Request) {
+	static async updateUserRole(req: Request) {
 		const { role, userId, value } = validate({
 			role: req.body.role,
 			userId: req.body.userId,
@@ -44,10 +44,10 @@ export class UserController {
 		}, {
 			role: {
 				required: true,
-				rules: [Validation.isString, Validation.arrayContainsX(roles, (cur, val) => cur === val)]
+				rules: [Validation.isString(), Validation.arrayContains(roles, (cur, val) => cur === val)]
 			},
-			value: { required: true, rules: [Validation.isBoolean] },
-			userId: { required: true, rules: [Validation.isString] }
+			value: { required: true, rules: [Validation.isBoolean()] },
+			userId: { required: true, rules: [Validation.isString()] }
 		})
 
 		if (req.authUser!.id === userId) throw new BadRequestError('You cannot modify your own roles')
@@ -57,12 +57,12 @@ export class UserController {
 		})
 	}
 
-	static async signout (req: Request) {
+	static async signout(req: Request) {
 		const user = await verifyAccessToken(req.headers.AccessToken ?? '').catch(() => null)
 		return await signOutUser(user?.id ?? '')
 	}
 
-	static async superAdmin (_: Request) {
+	static async superAdmin(_: Request) {
 		const user = await AuthUsersUseCases.findUserByEmail(superAdminEmail)
 		if (!user) throw new NotFoundError()
 		return await AuthUsersUseCases.updateRole({
@@ -74,7 +74,7 @@ export class UserController {
 		})
 	}
 
-	static async delete (req: Request) {
+	static async delete(req: Request) {
 		const authUserId = req.authUser!.id
 		const deleted = await AuthUsersUseCases.deleteUsers([authUserId])
 		await signOutUser(authUserId)

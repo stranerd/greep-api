@@ -14,7 +14,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@stranerd/api-commons": "^3.26.0",
+		"equipped": "^4.0.0-alpha.9",
 		"nodemailer": "^6.9.1"
 	},
 	"devDependencies": {

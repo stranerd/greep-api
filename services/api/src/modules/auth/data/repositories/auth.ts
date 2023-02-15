@@ -15,7 +15,7 @@ import {
 	signinWithApple,
 	signinWithGoogle,
 	ValidationError
-} from '@stranerd/api-commons'
+} from 'equipped'
 import { appInstance } from '@utils/environment'
 import { UserMapper } from '../mappers/users'
 import { publishers } from '@utils/events'
@@ -26,19 +26,19 @@ export class AuthRepository implements IAuthRepository {
 	private static instance: AuthRepository
 	private mapper = new UserMapper()
 
-	static getInstance () {
+	static getInstance() {
 		if (!AuthRepository.instance) AuthRepository.instance = new AuthRepository()
 		return AuthRepository.instance
 	}
 
-	async addNewUser (data: UserToModel, type: Enum<typeof AuthTypes>) {
+	async addNewUser(data: UserToModel, type: Enum<typeof AuthTypes>) {
 		data.email = data.email.toLowerCase()
 		if (data.password) data.password = await Hash.hash(data.password)
 		const userData = await new User(data).save()
 		return this.signInUser(userData, type)
 	}
 
-	async authenticateUser (details: Credential, passwordValidate: boolean, type: Enum<typeof AuthTypes>) {
+	async authenticateUser(details: Credential, passwordValidate: boolean, type: Enum<typeof AuthTypes>) {
 		details.email = details.email.toLowerCase()
 		const user = await User.findOne({ email: details.email })
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
@@ -54,7 +54,7 @@ export class AuthRepository implements IAuthRepository {
 		return this.signInUser(user, type)
 	}
 
-	async sendVerificationMail (email: string) {
+	async sendVerificationMail(email: string) {
 		email = email.toLowerCase()
 		const token = Random.number(1e5, 1e6).toString()
 
@@ -74,7 +74,7 @@ export class AuthRepository implements IAuthRepository {
 		return true
 	}
 
-	async verifyEmail (token: string) {
+	async verifyEmail(token: string) {
 		// check token in cache
 		const userEmail = await appInstance.cache.get('email-verification-token-' + token)
 		if (!userEmail) throw new BadRequestError('Invalid token')
@@ -86,7 +86,7 @@ export class AuthRepository implements IAuthRepository {
 		return this.mapper.mapFrom(user)!
 	}
 
-	async sendPasswordResetMail (email: string) {
+	async sendPasswordResetMail(email: string) {
 		email = email.toLowerCase()
 		const token = Random.number(1e5, 1e6).toString()
 
@@ -106,7 +106,7 @@ export class AuthRepository implements IAuthRepository {
 		return true
 	}
 
-	async resetPassword (input: PasswordResetInput) {
+	async resetPassword(input: PasswordResetInput) {
 		// check token in cache
 		const userEmail = await appInstance.cache.get('password-reset-token-' + input.token)
 		if (!userEmail) throw new BadRequestError('Invalid token')
@@ -121,7 +121,7 @@ export class AuthRepository implements IAuthRepository {
 		return this.mapper.mapFrom(user)!
 	}
 
-	async googleSignIn (idToken: string) {
+	async googleSignIn(idToken: string) {
 		const data = await signinWithGoogle(idToken)
 		const email = data.email!.toLowerCase()
 
@@ -135,11 +135,11 @@ export class AuthRepository implements IAuthRepository {
 		})
 	}
 
-	async appleSignIn ({
-		                   idToken,
-		                   firstName,
-		                   lastName
-	                   }: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
+	async appleSignIn({
+		idToken,
+		firstName,
+		lastName
+	}: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
 		const data = await signinWithApple(idToken).catch((e: any) => {
 			throw new BadRequestError(e.message)
 		})
@@ -152,7 +152,7 @@ export class AuthRepository implements IAuthRepository {
 		})
 	}
 
-	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
+	private async authorizeSocial(type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
@@ -170,7 +170,7 @@ export class AuthRepository implements IAuthRepository {
 		}, false, type)
 	}
 
-	private async signInUser (user: UserFromModel & mongoose.Document<any, any, UserFromModel>, type: Enum<typeof AuthTypes>) {
+	private async signInUser(user: UserFromModel & mongoose.Document<any, any, UserFromModel>, type: Enum<typeof AuthTypes>) {
 		const userUpdated = await User.findByIdAndUpdate(user._id, {
 			$set: { lastSignedInAt: Date.now() },
 			$addToSet: { authTypes: [type] }

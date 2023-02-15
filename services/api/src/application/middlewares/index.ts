@@ -5,7 +5,7 @@ import {
 	NotAuthorizedError,
 	requireAuthUser,
 	requireRefreshUser
-} from '@stranerd/api-commons'
+} from 'equipped'
 
 export const isAuthenticatedButIgnoreVerified = makeMiddleware(
 	async (request) => {

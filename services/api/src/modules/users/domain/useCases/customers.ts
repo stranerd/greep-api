@@ -1,5 +1,5 @@
 import { ICustomerRepository } from '../i-repositories/customers'
-import { QueryParams } from '@stranerd/api-commons'
+import { QueryParams } from 'equipped'
 
 export class CustomersUseCase {
 	repository: ICustomerRepository
@@ -8,19 +8,19 @@ export class CustomersUseCase {
 		this.repository = repo
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		return await this.repository.find(id)
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		return await this.repository.get(query)
 	}
 
-	async updateTrip (data: { driverId: string, name: string, count: number }) {
+	async updateTrip(data: { driverId: string, name: string, count: number }) {
 		return await this.repository.updateTrip(data)
 	}
 
-	async updateDebt (data: { driverId: string, name: string, count: number }) {
+	async updateDebt(data: { driverId: string, name: string, count: number }) {
 		return await this.repository.updateDebt(data)
 	}
 }

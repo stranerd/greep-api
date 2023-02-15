@@ -1,4 +1,4 @@
-import { Route } from '@stranerd/api-commons'
+import { Route } from 'equipped'
 import authRoutes from './auth'
 import usersRoutes from './users'
 

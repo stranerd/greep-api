@@ -1,9 +1,9 @@
-import { BaseMapper } from '@stranerd/api-commons'
+import { BaseMapper } from 'equipped'
 import { ErrorFromModel, ErrorToModel } from '../models/errors'
 import { ErrorEntity } from '../../domain/entities/errors'
 
 export class ErrorMapper extends BaseMapper<ErrorFromModel, ErrorToModel, ErrorEntity> {
-	mapFrom (model: ErrorFromModel | null) {
+	mapFrom(model: ErrorFromModel | null) {
 		if (!model) return null
 		const {
 			_id, content, subject, to, from, error, data,
@@ -16,7 +16,7 @@ export class ErrorMapper extends BaseMapper<ErrorFromModel, ErrorToModel, ErrorE
 		})
 	}
 
-	mapTo (entity: ErrorEntity) {
+	mapTo(entity: ErrorEntity) {
 		return {
 			content: entity.content,
 			subject: entity.subject,

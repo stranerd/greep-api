@@ -8,34 +8,34 @@ import {
 	Request,
 	validate,
 	Validation
-} from '@stranerd/api-commons'
+} from 'equipped'
 
 export class TransactionsController {
-	static async getTransactions (req: Request) {
+	static async getTransactions(req: Request) {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'driverId', value: req.authUser!.id }, { field: 'managerId', value: req.authUser!.id }]
 		query.authType = QueryKeys.or
 		return await TransactionsUseCases.get(query)
 	}
 
-	static async getTransactionsAdmin (req: Request) {
+	static async getTransactionsAdmin(req: Request) {
 		const query = req.query as QueryParams
 		return await TransactionsUseCases.get(query)
 	}
 
-	static async findTransaction (req: Request) {
+	static async findTransaction(req: Request) {
 		const transaction = await TransactionsUseCases.find(req.params.id)
 		if (!transaction || ![transaction.managerId, transaction.driverId].includes(req.authUser!.id)) throw new NotFoundError()
 		return transaction
 	}
 
-	static async findTransactionAdmin (req: Request) {
+	static async findTransactionAdmin(req: Request) {
 		const transaction = await TransactionsUseCases.find(req.params.id)
 		if (!transaction) throw new NotFoundError()
 		return transaction
 	}
 
-	static async createTransaction (req: Request) {
+	static async createTransaction(req: Request) {
 		const isTrip = req.body.data?.type === TransactionType.trip
 		const isExpense = req.body.data?.type === TransactionType.expense
 		const isBalance = req.body.data?.type === TransactionType.balance
@@ -63,30 +63,30 @@ export class TransactionsController {
 		}, {
 			amount: {
 				required: true,
-				rules: [Validation.isNumber, Validation.isMoreThanX(isBalance ? Number.NEGATIVE_INFINITY : 0)]
+				rules: [Validation.isNumber(), Validation.isMoreThan(isBalance ? Number.NEGATIVE_INFINITY : 0)]
 			},
-			description: { required: true, rules: [Validation.isString] },
-			recordedAt: { required: true, rules: [Validation.isNumber, Validation.isMoreThanX(0)] },
+			description: { required: true, rules: [Validation.isString()] },
+			recordedAt: { required: true, rules: [Validation.isNumber(), Validation.isMoreThan(0)] },
 			type: {
 				required: true,
-				rules: [Validation.isString, Validation.arrayContainsX(Object.values(TransactionType), (cur, val) => cur === val)]
+				rules: [Validation.isString(), Validation.arrayContains(Object.values(TransactionType), (cur, val) => cur === val)]
 			},
 			name: {
 				required: isExpense,
-				rules: [Validation.isString, Validation.isLongerThanX(0)]
+				rules: [Validation.isString(), Validation.isMinOf(1)]
 			},
-			parentId: { required: isBalance, rules: [Validation.isString] },
+			parentId: { required: isBalance, rules: [Validation.isString()] },
 			customerName: {
 				required: isTrip,
-				rules: [Validation.isString, Validation.isLongerThanX(0)]
+				rules: [Validation.isString(), Validation.isMinOf(1)]
 			},
 			paidAmount: {
 				required: isTrip,
-				rules: [Validation.isNumber]
+				rules: [Validation.isNumber()]
 			},
 			paymentType: {
 				required: isTrip,
-				rules: [Validation.isString, Validation.arrayContainsX(Object.values(PaymentType), (cur, val) => cur === val)]
+				rules: [Validation.isString(), Validation.arrayContains(Object.values(PaymentType), (cur, val) => cur === val)]
 			}
 		})
 
@@ -117,7 +117,7 @@ export class TransactionsController {
 		})
 	}
 
-	static async deleteTransaction (req: Request) {
+	static async deleteTransaction(req: Request) {
 		const isDeleted = await TransactionsUseCases.delete({ id: req.params.id, managerId: req.authUser!.id })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()

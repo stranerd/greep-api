@@ -1,4 +1,4 @@
-import { generateChangeStreams, mongoose } from '@stranerd/api-commons'
+import { generateChangeStreams, mongoose } from 'equipped'
 import { TripFromModel } from '../models/trips'
 import { TripChangeStreamCallbacks } from '@utils/changeStreams/users/trips'
 import { TripEntity } from '../../domain/entities/trips'

@@ -1,4 +1,4 @@
-import { MediaOutput } from '@stranerd/api-commons'
+import { MediaOutput } from 'equipped'
 
 export interface UserUpdateInput {
 	name: { first: string, last: string }
@@ -11,21 +11,21 @@ export interface RoleInput {
 }
 
 export interface RegisterInput extends UserUpdateInput {
-	email: string;
-	password: string;
+	email: string
+	password: string
 }
 
 export interface PasswordResetInput {
-	token: string;
-	password: string;
+	token: string
+	password: string
 }
 
 export interface Credential {
-	email: string;
-	password: string;
+	email: string
+	password: string
 }
 
 export interface AuthOutput {
-	accessToken: string;
-	refreshToken: string;
+	accessToken: string
+	refreshToken: string
 }

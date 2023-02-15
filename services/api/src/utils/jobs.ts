@@ -1,4 +1,4 @@
-import { CronTypes, Email } from '@stranerd/api-commons'
+import { CronTypes, Email } from 'equipped'
 import { appInstance } from '@utils/environment'
 import { EmailsUseCases } from '@modules/emails'
 import { sendMailAndCatchError } from '@utils/modules/emails'

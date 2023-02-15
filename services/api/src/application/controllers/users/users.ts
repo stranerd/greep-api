@@ -1,42 +1,42 @@
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotFoundError, QueryParams, Request, validate, Validation } from '@stranerd/api-commons'
+import { BadRequestError, NotFoundError, QueryParams, Request, validate, Validation } from 'equipped'
 
 export class UsersController {
-	static async getUsers (req: Request) {
+	static async getUsers(req: Request) {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'dates.deletedAt', value: null }]
 		return await UsersUseCases.get(query)
 	}
 
-	static async getUsersAdmin (req: Request) {
+	static async getUsersAdmin(req: Request) {
 		const query = req.query as QueryParams
 		return await UsersUseCases.get(query)
 	}
 
-	static async findUser (req: Request) {
+	static async findUser(req: Request) {
 		const user = await UsersUseCases.find(req.params.id)
 		if (!user || user.isDeleted()) throw new NotFoundError()
 		return user
 	}
 
-	static async findUserAdmin (req: Request) {
+	static async findUserAdmin(req: Request) {
 		const user = await UsersUseCases.find(req.params.id)
 		if (!user) throw new NotFoundError()
 		return user
 	}
 
-	static async addDriver (req: Request) {
+	static async addDriver(req: Request) {
 		const authUserId = req.authUser!.id
 		const { driverId, add, commission } = validate({
 			driverId: req.body.driverId,
 			commission: req.body.commission,
 			add: req.body.add
 		}, {
-			driverId: { required: true, rules: [Validation.isString] },
-			add: { required: true, rules: [Validation.isBoolean] },
+			driverId: { required: true, rules: [Validation.isString()] },
+			add: { required: true, rules: [Validation.isBoolean()] },
 			commission: {
 				required: true,
-				rules: [Validation.isNumber, Validation.isMoreThanOrEqualToX(0), Validation.isLessThanOrEqualToX(1)]
+				rules: [Validation.isNumber(), Validation.isMoreThanOrEqualTo(0), Validation.isLessThanOrEqualTo(1)]
 			}
 		})
 
@@ -57,14 +57,14 @@ export class UsersController {
 		return await UsersUseCases.requestAddDriver({ driverId, add, commission, managerId: authUserId })
 	}
 
-	static async acceptManager (req: Request) {
+	static async acceptManager(req: Request) {
 		const authUserId = req.authUser!.id
 		const { managerId, accept } = validate({
 			managerId: req.body.managerId,
 			accept: req.body.accept
 		}, {
-			managerId: { required: true, rules: [Validation.isString] },
-			accept: { required: true, rules: [Validation.isBoolean] }
+			managerId: { required: true, rules: [Validation.isString()] },
+			accept: { required: true, rules: [Validation.isBoolean()] }
 		})
 
 		if (accept && managerId === authUserId) throw new BadRequestError('you can\'t add yourself as a driver. Just record transactions automatically')
@@ -86,15 +86,15 @@ export class UsersController {
 		})
 	}
 
-	static async updateDriverCommission (req: Request) {
+	static async updateDriverCommission(req: Request) {
 		const data = validate({
 			driverId: req.body.driverId,
 			commission: req.body.commission
 		}, {
-			driverId: { required: true, rules: [Validation.isString] },
+			driverId: { required: true, rules: [Validation.isString()] },
 			commission: {
 				required: true,
-				rules: [Validation.isNumber, Validation.isMoreThanOrEqualToX(0), Validation.isLessThanOrEqualToX(1)]
+				rules: [Validation.isNumber(), Validation.isMoreThanOrEqualTo(0), Validation.isLessThanOrEqualTo(1)]
 			}
 		})
 		const driver = await UsersUseCases.find(data.driverId)
@@ -102,22 +102,22 @@ export class UsersController {
 		return await UsersUseCases.updateDriverCommission({ ...data, managerId: req.authUser!.id })
 	}
 
-	static async removeDriver (req: Request) {
+	static async removeDriver(req: Request) {
 		const data = validate({
 			driverId: req.body.driverId
 		}, {
-			driverId: { required: true, rules: [Validation.isString] }
+			driverId: { required: true, rules: [Validation.isString()] }
 		})
 		return await UsersUseCases.removeDriver({ ...data, managerId: req.authUser!.id })
 	}
 
-	static async push (req: Request) {
+	static async push(req: Request) {
 		const { token, add } = validate({
 			token: req.body.token,
 			add: req.body.add
 		}, {
-			token: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
-			add: { required: true, rules: [Validation.isBoolean] }
+			token: { required: true, rules: [Validation.isString(), Validation.isMinOf(1)] },
+			add: { required: true, rules: [Validation.isBoolean()] }
 		})
 		return await UsersUseCases.updatePushTokens({ userId: req.authUser!.id, tokens: [token], add })
 	}

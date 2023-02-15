@@ -1,9 +1,9 @@
-import { BaseMapper } from '@stranerd/api-commons'
+import { BaseMapper } from 'equipped'
 import { TransactionEntity } from '../../domain/entities/transactions'
 import { TransactionFromModel, TransactionToModel } from '../models/transactions'
 
 export class TransactionMapper extends BaseMapper<TransactionFromModel, TransactionToModel, TransactionEntity> {
-	mapFrom (param: TransactionFromModel | null) {
+	mapFrom(param: TransactionFromModel | null) {
 		return !param ? null : new TransactionEntity({
 			id: param._id.toString(),
 			driverId: param.driverId,
@@ -17,7 +17,7 @@ export class TransactionMapper extends BaseMapper<TransactionFromModel, Transact
 		})
 	}
 
-	mapTo (param: TransactionEntity) {
+	mapTo(param: TransactionEntity) {
 		return {
 			driverId: param.driverId,
 			managerId: param.managerId,

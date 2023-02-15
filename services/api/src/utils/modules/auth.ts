@@ -6,7 +6,7 @@ import {
 	exchangeOldForNewTokens,
 	makeAccessToken,
 	makeRefreshToken
-} from '@stranerd/api-commons'
+} from 'equipped'
 import { AuthOutput, AuthUserEntity, AuthUsersUseCases } from '@modules/auth'
 
 export const signOutUser = async (userId: string): Promise<boolean> => {

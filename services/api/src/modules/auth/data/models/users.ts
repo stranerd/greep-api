@@ -1,4 +1,4 @@
-import { AuthTypes, AuthRoles, Enum, MediaOutput } from '@stranerd/api-commons'
+import { AuthTypes, AuthRoles, Enum, MediaOutput } from 'equipped'
 
 export interface UserFromModel extends UserToModel {
 	_id: string

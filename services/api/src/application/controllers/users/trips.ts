@@ -9,49 +9,48 @@ import {
 	validate,
 	Validation,
 	ValidationError
-} from '@stranerd/api-commons'
+} from 'equipped'
 
-const isValidCoords = (val: any) => {
+const isValidCoords = Validation.makeRule<any>((val) => {
 	const valid = [
-		Validation.isArrayOf(val, (cur) => Validation.isNumber(cur).valid, 'coords').valid,
-		Validation.hasLessThan(val, 3).valid,
-		Validation.hasMoreThan(val, 1).valid
+		Validation.isArrayOf( (cur) => Validation.isNumber()(cur).valid, 'coords')(val).valid,
+		Validation.hasLengthOf(2)(val).valid,
 	].every((v) => v)
-	return valid ? Validation.isValid() : Validation.isInvalid('not a valid coordinate')
-}
+	return valid ? Validation.isValid(val) : Validation.isInvalid(['not a valid coordinate'], val)
+})
 
 export class TripsController {
-	static async getTrips (req: Request) {
+	static async getTrips(req: Request) {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'driverId', value: req.authUser!.id }, { field: 'managerId', value: req.authUser!.id }]
 		query.authType = QueryKeys.or
 		return await TripsUseCases.get(query)
 	}
 
-	static async getTripsAdmin (req: Request) {
+	static async getTripsAdmin(req: Request) {
 		const query = req.query as QueryParams
 		return await TripsUseCases.get(query)
 	}
 
-	static async findTrip (req: Request) {
+	static async findTrip(req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || ![trip.managerId, trip.driverId].includes(req.authUser!.id)) throw new NotFoundError()
 		return trip
 	}
 
-	static async findTripAdmin (req: Request) {
+	static async findTripAdmin(req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip) throw new NotFoundError()
 		return trip
 	}
 
-	static async createTrip (req: Request) {
+	static async createTrip(req: Request) {
 		const { coords, location } = validate({
 			coords: req.body.coords,
 			location: req.body.location
 		}, {
 			coords: { required: true, rules: [isValidCoords] },
-			location: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] }
+			location: { required: true, rules: [Validation.isString(), Validation.isMinOf(1)] }
 		})
 
 		const driverId = req.authUser!.id
@@ -67,13 +66,13 @@ export class TripsController {
 		})
 	}
 
-	static async updateTrip (req: Request, status: TripStatus) {
+	static async updateTrip(req: Request, status: TripStatus) {
 		const { coords, location } = validate({
 			coords: req.body.coords,
 			location: req.body.location
 		}, {
 			coords: { required: true, rules: [isValidCoords] },
-			location: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] }
+			location: { required: true, rules: [Validation.isString(), Validation.isMinOf(1)] }
 		})
 
 		const trip = await TripsUseCases.find(req.params.id)
@@ -101,7 +100,7 @@ export class TripsController {
 		throw new NotAuthorizedError()
 	}
 
-	static async detailTrip (req: Request) {
+	static async detailTrip(req: Request) {
 		const {
 			amount,
 			description,
@@ -117,14 +116,14 @@ export class TripsController {
 			customerName: req.body.data?.customerName,
 			paymentType: req.body.data?.paymentType
 		}, {
-			amount: { required: true, rules: [Validation.isNumber, Validation.isMoreThanX(0)] },
-			description: { required: true, rules: [Validation.isString] },
-			recordedAt: { required: true, rules: [Validation.isNumber, Validation.isMoreThanX(0)] },
-			customerName: { required: true, rules: [Validation.isString, Validation.isLongerThanX(0)] },
-			paidAmount: { required: true, rules: [Validation.isNumber] },
+			amount: { required: true, rules: [Validation.isNumber(), Validation.isMoreThan(0)] },
+			description: { required: true, rules: [Validation.isString()] },
+			recordedAt: { required: true, rules: [Validation.isNumber(), Validation.isMoreThan(0)] },
+			customerName: { required: true, rules: [Validation.isString(), Validation.isMinOf(1)] },
+			paidAmount: { required: true, rules: [Validation.isNumber()] },
 			paymentType: {
 				required: true,
-				rules: [Validation.isString, Validation.arrayContainsX(Object.values(PaymentType), (cur, val) => cur === val)]
+				rules: [Validation.isString(), Validation.arrayContains(Object.values(PaymentType), (cur, val) => cur === val)]
 			}
 		})
 

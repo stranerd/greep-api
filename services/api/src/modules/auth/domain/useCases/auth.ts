@@ -1,6 +1,6 @@
 import { IAuthRepository } from '../i-repositories/auth'
 import { Credential, PasswordResetInput, RegisterInput } from '../types'
-import { AuthTypes } from '@stranerd/api-commons'
+import { AuthTypes } from 'equipped'
 import { UserToModel } from '../../data/models/users'
 
 export class AuthUseCase {
@@ -10,19 +10,19 @@ export class AuthUseCase {
 		this.repository = repository
 	}
 
-	async authenticateUser (params: Credential) {
+	async authenticateUser(params: Credential) {
 		return await this.repository.authenticateUser(params, true, AuthTypes.email)
 	}
 
-	async googleSignIn (input: { idToken: string }) {
+	async googleSignIn(input: { idToken: string }) {
 		return await this.repository.googleSignIn(input.idToken)
 	}
 
-	async appleSignIn (input: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
+	async appleSignIn(input: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
 		return await this.repository.appleSignIn(input)
 	}
 
-	async registerUser (params: RegisterInput) {
+	async registerUser(params: RegisterInput) {
 		const userModel: UserToModel = {
 			...params,
 			isVerified: false,
@@ -32,19 +32,19 @@ export class AuthUseCase {
 		return await this.repository.addNewUser(userModel, AuthTypes.email)
 	}
 
-	async resetPassword (input: PasswordResetInput) {
+	async resetPassword(input: PasswordResetInput) {
 		return await this.repository.resetPassword(input)
 	}
 
-	async sendPasswordResetMail (email: string) {
+	async sendPasswordResetMail(email: string) {
 		return await this.repository.sendPasswordResetMail(email)
 	}
 
-	async sendVerificationMail (email: string) {
+	async sendVerificationMail(email: string) {
 		return await this.repository.sendVerificationMail(email)
 	}
 
-	async verifyEmail (token: string) {
+	async verifyEmail(token: string) {
 		return await this.repository.verifyEmail(token)
 	}
 }

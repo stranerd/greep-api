@@ -1,9 +1,9 @@
-import { BaseMapper } from '@stranerd/api-commons'
+import { BaseMapper } from 'equipped'
 import { CustomerEntity } from '../../domain/entities/customers'
 import { CustomerFromModel, CustomerToModel } from '../models/customers'
 
 export class CustomerMapper extends BaseMapper<CustomerFromModel, CustomerToModel, CustomerEntity> {
-	mapFrom (param: CustomerFromModel | null) {
+	mapFrom(param: CustomerFromModel | null) {
 		return !param ? null : new CustomerEntity({
 			id: param._id.toString(),
 			name: param.name,
@@ -15,7 +15,7 @@ export class CustomerMapper extends BaseMapper<CustomerFromModel, CustomerToMode
 		})
 	}
 
-	mapTo (param: CustomerEntity) {
+	mapTo(param: CustomerEntity) {
 		return {
 			name: param.name,
 			driverId: param.driverId
