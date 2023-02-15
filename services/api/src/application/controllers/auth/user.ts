@@ -1,8 +1,8 @@
 import { AuthUsersUseCases } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
-import { AuthRole, BadRequestError, NotFoundError, Request, validate, Validation, verifyAccessToken } from 'equipped'
 import { superAdminEmail } from '@utils/environment'
 import { signOutUser } from '@utils/modules/auth'
+import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validateReq, verifyAccessToken } from 'equipped'
 
 const roles = Object.values(AuthRole).filter((key) => key !== AuthRole.isSuperAdmin)
 
@@ -16,39 +16,29 @@ export class UserController {
 		const userId = req.authUser!.id
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
-		const data = validate({
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			photo: uploadedPhoto as any
-		}, {
-			firstName: { required: true, rules: [Validation.isString(), Validation.isMinOf(1)] },
-			lastName: { required: true, rules: [Validation.isString()] },
-			photo: { required: true, nullable: true, rules: [Validation.isNotTruncated(), Validation.isImage()] }
-		})
+		const data = validateReq({
+			firstName: Schema.string().min(1),
+			lastName: Schema.string().min(1),
+			photo: Schema.file().image().nullable()
+		}, { ...req.body, photo: uploadedPhoto })
 		const { firstName, lastName } = data
-		if (uploadedPhoto) data.photo = await StorageUseCases.upload('profiles', uploadedPhoto)
+		const photo = uploadedPhoto ? await StorageUseCases.upload('profiles', uploadedPhoto) : undefined
 
-		const validateData = {
-			name: { first: firstName, last: lastName },
-			...(changedPhoto ? { photo: data.photo } : {})
-		}
-
-		return await AuthUsersUseCases.updateProfile({ userId, data: validateData as any })
+		return await AuthUsersUseCases.updateProfile({
+			userId,
+			data: {
+				name: { first: firstName, last: lastName },
+				...(changedPhoto ? { photo } : {}) as any
+			}
+		})
 	}
 
 	static async updateUserRole(req: Request) {
-		const { role, userId, value } = validate({
-			role: req.body.role,
-			userId: req.body.userId,
-			value: req.body.value
-		}, {
-			role: {
-				required: true,
-				rules: [Validation.isString(), Validation.arrayContains(roles, (cur, val) => cur === val)]
-			},
-			value: { required: true, rules: [Validation.isBoolean()] },
-			userId: { required: true, rules: [Validation.isString()] }
-		})
+		const { role, userId, value } = validateReq({
+			role: Schema.string().in(roles, (cur, val) => cur === val),
+			userId: Schema.string().min(1),
+			value: Schema.boolean()
+		}, req.body)
 
 		if (req.authUser!.id === userId) throw new BadRequestError('You cannot modify your own roles')
 

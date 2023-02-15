@@ -1,7 +1,7 @@
 import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
-import { AuthTypes, Request, validate, Validation, ValidationError } from 'equipped'
-import { generateAuthOutput } from '@utils/modules/auth'
 import { StorageUseCases } from '@modules/storage'
+import { AuthTypes, Request, Schema, validateReq, Validation, ValidationError } from 'equipped'
+import { generateAuthOutput } from '@utils/modules/auth'
 
 export class EmailsController {
 	static async signup(req: Request) {
@@ -15,31 +15,23 @@ export class EmailsController {
 
 		const user = await AuthUsersUseCases.findUserByEmail(userCredential.email)
 
-		const isUniqueInDb = Validation.makeRule<string>((value) => {
-			const val = value as string
-			if (!user) return Validation.isValid(val)
-			if (user.authTypes.includes(AuthTypes.email)) return Validation.isInvalid(['this email already exists with a password attached'], val)
-			if (user.authTypes.includes(AuthTypes.google)) return Validation.isInvalid(['this email is associated with a google account. Try signing in with google'], val)
-			return Validation.isInvalid(['email already in use'], val)
-		})
+		const { email, firstName, lastName, password, photo: userPhoto } = validateReq({
+			email: Schema.string().email().addRule((value) => {
+				const email = value as string
+				if (!user) return Validation.isValid(email)
+				if (user.authTypes.includes(AuthTypes.email)) return Validation.isInvalid(['this email already exists with a password attached'], email)
+				if (user.authTypes.includes(AuthTypes.google)) return Validation.isInvalid(['this email is associated with a google account. Try signing in with google'], email)
+				return Validation.isInvalid(['email already in use'], email)
+			}),
+			password: Schema.string().min(8).max(16),
+			description: Schema.string(),
+			photo: Schema.file().image().nullable(),
+			firstName: Schema.string().min(1),
+			lastName: Schema.string().min(1),
+			referrer: Schema.string().nullable()
+		}, userCredential)
 
-		const {
-			email,
-			firstName,
-			lastName,
-			password,
-			photo: userPhoto
-		} = validate(userCredential, {
-			email: { required: true, rules: [Validation.isEmail(), isUniqueInDb] },
-			password: {
-				required: true,
-				rules: [Validation.isString(), Validation.isMinOf(8), Validation.isMaxOf(16)]
-			},
-			photo: { required: true, nullable: true, rules: [Validation.isNotTruncated(), Validation.isImage()] },
-			firstName: { required: true, rules: [Validation.isString(), Validation.isMinOf(1)] },
-			lastName: { required: true, rules: [Validation.isString()] }
-		})
-		const photo = userPhoto ? await StorageUseCases.upload('profiles', userPhoto) : null
+		const photo = userPhoto ? await StorageUseCases.upload('profiles/photos', userPhoto) : null
 		const validateData = {
 			name: { first: firstName, last: lastName },
 			email, password, photo
@@ -53,24 +45,19 @@ export class EmailsController {
 	}
 
 	static async signin(req: Request) {
-		const validateData = validate({
-			email: req.body.email,
-			password: req.body.password
-		}, {
-			email: { required: true, rules: [Validation.isEmail()] },
-			password: { required: true, rules: [Validation.isString()] }
-		})
+		const validateData = validateReq({
+			email: Schema.string().email(),
+			password: Schema.string(),
+		}, req.body)
 
 		const data = await AuthUseCases.authenticateUser(validateData)
 		return await generateAuthOutput(data)
 	}
 
 	static async sendVerificationMail(req: Request) {
-		const { email } = validate({
-			email: req.body.email
-		}, {
-			email: { required: true, rules: [Validation.isEmail()] }
-		})
+		const { email } = validateReq({
+			email: Schema.string().email()
+		}, req.body)
 
 		const user = await AuthUsersUseCases.findUserByEmail(email)
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
@@ -79,11 +66,9 @@ export class EmailsController {
 	}
 
 	static async verifyEmail(req: Request) {
-		const { token } = validate({
-			token: req.body.token
-		}, {
-			token: { required: true, rules: [Validation.isString()] }
-		})
+		const { token } = validateReq({
+			token: Schema.string()
+		}, req.body)
 
 		const data = await AuthUseCases.verifyEmail(token)
 		return await generateAuthOutput(data)
