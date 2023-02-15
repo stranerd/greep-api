@@ -1,4 +1,4 @@
-import { Rule, Validator } from '@stranerd/validate'
+import { Rule, Validator } from 'valleyed'
 import { reactive } from 'vue'
 import { UploaderService } from '../../services/uploader'
 import { UploadedFile } from '@modules/core'
@@ -8,7 +8,7 @@ export abstract class BaseFactory<E, T, K extends Record<string, any>> {
 	abstract toModel: () => Promise<T>
 	abstract loadEntity: (entity: E) => void
 	abstract reserved: string[]
-	protected abstract readonly rules: Record<keyof K, { required: boolean | (() => boolean), nullable?: boolean, rules: Rule[] }>
+	protected abstract readonly rules: Record<keyof K, { required: boolean | (() => boolean), nullable?: boolean, rules: Rule<any>[] }>
 	protected readonly defaults: K
 	protected values: K
 	protected validValues: K
@@ -34,13 +34,13 @@ export abstract class BaseFactory<E, T, K extends Record<string, any>> {
 		const check = this.checkValidity(property, value)
 
 		this.values[property] = value
-		this.validValues[property] = check.isValid || ignoreRules ? value : this.defaults[property]
+		this.validValues[property] = check.valid || ignoreRules ? value : this.defaults[property]
 		this.errors[property] = this.defaults[property] === value ? '' : check.message
 
-		return check.isValid
+		return check.valid
 	}
 
-	isValid = (property: keyof K) => this.checkValidity(property, this.validValues[property]).isValid
+	isValid = (property: keyof K) => this.checkValidity(property, this.validValues[property]).valid
 
 	validateAll () {
 		Object.keys(this.defaults)
@@ -48,11 +48,11 @@ export abstract class BaseFactory<E, T, K extends Record<string, any>> {
 	}
 
 	checkValidity (property: keyof K, value: any) {
-		const { isValid, errors } = Validator.single(value, this.rules[property].rules, {
+		const { valid, errors } = Validator.and(value, [this.rules[property].rules], {
 			required: this.rules[property].required,
 			nullable: this.rules[property].nullable
 		})
-		return { isValid, message: errors.find((e) => !!e) ?? '' }
+		return { valid, message: errors.find((e) => !!e) ?? '' }
 	}
 
 	reset () {

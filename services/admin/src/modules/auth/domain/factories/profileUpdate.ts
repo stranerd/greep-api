@@ -1,4 +1,4 @@
-import { isImage, isLongerThanX, isString } from '@stranerd/validate'
+import { isImage, isMaxOf, isMinOf, isString } from 'valleyed'
 import { ProfileUpdate } from '../entities/auth'
 import { BaseFactory, Media, UploadedFile } from '@modules/core'
 import { UserEntity } from '@modules/users'
@@ -8,10 +8,10 @@ type Keys = { first: string, last: string, description: string, photo: Content }
 
 export class ProfileUpdateFactory extends BaseFactory<UserEntity, ProfileUpdate, Keys> {
 	readonly rules = {
-		first: { required: true, rules: [isString, isLongerThanX(0)] },
-		last: { required: true, rules: [isString, isLongerThanX(0)] },
-		description: { required: true, rules: [isString] },
-		photo: { required: true, nullable: true, rules: [isImage] }
+		first: { required: true, rules: [isString(), isMinOf(1)] },
+		last: { required: true, rules: [isString(), isMaxOf(1)] },
+		description: { required: true, rules: [isString()] },
+		photo: { required: true, nullable: true, rules: [isImage()] }
 	}
 
 	reserved = []

@@ -1,4 +1,4 @@
-import { isEmail, isImage, isLongerThanX, isShallowEqualTo, isShorterThanX, isString } from '@stranerd/validate'
+import { isEmail, isImage, isMaxOf, isMinOf, isShallowEqualTo, isString } from 'valleyed'
 import { NewUser } from '../entities/auth'
 import { BaseFactory, Media, UploadedFile } from '@modules/core'
 
@@ -6,15 +6,18 @@ type Content = UploadedFile | Media | null
 
 export class EmailSignupFactory extends BaseFactory<null, NewUser, NewUser & { cPassword: string, photo: Content }> {
 	readonly rules = {
-		firstName: { required: true, rules: [isString, isLongerThanX(0)] },
-		lastName: { required: true, rules: [isString, isLongerThanX(0)] },
-		description: { required: true, rules: [isString] },
-		email: { required: true, rules: [isString, isEmail] },
-		photo: { required: true, nullable: true, rules: [isImage] },
-		password: { required: true, rules: [isString, isLongerThanX(7), isShorterThanX(17)] },
+		firstName: { required: true, rules: [isString(), isMinOf(1)] },
+		lastName: { required: true, rules: [isString(), isMinOf(1)] },
+		description: { required: true, rules: [isString()] },
+		email: { required: true, rules: [isString(), isEmail()] },
+		photo: { required: true, nullable: true, rules: [isImage()] },
+		password: { required: true, rules: [isString(), isMinOf(8), isMaxOf(16)] },
 		cPassword: {
 			required: true,
-			rules: [(val: string) => isShallowEqualTo(val, this.password, 'is not equal'), isLongerThanX(7), isShorterThanX(17)]
+			rules: [
+				(val: unknown) => isShallowEqualTo(this.password, 'is not equal')(val),
+				isMinOf(8), isMaxOf(16)
+			]
 		}
 	}
 

@@ -1,17 +1,20 @@
-import { isEmail, isLongerThanX, isShallowEqualTo, isShorterThanX, isString } from '@stranerd/validate'
+import { isEmail, isMaxOf, isMinOf, isShallowEqualTo, isString } from 'valleyed'
 import { BaseFactory } from '@modules/core'
 
 type Keys = { email: string, token: string, password: string, cPassword: string }
 
 export class PasswordResetFactory extends BaseFactory<null, { password: string, token: string }, Keys> {
 	readonly rules = {
-		token: { required: true, rules: [isString, isLongerThanX(4)] },
-		password: { required: true, rules: [isString, isLongerThanX(7), isShorterThanX(17)] },
+		token: { required: true, rules: [isString(), isMinOf(5)] },
+		password: { required: true, rules: [isString(), isMinOf(8), isMaxOf(16)] },
 		cPassword: {
 			required: true,
-			rules: [isString, (val: string) => isShallowEqualTo(val, this.password, 'is not equal to the new password'), isLongerThanX(7), isShorterThanX(17)]
+			rules: [
+				isString(),
+				(val: unknown) => isShallowEqualTo(this.password, 'is not equal to the new password')(val),
+				isMinOf(8), isMaxOf(16)]
 		},
-		email: { required: true, rules: [isString, isEmail] }
+		email: { required: true, rules: [isString(), isEmail()] }
 	}
 
 	reserved = []

@@ -763,13 +763,6 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz#96116f2a912e0c02817345b3c10751069920d553"
   integrity sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==
 
-"@stranerd/validate@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@stranerd/validate/-/validate-3.4.0.tgz#1f060b5b26b7a9f73cd08c6a3bcd67f0b9c48bc8"
-  integrity sha512-9kZ0kAUMEWBQ5A1cF02aVOIgucYmYG/KbkCd9mJOB+JfF3S0fNrFVVBQPV+96fiNxr89hhay7B9ryBVEaBEUjA==
-  dependencies:
-    url-regex-safe "^3.0.0"
-
 "@trysound/sax@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
@@ -5696,6 +5689,13 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+valleyed@^4.0.4-alpha.2:
+  version "4.0.4-alpha.2"
+  resolved "https://registry.yarnpkg.com/valleyed/-/valleyed-4.0.4-alpha.2.tgz#b22b978e82a5a38d34e05781ae6efec36850b937"
+  integrity sha512-N+Dqx+3Ve8G6i29GC+EKCYILKo0ThcUYumc1kK9xSdHWzWAoC1UWforswp//+kmnE1tSXhZYH9snUbg9hsCeTw==
+  dependencies:
+    url-regex-safe "^3.0.0"
 
 vite-node@^0.25.2:
   version "0.25.8"

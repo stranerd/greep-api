@@ -1,4 +1,4 @@
-import { isLongerThanX, isShallowEqualTo, isShorterThanX, isString } from '@stranerd/validate'
+import { isMaxOf, isMinOf, isShallowEqualTo, isString } from 'valleyed'
 import { PasswordUpdate } from '../entities/auth'
 import { BaseFactory } from '@modules/core'
 
@@ -6,14 +6,14 @@ type Keys = { oldPassword: string, password: string, cPassword: string }
 
 export class PasswordUpdateFactory extends BaseFactory<null, PasswordUpdate, Keys> {
 	readonly rules = {
-		oldPassword: { required: true, rules: [isString] },
+		oldPassword: { required: true, rules: [isString()] },
 		password: {
 			required: true,
-			rules: [isString, isLongerThanX(7), isShorterThanX(17)]
+			rules: [isString(), isMinOf(8), isMaxOf(16)]
 		},
 		cPassword: {
 			required: true,
-			rules: [isString, (val: string) => isShallowEqualTo(val, this.password, 'is not equal'), isLongerThanX(7), isShorterThanX(17)]
+			rules: [isString(), (val: unknown) => isShallowEqualTo(this.password, 'is not equal')(val), isMinOf(8), isMaxOf(18)]
 		}
 	}
 
