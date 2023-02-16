@@ -1,4 +1,4 @@
-import { isEmail, isMaxOf, isMinOf, isString } from 'valleyed'
+import { v } from 'valleyed'
 import { AuthUser } from '../entities/auth'
 import { BaseFactory } from '@modules/core'
 
@@ -6,8 +6,8 @@ type Keys = { email: string, password: string }
 
 export class EmailSigninFactory extends BaseFactory<null, AuthUser, Keys> {
 	readonly rules = {
-		email: { required: true, rules: [isEmail()] },
-		password: { required: true, rules: [isString(), isMinOf(8), isMaxOf(16)] }
+		email: v.string().email(),
+		password: v.string().min(8).max(16)
 	}
 
 	reserved = []

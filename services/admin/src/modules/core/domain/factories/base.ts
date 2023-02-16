@@ -1,4 +1,4 @@
-import { Rule, Validator } from 'valleyed'
+import { Differ, VCore } from 'valleyed'
 import { reactive } from 'vue'
 import { UploaderService } from '../../services/uploader'
 import { UploadedFile } from '@modules/core'
@@ -8,7 +8,7 @@ export abstract class BaseFactory<E, T, K extends Record<string, any>> {
 	abstract toModel: () => Promise<T>
 	abstract loadEntity: (entity: E) => void
 	abstract reserved: string[]
-	protected abstract readonly rules: Record<keyof K, { required: boolean | (() => boolean), nullable?: boolean, rules: Rule<any>[] }>
+	protected abstract readonly rules: Record<keyof K, VCore<any, any>>
 	protected readonly defaults: K
 	protected values: K
 	protected validValues: K
@@ -33,9 +33,9 @@ export abstract class BaseFactory<E, T, K extends Record<string, any>> {
 	set (property: keyof K, value: any, ignoreRules = false) {
 		const check = this.checkValidity(property, value)
 
-		this.values[property] = value
+		this.values[property] = check.value
 		this.validValues[property] = check.valid || ignoreRules ? value : this.defaults[property]
-		this.errors[property] = this.defaults[property] === value ? '' : check.message
+		this.errors[property] = Differ.equal(this.defaults[property], value) ? '' : check.errors.at(0) ?? ''
 
 		return check.valid
 	}
@@ -48,11 +48,7 @@ export abstract class BaseFactory<E, T, K extends Record<string, any>> {
 	}
 
 	checkValidity (property: keyof K, value: any) {
-		const { valid, errors } = Validator.and(value, [this.rules[property].rules], {
-			required: this.rules[property].required,
-			nullable: this.rules[property].nullable
-		})
-		return { valid, message: errors.find((e) => !!e) ?? '' }
+		return this.rules[property].parse(value)
 	}
 
 	reset () {

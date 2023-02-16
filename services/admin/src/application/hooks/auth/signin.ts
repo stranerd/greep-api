@@ -1,9 +1,9 @@
-import { onMounted, Ref, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { googleLogout } from 'vue3-google-login'
-import { AuthUseCases, EmailSigninFactory, EmailSignupFactory } from '@modules/auth'
-import { useErrorHandler, useLoadingHandler, useSuccessHandler } from '@app/hooks/core/states'
 import { createSession } from '@app/hooks/auth/session'
+import { useErrorHandler, useLoadingHandler, useSuccessHandler } from '@app/hooks/core/states'
+import { AuthUseCases, EmailSigninFactory, EmailSignupFactory } from '@modules/auth'
 import { NetworkError, StatusCodes } from '@modules/core'
 
 const global = {
@@ -17,40 +17,40 @@ const global = {
 
 export const useEmailSignin = () => {
 	const router = useRouter()
-	const factory = ref(new EmailSigninFactory()) as Ref<EmailSigninFactory>
+	const factory = new EmailSigninFactory()
 	const { error, loading, setError, setLoading } = global.emailSignin
 	const signin = async () => {
 		await setError('')
-		if (factory.value.valid && !loading.value) {
+		if (factory.valid && !loading.value) {
 			await setLoading(true)
 			try {
-				const user = await AuthUseCases.signinWithEmail(factory.value, {})
+				const user = await AuthUseCases.signinWithEmail(factory, {})
 				await createSession(user, router)
 			} catch (error) {
 				await setError(error)
 			}
 			await setLoading(false)
-		} else factory.value.validateAll()
+		} else factory.validateAll()
 	}
 	return { factory, loading, error, signin }
 }
 
 export const useEmailSignup = () => {
 	const router = useRouter()
-	const factory = ref(new EmailSignupFactory()) as Ref<EmailSignupFactory>
+	const factory = new EmailSignupFactory()
 	const { error, loading, setError, setLoading } = global.emailSignup
 	const signup = async () => {
 		await setError('')
-		if (factory.value.valid && !loading.value) {
+		if (factory.valid && !loading.value) {
 			await setLoading(true)
 			try {
-				const user = await AuthUseCases.signupWithEmail(factory.value, {})
+				const user = await AuthUseCases.signupWithEmail(factory, {})
 				await createSession(user, router)
 			} catch (error) {
 				await setError(error)
 			}
 			await setLoading(false)
-		} else factory.value.validateAll()
+		} else factory.validateAll()
 	}
 	return { factory, loading, error, signup }
 }

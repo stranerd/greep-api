@@ -1,4 +1,4 @@
-import { isEmail, isEqualTo, isImage, isMaxOf, isMinOf, isString } from 'valleyed'
+import { isEqualTo, v } from 'valleyed'
 import { NewUser } from '../entities/auth'
 import { BaseFactory, Media, UploadedFile } from '@modules/core'
 
@@ -6,19 +6,14 @@ type Content = UploadedFile | Media | null
 
 export class EmailSignupFactory extends BaseFactory<null, NewUser, NewUser & { cPassword: string, photo: Content }> {
 	readonly rules = {
-		firstName: { required: true, rules: [isString(), isMinOf(1)] },
-		lastName: { required: true, rules: [isString(), isMinOf(1)] },
-		description: { required: true, rules: [isString()] },
-		email: { required: true, rules: [isString(), isEmail()] },
-		photo: { required: true, nullable: true, rules: [isImage()] },
-		password: { required: true, rules: [isString(), isMinOf(8), isMaxOf(16)] },
-		cPassword: {
-			required: true,
-			rules: [
-				(val: unknown) => isEqualTo(this.password, (val, comp) => val === comp, 'is not equal')(val),
-				isMinOf(8), isMaxOf(16)
-			]
-		}
+		firstName: v.string().min(1),
+		lastName: v.string().min(1),
+		description: v.string(),
+		email: v.string().email(),
+		photo: v.file().image().nullable(),
+		password: v.string().min(8).max(16),
+		cPassword: v.string().min(8).max(16)
+			.custom((val) => isEqualTo(this.password)(val).valid, 'is not equal')
 	}
 
 	reserved = []
