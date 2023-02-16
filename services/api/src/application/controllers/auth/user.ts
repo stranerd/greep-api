@@ -2,9 +2,7 @@ import { AuthUsersUseCases } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
 import { superAdminEmail } from '@utils/environment'
 import { signOutUser } from '@utils/modules/auth'
-import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validateReq, verifyAccessToken } from 'equipped'
-
-const roles = Object.values(AuthRole).filter((key) => key !== AuthRole.isSuperAdmin)
+import { AuthRole, BadRequestError, Enum, NotFoundError, Request, Schema, validateReq, verifyAccessToken } from 'equipped'
 
 export class UserController {
 	static async findUser(req: Request) {
@@ -35,7 +33,8 @@ export class UserController {
 
 	static async updateUserRole(req: Request) {
 		const { role, userId, value } = validateReq({
-			role: Schema.string().in(roles, (cur, val) => cur === val),
+			role: Schema.any<Enum<typeof AuthRole>>().in(Object.values(AuthRole)
+				.filter((key) => key !== AuthRole.isSuperAdmin)),
 			userId: Schema.string().min(1),
 			value: Schema.boolean()
 		}, req.body)

@@ -1,10 +1,10 @@
 import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
-import { AuthTypes, Request, Schema, validateReq, Validation, ValidationError } from 'equipped'
 import { generateAuthOutput } from '@utils/modules/auth'
+import { AuthTypes, Request, Schema, validateReq, Validation, ValidationError } from 'equipped'
 
 export class EmailsController {
-	static async signup(req: Request) {
+	static async signup (req: Request) {
 		const userCredential = {
 			email: req.body.email ?? '',
 			firstName: req.body.firstName,
@@ -24,11 +24,9 @@ export class EmailsController {
 				return Validation.isInvalid(['email already in use'], email)
 			}),
 			password: Schema.string().min(8).max(16),
-			description: Schema.string(),
 			photo: Schema.file().image().nullable(),
 			firstName: Schema.string().min(1),
-			lastName: Schema.string().min(1),
-			referrer: Schema.string().nullable()
+			lastName: Schema.string().min(1)
 		}, userCredential)
 
 		const photo = userPhoto ? await StorageUseCases.upload('profiles/photos', userPhoto) : null
@@ -44,7 +42,7 @@ export class EmailsController {
 		return await generateAuthOutput(updatedUser)
 	}
 
-	static async signin(req: Request) {
+	static async signin (req: Request) {
 		const validateData = validateReq({
 			email: Schema.string().email(),
 			password: Schema.string(),
@@ -54,7 +52,7 @@ export class EmailsController {
 		return await generateAuthOutput(data)
 	}
 
-	static async sendVerificationMail(req: Request) {
+	static async sendVerificationMail (req: Request) {
 		const { email } = validateReq({
 			email: Schema.string().email()
 		}, req.body)
@@ -65,7 +63,7 @@ export class EmailsController {
 		return await AuthUseCases.sendVerificationMail(user.email)
 	}
 
-	static async verifyEmail(req: Request) {
+	static async verifyEmail (req: Request) {
 		const { token } = validateReq({
 			token: Schema.string()
 		}, req.body)

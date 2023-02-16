@@ -1,4 +1,4 @@
-import { isEmail, isImage, isMaxOf, isMinOf, isShallowEqualTo, isString } from 'valleyed'
+import { isEmail, isEqualTo, isImage, isMaxOf, isMinOf, isString } from 'valleyed'
 import { NewUser } from '../entities/auth'
 import { BaseFactory, Media, UploadedFile } from '@modules/core'
 
@@ -15,7 +15,7 @@ export class EmailSignupFactory extends BaseFactory<null, NewUser, NewUser & { c
 		cPassword: {
 			required: true,
 			rules: [
-				(val: unknown) => isShallowEqualTo(this.password, 'is not equal')(val),
+				(val: unknown) => isEqualTo(this.password, (val, comp) => val === comp, 'is not equal')(val),
 				isMinOf(8), isMaxOf(16)
 			]
 		}

@@ -1,4 +1,4 @@
-import { isEmail, isMaxOf, isMinOf, isShallowEqualTo, isString } from 'valleyed'
+import { isEmail, isEqualTo, isMaxOf, isMinOf, isString } from 'valleyed'
 import { BaseFactory } from '@modules/core'
 
 type Keys = { email: string, token: string, password: string, cPassword: string }
@@ -11,7 +11,7 @@ export class PasswordResetFactory extends BaseFactory<null, { password: string, 
 			required: true,
 			rules: [
 				isString(),
-				(val: unknown) => isShallowEqualTo(this.password, 'is not equal to the new password')(val),
+				(val: unknown) => isEqualTo(this.password, (val, comp) => val === comp, 'is not equal to the new password')(val),
 				isMinOf(8), isMaxOf(16)]
 		},
 		email: { required: true, rules: [isString(), isEmail()] }

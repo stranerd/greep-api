@@ -1,4 +1,4 @@
-import { isMaxOf, isMinOf, isShallowEqualTo, isString } from 'valleyed'
+import { isEqualTo, isMaxOf, isMinOf, isString } from 'valleyed'
 import { PasswordUpdate } from '../entities/auth'
 import { BaseFactory } from '@modules/core'
 
@@ -13,7 +13,10 @@ export class PasswordUpdateFactory extends BaseFactory<null, PasswordUpdate, Key
 		},
 		cPassword: {
 			required: true,
-			rules: [isString(), (val: unknown) => isShallowEqualTo(this.password, 'is not equal')(val), isMinOf(8), isMaxOf(18)]
+			rules: [
+				isString(),
+				(val: unknown) => isEqualTo(this.password, (val, comp) => val === comp, 'is not equal')(val),
+				isMinOf(8), isMaxOf(18)]
 		}
 	}
 

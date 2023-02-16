@@ -54,7 +54,7 @@ export class TransactionsController {
 					type: Schema.any<TransactionType.trip>().eq(TransactionType.trip),
 					customerName: Schema.string().min(1),
 					paidAmount: Schema.number(),
-					paymentType: Schema.any<PaymentType>().in(Object.values(PaymentType), (cur, val) => cur === val)
+					paymentType: Schema.any<PaymentType>().in(Object.values(PaymentType))
 				})
 			])
 		}, req.body)

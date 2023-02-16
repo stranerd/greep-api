@@ -1735,10 +1735,10 @@ engine.io@~6.4.0:
     engine.io-parser "~5.0.3"
     ws "~8.11.0"
 
-equipped@^4.0.0-alpha.9:
-  version "4.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.0.0-alpha.9.tgz#ba8348d799359823221e0bb369edf964d52be454"
-  integrity sha512-lW5LYXYV8C1S7DOaovFJfwta9T/naQWQtpxcSz6Ks10AKzJaxao7L003n/vD/IkSKEH05YhPsh7hX76PI4jNhA==
+equipped@^4.0.0-alpha-10:
+  version "4.0.0-alpha-10"
+  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.0.0-alpha-10.tgz#85939ff7e06842f5f1c78c1030497a6758f58fb1"
+  integrity sha512-lsAKxL4QUlEJr2PZcturSCG2+4tHHdxseR1NlnLMG+agUx6AEK2sbB2U4ROnCUHPT2lh/YkKgz5gncn1RVICgA==
   dependencies:
     amqplib "^0.10.3"
     axios "^1.3.3"
@@ -1761,7 +1761,7 @@ equipped@^4.0.0-alpha.9:
     pug "^3.0.2"
     redis "^4.6.4"
     socket.io "4.6.0"
-    valleyed "^4.0.4-alpha.2"
+    valleyed "^4.0.5"
 
 escape-html@~1.0.3:
   version "1.0.3"
@@ -3595,10 +3595,10 @@ v8-compile-cache-lib@^3.0.1:
   resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
   integrity sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
 
-valleyed@^4.0.4-alpha.2:
-  version "4.0.4-alpha.2"
-  resolved "https://registry.yarnpkg.com/valleyed/-/valleyed-4.0.4-alpha.2.tgz#b22b978e82a5a38d34e05781ae6efec36850b937"
-  integrity sha512-N+Dqx+3Ve8G6i29GC+EKCYILKo0ThcUYumc1kK9xSdHWzWAoC1UWforswp//+kmnE1tSXhZYH9snUbg9hsCeTw==
+valleyed@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/valleyed/-/valleyed-4.0.5.tgz#a18477cab4329842f41e5a22c4acb929093e24be"
+  integrity sha512-ggPDZ/Xwzveh1sX6d/hBnIaZGGMV6f8jW7X+JkselY/fYTBqvS+oiwrs92hVYUC6RewMJOXlaRHoNtRHXVpBDA==
   dependencies:
     url-regex-safe "^3.0.0"
 
