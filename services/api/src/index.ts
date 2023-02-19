@@ -1,12 +1,12 @@
-import { OnJoinFn } from 'equipped'
-import { appId, appInstance, port } from '@utils/environment'
-import { subscribers } from '@utils/events'
 import { routes } from '@application/routes'
 import { UsersUseCases } from '@modules/users'
+import { appId, appInstance, port } from '@utils/environment'
+import { subscribers } from '@utils/events'
 import { startJobs } from '@utils/jobs'
+import { OnJoinFn } from 'equipped'
 
 const start = async () => {
-	await appInstance.startDbConnection()
+	await appInstance.startConnections()
 	await Promise.all(
 		Object.values(subscribers)
 			.map(async (subscriber) => {

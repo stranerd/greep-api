@@ -1,8 +1,9 @@
-import { generateChangeStreams, mongoose } from 'equipped'
-import { TripFromModel } from '../models/trips'
-import { TripChangeStreamCallbacks } from '@utils/changeStreams/users/trips'
+import { TripDbChangeCallbacks } from '@utils/changeStreams/users/trips'
+import { appInstance } from '@utils/environment'
+import { mongoose } from 'equipped'
 import { TripEntity } from '../../domain/entities/trips'
 import { TripMapper } from '../mappers/trips'
+import { TripFromModel } from '../models/trips'
 
 const TripSchema = new mongoose.Schema<TripFromModel>({
 	_id: {
@@ -40,4 +41,5 @@ const TripSchema = new mongoose.Schema<TripFromModel>({
 
 export const Trip = mongoose.model<TripFromModel>('UsersTrip', TripSchema)
 
-generateChangeStreams<TripFromModel, TripEntity>(Trip, TripChangeStreamCallbacks, new TripMapper().mapFrom).then()
+export const TripChange = appInstance.db
+	.generateDbChange<TripFromModel, TripEntity>(Trip, TripDbChangeCallbacks, new TripMapper().mapFrom)

@@ -1,8 +1,8 @@
 import { TripEntity, TripFromModel } from '@modules/users'
 import { appInstance } from '@utils/environment'
-import { ChangeStreamCallbacks } from 'equipped'
+import { DbChangeCallbacks } from 'equipped'
 
-export const TripChangeStreamCallbacks: ChangeStreamCallbacks<TripFromModel, TripEntity> = {
+export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created(`users/trips/${after.driverId}`, after)
 		await appInstance.listener.created(`users/trips/${after.managerId}`, after)
