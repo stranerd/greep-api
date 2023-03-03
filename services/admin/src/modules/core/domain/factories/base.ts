@@ -1,6 +1,7 @@
 import { Differ, VCore } from 'valleyed'
 import { reactive } from 'vue'
 import { UploaderService } from '../../services/uploader'
+import { deepUnref } from '@utils/unref'
 import { UploadedFile } from '@modules/core'
 
 export abstract class BaseFactory<E, T, K extends Record<string, any>> {
@@ -48,7 +49,7 @@ export abstract class BaseFactory<E, T, K extends Record<string, any>> {
 	}
 
 	checkValidity (property: keyof K, value: any) {
-		return this.rules[property].parse(value)
+		return this.rules[property].parse(deepUnref(value))
 	}
 
 	reset () {
