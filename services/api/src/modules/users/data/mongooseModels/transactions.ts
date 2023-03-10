@@ -1,4 +1,3 @@
-import { TransactionDbChangeCallbacks } from '@utils/changeStreams/users/transactions'
 import { appInstance } from '@utils/environment'
 import { TransactionMapper } from '../mappers/transactions'
 import { TransactionFromModel } from '../models/transactions'
@@ -48,4 +47,4 @@ const TransactionSchema = new appInstance.dbs.mongo.Schema<TransactionFromModel>
 
 export const Transaction = appInstance.dbs.mongo.use().model<TransactionFromModel>('UsersTransaction', TransactionSchema)
 
-export const TransactionChange = appInstance.dbs.mongo.change(Transaction, TransactionDbChangeCallbacks, new TransactionMapper().mapFrom)
+export const TransactionChange = appInstance.dbs.mongo.change(Transaction, {}, new TransactionMapper().mapFrom)

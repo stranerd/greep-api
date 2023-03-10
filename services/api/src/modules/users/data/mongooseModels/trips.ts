@@ -1,4 +1,3 @@
-import { TripDbChangeCallbacks } from '@utils/changeStreams/users/trips'
 import { appInstance } from '@utils/environment'
 import { TripMapper } from '../mappers/trips'
 import { TripFromModel } from '../models/trips'
@@ -39,4 +38,4 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>({
 
 export const Trip = appInstance.dbs.mongo.use().model<TripFromModel>('UsersTrip', TripSchema)
 
-export const TripChange = appInstance.dbs.mongo.change(Trip, TripDbChangeCallbacks, new TripMapper().mapFrom)
+export const TripChange = appInstance.dbs.mongo.change(Trip, {}, new TripMapper().mapFrom)
