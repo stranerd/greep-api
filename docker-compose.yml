@@ -22,13 +22,15 @@ services:
       target: production
     hostname: api
     restart: always
+    stop_grace_period: 60s
     depends_on:
       - mongodb
       - redis
-      - rabbitmq
+      - kafka
+      - debezium
     volumes:
       - '/c/data/docker/greep/files/api/:/app/public/'
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- node lib/index.js'
+    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- node lib/index.js'
 
   admin:
     build:
@@ -38,7 +40,7 @@ services:
     restart: always
     depends_on:
       - api
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn start'
+    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- yarn start'
 
   mongodb:
     image: 'mongo:6.0.3'
@@ -77,9 +79,6 @@ services:
       STATUS_STORAGE_TOPIC: debezium.connect.status
     depends_on:
       - kafka
-    volumes:
-      - '/c/data/docker/greep/debezium/data/config:/kafka/config'
-      - '/c/data/docker/greep/debezium/data/logs:/kafka/logs'
 
   redis:
     image: 'redis:6.2.5-alpine'

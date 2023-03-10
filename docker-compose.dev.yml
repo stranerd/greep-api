@@ -11,7 +11,7 @@ services:
       target: base
     volumes:
       - "./services/api/src:/app/src:ro"
-    command: "sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- yarn dev"
+    command: "sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- yarn dev"
 
   admin:
     restart: on-failure
@@ -20,7 +20,7 @@ services:
     volumes:
       - "./services/admin/build:/app/build"
       - "./services/admin/src:/app/src:ro"
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 rabbitmq:5672 -- echo "Start dev server on your machine"'
+    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- echo "Start dev server on your machine"'
 
   mongodb:
     ports:
@@ -51,3 +51,15 @@ services:
       - redis
     environment:
       - 'REDIS_HOSTS=local:redis:6379'
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:master
+    hostname: kafka-ui
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    ports:
+      - '84:8080'
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=${KAFKA_URIS}
