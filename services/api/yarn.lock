@@ -1735,7 +1735,7 @@ engine.io@~6.4.0:
     engine.io-parser "~5.0.3"
     ws "~8.11.0"
 
-equipped@^4.0.2-alpha.3:
+equipped@4.0.2-alpha.3:
   version "4.0.2-alpha.3"
   resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.0.2-alpha.3.tgz#78b609260a01d00f49fc0a93653715302e87dcf3"
   integrity sha512-mVTIbXnm7OZfWiSfJ6+B3YlNaXgT51+L4BM/NYznePGHgheX75VPNuiVYz/vAuAnOU66DchTFkkxQuhESoNrYg==
