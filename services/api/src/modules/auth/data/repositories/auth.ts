@@ -9,7 +9,6 @@ import {
 	Enum,
 	Hash,
 	MediaOutput,
-	mongoose,
 	Random,
 	readEmailFromPug,
 	signinWithApple,
@@ -170,7 +169,7 @@ export class AuthRepository implements IAuthRepository {
 		}, false, type)
 	}
 
-	private async signInUser(user: UserFromModel & mongoose.Document<any, any, UserFromModel>, type: Enum<typeof AuthTypes>) {
+	private async signInUser(user: UserFromModel, type: Enum<typeof AuthTypes>) {
 		const userUpdated = await User.findByIdAndUpdate(user._id, {
 			$set: { lastSignedInAt: Date.now() },
 			$addToSet: { authTypes: [type] }

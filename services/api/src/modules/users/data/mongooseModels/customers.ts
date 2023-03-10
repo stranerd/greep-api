@@ -1,14 +1,12 @@
 import { CustomerDbChangeCallbacks } from '@utils/changeStreams/users/customers'
 import { appInstance } from '@utils/environment'
-import { mongoose } from 'equipped'
-import { CustomerEntity } from '../../domain/entities/customers'
 import { CustomerMapper } from '../mappers/customers'
 import { CustomerFromModel } from '../models/customers'
 
-const CustomerSchema = new mongoose.Schema<CustomerFromModel>({
+const CustomerSchema = new appInstance.dbs.mongo.Schema<CustomerFromModel>({
 	_id: {
 		type: String,
-		default: () => new mongoose.Types.ObjectId().toString()
+		default: () => appInstance.dbs.mongo.Id.toString()
 	},
 	name: {
 		type: String,
@@ -40,7 +38,6 @@ const CustomerSchema = new mongoose.Schema<CustomerFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Customer = mongoose.model<CustomerFromModel>('UsersCustomer', CustomerSchema)
+export const Customer = appInstance.dbs.mongo.use().model<CustomerFromModel>('UsersCustomer', CustomerSchema)
 
-export const CustomerChange = appInstance.db
-	.generateDbChange<CustomerFromModel, CustomerEntity>(Customer, CustomerDbChangeCallbacks, new CustomerMapper().mapFrom)
+export const CustomerChange = appInstance.dbs.mongo.change(Customer, CustomerDbChangeCallbacks, new CustomerMapper().mapFrom)

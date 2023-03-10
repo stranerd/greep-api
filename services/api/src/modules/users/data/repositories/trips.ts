@@ -1,12 +1,12 @@
 import { Transaction } from '@modules/users/data/mongooseModels/transactions'
 import { appInstance } from '@utils/environment'
-import { mongoose, QueryParams } from 'equipped'
+import { QueryParams } from 'equipped'
 import { ITripRepository } from '../../domain/i-repositories/trips'
 import { TripStatus } from '../../domain/types'
 import { TransactionMapper } from '../mappers/transactions'
 import { TripMapper } from '../mappers/trips'
 import { TransactionToModel } from '../models/transactions'
-import { TripFromModel, TripToModel } from '../models/trips'
+import { TripToModel } from '../models/trips'
 import { Trip } from '../mongooseModels/trips'
 
 export class TripRepository implements ITripRepository {
@@ -20,7 +20,7 @@ export class TripRepository implements ITripRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.db.parseQueryParams<TripFromModel>(Trip, query)
+		const data = await appInstance.dbs.mongo.query(Trip, query)
 		return {
 			...data,
 			results: data.results.map((n) => this.mapper.mapFrom(n)!)
@@ -53,8 +53,7 @@ export class TripRepository implements ITripRepository {
 
 	async detail ({ id, driverId, data }: { id: string, driverId: string, data: TransactionToModel }) {
 		let res = null as any
-		const session = await mongoose.startSession()
-		await session.withTransaction(async (session) => {
+		await Trip.collection.conn.transaction(async (session) => {
 			const trip = this.mapper.mapFrom(await Trip.findOneAndUpdate({
 				_id: id, driverId, status: TripStatus.ended
 			}, { $set: { status: TripStatus.detailed } }, { session }))
@@ -62,7 +61,6 @@ export class TripRepository implements ITripRepository {
 			res = await new Transaction(data).save()
 			return res
 		})
-		await session.endSession()
 		return this.transactionMapper.mapFrom(res)
 	}
 }

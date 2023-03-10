@@ -1,15 +1,12 @@
 import { TransactionDbChangeCallbacks } from '@utils/changeStreams/users/transactions'
 import { appInstance } from '@utils/environment'
-import { mongoose } from 'equipped'
-import { TransactionEntity } from '../../domain/entities/transactions'
-import { TransactionData } from '../../domain/types'
 import { TransactionMapper } from '../mappers/transactions'
 import { TransactionFromModel } from '../models/transactions'
 
-const TransactionSchema = new mongoose.Schema<TransactionFromModel>({
+const TransactionSchema = new appInstance.dbs.mongo.Schema<TransactionFromModel>({
 	_id: {
 		type: String,
-		default: () => new mongoose.Types.ObjectId().toString()
+		default: () => appInstance.dbs.mongo.Id.toString()
 	},
 	driverId: {
 		type: String,
@@ -29,7 +26,7 @@ const TransactionSchema = new mongoose.Schema<TransactionFromModel>({
 		default: ''
 	},
 	data: {
-		type: mongoose.Schema.Types.Mixed as unknown as TransactionData,
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
 	recordedAt: {
@@ -49,7 +46,6 @@ const TransactionSchema = new mongoose.Schema<TransactionFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Transaction = mongoose.model<TransactionFromModel>('UsersTransaction', TransactionSchema)
+export const Transaction = appInstance.dbs.mongo.use().model<TransactionFromModel>('UsersTransaction', TransactionSchema)
 
-export const TransactionChange = appInstance.db
-	.generateDbChange<TransactionFromModel, TransactionEntity>(Transaction, TransactionDbChangeCallbacks, new TransactionMapper().mapFrom)
+export const TransactionChange = appInstance.dbs.mongo.change(Transaction, TransactionDbChangeCallbacks, new TransactionMapper().mapFrom)

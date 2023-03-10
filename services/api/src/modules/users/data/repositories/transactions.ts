@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { ITransactionRepository } from '../../domain/i-repositories/transactions'
 import { TransactionType } from '../../domain/types'
 import { TransactionMapper } from '../mappers/transactions'
-import { TransactionFromModel, TransactionToModel } from '../models/transactions'
+import { TransactionToModel } from '../models/transactions'
 import { Transaction } from '../mongooseModels/transactions'
 
 export class TransactionRepository implements ITransactionRepository {
@@ -16,7 +16,7 @@ export class TransactionRepository implements ITransactionRepository {
 	}
 
 	async get (query: QueryParams) {
-		const data = await appInstance.db.parseQueryParams<TransactionFromModel>(Transaction, query)
+		const data = await appInstance.dbs.mongo.query(Transaction, query)
 		return {
 			...data,
 			results: data.results.map((n) => this.mapper.mapFrom(n)!)

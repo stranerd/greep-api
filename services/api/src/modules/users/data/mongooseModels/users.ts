@@ -1,21 +1,19 @@
 import { UserDbChangeCallbacks } from '@utils/changeStreams/users/users'
 import { appInstance } from '@utils/environment'
-import { mongoose } from 'equipped'
-import { UserEntity } from '../../domain/entities/users'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
 
-const UserSchema = new mongoose.Schema<UserFromModel>({
+const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 	_id: {
 		type: String,
-		default: () => new mongoose.Types.ObjectId().toString()
+		default: () => appInstance.dbs.mongo.Id.toString()
 	},
 	bio: {
-		type: mongoose.Schema.Types.Mixed as unknown as UserFromModel['bio'],
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
 	roles: {
-		type: mongoose.Schema.Types.Mixed as unknown as UserFromModel['roles'],
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
 		default: {} as unknown as UserFromModel['roles']
 	},
@@ -44,12 +42,12 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		}
 	},
 	drivers: {
-		type: [mongoose.Schema.Types.Mixed] as unknown as UserFromModel['drivers'],
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as UserFromModel['drivers'],
 		required: false,
 		default: []
 	},
 	managerRequests: {
-		type: [mongoose.Schema.Types.Mixed] as unknown as UserFromModel['managerRequests'],
+		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as UserFromModel['managerRequests'],
 		required: false,
 		default: []
 	},
@@ -59,13 +57,12 @@ const UserSchema = new mongoose.Schema<UserFromModel>({
 		default: []
 	},
 	manager: {
-		type: mongoose.Schema.Types.Mixed as unknown as UserFromModel['manager'],
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
 		default: null
 	}
 }, { minimize: false })
 
-export const User = mongoose.model<UserFromModel>('User', UserSchema)
+export const User = appInstance.dbs.mongo.use().model<UserFromModel>('User', UserSchema)
 
-export const UserChange = appInstance.db
-	.generateDbChange<UserFromModel, UserEntity>(User, UserDbChangeCallbacks, new UserMapper().mapFrom)
+export const UserChange = appInstance.dbs.mongo.change(User, UserDbChangeCallbacks, new UserMapper().mapFrom)

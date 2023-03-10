@@ -9,7 +9,6 @@ import {
 import { IUserRepository } from '../../domain/i-repositories/users'
 import { RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
-import { UserFromModel } from '../models/users'
 import User from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
@@ -27,7 +26,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async getUsers (query: QueryParams) {
-		const data = await appInstance.db.parseQueryParams<UserFromModel>(User, query)
+		const data = await appInstance.dbs.mongo.query(User, query)
 		return {
 			...data,
 			results: data.results.map((u) => this.mapper.mapFrom(u)!)

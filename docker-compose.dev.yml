@@ -1,5 +1,10 @@
 version: "3.8"
 services:
+  traefik:
+    restart: unless-stopped
+    ports:
+      - "90:8080"
+
   api:
     restart: unless-stopped
     build:
@@ -22,25 +27,27 @@ services:
       - '27017:27017'
     restart: unless-stopped
 
-  mongodb-express:
-    restart: unless-stopped
-    ports:
-      - '81:8081'
-
-  rabbitmq:
-    restart: unless-stopped
-    ports:
-      - '82:15672'
-
   redis:
     restart: unless-stopped
 
+  mongodb-express:
+    image: 'mongo-express:latest'
+    hostname: mongodb-express
+    restart: unless-stopped
+    ports:
+      - '81:8081'
+    depends_on:
+      - mongodb
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
   redis-commander:
+    image: 'rediscommander/redis-commander:latest'
+    hostname: redis-commander
     restart: unless-stopped
     ports:
       - '83:8081'
-
-  traefik:
-    restart: unless-stopped
-    ports:
-      - "90:8080"
+    depends_on:
+      - redis
+    environment:
+      - 'REDIS_HOSTS=local:redis:6379'

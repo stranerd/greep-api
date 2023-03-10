@@ -19,17 +19,15 @@ export const emails = Object.fromEntries(
 	}])
 )
 
-export const accessTokenKey = getEnvOrFail('ACCESS_TOKEN_KEY')
-export const refreshTokenKey = getEnvOrFail('REFRESH_TOKEN_KEY')
-export const mongoDbURI = getEnvOrFail('MONGODB_URI')
-export const rabbitURI = getEnvOrFail('RABBITMQ_URI')
-export const redisURI = getEnvOrFail('REDIS_URI')
-
 Instance.initialize({
-	accessTokenKey, refreshTokenKey,
-	mongoDbURI, rabbitURI, redisURI,
 	isDev, appId,
+	accessTokenKey: getEnvOrFail('ACCESS_TOKEN_KEY'),
+	refreshTokenKey: getEnvOrFail('REFRESH_TOKEN_KEY'),
 	bullQueueName: 'greep-task-queues',
-	rabbitColumnName: 'Greep'
+	mongoDbURI: getEnvOrFail('MONGODB_URI'),
+	redisURI: getEnvOrFail('REDIS_URI'),
+	kafkaURIs: getEnvOrFail('KAFKA_URIS').split(','),
+	debeziumUrl: getEnvOrFail('DEBEZIUM_URL'),
+	eventColumnName: 'Greep'
 })
 export const appInstance = Instance.get()

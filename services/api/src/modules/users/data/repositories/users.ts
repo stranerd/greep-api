@@ -1,9 +1,7 @@
 import { appInstance } from '@utils/environment'
-import { mongoose } from 'equipped'
 import { IUserRepository } from '../../domain/i-repositories/users'
 import { UserBio, UserRoles } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
-import { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
@@ -16,7 +14,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async get (query) {
-		const data = await appInstance.db.parseQueryParams<UserFromModel>(User, query)
+		const data = await appInstance.dbs.mongo.query(User, query)
 		return {
 			...data,
 			results: data.results.map((u) => this.mapper.mapFrom(u)!)
@@ -77,9 +75,8 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async acceptManager (managerId: string, driverId: string, commission: number, accept: boolean) {
-		const session = await mongoose.startSession()
 		let res = false
-		await session.withTransaction(async (session) => {
+		await User.collection.conn.transaction(async (session) => {
 			if (!accept) {
 				const driver = await User.findOneAndUpdate(
 					{ _id: driverId, manager: null },
@@ -100,14 +97,12 @@ export class UserRepository implements IUserRepository {
 			}
 			return res
 		})
-		await session.endSession()
 		return res
 	}
 
 	async updateDriverCommission (managerId: string, driverId: string, commission: number) {
-		const session = await mongoose.startSession()
 		let res = false
-		await session.withTransaction(async (session) => {
+		await User.collection.conn.transaction(async (session) => {
 			const driver = await User.findOneAndUpdate(
 				{ _id: driverId, 'manager.managerId': managerId },
 				{ $set: { 'manager.commission': commission } },
@@ -120,14 +115,12 @@ export class UserRepository implements IUserRepository {
 			res = !!manager && !!driver
 			return res
 		})
-		await session.endSession()
 		return res
 	}
 
 	async removeDriver (managerId: string, driverId: string) {
-		const session = await mongoose.startSession()
 		let res = false
-		await session.withTransaction(async (session) => {
+		await User.collection.conn.transaction(async (session) => {
 			const driver = await User.findOneAndUpdate(
 				{ _id: driverId, 'manager.managerId': managerId },
 				{ $set: { manager: null } },
@@ -140,7 +133,6 @@ export class UserRepository implements IUserRepository {
 			res = !!manager && !!driver
 			return res
 		})
-		await session.endSession()
 		return res
 	}
 

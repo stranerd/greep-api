@@ -1,7 +1,6 @@
 import { appInstance } from '@utils/environment'
 import { ICustomerRepository } from '../../domain/i-repositories/customers'
 import { CustomerMapper } from '../mappers/customers'
-import { CustomerFromModel } from '../models/customers'
 import { Customer } from '../mongooseModels/customers'
 
 export class CustomerRepository implements ICustomerRepository {
@@ -14,7 +13,7 @@ export class CustomerRepository implements ICustomerRepository {
 	}
 
 	async get (query) {
-		const data = await appInstance.db.parseQueryParams<CustomerFromModel>(Customer, query)
+		const data = await appInstance.dbs.mongo.query(Customer, query)
 		return {
 			...data,
 			results: data.results.map((u) => this.mapper.mapFrom(u)!)
