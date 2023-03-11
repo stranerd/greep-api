@@ -10,10 +10,9 @@ import { DbChangeCallbacks } from 'equipped'
 
 export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromModel, TransactionEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created(`users/transactions/${after.driverId}`, after)
-		await appInstance.listener.created(`users/transactions/${after.managerId}`, after)
-		await appInstance.listener.created(`users/transactions/${after.id}/${after.driverId}`, after)
-		await appInstance.listener.created(`users/transactions/${after.id}/${after.managerId}`, after)
+		await appInstance.listener.created([
+			after.managerId, after.driverId, `${after.id}/${after.managerId}`, `${after.id}/${after.driverId}`
+		].map((c) => `users/transactions/${c}`), after)
 
 		if (after.data.type === TransactionType.balance) await TransactionsUseCases.updateTripDebt({
 			id: after.data.parentId,
@@ -35,10 +34,9 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 		}
 	},
 	updated: async ({ after, before }) => {
-		await appInstance.listener.updated(`users/transactions/${after.driverId}`, after)
-		await appInstance.listener.updated(`users/transactions/${after.managerId}`, after)
-		await appInstance.listener.updated(`users/transactions/${after.id}/${after.driverId}`, after)
-		await appInstance.listener.updated(`users/transactions/${after.id}/${after.managerId}`, after)
+		await appInstance.listener.updated([
+			after.managerId, after.driverId, `${after.id}/${after.managerId}`, `${after.id}/${after.driverId}`
+		].map((c) => `users/transactions/${c}`), after)
 
 		const debtChanged = after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt
 		if (debtChanged) await CustomersUseCases.updateDebt({
@@ -48,10 +46,9 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 		})
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted(`users/transactions/${before.driverId}`, before)
-		await appInstance.listener.deleted(`users/transactions/${before.managerId}`, before)
-		await appInstance.listener.deleted(`users/transactions/${before.id}/${before.driverId}`, before)
-		await appInstance.listener.deleted(`users/transactions/${before.id}/${before.managerId}`, before)
+		await appInstance.listener.deleted([
+			before.managerId, before.driverId, `${before.id}/${before.managerId}`, `${before.id}/${before.driverId}`
+		].map((c) => `users/transactions/${c}`), before)
 
 		if (before.data.type === TransactionType.trip) {
 			await CustomersUseCases.updateTrip({

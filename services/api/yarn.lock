@@ -1026,10 +1026,10 @@ engine.io@~6.4.1:
     engine.io-parser "~5.0.3"
     ws "~8.11.0"
 
-equipped@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.1.1.tgz#532db8edbf52d85709c5e5b437dc703b5bdeb81e"
-  integrity sha512-45mGG5LZnNma7VkHRvOi5DWWkTTkhxtxfv99WRRkQ26RQ3vVIi+XkCfC1nx4zYiIL4hrNcReEaGlm5Pp9N6w8A==
+equipped@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.1.2.tgz#73f6bf4a8172e23a36a4726b5ebb9ce022e2e94b"
+  integrity sha512-FXlSe5ZmzngRWECjxBgqVGgOuLcuTdAtxRggbuv0WQG5TN3kVAkJEwLtDq71hIqoNoijZL2243jbNucCp9Kvaw==
   dependencies:
     amqp-connection-manager "^4.1.11"
     amqplib "^0.10.3"

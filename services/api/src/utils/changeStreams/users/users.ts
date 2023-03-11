@@ -4,17 +4,20 @@ import { DbChangeCallbacks } from 'equipped'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created('users/users', after)
-		await appInstance.listener.created(`users/users/${after.id}`, after)
+		await appInstance.listener.created([
+			'', `/${after.id}`
+		].map((c) => `users/users${c}`), after)
 	},
 	updated: async ({ after, changes }) => {
-		await appInstance.listener.updated('users/users', after)
-		await appInstance.listener.updated(`users/users/${after.id}`, after)
+		await appInstance.listener.updated([
+			'', `/${after.id}`
+		].map((c) => `users/users${c}`), after)
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
 		if (updatedBioOrRoles) await Promise.all([].map(async (useCase: any) => await useCase.updateUserBio(after.getEmbedded())))
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted('users/users', before)
-		await appInstance.listener.deleted(`users/users/${before.id}`, before)
+		await appInstance.listener.deleted([
+			'', `/${before.id}`
+		].map((c) => `users/users${c}`), before)
 	}
 }
