@@ -1,3 +1,4 @@
+import { CustomerDbChangeCallbacks } from '@utils/changeStreams/users/customers'
 import { appInstance } from '@utils/environment'
 import { CustomerMapper } from '../mappers/customers'
 import { CustomerFromModel } from '../models/customers'
@@ -39,4 +40,4 @@ const CustomerSchema = new appInstance.dbs.mongo.Schema<CustomerFromModel>({
 
 export const Customer = appInstance.dbs.mongo.use().model<CustomerFromModel>('UsersCustomer', CustomerSchema)
 
-export const CustomerChange = appInstance.dbs.mongo.change(Customer, {}, new CustomerMapper().mapFrom)
+export const CustomerChange = appInstance.dbs.mongo.change(Customer, CustomerDbChangeCallbacks, new CustomerMapper().mapFrom)

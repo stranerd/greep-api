@@ -1,3 +1,4 @@
+import { ErrorDbChangeCallbacks } from '@utils/changeStreams/emails/errors'
 import { appInstance } from '@utils/environment'
 import { ErrorMapper } from '../mappers/errors'
 import { ErrorFromModel } from '../models/errors'
@@ -46,4 +47,4 @@ const Schema = new appInstance.dbs.mongo.Schema<ErrorFromModel>({
 
 export const Error = appInstance.dbs.mongo.use().model<ErrorFromModel>('EmailsError', Schema)
 
-export const ErrorChange = appInstance.dbs.mongo.change(Error, {}, new ErrorMapper().mapFrom)
+export const ErrorChange = appInstance.dbs.mongo.change(Error, ErrorDbChangeCallbacks, new ErrorMapper().mapFrom)

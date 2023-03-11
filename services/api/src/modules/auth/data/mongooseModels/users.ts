@@ -1,3 +1,4 @@
+import { UserDbChangeCallbacks } from '@utils/changeStreams/auth/users'
 import { appInstance } from '@utils/environment'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
@@ -59,6 +60,6 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 
 export const User = appInstance.dbs.mongo.use().model<UserFromModel>('AuthUser', UserSchema)
 
-export const UserChange = appInstance.dbs.mongo.change(User, {}, new UserMapper().mapFrom)
+export const UserChange = appInstance.dbs.mongo.change(User, UserDbChangeCallbacks, new UserMapper().mapFrom)
 
 export default User
