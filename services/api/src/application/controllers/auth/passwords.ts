@@ -1,10 +1,10 @@
 import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
 import { generateAuthOutput } from '@utils/modules/auth'
-import { BadRequestError, Hash, Request, Schema, validateReq, ValidationError } from 'equipped'
+import { BadRequestError, Hash, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class PasswordsController {
-	static async sendResetMail(req: Request) {
-		const { email } = validateReq({
+	static async sendResetMail (req: Request) {
+		const { email } = validate({
 			email: Schema.string().email()
 		}, req.body)
 
@@ -14,8 +14,8 @@ export class PasswordsController {
 		return await AuthUseCases.sendPasswordResetMail(user.email)
 	}
 
-	static async resetPassword(req: Request) {
-		const validateData = validateReq({
+	static async resetPassword (req: Request) {
+		const validateData = validate({
 			token: Schema.force.string(),
 			password: Schema.string().min(8).max(16)
 		}, req.body)
@@ -24,9 +24,9 @@ export class PasswordsController {
 		return await generateAuthOutput(data)
 	}
 
-	static async updatePassword(req: Request) {
+	static async updatePassword (req: Request) {
 		const userId = req.authUser!.id
-		const { oldPassword, password } = validateReq({
+		const { oldPassword, password } = validate({
 			oldPassword: Schema.string(),
 			password: Schema.string().min(8).max(16)
 		}, req.body)

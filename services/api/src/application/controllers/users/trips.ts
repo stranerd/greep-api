@@ -6,36 +6,36 @@ import {
 	QueryKeys,
 	QueryParams,
 	Request,
-	Schema, validateReq, ValidationError
+	Schema, validate, ValidationError
 } from 'equipped'
 
 export class TripsController {
-	static async getTrips(req: Request) {
+	static async getTrips (req: Request) {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'driverId', value: req.authUser!.id }, { field: 'managerId', value: req.authUser!.id }]
 		query.authType = QueryKeys.or
 		return await TripsUseCases.get(query)
 	}
 
-	static async getTripsAdmin(req: Request) {
+	static async getTripsAdmin (req: Request) {
 		const query = req.query as QueryParams
 		return await TripsUseCases.get(query)
 	}
 
-	static async findTrip(req: Request) {
+	static async findTrip (req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || ![trip.managerId, trip.driverId].includes(req.authUser!.id)) throw new NotFoundError()
 		return trip
 	}
 
-	static async findTripAdmin(req: Request) {
+	static async findTripAdmin (req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip) throw new NotFoundError()
 		return trip
 	}
 
-	static async createTrip(req: Request) {
-		const data = validateReq({
+	static async createTrip (req: Request) {
+		const data = validate({
 			coords: Schema.tuple([Schema.number(), Schema.number()]),
 			location: Schema.string().min(1)
 		}, req.body)
@@ -53,8 +53,8 @@ export class TripsController {
 		})
 	}
 
-	static async updateTrip(req: Request, status: TripStatus) {
-		const data = validateReq({
+	static async updateTrip (req: Request, status: TripStatus) {
+		const data = validate({
 			coords: Schema.tuple([Schema.number(), Schema.number()]),
 			location: Schema.string().min(1)
 		}, req.body)
@@ -84,15 +84,15 @@ export class TripsController {
 		throw new NotAuthorizedError()
 	}
 
-	static async detailTrip(req: Request) {
-		const data = validateReq({
+	static async detailTrip (req: Request) {
+		const data = validate({
 			amount: Schema.number().gt(0),
 			description: Schema.string(),
 			recordedAt: Schema.time().asStamp(),
 			data: Schema.object({
 				customerName: Schema.string().min(1),
 				paidAmount: Schema.number(),
-				paymentType: Schema.any<PaymentType>().in(Object.values(PaymentType))
+				paymentType: Schema.in(Object.values(PaymentType))
 			})
 		}, req.body)
 

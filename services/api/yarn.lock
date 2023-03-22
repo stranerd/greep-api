@@ -272,13 +272,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/long@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@types/long/-/long-5.0.0.tgz#daaa7b7f74c919c946ff74889d5ca2afe363b2cd"
-  integrity sha512-eQs9RsucA/LNjnMoJvWG/nXa7Pot/RbBzilF/QRIU/xRl+0ApxrSUFsV5lmf01SvSlqMzJ7Zwxe440wmz2SJGA==
-  dependencies:
-    long "*"
-
 "@types/mime@*":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-3.0.1.tgz#5f8f2bca0a5863cb69bc0b0acd88c96cb1d4ae10"
@@ -1026,10 +1019,10 @@ engine.io@~6.4.1:
     engine.io-parser "~5.0.3"
     ws "~8.11.0"
 
-equipped@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.1.2.tgz#73f6bf4a8172e23a36a4726b5ebb9ce022e2e94b"
-  integrity sha512-FXlSe5ZmzngRWECjxBgqVGgOuLcuTdAtxRggbuv0WQG5TN3kVAkJEwLtDq71hIqoNoijZL2243jbNucCp9Kvaw==
+equipped@4.1.7:
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.1.7.tgz#40800aa55b5b43b58f00307cb457bae79ff8e6fc"
+  integrity sha512-u3kgw95NdKhFj7VRzqswoT+Evh5+/0rHdgvLddAab6/R3LA+l9eEa7gstmkzMqHDpS/GylbaPuIoItamDUQAtw==
   dependencies:
     amqp-connection-manager "^4.1.11"
     amqplib "^0.10.3"
@@ -1060,7 +1053,7 @@ equipped@^4.1.2:
     redis "^4.6.5"
     socket.io "4.6.1"
     supertest "^6.3.3"
-    valleyed "^4.1.0"
+    valleyed "4.1.4"
 
 es-abstract@^1.17.0-next.1, es-abstract@^1.19.0, es-abstract@^1.20.4:
   version "1.21.1"
@@ -2029,11 +2022,6 @@ lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
-
-long@*:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/long/-/long-5.2.0.tgz#2696dadf4b4da2ce3f6f6b89186085d94d52fd61"
-  integrity sha512-9RTUNjK60eJbx3uz+TEGF7fUr29ZDxR5QzXcyDpeSfeH28S9ycINflOgOlppit5U+4kNTe83KQnMEerw7GmE8w==
 
 lru-cache@^6.0.0:
   version "6.0.0"
@@ -3258,10 +3246,10 @@ v8-compile-cache-lib@^3.0.1:
   resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
   integrity sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
 
-valleyed@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/valleyed/-/valleyed-4.1.0.tgz#b328d4bbd23b16d399884dd541ace315037be650"
-  integrity sha512-yN/JB1yvF+VUAuRO84y84zAsKsHdVoMMOMAXOjgeQ9Sn5nA9run+7Z0n3T8Enk0tNUS9ht5FYFwt65TttaZJ0w==
+valleyed@4.1.4:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/valleyed/-/valleyed-4.1.4.tgz#d0b4c5d5425e9b32efb893e6f1bd5974780c7404"
+  integrity sha512-VzoltJF5lTZNveauI/qc0Kz/qyl0XwyE8csWnh4pgzgmfEXAguIIYqL5ZHZ6PVe4CN6P05gih1iFMvKhyPdSWw==
   dependencies:
     url-regex-safe "^3.0.0"
 

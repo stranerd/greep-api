@@ -2,19 +2,19 @@ import { AuthUsersUseCases } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
 import { superAdminEmail } from '@utils/environment'
 import { signOutUser } from '@utils/modules/auth'
-import { AuthRole, BadRequestError, Enum, NotFoundError, Request, Schema, validateReq, verifyAccessToken } from 'equipped'
+import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
 
 export class UserController {
-	static async findUser(req: Request) {
+	static async findUser (req: Request) {
 		const userId = req.authUser!.id
 		return await AuthUsersUseCases.findUser(userId)
 	}
 
-	static async updateUser(req: Request) {
+	static async updateUser (req: Request) {
 		const userId = req.authUser!.id
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
-		const data = validateReq({
+		const data = validate({
 			firstName: Schema.string().min(1),
 			lastName: Schema.string().min(1),
 			photo: Schema.file().image().nullable()
@@ -31,9 +31,9 @@ export class UserController {
 		})
 	}
 
-	static async updateUserRole(req: Request) {
-		const { role, userId, value } = validateReq({
-			role: Schema.any<Enum<typeof AuthRole>>().in(Object.values(AuthRole)
+	static async updateUserRole (req: Request) {
+		const { role, userId, value } = validate({
+			role: Schema.in(Object.values(AuthRole)
 				.filter((key) => key !== AuthRole.isSuperAdmin)),
 			userId: Schema.string().min(1),
 			value: Schema.boolean()
@@ -46,12 +46,12 @@ export class UserController {
 		})
 	}
 
-	static async signout(req: Request) {
+	static async signout (req: Request) {
 		const user = await verifyAccessToken(req.headers.AccessToken ?? '').catch(() => null)
 		return await signOutUser(user?.id ?? '')
 	}
 
-	static async superAdmin(_: Request) {
+	static async superAdmin (_: Request) {
 		const user = await AuthUsersUseCases.findUserByEmail(superAdminEmail)
 		if (!user) throw new NotFoundError()
 		return await AuthUsersUseCases.updateRole({
@@ -63,7 +63,7 @@ export class UserController {
 		})
 	}
 
-	static async delete(req: Request) {
+	static async delete (req: Request) {
 		const authUserId = req.authUser!.id
 		const deleted = await AuthUsersUseCases.deleteUsers([authUserId])
 		await signOutUser(authUserId)

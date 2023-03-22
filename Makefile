@@ -8,7 +8,7 @@ setup:
 	mkdir -p $(SETUP_FOLDER)
 	touch $(SETUP_FOLDER)/acmeStaging.json $(SETUP_FOLDER)/acmeProduction.json
 	chmod 600 $(SETUP_FOLDER)/acme*.json
-	touch /c/data/docker/greep/kafka/data
+	mkdir -p /c/data/docker/greep/kafka/data
 	chmod 777 /c/data/docker/greep/kafka/data
 	node bin/copy-envs.js $(APPS)
 

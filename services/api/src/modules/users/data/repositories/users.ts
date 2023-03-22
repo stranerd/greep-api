@@ -43,7 +43,7 @@ export class UserRepository implements IUserRepository {
 	async markUserAsDeleted (userId: string, timestamp: number) {
 		await User.findByIdAndUpdate(userId, {
 			$set: { 'dates.deletedAt': timestamp }
-		}, { upsert: true })
+		}, {})
 	}
 
 	async updateUserWithRoles (userId: string, data: UserRoles) {

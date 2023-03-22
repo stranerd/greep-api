@@ -1,33 +1,33 @@
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotFoundError, QueryParams, Request, Schema, validateReq } from 'equipped'
+import { BadRequestError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
-	static async getUsers(req: Request) {
+	static async getUsers (req: Request) {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'dates.deletedAt', value: null }]
 		return await UsersUseCases.get(query)
 	}
 
-	static async getUsersAdmin(req: Request) {
+	static async getUsersAdmin (req: Request) {
 		const query = req.query as QueryParams
 		return await UsersUseCases.get(query)
 	}
 
-	static async findUser(req: Request) {
+	static async findUser (req: Request) {
 		const user = await UsersUseCases.find(req.params.id)
 		if (!user || user.isDeleted()) throw new NotFoundError()
 		return user
 	}
 
-	static async findUserAdmin(req: Request) {
+	static async findUserAdmin (req: Request) {
 		const user = await UsersUseCases.find(req.params.id)
 		if (!user) throw new NotFoundError()
 		return user
 	}
 
-	static async addDriver(req: Request) {
+	static async addDriver (req: Request) {
 		const authUserId = req.authUser!.id
-		const data = validateReq({
+		const data = validate({
 			driverId: Schema.string().min(1),
 			commission: Schema.number().gte(0).lte(1),
 			add: Schema.boolean()
@@ -50,9 +50,9 @@ export class UsersController {
 		return await UsersUseCases.requestAddDriver({ ...data, managerId: authUserId })
 	}
 
-	static async acceptManager(req: Request) {
+	static async acceptManager (req: Request) {
 		const authUserId = req.authUser!.id
-		const data = validateReq({
+		const data = validate({
 			managerId: Schema.string().min(1),
 			accept: Schema.boolean()
 		}, req.body)
@@ -75,8 +75,8 @@ export class UsersController {
 		})
 	}
 
-	static async updateDriverCommission(req: Request) {
-		const data = validateReq({
+	static async updateDriverCommission (req: Request) {
+		const data = validate({
 			driverId: Schema.string().min(1),
 			commission: Schema.number().gte(0).lte(1)
 		}, req.body)
@@ -85,15 +85,15 @@ export class UsersController {
 		return await UsersUseCases.updateDriverCommission({ ...data, managerId: req.authUser!.id })
 	}
 
-	static async removeDriver(req: Request) {
-		const data = validateReq({
+	static async removeDriver (req: Request) {
+		const data = validate({
 			driverId: Schema.string().min(1)
 		}, req.body)
 		return await UsersUseCases.removeDriver({ ...data, managerId: req.authUser!.id })
 	}
 
-	static async push(req: Request) {
-		const { token, add } = validateReq({
+	static async push (req: Request) {
+		const { token, add } = validate({
 			token: Schema.string().min(1),
 			add: Schema.boolean()
 		}, req.body)
