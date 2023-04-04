@@ -14,7 +14,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"equipped": "4.1.7",
+		"equipped": "4.1.9",
 		"nodemailer": "^6.9.1"
 	},
 	"devDependencies": {
