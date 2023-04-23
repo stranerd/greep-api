@@ -17,8 +17,8 @@ jobs:
           ENV_SECRETS: ${{ secrets.ENV_SECRETS }}
         run: echo "$ENV_SECRETS" > env.json
       - name: Docker Stop Existing Run
-        run: make prod-stop
+        run: sudo make prod-stop
       - name: Docker Build
-        run: make prod-build
+        run: sudo make prod-build
       - name: Docker Start
-        run: make prod-start-detach
+        run: sudo make prod-start-detach
