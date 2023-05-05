@@ -19,6 +19,12 @@ export const emails = Object.fromEntries(
 	}])
 )
 
+const flutterwave = JSON.parse(getEnvOrFail('FLUTTERWAVE') || '{}')
+export const flutterwaveConfig = {
+	secretKey: flutterwave.secretKey,
+	publicKey: flutterwave.publicKey
+}
+
 Instance.initialize({
 	isDev, appId,
 	accessTokenKey: getEnvOrFail('ACCESS_TOKEN_KEY'),
