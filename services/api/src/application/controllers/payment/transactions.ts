@@ -20,27 +20,20 @@ export class TransactionsController {
 		return await TransactionsUseCases.get(query)
 	}
 
-	static async create (req: Request) {
-		const isNewCardType = req.body.data?.type === TransactionType.NewCard
-		const types = [TransactionType.NewCard]
+	static async fund (req: Request) {
 		const authUser = req.authUser!
 
-		const { data: { type } } = validate({
-			data: Schema.object({
-				type: Schema.any<TransactionType>().in(types)
-			})
+		const { amount } = validate({
+			amount: Schema.number().gt(0)
 		}, req.body)
 
-		const dynamics = { title: '', amount: 0 }
-
-		if (isNewCardType) {
-			dynamics.title = 'Test charge on new card'
-			dynamics.amount = 10
-		}
-
 		return await TransactionsUseCases.create({
-			...dynamics, currency: Currencies.TRY, userId: authUser.id, email: authUser.email,
-			status: TransactionStatus.initialized, data: isNewCardType ? { type } : ({} as any)
+			title: 'Fund wallet',
+			currency: Currencies.NGN,
+			amount,
+			userId: authUser.id, email: authUser.email,
+			status: TransactionStatus.initialized,
+			data: { type: TransactionType.FundWallet }
 		})
 	}
 

@@ -1,29 +1,16 @@
 import {
-	Currencies,
-	MethodsUseCases,
 	TransactionEntity,
 	TransactionStatus,
-	TransactionsUseCases,
-	TransactionType,
-	WalletsUseCases
+	TransactionsUseCases
 } from '@modules/payment'
-import { FlutterwavePayment } from '@utils/modules/payment/flutterwave'
 import { Conditions } from 'equipped'
 
-export const fulfillTransaction = async (transaction: TransactionEntity) => {
-	if (transaction.data.type === TransactionType.NewCard) {
-		const method = await FlutterwavePayment.saveCard(transaction.userId, transaction.id)
-		if (!method) return
-		await MethodsUseCases.create(method)
-		await WalletsUseCases.updateAmount({
-			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY)
-		})
-		await TransactionsUseCases.update({
+export const fulfillTransaction = async (_: TransactionEntity) => {
+
+	/* await TransactionsUseCases.update({
 			id: transaction.id,
 			data: { status: TransactionStatus.settled }
-		})
-	}
+		}) */
 }
 
 export const retryTransactions = async (timeInMs: number) => {

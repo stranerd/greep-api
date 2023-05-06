@@ -1,4 +1,4 @@
-import { Currencies, MethodToModel, MethodType } from '@modules/payment'
+import { Currencies } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
 import axios from 'axios'
 import FlutterwaveNode from 'flutterwave-node-v3'
@@ -48,24 +48,6 @@ export class FlutterwavePayment {
 		if (!transaction) return false
 		if (transaction.currency !== currency || transaction.amount !== Math.abs(amount)) return false
 		return transaction.status === 'successful'
-	}
-
-	static async saveCard (userId: string, transactionId: string): Promise<MethodToModel | null> {
-		const transaction = await this.verifyById(transactionId)
-		if (!transaction) return null
-		const [month, year] = transaction.card.expiry.split('/').map((x) => parseInt(x))
-		const expireTime = new Date(2000 + year, month).getTime()
-		return {
-			userId, token: transaction.card.token,
-			data: {
-				type: MethodType.card,
-				last4Digits: transaction.card.last_4digits,
-				country: transaction.card.country,
-				cardType: transaction.card.type,
-				expiredAt: expireTime,
-				expired: expireTime <= Date.now()
-			}
-		}
 	}
 
 	static async convertAmount (amount: number, from: Currencies, to: Currencies) {

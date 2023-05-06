@@ -1,5 +1,6 @@
 export enum Currencies {
-	TRY = 'TRY'
+	TRY = 'TRY',
+	NGN = 'NGN'
 }
 
 export enum TransactionStatus {
@@ -10,25 +11,12 @@ export enum TransactionStatus {
 }
 
 export enum TransactionType {
-	NewCard = 'NewCard',
+	FundWallet = 'FundWallet',
 	Transfer = 'Transfer',
 }
 
-type TransactionNewCard = {
-	type: TransactionType.NewCard
-}
-
-export type TransactionData = TransactionNewCard
-
-export enum MethodType {
-	card = 'card'
-}
-
-export type MethodData = {
-	type: MethodType.card
-	last4Digits: string
-	country: string
-	cardType: string
-	expiredAt: number
-	expired: boolean
+export type TransactionData = {
+	type: TransactionType.FundWallet
+} | {
+	type: TransactionType.Transfer
 }

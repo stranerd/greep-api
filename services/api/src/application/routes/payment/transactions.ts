@@ -42,14 +42,14 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/payment/transactions',
+		path: '/payment/transactions/fund',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await TransactionsController.create(req)
+					result: await TransactionsController.fund(req)
 				}
 			})
 		]
