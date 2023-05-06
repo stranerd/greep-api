@@ -12,11 +12,28 @@ export enum TransactionStatus {
 
 export enum TransactionType {
 	FundWallet = 'FundWallet',
-	Transfer = 'Transfer',
+	Sent = 'Sent',
+	Received = 'Received',
 }
 
 export type TransactionData = {
-	type: TransactionType.FundWallet
+	type: TransactionType.FundWallet,
+	exchangeRate: number
 } | {
-	type: TransactionType.Transfer
+	type: TransactionType.Sent,
+	note: string
+	to: string
+} | {
+	type: TransactionType.Received,
+	note: string
+	from: string
+}
+
+export type TransferData = {
+	from: string,
+	to: string,
+	fromEmail: string,
+	toEmail: string,
+	amount: number,
+	note: string
 }

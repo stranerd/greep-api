@@ -15,5 +15,18 @@ export const walletsRoutes: Route[] = [
 				}
 			})
 		]
+	},
+	{
+		path: '/payment/wallets/tranfer',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.transfer(req)
+				}
+			})
+		]
 	}
 ]
