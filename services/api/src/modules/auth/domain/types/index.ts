@@ -13,6 +13,7 @@ export interface RoleInput {
 export interface RegisterInput extends UserUpdateInput {
 	email: string
 	password: string
+	referrer: string | null
 }
 
 export interface PasswordResetInput {

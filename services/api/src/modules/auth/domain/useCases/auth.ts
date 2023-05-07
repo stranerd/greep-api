@@ -14,12 +14,12 @@ export class AuthUseCase {
 		return await this.repository.authenticateUser(params, true, AuthTypes.email)
 	}
 
-	async googleSignIn(input: { idToken: string }) {
-		return await this.repository.googleSignIn(input.idToken)
+	async googleSignIn (input: { idToken: string, referrer: string | null }) {
+		return await this.repository.googleSignIn(input.idToken, input.referrer)
 	}
 
-	async appleSignIn(input: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
-		return await this.repository.appleSignIn(input)
+	async appleSignIn (input: { data: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }, referrer: string | null }) {
+		return await this.repository.appleSignIn(input.data, input.referrer)
 	}
 
 	async registerUser(params: RegisterInput) {

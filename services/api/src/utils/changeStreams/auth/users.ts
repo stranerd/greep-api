@@ -1,5 +1,5 @@
 import { AuthUserEntity, UserFromModel } from '@modules/auth'
-import { UsersUseCases } from '@modules/users'
+import { ReferralsUseCases, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { DbChangeCallbacks } from 'equipped'
 
@@ -19,6 +19,9 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 			data: after.roles,
 			timestamp: Date.now()
 		})
+
+
+		if (after.referrer && after.isVerified) await ReferralsUseCases.create({ userId: after.referrer, referred: after.id })
 	},
 	updated: async ({ before, after, changes }) => {
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
@@ -39,6 +42,11 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 			id: after.id,
 			data: after.roles,
 			timestamp: Date.now()
+		})
+
+		if ((changes.referrer || changes.isVerified) && after.referrer && after.isVerified) await ReferralsUseCases.create({
+			userId: after.referrer,
+			referred: after.id
 		})
 	},
 	deleted: async ({ before }) => {

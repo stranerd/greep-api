@@ -120,7 +120,7 @@ export class AuthRepository implements IAuthRepository {
 		return this.mapper.mapFrom(user)!
 	}
 
-	async googleSignIn(idToken: string) {
+	async googleSignIn (idToken: string, referrer: string | null) {
 		const data = await signinWithGoogle(idToken)
 		const email = data.email!.toLowerCase()
 
@@ -130,15 +130,11 @@ export class AuthRepository implements IAuthRepository {
 
 		return this.authorizeSocial(AuthTypes.google, {
 			email, photo, name: { first: data.first_name, last: data.last_name },
-			isVerified: data.email_verified === 'true'
+			isVerified: data.email_verified === 'true', referrer
 		})
 	}
 
-	async appleSignIn({
-		idToken,
-		firstName,
-		lastName
-	}: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
+	async appleSignIn ({ idToken, firstName, lastName }, referrer) {
 		const data = await signinWithApple(idToken).catch((e: any) => {
 			throw new BadRequestError(e.message)
 		})
@@ -147,11 +143,11 @@ export class AuthRepository implements IAuthRepository {
 
 		return this.authorizeSocial(AuthTypes.apple, {
 			email, photo: null, name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
-			isVerified: data.email_verified === 'true'
+			isVerified: data.email_verified === 'true', referrer
 		})
 	}
 
-	private async authorizeSocial(type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
+	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified' | 'referrer'>) {
 		const userData = await User.findOne({ email: data.email })
 
 		if (!userData) return await this.addNewUser({
@@ -160,7 +156,8 @@ export class AuthRepository implements IAuthRepository {
 			photo: data.photo,
 			authTypes: [type],
 			password: '',
-			isVerified: data.isVerified
+			isVerified: data.isVerified,
+			referrer: data.referrer
 		}, type)
 
 		return await this.authenticateUser({

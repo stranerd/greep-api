@@ -10,6 +10,7 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly isVerified: boolean
 	public readonly authTypes: Enum<typeof AuthTypes>[]
 	public readonly roles: AuthRoles
+	public readonly referrer: string | null
 	public readonly lastSignedInAt: number
 	public readonly signedUpAt: number
 
@@ -23,6 +24,7 @@ export class AuthUserEntity extends BaseEntity {
 		this.isVerified = data.isVerified
 		this.authTypes = data.authTypes
 		this.roles = data.roles ?? {}
+		this.referrer = data.referrer
 		this.lastSignedInAt = data.lastSignedInAt
 		this.signedUpAt = data.signedUpAt
 	}
@@ -50,4 +52,5 @@ interface UserConstructorArgs {
 	authTypes: Enum<typeof AuthTypes>[]
 	lastSignedInAt: number
 	signedUpAt: number
+	referrer: string | null
 }

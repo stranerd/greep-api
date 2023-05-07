@@ -1,3 +1,4 @@
+import { AuthOutput, AuthUserEntity, AuthUsersUseCases } from '@modules/auth'
 import {
 	BadRequestError,
 	Conditions,
@@ -7,12 +8,17 @@ import {
 	makeAccessToken,
 	makeRefreshToken
 } from 'equipped'
-import { AuthOutput, AuthUserEntity, AuthUsersUseCases } from '@modules/auth'
 
 export const signOutUser = async (userId: string): Promise<boolean> => {
 	await deleteCachedAccessToken(userId)
 	await deleteCachedRefreshToken(userId)
 	return true
+}
+
+export const verifyReferrer = async (referrer: string | null) => {
+	if (!referrer) return null
+	const user = await AuthUsersUseCases.findUser(referrer)
+	return user?.id ?? null
 }
 
 export const generateAuthOutput = async (user: AuthUserEntity): Promise<AuthOutput & { user: AuthUserEntity }> => {

@@ -45,7 +45,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		required: false,
 		default: {} as unknown as UserFromModel['roles']
 	},
-
+	referrer: {
+		type: String,
+		required: false,
+		default: null
+	},
 	lastSignedInAt: {
 		type: Number,
 		required: false,
