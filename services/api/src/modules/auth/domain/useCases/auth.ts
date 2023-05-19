@@ -1,7 +1,7 @@
-import { IAuthRepository } from '../i-repositories/auth'
-import { Credential, PasswordResetInput, RegisterInput } from '../types'
 import { AuthTypes } from 'equipped'
 import { UserToModel } from '../../data/models/users'
+import { IAuthRepository } from '../i-repositories/auth'
+import { Credential, PasswordResetInput, RegisterInput } from '../types'
 
 export class AuthUseCase {
 	private repository: IAuthRepository
@@ -25,6 +25,7 @@ export class AuthUseCase {
 	async registerUser(params: RegisterInput) {
 		const userModel: UserToModel = {
 			...params,
+			type: null,
 			isVerified: false,
 			authTypes: [AuthTypes.email]
 		}

@@ -7,7 +7,7 @@ import {
 	QueryParams
 } from 'equipped'
 import { IUserRepository } from '../../domain/i-repositories/users'
-import { RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
+import { AuthUserType, RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import User from '../mongooseModels/users'
 
@@ -61,7 +61,6 @@ export class UserRepository implements IUserRepository {
 		if (!user) throw new NotFoundError()
 
 		return this.mapper.mapFrom(user)!
-
 	}
 
 	async updateUserRole ({ userId, roles }: RoleInput) {
@@ -81,5 +80,10 @@ export class UserRepository implements IUserRepository {
 			$addToSet: { authTypes: AuthTypes.email }
 		})
 		return !!user
+	}
+
+	async updateType (userId: string, type: AuthUserType) {
+		const user = await User.findByIdAndUpdate(userId, { $set: { type } }, { new: true })
+		return this.mapper.mapFrom(user)
 	}
 }

@@ -1,5 +1,5 @@
 import { AuthRoles, AuthTypes, BaseEntity, Enum, MediaOutput } from 'equipped'
-import { UserUpdateInput } from '../types'
+import { AuthUserType, UserUpdateInput } from '../types'
 
 export class AuthUserEntity extends BaseEntity {
 	public readonly id: string
@@ -11,6 +11,7 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly authTypes: Enum<typeof AuthTypes>[]
 	public readonly roles: AuthRoles
 	public readonly referrer: string | null
+	public readonly type: AuthUserType | null
 	public readonly lastSignedInAt: number
 	public readonly signedUpAt: number
 
@@ -25,6 +26,7 @@ export class AuthUserEntity extends BaseEntity {
 		this.authTypes = data.authTypes
 		this.roles = data.roles ?? {}
 		this.referrer = data.referrer
+		this.type = data.type
 		this.lastSignedInAt = data.lastSignedInAt
 		this.signedUpAt = data.signedUpAt
 	}
@@ -36,8 +38,8 @@ export class AuthUserEntity extends BaseEntity {
 		}
 	}
 
-	static bioKeys(): (keyof (UserUpdateInput & { email: string }))[] {
-		return ['name', 'email', 'photo']
+	static bioKeys(): (keyof (UserUpdateInput & { email: string, type: AuthUserType }))[] {
+		return ['name', 'email', 'photo', 'type']
 	}
 }
 
@@ -53,4 +55,5 @@ interface UserConstructorArgs {
 	lastSignedInAt: number
 	signedUpAt: number
 	referrer: string | null
+	type: AuthUserType | null
 }

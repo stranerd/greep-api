@@ -1,5 +1,4 @@
 import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
-import { StorageUseCases } from '@modules/storage'
 import { generateAuthOutput, verifyReferrer } from '@utils/modules/auth'
 import { AuthTypes, Request, Schema, Validation, ValidationError, validate } from 'equipped'
 
@@ -15,7 +14,7 @@ export class EmailsController {
 
 		const user = await AuthUsersUseCases.findUserByEmail(userCredential.email)
 
-		const { email, firstName, lastName, password, photo: userPhoto, referrer } = validate({
+		const { email, password, referrer } = validate({
 			email: Schema.string().email().addRule((value) => {
 				const email = value as string
 				if (!user) return Validation.isValid(email)
@@ -24,16 +23,12 @@ export class EmailsController {
 				return Validation.isInvalid(['email already in use'], email)
 			}),
 			password: Schema.string().min(8).max(16),
-			photo: Schema.file().image().nullable(),
-			firstName: Schema.string().min(1),
-			lastName: Schema.string().min(1),
 			referrer: Schema.string().min(1).nullable().default(null)
 		}, userCredential)
 
-		const photo = userPhoto ? await StorageUseCases.upload('profiles/photos', userPhoto) : null
 		const validateData = {
-			name: { first: firstName, last: lastName },
-			email, password, photo,
+			name: { first: '', last: '' },
+			email, password, photo: null,
 			referrer: await verifyReferrer(referrer)
 		}
 

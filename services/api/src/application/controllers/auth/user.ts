@@ -1,8 +1,8 @@
-import { AuthUsersUseCases } from '@modules/auth'
+import { AuthUserType, AuthUsersUseCases } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
 import { superAdminEmail } from '@utils/environment'
 import { signOutUser } from '@utils/modules/auth'
-import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
+import { AuthRole, BadRequestError, NotAuthorizedError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
 
 export class UserController {
 	static async findUser (req: Request) {
@@ -29,6 +29,19 @@ export class UserController {
 				...(changedPhoto ? { photo } : {}) as any
 			}
 		})
+	}
+
+	static async updateType (req: Request) {
+		const { type } = validate({
+			type: Schema.in(Object.values(AuthUserType)),
+		}, req.body)
+
+		const updatedUser = await AuthUsersUseCases.updateType({
+			id: req.authUser!.id,
+			type
+		})
+		if (updatedUser) return updatedUser
+		throw new NotAuthorizedError()
 	}
 
 	static async updateUserRole (req: Request) {

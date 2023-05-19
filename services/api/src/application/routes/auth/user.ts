@@ -30,6 +30,20 @@ const updateUser: Route = {
 	]
 }
 
+const updateType: Route = {
+	path: '/auth/type',
+	method: 'put',
+	controllers: [
+		isAuthenticated,
+		makeController(async (req) => {
+			return {
+				status: StatusCodes.Ok,
+				result: await UserController.updateType(req)
+			}
+		})
+	]
+}
+
 const updateUserRole: Route = {
 	path: '/auth/user/roles',
 	method: 'post',
@@ -84,5 +98,5 @@ const deleteAccount: Route = {
 	]
 }
 
-const routes: Route[] = [getUserDetails, updateUserRole, updateUser, signout, superAdmin, deleteAccount]
+const routes: Route[] = [getUserDetails, updateUserRole, updateUser, updateType, signout, superAdmin, deleteAccount]
 export default routes
