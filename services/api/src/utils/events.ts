@@ -1,6 +1,6 @@
 import { Events, EventTypes } from 'equipped'
 import { appInstance } from '@utils/environment'
-import { sendMailAndCatchError } from '@utils/modules/emails'
+import { sendMailAndCatchError } from '@modules/notifications'
 import { StorageUseCases } from '@modules/storage'
 
 const eventBus = appInstance.eventBus

@@ -1,7 +1,6 @@
 import { CronTypes, Email } from 'equipped'
 import { appInstance } from '@utils/environment'
-import { EmailsUseCases } from '@modules/emails'
-import { sendMailAndCatchError } from '@utils/modules/emails'
+import { EmailErrorsUseCases, sendMailAndCatchError } from '@modules/notifications'
 import { deleteUnverifiedUsers } from '@modules/auth'
 
 export const startJobs = async () => {
@@ -17,7 +16,7 @@ export const startJobs = async () => {
 		},
 		onCron: async (type) => {
 			if (type === CronTypes.hourly) {
-				const errors = await EmailsUseCases.getAndDeleteAllErrors()
+				const errors = await EmailErrorsUseCases.getAndDeleteAll()
 				await Promise.all(
 					errors.map(async (error) => {
 						await sendMailAndCatchError(error as unknown as Email)
