@@ -1,13 +1,13 @@
 import { routes } from '@application/routes'
 import { UsersUseCases } from '@modules/users'
-import { appInstance, isProd, port } from '@utils/environment'
+import { appInstance, isDev, port } from '@utils/environment'
 import { subscribers } from '@utils/events'
 import { startJobs } from '@utils/jobs'
 import { OnJoinFn } from 'equipped'
 import { initializeApp } from 'firebase-admin/app'
 
 const start = async () => {
-	if (isProd) initializeApp()
+	if (!isDev) initializeApp()
 	await appInstance.startConnections()
 	await Promise.all(
 		Object.values(subscribers)
