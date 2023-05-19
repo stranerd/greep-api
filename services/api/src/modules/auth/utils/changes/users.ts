@@ -1,7 +1,8 @@
-import { AuthUserEntity, UserFromModel } from '@modules/auth'
 import { ReferralsUseCases, UsersUseCases } from '@modules/users'
 import { publishers } from '@utils/events'
 import { DbChangeCallbacks } from 'equipped'
+import { UserFromModel } from '../../data/models/users'
+import { AuthUserEntity } from '../../domain/entities/users'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEntity> = {
 	created: async ({ after }) => {

@@ -1,4 +1,3 @@
-import { AuthOutput, AuthUserEntity, AuthUsersUseCases } from '@modules/auth'
 import {
 	BadRequestError,
 	Conditions,
@@ -8,6 +7,9 @@ import {
 	makeAccessToken,
 	makeRefreshToken
 } from 'equipped'
+import { AuthUsersUseCases } from '..'
+import { AuthUserEntity } from '../domain/entities/users'
+import { AuthOutput } from '../domain/types'
 
 export const signOutUser = async (userId: string): Promise<boolean> => {
 	await deleteCachedAccessToken(userId)
@@ -54,6 +56,5 @@ export const deleteUnverifiedUsers = async () => {
 		],
 		all: true
 	})
-	unverifiedUsers
-	// await AuthUsersUseCases.deleteUsers(unverifiedUsers.map((u) => u.id))
+	await AuthUsersUseCases.deleteUsers(unverifiedUsers.map((u) => u.id))
 }

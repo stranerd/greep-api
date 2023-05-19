@@ -1,7 +1,6 @@
-import { AuthUserType, AuthUsersUseCases } from '@modules/auth'
+import { AuthUserType, AuthUsersUseCases, signOutUser } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
 import { superAdminEmail } from '@utils/environment'
-import { signOutUser } from '@utils/modules/auth'
 import { AuthRole, BadRequestError, NotAuthorizedError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
 
 export class UserController {

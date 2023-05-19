@@ -2,7 +2,7 @@ import { CronTypes, Email } from 'equipped'
 import { appInstance } from '@utils/environment'
 import { EmailsUseCases } from '@modules/emails'
 import { sendMailAndCatchError } from '@utils/modules/emails'
-import { deleteUnverifiedUsers } from '@utils/modules/auth'
+import { deleteUnverifiedUsers } from '@modules/auth'
 
 export const startJobs = async () => {
 	await appInstance.job.startProcessingQueues([

@@ -1,6 +1,5 @@
-import { AuthUseCases } from '@modules/auth'
+import { AuthUseCases, generateAuthOutput, verifyReferrer } from '@modules/auth'
 import { Request, Schema, validate } from 'equipped'
-import { generateAuthOutput, verifyReferrer } from '@utils/modules/auth'
 
 export class IdentitiesController {
 	static async googleSignIn (req: Request) {

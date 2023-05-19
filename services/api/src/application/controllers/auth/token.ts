@@ -1,4 +1,4 @@
-import { getNewTokens } from '@utils/modules/auth'
+import { getNewTokens } from '@modules/auth'
 import { Request } from 'equipped'
 
 export class TokenController {

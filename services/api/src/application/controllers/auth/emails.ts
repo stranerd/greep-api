@@ -1,5 +1,4 @@
-import { AuthUseCases, AuthUsersUseCases } from '@modules/auth'
-import { generateAuthOutput, verifyReferrer } from '@utils/modules/auth'
+import { AuthUseCases, AuthUsersUseCases, generateAuthOutput, verifyReferrer } from '@modules/auth'
 import { AuthTypes, Request, Schema, Validation, ValidationError, validate } from 'equipped'
 
 export class EmailsController {
