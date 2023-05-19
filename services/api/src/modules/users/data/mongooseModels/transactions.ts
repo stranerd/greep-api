@@ -1,5 +1,5 @@
-import { TransactionDbChangeCallbacks } from '@utils/changeStreams/users/transactions'
 import { appInstance } from '@utils/environment'
+import { TransactionDbChangeCallbacks } from '../../utils/changes/transactions'
 import { TransactionMapper } from '../mappers/transactions'
 import { TransactionFromModel } from '../models/transactions'
 

@@ -1,6 +1,7 @@
-import { UserEntity, UserFromModel } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
+import { UserFromModel } from '../../data/models/users'
+import { UserEntity } from '../../domain/entities/users'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {

@@ -1,4 +1,4 @@
-import { CustomerDbChangeCallbacks } from '@utils/changeStreams/users/customers'
+import { CustomerDbChangeCallbacks } from '../../utils/changes/customers'
 import { appInstance } from '@utils/environment'
 import { CustomerMapper } from '../mappers/customers'
 import { CustomerFromModel } from '../models/customers'

@@ -1,5 +1,5 @@
-import { TripDbChangeCallbacks } from '@utils/changeStreams/users/trips'
 import { appInstance } from '@utils/environment'
+import { TripDbChangeCallbacks } from '../../utils/changes/trips'
 import { TripMapper } from '../mappers/trips'
 import { TripFromModel } from '../models/trips'
 

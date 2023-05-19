@@ -21,14 +21,4 @@ export const CustomersUseCases = new CustomersUseCase(customerRepository)
 export const TransactionsUseCases = new TransactionsUseCase(transactionRepository)
 export const TripsUseCases = new TripsUseCase(tripRepository)
 
-export { CustomerFromModel } from './data/models/customers'
-export { ReferralFromModel } from './data/models/referrals'
-export { TransactionFromModel } from './data/models/transactions'
-export { TripFromModel } from './data/models/trips'
-export { UserFromModel } from './data/models/users'
-export { CustomerEntity } from './domain/entities/customers'
-export { ReferralEntity } from './domain/entities/referrals'
-export { TransactionEntity } from './domain/entities/transactions'
-export { TripEntity } from './domain/entities/trips'
-export { UserEntity } from './domain/entities/users'
-export { EmbeddedUser, PaymentType, TransactionType, TripStatus, UserBio, UserRoles } from './domain/types'
+export { EmbeddedUser, PaymentType, TransactionType, TripStatus } from './domain/types'

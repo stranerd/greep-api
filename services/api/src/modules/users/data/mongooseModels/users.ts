@@ -1,5 +1,5 @@
-import { UserDbChangeCallbacks } from '@utils/changeStreams/users/users'
 import { appInstance } from '@utils/environment'
+import { UserDbChangeCallbacks } from '../../utils/changes/users'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
 

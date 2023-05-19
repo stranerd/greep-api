@@ -1,12 +1,9 @@
-import {
-	CustomersUseCases,
-	TransactionEntity,
-	TransactionFromModel,
-	TransactionsUseCases,
-	TransactionType
-} from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
+import { CustomersUseCases, TransactionsUseCases } from '../../'
+import { TransactionFromModel } from '../../data/models/transactions'
+import { TransactionEntity } from '../../domain/entities/transactions'
+import { TransactionType } from '../../domain/types'
 
 export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromModel, TransactionEntity> = {
 	created: async ({ after }) => {

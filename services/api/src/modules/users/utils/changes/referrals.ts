@@ -1,6 +1,7 @@
-import { ReferralEntity, ReferralFromModel } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
+import { ReferralFromModel } from '../../data/models/referrals'
+import { ReferralEntity } from '../../domain/entities/referrals'
 
 export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, ReferralEntity> = {
 	created: async ({ after }) => {

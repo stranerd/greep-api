@@ -1,5 +1,5 @@
-import { ReferralDbChangeCallbacks } from '@utils/changeStreams/users/referrals'
 import { appInstance } from '@utils/environment'
+import { ReferralDbChangeCallbacks } from '../../utils/changes/referrals'
 import { ReferralMapper } from '../mappers/referrals'
 import { ReferralFromModel } from '../models/referrals'
 

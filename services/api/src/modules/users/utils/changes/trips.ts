@@ -1,6 +1,7 @@
-import { TripEntity, TripFromModel } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
+import { TripFromModel } from '../../data/models/trips'
+import { TripEntity } from '../../domain/entities/trips'
 
 export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity> = {
 	created: async ({ after }) => {
