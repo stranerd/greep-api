@@ -1,7 +1,7 @@
-import { Currencies } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
 import axios from 'axios'
 import FlutterwaveNode from 'flutterwave-node-v3'
+import { Currencies } from '../domain/types'
 
 const flw = () => new FlutterwaveNode(flutterwaveConfig.publicKey, flutterwaveConfig.secretKey)
 

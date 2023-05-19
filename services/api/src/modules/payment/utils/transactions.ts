@@ -1,9 +1,7 @@
-import {
-	TransactionEntity,
-	TransactionStatus,
-	TransactionsUseCases
-} from '@modules/payment'
 import { Conditions } from 'equipped'
+import { TransactionsUseCases } from '../'
+import { TransactionEntity } from '../domain/entities/transactions'
+import { TransactionStatus } from '../domain/types'
 
 export const fulfillTransaction = async (_: TransactionEntity) => {
 

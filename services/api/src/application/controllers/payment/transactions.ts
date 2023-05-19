@@ -1,7 +1,6 @@
-import { Currencies, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
+import { Currencies, FlutterwavePayment, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
+import { getNGNToLiraRate } from '@modules/payment/utils/exchange'
 import { flutterwaveConfig } from '@utils/environment'
-import { getNGNToLiraRate } from '@utils/modules/payment/exchange'
-import { FlutterwavePayment } from '@utils/modules/payment/flutterwave'
 import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TransactionsController {

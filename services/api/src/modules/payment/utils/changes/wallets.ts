@@ -1,6 +1,7 @@
-import { WalletEntity, WalletFromModel } from '@modules/payment'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
+import { WalletFromModel } from '../../data/models/wallets'
+import { WalletEntity } from '../../domain/entities/wallets'
 
 export const WalletDbChangeCallbacks: DbChangeCallbacks<WalletFromModel, WalletEntity> = {
 	created: async ({ after }) => {

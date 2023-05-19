@@ -1,6 +1,6 @@
-import { WalletDbChangeCallbacks } from '@utils/changeStreams/payment/wallets'
 import { appInstance } from '@utils/environment'
 import { Currencies } from '../../domain/types'
+import { WalletDbChangeCallbacks } from '../../utils/changes/wallets'
 import { WalletMapper } from '../mappers/wallets'
 import { WalletFromModel } from '../models/wallets'
 
