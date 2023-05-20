@@ -1,6 +1,6 @@
+import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
 import { UserBio, UserRoles } from '../types'
-import { QueryParams } from 'equipped'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -55,9 +55,5 @@ export class UsersUseCase {
 
 	async removeDriver(data: { managerId: string, driverId: string }) {
 		return await this.repository.removeDriver(data.managerId, data.driverId)
-	}
-
-	async updatePushTokens(data: { userId: string, tokens: string[], add: boolean }) {
-		return await this.repository.updatePushTokens(data.userId, data.tokens, data.add)
 	}
 }

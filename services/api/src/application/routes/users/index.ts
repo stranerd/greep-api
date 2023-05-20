@@ -3,7 +3,7 @@ import { customersRoutes } from './customers'
 import { transactionsRoutes } from './transactions'
 import { tripsRoutes } from './trips'
 
-export default [
+export const userRoutes = [
 	...usersRoutes,
 	...customersRoutes,
 	...transactionsRoutes,

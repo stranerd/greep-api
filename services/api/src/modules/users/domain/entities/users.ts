@@ -1,3 +1,4 @@
+import { BaseEntity } from 'equipped'
 import {
 	EmbeddedUser,
 	UserBio,
@@ -8,7 +9,6 @@ import {
 	UserRoles,
 	UserStatus
 } from '../types'
-import { BaseEntity } from 'equipped'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -19,7 +19,6 @@ export class UserEntity extends BaseEntity {
 	public readonly drivers: UserDrivers
 	public readonly manager: UserManager | null
 	public readonly managerRequests: UserManagerRequests
-	public readonly pushTokens: string[]
 
 	constructor ({
 		id,
@@ -30,7 +29,6 @@ export class UserEntity extends BaseEntity {
 		drivers,
 		manager,
 		managerRequests,
-		pushTokens
 	}: UserConstructorArgs) {
 		super()
 		this.id = id
@@ -41,7 +39,6 @@ export class UserEntity extends BaseEntity {
 		this.drivers = drivers
 		this.manager = manager
 		this.managerRequests = managerRequests
-		this.pushTokens = pushTokens
 	}
 
 	isAdmin() {
@@ -70,5 +67,4 @@ type UserConstructorArgs = {
 	drivers: UserDrivers
 	manager: UserManager | null
 	managerRequests: UserManagerRequests
-	pushTokens: string[]
 }

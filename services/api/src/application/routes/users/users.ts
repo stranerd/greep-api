@@ -1,6 +1,6 @@
+import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { makeController, Route, StatusCodes } from 'equipped'
 import { UsersController } from '../../controllers/users/users'
-import { isAdmin, isAuthenticated } from '@application/middlewares'
 
 export const usersRoutes: Route[] = [
 	{
@@ -101,20 +101,6 @@ export const usersRoutes: Route[] = [
 				return {
 					status: StatusCodes.Ok,
 					result: await UsersController.removeDriver(req)
-				}
-			})
-		]
-	},
-	{
-		path: '/users/users/push/tokens',
-		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.push(req)
 				}
 			})
 		]

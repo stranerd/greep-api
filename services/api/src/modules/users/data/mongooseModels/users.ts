@@ -51,11 +51,6 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		required: false,
 		default: []
 	},
-	pushTokens: {
-		type: [String],
-		required: false,
-		default: []
-	},
 	manager: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,

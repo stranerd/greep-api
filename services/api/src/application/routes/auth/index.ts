@@ -1,10 +1,10 @@
 import emailRoutes from './emails'
-import passwordRoutes from './passwords'
-import userRoutes from './user'
-import tokenRoutes from './token'
 import identityRoutes from './identities'
+import passwordRoutes from './passwords'
+import tokenRoutes from './token'
+import userRoutes from './user'
 
-export default [
+export const authRoutes = [
 	...emailRoutes,
 	...passwordRoutes,
 	...userRoutes,
