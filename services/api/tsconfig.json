@@ -41,7 +41,7 @@
 	},
 	"include": [
 		"src"
-	],
+, "src/modules/users/domain/entities/activities.ts"	],
 	"exclude": [
 		"node_modules",
 		"lib"

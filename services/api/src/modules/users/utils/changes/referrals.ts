@@ -1,7 +1,9 @@
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
+import { ActivitiesUseCases, UsersUseCases } from '../..'
 import { ReferralFromModel } from '../../data/models/referrals'
 import { ReferralEntity } from '../../domain/entities/referrals'
+import { ActivityScores, UserMeta } from '../../domain/types'
 
 export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, ReferralEntity> = {
 	created: async ({ after }) => {
@@ -9,6 +11,22 @@ export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, Ref
 			`users/referrals/${after.userId}`,
 			`users/referrals/${after.id}/${after.userId}`,
 		], after)
+
+		await Promise.all([
+			ActivitiesUseCases.create({
+				score: ActivityScores.newReferral,
+				userId: after.userId,
+				data: {
+					type: UserMeta.referrals,
+					referralId: after.id
+				}
+			}),
+			UsersUseCases.incrementMeta({
+				id: after.userId,
+				value: 1,
+				property: UserMeta.referrals
+			})
+		])
 	},
 	updated: async ({ after }) => {
 		await appInstance.listener.updated([
@@ -21,5 +39,11 @@ export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, Ref
 			`users/referrals/${before.userId}`,
 			`users/referrals/${before.id}/${before.userId}`,
 		], before)
+
+		await UsersUseCases.incrementMeta({
+			id: before.userId,
+			value: -1,
+			property: UserMeta.referrals
+		})
 	}
 }

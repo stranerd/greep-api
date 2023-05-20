@@ -1,30 +1,30 @@
 import { isAuthenticated } from '@application/middlewares'
 import { Route, StatusCodes, makeController } from 'equipped'
-import { ReferralsController } from '../../controllers/users/referrals'
+import { ActivitiesController } from '../../controllers/users/activities'
 
-export const referralsRoutes: Route[] = [
+export const activitiesRoutes: Route[] = [
 	{
-		path: '/users/referrals/',
+		path: '/users/activities/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ReferralsController.getReferrals(req)
+					result: await ActivitiesController.get(req)
 				}
 			})
 		]
 	},
 	{
-		path: '/users/referrals/:id',
+		path: '/users/activities/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await ReferralsController.findReferral(req)
+					result: await ActivitiesController.find(req)
 				}
 			})
 		]

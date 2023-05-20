@@ -22,7 +22,6 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 			timestamp: Date.now()
 		})
 
-
 		if (after.referrer && after.isVerified) await ReferralsUseCases.create({ userId: after.referrer, referred: after.id })
 	},
 	updated: async ({ before, after, changes }) => {

@@ -1,6 +1,6 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { UserEntity } from '../entities/users'
-import { ScoreRewards, UserAccount, UserBio, UserRoles } from '../types'
+import { ActivityScores, UserAccount, UserBio, UserRoles } from '../types'
 
 export interface IUserRepository {
 	get(query: QueryParams): Promise<QueryResults<UserEntity>>
@@ -21,7 +21,7 @@ export interface IUserRepository {
 
 	incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1): Promise<void>
 
-	updateNerdScore (userId: string, amount: ScoreRewards): Promise<boolean>
+	updateNerdScore (userId: string, amount: ActivityScores): Promise<boolean>
 
 	resetRankings (key: keyof UserAccount['rankings']): Promise<boolean>
 

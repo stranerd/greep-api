@@ -1,5 +1,8 @@
 import { AuthUserType } from '@modules/auth'
 import { AuthRoles, MediaOutput } from 'equipped'
+import { UserMeta } from './activities'
+
+export * from './activities'
 
 export type UserBio = {
 	type: AuthUserType | null
@@ -50,18 +53,9 @@ export type UserAccount = {
 	meta: Record<UserMeta, number>
 }
 
-export enum UserMeta {
-	referrals = 'referrals',
-	total = 'total'
-}
-
 export enum UserRankings {
 	daily = 'daily',
 	weekly = 'weekly',
 	monthly = 'monthly',
 	overall = 'overall'
-}
-
-export enum ScoreRewards {
-	newReferral = 100
 }

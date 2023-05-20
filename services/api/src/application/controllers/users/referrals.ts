@@ -10,7 +10,7 @@ export class ReferralsController {
 
 	static async findReferral (req: Request) {
 		const referral = await ReferralsUseCases.find(req.params.id)
-		if (!referral) throw new NotFoundError()
+		if (!referral || referral.userId !== req.authUser!.id) throw new NotFoundError()
 		return referral
 	}
 }
