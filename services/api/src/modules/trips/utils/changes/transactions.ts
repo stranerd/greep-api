@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
-import { CustomersUseCases, TransactionsUseCases } from '../../'
+import { CustomersUseCases, TransactionsUseCases } from '../..'
 import { TransactionFromModel } from '../../data/models/transactions'
 import { TransactionEntity } from '../../domain/entities/transactions'
 import { TransactionType } from '../../domain/types'
@@ -9,7 +9,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 	created: async ({ after }) => {
 		await appInstance.listener.created([
 			after.managerId, after.driverId, `${after.id}/${after.managerId}`, `${after.id}/${after.driverId}`
-		].map((c) => `users/transactions/${c}`), after)
+		].map((c) => `trips/transactions/${c}`), after)
 
 		if (after.data.type === TransactionType.balance) await TransactionsUseCases.updateTripDebt({
 			id: after.data.parentId,
@@ -33,7 +33,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated([
 			after.managerId, after.driverId, `${after.id}/${after.managerId}`, `${after.id}/${after.driverId}`
-		].map((c) => `users/transactions/${c}`), after)
+		].map((c) => `trips/transactions/${c}`), after)
 
 		const debtChanged = after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt
 		if (debtChanged) await CustomersUseCases.updateDebt({
@@ -45,7 +45,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
 			before.managerId, before.driverId, `${before.id}/${before.managerId}`, `${before.id}/${before.driverId}`
-		].map((c) => `users/transactions/${c}`), before)
+		].map((c) => `trips/transactions/${c}`), before)
 
 		if (before.data.type === TransactionType.trip) {
 			await CustomersUseCases.updateTrip({

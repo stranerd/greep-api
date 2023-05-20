@@ -1,4 +1,5 @@
-import { PaymentType, TransactionType, TripStatus, TripsUseCases, UsersUseCases } from '@modules/users'
+import { PaymentType, TransactionType, TripStatus, TripsUseCases } from '@modules/trips'
+import { UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
 	NotAuthorizedError,
@@ -6,7 +7,9 @@ import {
 	QueryKeys,
 	QueryParams,
 	Request,
-	Schema, validate, ValidationError
+	Schema,
+	ValidationError,
+	validate
 } from 'equipped'
 
 export class TripsController {

@@ -7,16 +7,16 @@ export const CustomerDbChangeCallbacks: DbChangeCallbacks<CustomerFromModel, Cus
 	created: async ({ after }) => {
 		await appInstance.listener.created([
 			`${after.driverId}`, `${after.id}/${after.driverId}`
-		].map((c) => `users/customers/${c}`), after)
+		].map((c) => `trips/customers/${c}`), after)
 	},
 	updated: async ({ after }) => {
 		await appInstance.listener.updated([
 			`${after.driverId}`, `${after.id}/${after.driverId}`
-		].map((c) => `users/customers/${c}`), after)
+		].map((c) => `trips/customers/${c}`), after)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
 			`${before.driverId}`, `${before.id}/${before.driverId}`
-		].map((c) => `users/customers/${c}`), before)
+		].map((c) => `trips/customers/${c}`), before)
 	}
 }

@@ -1,10 +1,10 @@
 import { makeController, Route, StatusCodes } from 'equipped'
-import { CustomersController } from '../../controllers/users/customers'
+import { CustomersController } from '../../controllers/trips/customers'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
 
 export const customersRoutes: Route[] = [
 	{
-		path: '/users/customers/admin/',
+		path: '/trips/customers/admin/',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -17,7 +17,7 @@ export const customersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/customers/admin/:id',
+		path: '/trips/customers/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -30,7 +30,7 @@ export const customersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/customers/',
+		path: '/trips/customers/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -43,7 +43,7 @@ export const customersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/customers/:id',
+		path: '/trips/customers/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,

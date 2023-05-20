@@ -1,11 +1,11 @@
-import { makeController, Route, StatusCodes } from 'equipped'
-import { TripsController } from '../../controllers/users/trips'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { TripStatus } from '@modules/users'
+import { TripStatus } from '@modules/trips'
+import { Route, StatusCodes, makeController } from 'equipped'
+import { TripsController } from '../../controllers/trips/trips'
 
 export const tripsRoutes: Route[] = [
 	{
-		path: '/users/trips/admin',
+		path: '/trips/trips/admin',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -18,7 +18,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/trips/admin/:id',
+		path: '/trips/trips/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -31,7 +31,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/trips/',
+		path: '/trips/trips/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -44,7 +44,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/trips/:id',
+		path: '/trips/trips/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -57,7 +57,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/trips/',
+		path: '/trips/trips/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -70,7 +70,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/trips/:id/start',
+		path: '/trips/trips/:id/start',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -83,7 +83,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/trips/:id/end',
+		path: '/trips/trips/:id/end',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -96,7 +96,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/trips/:id/detail',
+		path: '/trips/trips/:id/detail',
 		method: 'post',
 		controllers: [
 			isAuthenticated,

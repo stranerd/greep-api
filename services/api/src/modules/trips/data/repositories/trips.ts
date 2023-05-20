@@ -1,4 +1,4 @@
-import { Transaction } from '@modules/users/data/mongooseModels/transactions'
+import { Transaction } from '../mongooseModels/transactions'
 import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { ITripRepository } from '../../domain/i-repositories/trips'

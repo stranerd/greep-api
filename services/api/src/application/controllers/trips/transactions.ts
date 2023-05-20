@@ -1,4 +1,5 @@
-import { PaymentType, TransactionsUseCases, TransactionType, UsersUseCases } from '@modules/users'
+import { PaymentType, TransactionsUseCases, TransactionType } from '@modules/trips'
+import { UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
 	NotAuthorizedError,

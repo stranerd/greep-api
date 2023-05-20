@@ -1,4 +1,4 @@
-import { CustomersUseCases } from '@modules/users'
+import { CustomersUseCases } from '@modules/trips'
 import { NotFoundError, QueryParams, Request } from 'equipped'
 
 export class CustomersController {

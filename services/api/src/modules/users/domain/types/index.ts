@@ -1,9 +1,6 @@
 import { AuthUserType } from '@modules/auth'
 import { AuthRoles, MediaOutput } from 'equipped'
 
-export * from './transactions'
-export * from './trips'
-
 export type UserBio = {
 	type: AuthUserType | null
 	email: string
