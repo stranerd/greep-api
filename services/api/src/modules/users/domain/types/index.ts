@@ -47,3 +47,24 @@ export type EmbeddedUser = {
 	bio: UserBio
 	roles: UserRoles
 }
+
+export type UserAccount = {
+	rankings: Record<UserRankings, { value: number, lastUpdatedAt: number }>
+	meta: Record<UserMeta, number>
+}
+
+export enum UserMeta {
+	referrals = 'referrals',
+	total = 'total'
+}
+
+export enum UserRankings {
+	daily = 'daily',
+	weekly = 'weekly',
+	monthly = 'monthly',
+	overall = 'overall'
+}
+
+export enum ScoreRewards {
+	newReferral = 100
+}

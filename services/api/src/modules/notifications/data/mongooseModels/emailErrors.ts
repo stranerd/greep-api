@@ -45,6 +45,6 @@ const Schema = new appInstance.dbs.mongo.Schema<EmailErrorFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now } })
 
-export const EmailError = appInstance.dbs.mongo.use().model<EmailErrorFromModel>('EmailError', Schema)
+export const EmailError = appInstance.dbs.mongo.use().model<EmailErrorFromModel>('NotificationsEmailError', Schema)
 
 export const EmailErrorChange = appInstance.dbs.mongo.change(EmailError, EmailErrorDbChangeCallbacks, new EmailErrorMapper().mapFrom)

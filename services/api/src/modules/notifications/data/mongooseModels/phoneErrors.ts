@@ -36,6 +36,6 @@ const Schema = new appInstance.dbs.mongo.Schema<PhoneErrorFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now } })
 
-export const PhoneError = appInstance.dbs.mongo.use().model<PhoneErrorFromModel>('PhoneError', Schema)
+export const PhoneError = appInstance.dbs.mongo.use().model<PhoneErrorFromModel>('NotificationsPhoneError', Schema)
 
 export const PhoneErrorChange = appInstance.dbs.mongo.change(PhoneError, PhoneErrorDbChangeCallbacks, new PhoneErrorMapper().mapFrom)

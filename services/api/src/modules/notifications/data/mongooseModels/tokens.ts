@@ -29,6 +29,6 @@ const Schema = new appInstance.dbs.mongo.Schema<TokenFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now } })
 
-export const Token = appInstance.dbs.mongo.use().model<TokenFromModel>('PushToken', Schema)
+export const Token = appInstance.dbs.mongo.use().model<TokenFromModel>('NotificationsPushToken', Schema)
 
 export const TokenChange = appInstance.dbs.mongo.change(Token, TokenDbChangeCallbacks, new TokenMapper().mapFrom)

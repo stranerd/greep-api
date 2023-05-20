@@ -1,6 +1,7 @@
 import { BaseEntity } from 'equipped'
 import {
 	EmbeddedUser,
+	UserAccount,
 	UserBio,
 	UserDates,
 	UserDrivers,
@@ -16,6 +17,7 @@ export class UserEntity extends BaseEntity {
 	public readonly roles: UserRoles
 	public readonly dates: UserDates
 	public readonly status: UserStatus
+	public readonly account: UserAccount
 	public readonly drivers: UserDrivers
 	public readonly manager: UserManager | null
 	public readonly managerRequests: UserManagerRequests
@@ -26,6 +28,7 @@ export class UserEntity extends BaseEntity {
 		roles,
 		dates,
 		status,
+		account,
 		drivers,
 		manager,
 		managerRequests,
@@ -36,6 +39,7 @@ export class UserEntity extends BaseEntity {
 		this.roles = roles ?? {}
 		this.dates = dates
 		this.status = status
+		this.account = account
 		this.drivers = drivers
 		this.manager = manager
 		this.managerRequests = managerRequests
@@ -64,6 +68,7 @@ type UserConstructorArgs = {
 	roles: UserRoles
 	dates: UserDates
 	status: UserStatus
+	account: UserAccount
 	drivers: UserDrivers
 	manager: UserManager | null
 	managerRequests: UserManagerRequests

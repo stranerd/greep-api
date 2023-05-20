@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/environment'
 import { IUserRepository } from '../../domain/i-repositories/users'
-import { UserBio, UserRoles } from '../../domain/types'
+import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
 
@@ -134,5 +134,35 @@ export class UserRepository implements IUserRepository {
 			return res
 		})
 		return res
+	}
+
+	async updateNerdScore (userId: string, amount: number) {
+		const rankings = Object.fromEntries(
+			Object.keys(UserRankings).map((key) => [`account.rankings.${key}.value`, amount])
+		)
+		const now = Date.now()
+		const lastUpdatedAt = Object.fromEntries(
+			Object.keys(UserRankings).map((key) => [`account.rankings.${key}.lastUpdatedAt`, now])
+		)
+		const user = await User.findByIdAndUpdate(userId, {
+			$set: lastUpdatedAt, $inc: rankings
+		})
+		return !!user
+	}
+
+	async resetRankings (key: keyof UserAccount['rankings']) {
+		const res = await User.updateMany({}, {
+			$set: { [`account.rankings.${key}`]: { value: 0, lastUpdatedAt: Date.now() } }
+		})
+		return !!res.acknowledged
+	}
+
+	async incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1) {
+		await User.findByIdAndUpdate(userId, {
+			$inc: {
+				[`account.meta.${propertyName}`]: value,
+				[`account.meta.${UserMeta.total}`]: value
+			}
+		})
 	}
 }

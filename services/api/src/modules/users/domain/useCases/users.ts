@@ -1,6 +1,6 @@
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
-import { UserBio, UserRoles } from '../types'
+import { UserAccount, UserBio, UserRoles } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -55,5 +55,17 @@ export class UsersUseCase {
 
 	async removeDriver(data: { managerId: string, driverId: string }) {
 		return await this.repository.removeDriver(data.managerId, data.driverId)
+	}
+
+	async incrementMeta (params: { id: string, value: 1 | -1, property: keyof UserAccount['meta'] }) {
+		return await this.repository.incrementUserMetaProperty(params.id, params.property, params.value)
+	}
+
+	async resetRankings (key: keyof UserAccount['rankings']) {
+		return await this.repository.resetRankings(key)
+	}
+
+	async updateNerdScore (params: { userId: string, amount: number }) {
+		return await this.repository.updateNerdScore(params.userId, params.amount)
 	}
 }

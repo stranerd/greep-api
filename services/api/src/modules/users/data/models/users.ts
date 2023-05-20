@@ -1,4 +1,5 @@
 import {
+	UserAccount,
 	UserBio,
 	UserDates,
 	UserDrivers,
@@ -20,4 +21,5 @@ export interface UserToModel {
 	drivers: UserDrivers
 	manager: UserManager | null
 	managerRequests: UserManagerRequests
+	account: UserAccount
 }

@@ -21,4 +21,4 @@ export const CustomersUseCases = new CustomersUseCase(customerRepository)
 export const TransactionsUseCases = new TransactionsUseCase(transactionRepository)
 export const TripsUseCases = new TripsUseCase(tripRepository)
 
-export { EmbeddedUser, PaymentType, TransactionType, TripStatus } from './domain/types'
+export { EmbeddedUser, PaymentType, TransactionType, TripStatus, UserRankings } from './domain/types'

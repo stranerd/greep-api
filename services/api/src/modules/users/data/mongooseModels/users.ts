@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/environment'
+import { UserMeta, UserRankings } from '../../domain/types'
 import { UserDbChangeCallbacks } from '../../utils/changes/users'
 import { UserMapper } from '../mappers/users'
 import { UserFromModel } from '../models/users'
@@ -40,6 +41,29 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			required: false,
 			default: 0
 		}
+	},
+	account: {
+		meta: Object.fromEntries(
+			Object.values(UserMeta).map((key) => [key, {
+				type: Number,
+				required: false,
+				default: 0
+			}])
+		),
+		rankings: Object.fromEntries(
+			Object.keys(UserRankings).map((key) => [key, {
+				value: {
+					type: Number,
+					required: false,
+					default: 0
+				},
+				lastUpdatedAt: {
+					type: Number,
+					required: false,
+					default: Date.now()
+				}
+			}])
+		)
 	},
 	drivers: {
 		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as UserFromModel['drivers'],

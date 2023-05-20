@@ -12,7 +12,8 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			drivers: param.drivers,
 			manager: param.manager,
 			managerRequests: param.managerRequests,
-			status: param.status
+			status: param.status,
+			account: param.account,
 		})
 	}
 
@@ -24,7 +25,8 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			manager: param.manager,
 			drivers: param.drivers,
 			managerRequests: param.managerRequests,
-			status: param.status
+			status: param.status,
+			account: param.account,
 		}
 	}
 }
