@@ -50,8 +50,9 @@ export class WalletRepository implements IWalletRepository {
 	async transfer (data: TransferData) {
 		let res = false
 		await Wallet.collection.conn.transaction(async (session) => {
-			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.from, session))!
-			const updatedBalance = wallet.balance.amount - data.amount
+			const fromWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.from, session))!
+			const toWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.to, session))!
+			const updatedBalance = fromWallet.balance.amount - data.amount
 			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
 			const transactions: TransactionToModel[] = [
 				{
@@ -59,7 +60,7 @@ export class WalletRepository implements IWalletRepository {
 					email: data.fromEmail,
 					title: 'You sent money',
 					amount: 0 - data.amount,
-					currency: wallet.balance.currency,
+					currency: fromWallet.balance.currency,
 					status: TransactionStatus.settled,
 					data: { type: TransactionType.Sent, note: data.note, to: data.to }
 				}, {
@@ -67,16 +68,21 @@ export class WalletRepository implements IWalletRepository {
 					email: data.toEmail,
 					title: 'You received money',
 					amount: data.amount,
-					currency: wallet.balance.currency,
+					currency: fromWallet.balance.currency,
 					status: TransactionStatus.settled,
 					data: { type: TransactionType.Received, note: data.note, from: data.from }
 				}
 			]
-			await Transaction.insertMany(transactions)
-			res = !!(await Wallet.findByIdAndUpdate(wallet.id,
+			await Transaction.insertMany(transactions, { session })
+			const updatedFromWallet =  await Wallet.findByIdAndUpdate(fromWallet.id,
 				{ $inc: { 'balance.amount': 0 - data.amount } },
 				{ new: true, session }
-			))
+			)
+			const updatedToWallet =  await Wallet.findByIdAndUpdate(toWallet.id,
+				{ $inc: { 'balance.amount': data.amount } },
+				{ new: true, session }
+			)
+			res = !!updatedFromWallet && !!updatedToWallet
 			return res
 		})
 		return res

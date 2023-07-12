@@ -17,7 +17,7 @@ export const walletsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/payment/wallets/tranfer',
+		path: '/payment/wallets/transfer',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
