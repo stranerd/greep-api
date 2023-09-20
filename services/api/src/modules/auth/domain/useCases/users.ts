@@ -1,5 +1,5 @@
+import { QueryKeys, QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
-import { QueryParams } from 'equipped'
 import { AuthUserType, RegisterInput, RoleInput, UserUpdateInput } from '../types'
 
 export class AuthUsersUseCase {
@@ -17,12 +17,13 @@ export class AuthUsersUseCase {
 		return await this.repository.findUser(id)
 	}
 
-	async findUserByEmail(email: string) {
+	async findUserByEmailorUsername(value: string) {
 		const res = await this.repository.getUsers({
-			where: [{ field: 'email', value: email.toLowerCase() }],
+			where: [{ field: 'email', value: value.toLowerCase() }, { field: 'username', value: value.toLowerCase() }],
+			whereType: QueryKeys.or,
 			limit: 1
 		})
-		return res.results[0] ?? null
+		return res.results.at(0) ?? null
 	}
 
 	async getUsers(data: QueryParams) {

@@ -11,15 +11,20 @@ export class EmailsController {
 			photo: req.files.photo?.[0] ?? null
 		}
 
-		const user = await AuthUsersUseCases.findUserByEmail(userCredential.email)
+		const user = await AuthUsersUseCases.findUserByEmailorUsername(userCredential.email)
 
-		const { email, password, referrer } = validate({
+		const { email, username, password, referrer } = validate({
 			email: Schema.string().email().addRule((value) => {
 				const email = value as string
-				if (!user) return Validation.isValid(email)
+				if (!user || user.email !== email) return Validation.isValid(email)
 				if (user.authTypes.includes(AuthTypes.email)) return Validation.isInvalid(['this email already exists with a password attached'], email)
 				if (user.authTypes.includes(AuthTypes.google)) return Validation.isInvalid(['this email is associated with a google account. Try signing in with google'], email)
 				return Validation.isInvalid(['email already in use'], email)
+			}),
+			username: Schema.string().min(3).max(16).addRule((value) => {
+				const username = value as string
+				if (!user || user.username !== username) return Validation.isValid(username)
+				return Validation.isInvalid(['username already in use'], username)
 			}),
 			password: Schema.string().min(8).max(16),
 			referrer: Schema.string().min(1).nullable().default(null)
@@ -27,7 +32,7 @@ export class EmailsController {
 
 		const validateData = {
 			name: { first: '', last: '' },
-			email, password, photo: null,
+			username, email, password, photo: null,
 			referrer: await verifyReferrer(referrer)
 		}
 
@@ -53,7 +58,7 @@ export class EmailsController {
 			email: Schema.string().email()
 		}, req.body)
 
-		const user = await AuthUsersUseCases.findUserByEmail(email)
+		const user = await AuthUsersUseCases.findUserByEmailorUsername(email)
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
 
 		return await AuthUseCases.sendVerificationMail(user.email)

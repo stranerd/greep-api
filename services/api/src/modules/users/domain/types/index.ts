@@ -6,6 +6,7 @@ export * from './activities'
 
 export type UserBio = {
 	type: AuthUserType | null
+	username: string
 	email: string
 	name: {
 		first: string

@@ -9,6 +9,7 @@ export interface UserFromModel extends UserToModel {
 }
 
 export interface UserToModel {
+	username: string
 	email: string
 	password: string
 	name: { first: string, last: string }

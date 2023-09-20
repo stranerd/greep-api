@@ -3,6 +3,7 @@ import { MediaOutput } from 'equipped'
 export interface UserUpdateInput {
 	name: { first: string, last: string }
 	photo: MediaOutput | null
+	username: string
 }
 
 export interface RoleInput {

@@ -3,6 +3,7 @@ import { AuthUserType, UserUpdateInput } from '../types'
 
 export class AuthUserEntity extends BaseEntity {
 	public readonly id: string
+	public readonly username: string
 	public readonly email: string
 	public readonly password: string
 	public readonly name: { first: string, last: string }
@@ -18,6 +19,7 @@ export class AuthUserEntity extends BaseEntity {
 	constructor (data: UserConstructorArgs) {
 		super()
 		this.id = data.id
+		this.username = data.username
 		this.email = data.email
 		this.password = data.password
 		this.name = data.name
@@ -39,12 +41,13 @@ export class AuthUserEntity extends BaseEntity {
 	}
 
 	static bioKeys(): (keyof (UserUpdateInput & { email: string, type: AuthUserType }))[] {
-		return ['name', 'email', 'photo', 'type']
+		return ['username', 'name', 'email', 'photo', 'type']
 	}
 }
 
 interface UserConstructorArgs {
 	id: string
+	username: string
 	email: string
 	password: string
 	roles: AuthRoles

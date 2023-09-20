@@ -1,7 +1,5 @@
-import { IAuthRepository } from '../../domain/i-repositories/auth'
-import { Credential, PasswordResetInput } from '../../domain/types'
-import User from '../mongooseModels/users'
-import { UserFromModel, UserToModel } from '../models/users'
+import { appInstance } from '@utils/environment'
+import { publishers } from '@utils/events'
 import {
 	AuthTypes,
 	BadRequestError,
@@ -10,14 +8,16 @@ import {
 	Hash,
 	MediaOutput,
 	Random,
+	ValidationError,
 	readEmailFromPug,
 	signinWithApple,
-	signinWithGoogle,
-	ValidationError
+	signinWithGoogle
 } from 'equipped'
-import { appInstance } from '@utils/environment'
+import { IAuthRepository } from '../../domain/i-repositories/auth'
+import { Credential, PasswordResetInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
-import { publishers } from '@utils/events'
+import { UserFromModel, UserToModel } from '../models/users'
+import User from '../mongooseModels/users'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
@@ -39,8 +39,8 @@ export class AuthRepository implements IAuthRepository {
 
 	async authenticateUser(details: Credential, passwordValidate: boolean, type: Enum<typeof AuthTypes>) {
 		details.email = details.email.toLowerCase()
-		const user = await User.findOne({ email: details.email })
-		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
+		const user = await User.findOne({ $or: [{ email: details.email }, { username: details.email }] })
+		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email/username exists'] }])
 
 		const match = passwordValidate
 			? user.authTypes.includes(AuthTypes.email)
@@ -152,6 +152,7 @@ export class AuthRepository implements IAuthRepository {
 
 		if (!userData) return await this.addNewUser({
 			name: data.name,
+			username: Random.string(9),
 			email: data.email,
 			photo: data.photo,
 			authTypes: [type],
@@ -169,7 +170,7 @@ export class AuthRepository implements IAuthRepository {
 
 	private async signInUser(user: UserFromModel, type: Enum<typeof AuthTypes>) {
 		const userUpdated = await User.findByIdAndUpdate(user._id, {
-			$set: { lastSignedInAt: Date.now() },
+			$set: { lastSignedInAt: Date.now(), ...(user.username ? {} : { username: Random.string(9) } ) },
 			$addToSet: { authTypes: [type] }
 		}, { new: true })
 

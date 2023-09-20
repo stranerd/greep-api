@@ -7,7 +7,7 @@ export class PasswordsController {
 			email: Schema.string().email()
 		}, req.body)
 
-		const user = await AuthUsersUseCases.findUserByEmail(email)
+		const user = await AuthUsersUseCases.findUserByEmailorUsername(email)
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
 
 		return await AuthUseCases.sendPasswordResetMail(user.email)

@@ -8,6 +8,14 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
 	},
+	username: {
+		type: String,
+		trim: true,
+		lowercase: true,
+		unique: true,
+		required: true,
+		default: ''
+	},
 	email: {
 		type: String,
 		trim: true,
