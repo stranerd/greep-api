@@ -17,10 +17,18 @@ export class AuthUsersUseCase {
 		return await this.repository.findUser(id)
 	}
 
-	async findUserByEmailorUsername(value: string) {
+	async findUsersByEmailorUsername(value: string) {
 		const res = await this.repository.getUsers({
 			where: [{ field: 'email', value: value.toLowerCase() }, { field: 'username', value: value.toLowerCase() }],
 			whereType: QueryKeys.or,
+			limit: 1
+		})
+		return res.results
+	}
+
+	async findUserByEmail(value: string) {
+		const res = await this.repository.getUsers({
+			where: [{ field: 'email', value: value.toLowerCase() }],
 			limit: 1
 		})
 		return res.results.at(0) ?? null

@@ -11,19 +11,22 @@ export class EmailsController {
 			photo: req.files.photo?.[0] ?? null
 		}
 
-		const user = await AuthUsersUseCases.findUserByEmailorUsername(userCredential.email)
+		const users = await AuthUsersUseCases.findUsersByEmailorUsername(userCredential.email)
+		const emailUser = users.find((u) => u.email === userCredential.email)
+		const usernameUser = users.find((u) => u.username === userCredential.email)
 
 		const { email, username, password, referrer } = validate({
 			email: Schema.string().email().addRule((value) => {
 				const email = value as string
-				if (!user || user.email !== email) return Validation.isValid(email)
-				if (user.authTypes.includes(AuthTypes.email)) return Validation.isInvalid(['this email already exists with a password attached'], email)
-				if (user.authTypes.includes(AuthTypes.google)) return Validation.isInvalid(['this email is associated with a google account. Try signing in with google'], email)
+				if (!emailUser) return Validation.isValid(email)
+				if (emailUser.authTypes.includes(AuthTypes.email)) return Validation.isInvalid(['this email already exists with a password attached'], email)
+				if (emailUser.authTypes.includes(AuthTypes.google)) return Validation.isInvalid(['this email is associated with a google account. Try signing in with google'], email)
+				if (emailUser.authTypes.includes(AuthTypes.apple)) return Validation.isInvalid(['this email is associated with an apple account. Try signing in with apple'], email)
 				return Validation.isInvalid(['email already in use'], email)
 			}),
 			username: Schema.string().min(3).max(16).addRule((value) => {
 				const username = value as string
-				if (!user || user.username !== username) return Validation.isValid(username)
+				if (usernameUser) return Validation.isValid(username)
 				return Validation.isInvalid(['username already in use'], username)
 			}),
 			password: Schema.string().min(8).max(16),
@@ -36,8 +39,8 @@ export class EmailsController {
 			referrer: await verifyReferrer(referrer)
 		}
 
-		const updatedUser = user
-			? await AuthUsersUseCases.updateDetails({ userId: user.id, data: validateData })
+		const updatedUser = emailUser
+			? await AuthUsersUseCases.updateDetails({ userId: emailUser.id, data: validateData })
 			: await AuthUseCases.registerUser(validateData)
 
 		return await generateAuthOutput(updatedUser)
@@ -58,7 +61,7 @@ export class EmailsController {
 			email: Schema.string().email()
 		}, req.body)
 
-		const user = await AuthUsersUseCases.findUserByEmailorUsername(email)
+		const user = await AuthUsersUseCases.findUserByEmail(email)
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
 
 		return await AuthUseCases.sendVerificationMail(user.email)

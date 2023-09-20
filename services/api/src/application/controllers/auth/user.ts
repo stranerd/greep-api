@@ -64,7 +64,7 @@ export class UserController {
 	}
 
 	static async superAdmin (_: Request) {
-		const user = await AuthUsersUseCases.findUserByEmailorUsername(superAdminEmail)
+		const user = await AuthUsersUseCases.findUserByEmail(superAdminEmail)
 		if (!user) throw new NotFoundError()
 		return await AuthUsersUseCases.updateRole({
 			userId: user.id,
