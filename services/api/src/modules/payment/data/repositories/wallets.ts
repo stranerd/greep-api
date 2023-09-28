@@ -58,19 +58,19 @@ export class WalletRepository implements IWalletRepository {
 				{
 					userId: data.from,
 					email: data.fromEmail,
-					title: 'You sent money',
+					title: `You sent money to ${data.toName}`,
 					amount: 0 - data.amount,
 					currency: fromWallet.balance.currency,
 					status: TransactionStatus.settled,
-					data: { type: TransactionType.Sent, note: data.note, to: data.to }
+					data: { type: TransactionType.Sent, note: data.note, to: data.to, toName: data.toName }
 				}, {
 					userId: data.to,
 					email: data.toEmail,
-					title: 'You received money',
+					title: `You received money from ${data.fromName}`,
 					amount: data.amount,
 					currency: fromWallet.balance.currency,
 					status: TransactionStatus.settled,
-					data: { type: TransactionType.Received, note: data.note, from: data.from }
+					data: { type: TransactionType.Received, note: data.note, from: data.from, fromName: data.fromName }
 				}
 			]
 			await Transaction.insertMany(transactions, { session })

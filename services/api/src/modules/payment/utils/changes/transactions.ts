@@ -3,7 +3,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { TransactionFromModel } from '../../data/models/transactions'
 import { TransactionEntity } from '../../domain/entities/transactions'
 import { TransactionStatus } from '../../domain/types'
-import { fulfillTransaction } from '../transactions'
+import { settleTransaction } from '../transactions'
 
 export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromModel, TransactionEntity> = {
 	created: async ({ after }) => {
@@ -12,7 +12,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 			`payment/transactions/${after.id}/${after.userId}`,
 		], after)
 
-		if (after.status === TransactionStatus.fulfilled) await fulfillTransaction(after)
+		if (after.status === TransactionStatus.fulfilled) await settleTransaction(after)
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated([
@@ -21,7 +21,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 		], after)
 
 		if (changes.status) {
-			if (before.status === TransactionStatus.initialized && after.status === TransactionStatus.fulfilled) await fulfillTransaction(after)
+			if (before.status === TransactionStatus.initialized && after.status === TransactionStatus.fulfilled) await settleTransaction(after)
 		}
 	},
 	deleted: async ({ before }) => {

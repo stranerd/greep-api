@@ -99,6 +99,9 @@ export class TripsController {
 			})
 		}, req.body)
 
+		const { results } = await UsersUseCases.get({ where: [{ field: 'bio.username', value: data.data.customerName }] })
+		if (results.length === 0) throw new BadRequestError('customer not found')
+
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || trip.driverId !== req.authUser!.id) throw new NotAuthorizedError()
 

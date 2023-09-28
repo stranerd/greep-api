@@ -25,8 +25,8 @@ export const startJobs = async () => {
 				await Promise.all([
 					retryTransactions(60 * 60 * 1000),
 					appInstance.job.retryAllFailedJobs(),
-					emails.map((e) => sendMailAndCatchError(e as any)),
-					texts.map((t) => sendTextAndCatchError(t))
+					...emails.map((e) => sendMailAndCatchError(e as any)),
+					...texts.map((t) => sendTextAndCatchError(t))
 				])
 			}
 			if (type === CronTypes.daily) {

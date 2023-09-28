@@ -28,6 +28,7 @@ export const generateAuthOutput = async (user: AuthUserEntity): Promise<AuthOutp
 		id: user.id,
 		type: user.type,
 		email: user.email,
+		username: user.username,
 		roles: user.roles,
 		isVerified: user.isVerified
 	})

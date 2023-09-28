@@ -17,12 +17,12 @@ export class WalletsController {
 		}, req.body)
 
 		if (to === authUser.id) throw new BadRequestError('cannot transfer to yourself')
-		const user = await UsersUseCases.find(to)
+		const user = await UsersUseCases.findByUsername(to)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
 		return await WalletsUseCases.transfer({
-			from: authUser.id, fromEmail: authUser.email,
-			to: user.id, toEmail: user.bio.email,
+			from: authUser.id, fromEmail: authUser.email, fromName: authUser.username,
+			to: user.id, toEmail: user.bio.email, toName: user.bio.username,
 			amount, note
 		})
 	}

@@ -55,7 +55,7 @@ export class TransactionsController {
 					type: Schema.is(TransactionType.trip as const),
 					customerName: Schema.string().min(1),
 					paidAmount: Schema.number(),
-					paymentType: Schema.any<PaymentType>().in(Object.values(PaymentType))
+					paymentType: Schema.any<PaymentType>().in(Object.values(PaymentType)).default(PaymentType.cash),
 				})
 			])
 		}, req.body)
@@ -71,6 +71,11 @@ export class TransactionsController {
 			if (parent.data.type !== TransactionType.trip) throw new BadRequestError('parent transaction is not a trip')
 			if (parent.data.debt === 0) throw new BadRequestError('parent transaction is settled already')
 			if (Math.abs(parent.data.debt) < Math.abs(data.amount)) throw new BadRequestError('amount is greater than the debt to settle')
+		}
+
+		if (data.data.type === TransactionType.trip) {
+			const { results } = await UsersUseCases.get({ where: [{ field: 'bio.username', value: data.data.customerName }] })
+			if (results.length === 0) throw new BadRequestError('customer not found')
 		}
 
 		return await TransactionsUseCases.create({

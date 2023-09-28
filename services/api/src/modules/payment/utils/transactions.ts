@@ -1,28 +1,37 @@
 import { Conditions } from 'equipped'
-import { TransactionsUseCases } from '../'
+import { FlutterwavePayment, TransactionsUseCases } from '../'
 import { TransactionEntity } from '../domain/entities/transactions'
 import { TransactionStatus } from '../domain/types'
 
-export const fulfillTransaction = async (_: TransactionEntity) => {
+export const settleTransaction = async (_transaction: TransactionEntity) => {
+}
 
-	/* await TransactionsUseCases.update({
-			id: transaction.id,
-			data: { status: TransactionStatus.settled }
-		}) */
+export const fulfillTransaction = async (transaction: TransactionEntity) => {
+	const successful = await FlutterwavePayment.verify(transaction.id, transaction.amount, transaction.currency)
+	if (!successful) return false
+	const txn = await TransactionsUseCases.update({
+		id: transaction.id,
+		data: { status: TransactionStatus.fulfilled }
+	})
+	return !!txn
 }
 
 export const retryTransactions = async (timeInMs: number) => {
 	const { results: fulfilledTransactions } = await TransactionsUseCases.get({
-		where: [{ field: 'status', value: TransactionStatus.fulfilled },
-			{ field: 'createdAt', condition: Conditions.gt, value: Date.now() - timeInMs }],
+		where: [
+			{ field: 'status', value: TransactionStatus.fulfilled },
+			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs }
+		],
 		all: true
 	})
-	await Promise.all(fulfilledTransactions.map(fulfillTransaction))
+	await Promise.all(fulfilledTransactions.map(settleTransaction))
 
 	const { results: initializedTransactions } = await TransactionsUseCases.get({
-		where: [{ field: 'status', value: TransactionStatus.initialized },
-			{ field: 'createdAt', condition: Conditions.gt, value: Date.now() - timeInMs }],
+		where: [
+			{ field: 'status', value: TransactionStatus.initialized },
+			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs }
+		],
 		all: true
 	})
-	await TransactionsUseCases.delete(initializedTransactions.map((t) => t.id))
+	await Promise.all(initializedTransactions.map(fulfillTransaction))
 }

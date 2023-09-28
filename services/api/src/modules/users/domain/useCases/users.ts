@@ -13,6 +13,11 @@ export class UsersUseCase {
 		return await this.repository.find(id)
 	}
 
+	async findByUsername(username: string) {
+		const { results } = await this.repository.get({ where: [{ field: 'bio.username', value: username }] })
+		return results.at(0) ?? null
+	}
+
 	async createUserWithBio(params: { id: string, data: UserBio, timestamp: number }) {
 		return await this.repository.createUserWithBio(params.id, params.data, params.timestamp)
 	}
