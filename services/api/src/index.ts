@@ -19,10 +19,13 @@ const start = async () => {
 	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
-	appInstance.listener.register('users/customers', isMine)
-	appInstance.listener.register('users/transactions', isMine)
-	appInstance.listener.register('users/trips', isMine)
-	appInstance.listener.register('users/users', isOpen)
+	appInstance.listener
+		.register('users/customers', isMine)
+		.register('users/transactions', isMine)
+		.register('users/trips', isMine)
+		.register('users/users', isOpen)
+		.register('messaging/chats', isMine)
+		.register('messaging/chatMetas', isMine)
 
 	await UsersUseCases.resetAllUsersStatus()
 
