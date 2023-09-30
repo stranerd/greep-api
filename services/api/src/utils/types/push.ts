@@ -6,9 +6,18 @@ type NotificationPushData = {
 	}
 }
 
+type ChatPushData = {
+	type: 'chats'
+	data: {
+		id: string
+		to: string
+		data: Record<string, any>
+	}
+}
+
 export type PushNotification = {
 	userIds: string[],
 	title: string
 	body: string
-	data: NotificationPushData
+	data: NotificationPushData | ChatPushData
 }

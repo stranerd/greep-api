@@ -136,7 +136,7 @@ export class UserRepository implements IUserRepository {
 		return res
 	}
 
-	async updateNerdScore (userId: string, amount: number) {
+	async updateScore (userId: string, amount: number) {
 		const rankings = Object.fromEntries(
 			Object.keys(UserRankings).map((key) => [`account.rankings.${key}.value`, amount])
 		)

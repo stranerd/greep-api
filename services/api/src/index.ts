@@ -23,9 +23,18 @@ const start = async () => {
 		.register('users/customers', isMine)
 		.register('users/transactions', isMine)
 		.register('users/trips', isMine)
-		.register('users/users', isOpen)
+
 		.register('messaging/chats', isMine)
 		.register('messaging/chatMetas', isMine)
+
+		.register('notifications/notifications', isMine)
+
+		.register('payment/transactions', isMine)
+		.register('payment/wallets', isMine)
+
+		.register('users/activities', isMine)
+		.register('users/referrals', isMine)
+		.register('users/users', isOpen)
 
 	await UsersUseCases.resetAllUsersStatus()
 

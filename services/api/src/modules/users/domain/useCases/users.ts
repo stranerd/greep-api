@@ -70,7 +70,7 @@ export class UsersUseCase {
 		return await this.repository.resetRankings(key)
 	}
 
-	async updateNerdScore (params: { userId: string, amount: number }) {
-		return await this.repository.updateNerdScore(params.userId, params.amount)
+	async updateScore (params: { userId: string, amount: number }) {
+		return await this.repository.updateScore(params.userId, params.amount)
 	}
 }

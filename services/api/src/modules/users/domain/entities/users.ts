@@ -22,6 +22,8 @@ export class UserEntity extends BaseEntity {
 	public readonly manager: UserManager | null
 	public readonly managerRequests: UserManagerRequests
 
+	ignoreInJSON = ['bio.email']
+
 	constructor ({
 		id,
 		bio,

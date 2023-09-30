@@ -1,3 +1,4 @@
+import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
 import { ActivityFromModel } from '../../data/models/activities'
@@ -9,6 +10,8 @@ export const ActivityDbChangeCallbacks: DbChangeCallbacks<ActivityFromModel, Act
 			`users/activities/${after.userId}`,
 			`users/activities/${after.id}/${after.userId}`,
 		], after)
+
+		await UsersUseCases.updateScore({ userId: after.userId, amount: after.score })
 	},
 	updated: async ({ after }) => {
 		await appInstance.listener.updated([
@@ -21,5 +24,7 @@ export const ActivityDbChangeCallbacks: DbChangeCallbacks<ActivityFromModel, Act
 			`users/activities/${before.userId}`,
 			`users/activities/${before.id}/${before.userId}`,
 		], before)
+
+		await UsersUseCases.updateScore({ userId: before.userId, amount: -before.score })
 	}
 }

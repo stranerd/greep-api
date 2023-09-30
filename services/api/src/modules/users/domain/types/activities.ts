@@ -7,9 +7,6 @@ export enum UserMeta {
 export type ActivityData = {
 	type: UserMeta.referrals,
 	referralId: string
-} | {
-	type: UserMeta.trips,
-	tripId: string
 }
 
 export enum ActivityScores {
