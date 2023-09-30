@@ -9,7 +9,6 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 		await UsersUseCases.createUserWithBio({
 			id: after.id,
 			data: {
-				type: after.type,
 				name: after.allNames,
 				email: after.email,
 				username: after.username,
@@ -32,7 +31,6 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 		if (updatedBio) await UsersUseCases.updateUserWithBio({
 			id: after.id,
 			data: {
-				type: after.type,
 				name: after.allNames,
 				email: after.email,
 				username: after.username,

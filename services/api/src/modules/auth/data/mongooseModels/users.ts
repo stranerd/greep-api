@@ -58,11 +58,6 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		required: false,
 		default: null
 	},
-	type: {
-		type: String,
-		required: false,
-		default: null
-	},
 	lastSignedInAt: {
 		type: Number,
 		required: false,

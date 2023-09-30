@@ -1,6 +1,6 @@
 import { QueryKeys, QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
-import { AuthUserType, RegisterInput, RoleInput, UserUpdateInput } from '../types'
+import { RegisterInput, RoleInput, UserUpdateInput } from '../types'
 
 export class AuthUsersUseCase {
 	private repository: IUserRepository
@@ -52,9 +52,5 @@ export class AuthUsersUseCase {
 
 	async updateRole(roleInput: RoleInput) {
 		return await this.repository.updateUserRole(roleInput)
-	}
-
-	async updateType (data: { id: string, type: AuthUserType }) {
-		return await this.repository.updateType(data.id, data.type)
 	}
 }

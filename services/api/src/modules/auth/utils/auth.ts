@@ -26,7 +26,6 @@ export const verifyReferrer = async (referrer: string | null) => {
 export const generateAuthOutput = async (user: AuthUserEntity): Promise<AuthOutput & { user: AuthUserEntity }> => {
 	const accessToken = await makeAccessToken({
 		id: user.id,
-		type: user.type,
 		email: user.email,
 		username: user.username,
 		roles: user.roles,

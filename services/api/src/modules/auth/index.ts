@@ -9,5 +9,4 @@ const userRepository = UserRepository.getInstance()
 export const AuthUseCases = new AuthUseCase(authRepository)
 export const AuthUsersUseCases = new AuthUsersUseCase(userRepository)
 
-export { AuthUserType } from './domain/types'
 export { deleteUnverifiedUsers, generateAuthOutput, getNewTokens, signOutUser, verifyReferrer } from './utils/auth'

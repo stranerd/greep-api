@@ -15,7 +15,6 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, AuthUserE
 			isVerified: param.isVerified,
 			authTypes: param.authTypes,
 			referrer: param.referrer,
-			type: param.type,
 			lastSignedInAt: param.lastSignedInAt,
 			signedUpAt: param.signedUpAt
 		})
@@ -32,7 +31,6 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, AuthUserE
 			isVerified: param.isVerified,
 			authTypes: param.authTypes,
 			referrer: param.referrer,
-			type: param.type,
 			lastSignedInAt: param.lastSignedInAt,
 			signedUpAt: param.signedUpAt
 		}

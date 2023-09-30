@@ -31,8 +31,3 @@ export interface AuthOutput {
 	accessToken: string
 	refreshToken: string
 }
-
-export enum AuthUserType {
-	driver = 'driver',
-	customer = 'customer'
-}
