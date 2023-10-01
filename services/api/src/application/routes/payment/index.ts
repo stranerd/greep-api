@@ -1,8 +1,8 @@
-import { Route } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { transactionsRoutes } from './transactions'
 import { walletsRoutes } from './wallets'
 
-export const paymentRoutes: Route[] = [
+export const paymentRoutes = groupRoutes('/payment', [
 	...transactionsRoutes,
 	...walletsRoutes
-]
+])

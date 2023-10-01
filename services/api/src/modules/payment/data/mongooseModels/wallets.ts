@@ -13,6 +13,11 @@ const WalletSchema = new appInstance.dbs.mongo.Schema<WalletFromModel>({
 		type: String,
 		required: true
 	},
+	pin: {
+		type: String,
+		required: false,
+		default: null
+	},
 	balance: {
 		amount: {
 			type: Number,

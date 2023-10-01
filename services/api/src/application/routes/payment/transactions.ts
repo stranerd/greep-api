@@ -1,10 +1,10 @@
 import { TransactionsController } from '@application/controllers/payment/transactions'
 import { isAuthenticated } from '@application/middlewares'
-import { makeController, Route, StatusCodes } from 'equipped'
+import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
-export const transactionsRoutes: Route[] = [
+export const transactionsRoutes = groupRoutes('/transactions', [
 	{
-		path: '/payment/transactions/flutterwave/secrets',
+		path: '/flutterwave/secrets',
 		method: 'get',
 		controllers: [
 			makeController(async (req) => {
@@ -16,7 +16,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/payment/transactions',
+		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -29,7 +29,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/payment/transactions/:id',
+		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -42,7 +42,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/payment/transactions/fund',
+		path: '/fund',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -55,7 +55,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/payment/transactions/:id/fulfill',
+		path: '/:id/fulfill',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
@@ -67,4 +67,4 @@ export const transactionsRoutes: Route[] = [
 			})
 		]
 	}
-]
+])

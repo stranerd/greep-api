@@ -7,6 +7,7 @@ export class WalletMapper extends BaseMapper<WalletFromModel, WalletToModel, Wal
 		return !param ? null : new WalletEntity({
 			id: param._id.toString(),
 			userId: param.userId,
+			pin: param.pin,
 			balance: param.balance,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt

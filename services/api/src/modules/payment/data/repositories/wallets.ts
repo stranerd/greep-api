@@ -87,4 +87,10 @@ export class WalletRepository implements IWalletRepository {
 		})
 		return res
 	}
+
+	async updatePin (userId: string, oldPin: string | null, pin: string) {
+		const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId))!
+		if (wallet.pin !== oldPin) throw new BadRequestError('invalid pin')
+		return !!await Wallet.findByIdAndUpdate(wallet.id, { pin }, { new: true })
+	}
 }

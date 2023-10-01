@@ -1,10 +1,10 @@
 import { WalletsController } from '@application/controllers/payment/wallets'
 import { isAuthenticated } from '@application/middlewares'
-import { makeController, Route, StatusCodes } from 'equipped'
+import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
-export const walletsRoutes: Route[] = [
+export const walletsRoutes = groupRoutes('/wallets', [
 	{
-		path: '/payment/wallets',
+		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -17,7 +17,7 @@ export const walletsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/payment/wallets/transfer',
+		path: '/transfer',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -28,5 +28,18 @@ export const walletsRoutes: Route[] = [
 				}
 			})
 		]
+	},
+	{
+		path: '/pin',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.updatePin(req)
+				}
+			})
+		]
 	}
-]
+])

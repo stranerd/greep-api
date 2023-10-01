@@ -19,4 +19,8 @@ export class WalletsUseCase {
 	async transfer (data: TransferData) {
 		return await this.repository.transfer(data)
 	}
+
+	async updatePin (data: { userId: string, oldPin: string | null, pin: string }) {
+		return await this.repository.updatePin(data.userId, data.oldPin, data.pin)
+	}
 }
