@@ -28,6 +28,18 @@ export const walletsRoutes = groupRoutes('/wallets', [
 				}
 			})
 		]
+	}, {
+		path: '/withdraw',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.withdraw(req)
+				}
+			})
+		]
 	},
 	{
 		path: '/pin',

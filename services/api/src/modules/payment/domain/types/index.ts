@@ -13,7 +13,7 @@ export enum TransactionType {
 	FundWallet = 'FundWallet',
 	Sent = 'Sent',
 	Received = 'Received',
-	Withdraw = 'Withdraw',
+	Withdrawal = 'Withdrawal',
 	WithdrawalRefund = 'WithdrawalRefund',
 }
 
@@ -29,6 +29,9 @@ export type TransactionData = {
 	note: string
 	from: string
 	fromName: string
+} | {
+	type: TransactionType.Withdrawal
+	withdrawalId: string
 } | {
 	type: TransactionType.WithdrawalRefund
 	withdrawalId: string
@@ -51,4 +54,10 @@ export enum WithdrawalStatus {
 	failed = 'failed',
 	completed = 'completed',
 	refunded = 'refunded',
+}
+
+export type WithdrawData = {
+	userId: string,
+	email: string,
+	amount: number,
 }

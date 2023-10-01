@@ -1,10 +1,12 @@
 import { BadRequestError } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
-import { TransactionStatus, TransactionType, TransferData } from '../../domain/types'
+import { TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
 import { TransactionToModel } from '../models/transactions'
 import { Transaction } from '../mongooseModels/transactions'
 import { Wallet } from '../mongooseModels/wallets'
+import { WithdrawalToModel } from '../models/withdrawals'
+import { Withdrawal } from '../mongooseModels/withdrawals'
 
 export class WalletRepository implements IWalletRepository {
 	private static instance: WalletRepository
@@ -83,6 +85,43 @@ export class WalletRepository implements IWalletRepository {
 				{ new: true, session }
 			)
 			res = !!updatedFromWallet && !!updatedToWallet
+			return res
+		})
+		return res
+	}
+
+	async withdraw (data: WithdrawData) {
+		let res = false
+		await Wallet.collection.conn.transaction(async (session) => {
+			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.userId, session))!
+			const fee = 0
+			const deductingAmount = data.amount + fee
+			const updatedBalance = wallet.balance.amount - deductingAmount
+			if (updatedBalance < 0) throw new Error('insufficient balance')
+			const withdrawalModel: WithdrawalToModel = {
+				userId: data.userId,
+				email: data.email,
+				amount: data.amount,
+				fee,
+				currency: wallet.balance.currency,
+				status: WithdrawalStatus.created,
+			}
+			const withdrawal = await new Withdrawal(withdrawalModel).save({ session })
+			const transaction: TransactionToModel = {
+				userId: data.userId,
+				email: data.email,
+				title: 'You withdrew money',
+				amount: 0 - deductingAmount,
+				currency: wallet.balance.currency,
+				status: TransactionStatus.settled,
+				data: { type: TransactionType.Withdrawal, withdrawalId: withdrawal._id }
+			}
+			await new Transaction(transaction).save({ session })
+			const updatedWallet = await Wallet.findByIdAndUpdate(wallet.id,
+				{ $inc: { 'balance.amount': transaction.amount } },
+				{ new: true, session }
+			)
+			res = !!updatedWallet
 			return res
 		})
 		return res
