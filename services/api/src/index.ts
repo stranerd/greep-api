@@ -31,6 +31,7 @@ const start = async () => {
 
 		.register('payment/transactions', isMine)
 		.register('payment/wallets', isMine)
+		.register('payment/withdrawals', isMine)
 
 		.register('users/activities', isMine)
 		.register('users/referrals', isMine)

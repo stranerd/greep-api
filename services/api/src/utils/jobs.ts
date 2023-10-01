@@ -1,6 +1,6 @@
 import { deleteUnverifiedUsers } from '@modules/auth'
 import { EmailErrorsUseCases, NotificationsUseCases, PhoneErrorsUseCases, sendMailAndCatchError, sendTextAndCatchError } from '@modules/notifications'
-import { retryTransactions } from '@modules/payment'
+import { processTransactions, processWithdrawals } from '@modules/payment'
 import { UserRankings, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { CronTypes } from 'equipped'
@@ -23,7 +23,8 @@ export const startJobs = async () => {
 					PhoneErrorsUseCases.getAndDeleteAll()
 				])
 				await Promise.all([
-					retryTransactions(60 * 60 * 1000),
+					processTransactions(60 * 60 * 1000),
+					processWithdrawals(60 * 60 * 1000),
 					appInstance.job.retryAllFailedJobs(),
 					...emails.map((e) => sendMailAndCatchError(e as any)),
 					...texts.map((t) => sendTextAndCatchError(t))

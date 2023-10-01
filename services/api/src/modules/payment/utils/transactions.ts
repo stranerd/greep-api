@@ -1,8 +1,8 @@
+import { NotificationType, sendNotification } from '@modules/notifications'
 import { Conditions } from 'equipped'
 import { FlutterwavePayment, TransactionsUseCases, WalletsUseCases } from '../'
 import { TransactionEntity } from '../domain/entities/transactions'
 import { Currencies, TransactionStatus, TransactionType } from '../domain/types'
-import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.FundWallet) {
@@ -20,6 +20,16 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 			data: { type: NotificationType.WalletFundSuccessful, amount: transaction.amount, currency: transaction.currency }
 		})
 	}
+	if (transaction.data.type === TransactionType.WithdrawalRefund) {
+		await WalletsUseCases.updateAmount({
+			userId: transaction.userId,
+			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY)
+		})
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: TransactionStatus.settled }
+		})
+	}
 }
 
 export const fulfillTransaction = async (transaction: TransactionEntity) => {
@@ -32,7 +42,7 @@ export const fulfillTransaction = async (transaction: TransactionEntity) => {
 	return !!txn
 }
 
-export const retryTransactions = async (timeInMs: number) => {
+export const processTransactions = async (timeInMs: number) => {
 	const { results: fulfilledTransactions } = await TransactionsUseCases.get({
 		where: [
 			{ field: 'status', value: TransactionStatus.fulfilled },
