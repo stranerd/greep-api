@@ -11,4 +11,4 @@ export const WalletsUseCases = new WalletsUseCase(walletRepository)
 
 export { Currencies, TransactionStatus, TransactionType } from './domain/types'
 export { FlutterwavePayment } from './utils/flutterwave'
-export { retryTransactions } from './utils/transactions'
+export { fulfillTransaction, retryTransactions } from './utils/transactions'

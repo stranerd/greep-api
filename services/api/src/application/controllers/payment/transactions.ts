@@ -1,7 +1,6 @@
-import { Currencies, FlutterwavePayment, TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
-import { getNGNToLiraRate } from '@modules/payment/utils/exchange'
+import { Currencies, fulfillTransaction, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class TransactionsController {
 	static async getSecrets (_: Request) {
@@ -23,29 +22,30 @@ export class TransactionsController {
 	static async fund (req: Request) {
 		const authUser = req.authUser!
 
+		const wallet = await WalletsUseCases.get(authUser.id)
+		if (!wallet.pin) throw new ValidationError([{ field: 'pin', messages: ['pin is not set'] }])
+
 		const { amount } = validate({
+			pin: Schema.string().min(4).max(4)
+				.eq(wallet.pin, (val, comp) => val === comp, 'invalid pin'),
 			amount: Schema.number().gt(0)
 		}, req.body)
 
 		return await TransactionsUseCases.create({
 			title: 'Fund wallet',
-			currency: Currencies.NGN,
+			currency: Currencies.TRY,
 			amount,
 			userId: authUser.id, email: authUser.email,
 			status: TransactionStatus.initialized,
-			data: { type: TransactionType.FundWallet, exchangeRate: await getNGNToLiraRate() }
+			data: { type: TransactionType.FundWallet }
 		})
 	}
 
 	static async fulfill (req: Request) {
 		const transaction = await TransactionsUseCases.find(req.params.id)
 		if (!transaction || transaction.userId !== req.authUser!.id) throw new NotAuthorizedError()
-		const successful = await FlutterwavePayment.verify(transaction.id, transaction.amount, transaction.currency)
+		const successful = await fulfillTransaction(transaction)
 		if (!successful) throw new BadRequestError('transaction unsuccessful')
-		const updatedTxn = await TransactionsUseCases.update({
-			id: transaction.id,
-			data: { status: TransactionStatus.fulfilled }
-		})
-		return !!updatedTxn
+		return successful
 	}
 }
