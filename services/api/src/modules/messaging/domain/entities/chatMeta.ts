@@ -1,5 +1,4 @@
 import { BaseEntity } from 'equipped'
-import { ChatData, ChatType } from '../types'
 import { ChatEntity } from './chat'
 
 export class ChatMetaEntity extends BaseEntity {
@@ -20,13 +19,6 @@ export class ChatMetaEntity extends BaseEntity {
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 		this.readAt = readAt
-	}
-
-	getEmbedded () : ChatData {
-		return {
-			type: ChatType.personal,
-			members: this.members,
-		}
 	}
 }
 

@@ -5,6 +5,7 @@ import { ChatFromModel, ChatToModel } from '../models/chat'
 import { Chat } from '../mongooseModels/chat'
 import { ChatMeta } from '../mongooseModels/chatMeta'
 import { appInstance } from '@utils/environment'
+import { ChatType } from '@modules/messaging/domain/types'
 
 const getChatMetaCondition = (from: string, to: string) => ({
 	$and: [
@@ -32,12 +33,17 @@ export class ChatRepository implements IChatRepository {
 			const createdAt = Date.now()
 			const chat = await new Chat({
 				...data, createdAt, updatedAt: createdAt,
+				data: { type: ChatType.personal, members: [data.from, data.to] },
 				readAt: { [data.from]: createdAt }
 			}).save({ session })
 			await ChatMeta.findOneAndUpdate(
 				getChatMetaCondition(data.from, data.to),
-				{ $set: { last: chat }, $max: { [`readAt.${data.from}`]: createdAt } },
-				{ session })
+				{
+					$set: { last: chat },
+					$max: { [`readAt.${data.from}`]: createdAt },
+					$setOnInsert: { members: [data.from, data.to] }
+				},
+				{ session, upsert: true })
 			res = chat
 			return chat
 		})

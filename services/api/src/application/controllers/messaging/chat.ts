@@ -1,9 +1,8 @@
-import { ChatMetasUseCases, ChatsUseCases } from '@modules/messaging'
+import { ChatsUseCases } from '@modules/messaging'
 import { StorageUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import {
 	BadRequestError, Conditions,
-	NotAuthorizedError,
 	QueryParams,
 	Request,
 	Schema,
@@ -39,16 +38,8 @@ export class ChatController {
 		const user = await UsersUseCases.find(authUserId)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-		const { results } = await ChatMetasUseCases.get({
-			where: [
-				{ field: 'members', value: authUserId },
-				{ field: 'members', value: to },
-			]
-		})
-		if (!results[0]) throw new NotAuthorizedError()
-
 		return await ChatsUseCases.add({
-			body, media, from: user.id, to, data: results[0].getEmbedded(),
+			body, media, from: user.id, to,
 			links: Validation.extractUrls(body)
 		})
 	}
