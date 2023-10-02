@@ -1,10 +1,10 @@
 import { ChatMetasUseCases } from '@modules/messaging'
-import { Conditions, QueryParams, Request } from 'equipped'
+import { QueryParams, Request } from 'equipped'
 
 export class ChatMetaController {
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'members', condition: Conditions.in, value: req.authUser!.id }]
+		query.auth = [{ field: 'members', value: req.authUser!.id }]
 		return await ChatMetasUseCases.get(query)
 	}
 

@@ -2,7 +2,7 @@ import { ChatsUseCases } from '@modules/messaging'
 import { StorageUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import {
-	BadRequestError, Conditions,
+	BadRequestError,
 	QueryParams,
 	Request,
 	Schema,
@@ -13,7 +13,7 @@ import {
 export class ChatController {
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'data.members', condition: Conditions.in, value: req.authUser!.id }]
+		query.auth = [{ field: 'data.members', value: req.authUser!.id }]
 		return await ChatsUseCases.get(query)
 	}
 
@@ -26,7 +26,7 @@ export class ChatController {
 	static async add (req: Request) {
 		const { body, media: mediaFile, to  } = validate({
 			body: Schema.string(),
-			to: Schema.string().min(1),
+			to: Schema.string().min(1).ne(req.authUser!.id, (val, comp) => val === comp, 'cannot send message to yourself'),
 			media: Schema.file().nullable()
 		}, {
 			...req.body, media: req.files.media?.[0] ?? null,
@@ -34,12 +34,11 @@ export class ChatController {
 
 		const media = mediaFile ? await StorageUseCases.upload('messaging/chats', mediaFile) : null
 
-		const authUserId = req.authUser!.id
-		const user = await UsersUseCases.find(authUserId)
-		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+		const user = await UsersUseCases.find(to)
+		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
 		return await ChatsUseCases.add({
-			body, media, from: user.id, to,
+			body, media, from: req.authUser!.id, to: user.id,
 			links: Validation.extractUrls(body)
 		})
 	}

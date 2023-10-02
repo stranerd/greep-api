@@ -21,10 +21,7 @@ export class ChatMetaRepository implements IChatMetaRepository {
 
 	async add (data: ChatMetaToModel) {
 		const chatMeta = await ChatMeta.findOneAndUpdate({
-			$and: [
-				{ members: data.members[0] },
-				{ members: data.members[1] },
-			]
+			members: { $all: data.members.map((val) => ({ $elemMatch: { $eq: val } })) }
 		}, {
 			$setOnInsert: data
 		}, { upsert: true, new: true })

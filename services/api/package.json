@@ -20,12 +20,12 @@
 		"nodemailer": "^6.9.5"
 	},
 	"devDependencies": {
-		"@types/node": "^20.7.2",
-		"@typescript-eslint/eslint-plugin": "^6.7.3",
-		"@typescript-eslint/parser": "^6.7.3",
+		"@types/node": "^20.8.1",
+		"@typescript-eslint/eslint-plugin": "^6.7.4",
+		"@typescript-eslint/parser": "^6.7.4",
 		"eslint": "^8.50.0",
 		"eslint-plugin-promise": "^6.1.1",
-		"resolve-tspaths": "^0.8.15",
+		"resolve-tspaths": "^0.8.16",
 		"ts-node-dev": "^2.0.0",
 		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.2.2"

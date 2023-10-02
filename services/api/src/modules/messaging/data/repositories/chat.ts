@@ -1,17 +1,14 @@
+import { ChatType } from '@modules/messaging/domain/types'
+import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { IChatRepository } from '../../domain/irepositories/chat'
 import { ChatMapper } from '../mappers/chat'
 import { ChatFromModel, ChatToModel } from '../models/chat'
 import { Chat } from '../mongooseModels/chat'
 import { ChatMeta } from '../mongooseModels/chatMeta'
-import { appInstance } from '@utils/environment'
-import { ChatType } from '@modules/messaging/domain/types'
 
 const getChatMetaCondition = (from: string, to: string) => ({
-	$and: [
-		{ members: from },
-		{ members: to },
-	]
+	members: { $all: [from, to].map((val) => ({ $elemMatch: { $eq: val } })) }
 })
 
 export class ChatRepository implements IChatRepository {

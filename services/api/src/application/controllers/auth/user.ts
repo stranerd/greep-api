@@ -1,7 +1,7 @@
 import { AuthUsersUseCases, signOutUser } from '@modules/auth'
 import { StorageUseCases } from '@modules/storage'
 import { superAdminEmail } from '@utils/environment'
-import { AuthRole, BadRequestError, NotFoundError, Request, Schema, validate, verifyAccessToken } from 'equipped'
+import { AuthRole, BadRequestError, NotFoundError, Request, Schema, Validation, validate, verifyAccessToken } from 'equipped'
 
 export class UserController {
 	static async findUser (req: Request) {
@@ -13,18 +13,29 @@ export class UserController {
 		const userId = req.authUser!.id
 		const uploadedPhoto = req.files.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
+
+		req.body.username = req.body.username?.toLowerCase() ?? ''
+		const users = await AuthUsersUseCases.findUsersByEmailorUsername(req.body.username)
+		const usernameUser = users.find((u) => u.username === req.body.username)
+
 		const data = validate({
 			firstName: Schema.string().min(1),
 			lastName: Schema.string().min(1),
+			username: Schema.string().min(4).addRule((value) => {
+				const username = value as string
+				if (!usernameUser || usernameUser.id === userId) return Validation.isValid(username)
+				return Validation.isInvalid(['username already in use'], username)
+			}),
 			photo: Schema.file().image().nullable()
 		}, { ...req.body, photo: uploadedPhoto })
-		const { firstName, lastName } = data
+		const { firstName, lastName, username } = data
 		const photo = uploadedPhoto ? await StorageUseCases.upload('profiles', uploadedPhoto) : undefined
 
 		return await AuthUsersUseCases.updateProfile({
 			userId,
 			data: {
 				name: { first: firstName, last: lastName },
+				username,
 				...(changedPhoto ? { photo } : {}) as any
 			}
 		})

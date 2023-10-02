@@ -1,21 +1,17 @@
 import { AuthUseCases, AuthUsersUseCases, generateAuthOutput, verifyReferrer } from '@modules/auth'
-import { AuthTypes, Request, Schema, Validation, ValidationError, validate } from 'equipped'
+import { AuthTypes, Random, Request, Schema, Validation, ValidationError, validate } from 'equipped'
 
 export class EmailsController {
 	static async signup (req: Request) {
 		const userCredential = {
 			email: req.body.email ?? '',
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			password: req.body.password,
-			photo: req.files.photo?.[0] ?? null
+			password: req.body.password
 		}
 
 		const users = await AuthUsersUseCases.findUsersByEmailorUsername(userCredential.email)
 		const emailUser = users.find((u) => u.email === userCredential.email)
-		const usernameUser = users.find((u) => u.username === userCredential.email)
 
-		const { email, username, password, referrer } = validate({
+		const { email, password, referrer } = validate({
 			email: Schema.string().email().addRule((value) => {
 				const email = value as string
 				if (!emailUser) return Validation.isValid(email)
@@ -24,18 +20,13 @@ export class EmailsController {
 				if (emailUser.authTypes.includes(AuthTypes.apple)) return Validation.isInvalid(['this email is associated with an apple account. Try signing in with apple'], email)
 				return Validation.isInvalid(['email already in use'], email)
 			}),
-			username: Schema.string().min(3).max(16).addRule((value) => {
-				const username = value as string
-				if (usernameUser) return Validation.isValid(username)
-				return Validation.isInvalid(['username already in use'], username)
-			}),
 			password: Schema.string().min(8).max(16),
 			referrer: Schema.string().min(1).nullable().default(null)
 		}, userCredential)
 
 		const validateData = {
 			name: { first: '', last: '' },
-			username, email, password, photo: null,
+			username: Random.string(9), email, password, photo: null,
 			referrer: await verifyReferrer(referrer)
 		}
 
@@ -48,7 +39,7 @@ export class EmailsController {
 
 	static async signin (req: Request) {
 		const validateData = validate({
-			email: Schema.string().email(),
+			email: Schema.string(),
 			password: Schema.string(),
 		}, req.body)
 
@@ -57,11 +48,7 @@ export class EmailsController {
 	}
 
 	static async sendVerificationMail (req: Request) {
-		const { email } = validate({
-			email: Schema.string().email()
-		}, req.body)
-
-		const user = await AuthUsersUseCases.findUserByEmail(email)
+		const user = await AuthUsersUseCases.findUserByEmail(req.authUser!.email)
 		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
 
 		return await AuthUseCases.sendVerificationMail(user.email)
