@@ -63,7 +63,12 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 					default: Date.now()
 				}
 			}])
-		)
+		),
+		application: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: null
+		},
 	},
 	type: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,

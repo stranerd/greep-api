@@ -11,6 +11,7 @@ export class NotificationMapper extends BaseMapper<NotificationFromModel, Notifi
 			data: param.data,
 			userId: param.userId,
 			seen: param.seen,
+			sendEmail: param.sendEmail,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
 		})
@@ -21,6 +22,7 @@ export class NotificationMapper extends BaseMapper<NotificationFromModel, Notifi
 			title: param.title,
 			body: param.body,
 			data: param.data,
+			sendEmail: param.sendEmail,
 			userId: param.userId
 		}
 	}

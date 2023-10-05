@@ -34,4 +34,6 @@ export interface IUserRepository {
 	removeDriver (managerId: string, driverId: string): Promise<boolean>
 
 	updateType (userId: string, data: UserTypeData): Promise<UserEntity | null>
+
+	updateApplication (userId, data: UserAccount['application']): Promise<boolean>
 }

@@ -107,10 +107,12 @@ export class UsersController {
 				})
 			])
 		}, {
-			...req.body,
-			license: req.files.license?.at(0) ?? null,
-			passport: req.files.license?.at(0) ?? null,
-			studentId: req.files.license?.at(0) ?? null,
+			data: {
+				...req.body,
+				license: req.files.license?.at(0) ?? null,
+				passport: req.files.passport?.at(0) ?? null,
+				studentId: req.files.studentId?.at(0) ?? null,
+			}
 		})
 
 
@@ -126,5 +128,16 @@ export class UsersController {
 		}
 
 		throw new NotAuthorizedError('cannot update user type')
+	}
+
+	static async updateApplication (req: Request) {
+		const data = validate({
+			accepted: Schema.boolean(),
+			message: Schema.string()
+		}, req.body)
+
+		const updated = await UsersUseCases.updateApplication({ userId: req.authUser!.id, data })
+		if (updated) return updated
+		throw new NotAuthorizedError('cannot update user application')
 	}
 }

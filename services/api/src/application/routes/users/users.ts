@@ -17,6 +17,19 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
+		path: '/users/users/application',
+		method: 'post',
+		controllers: [
+			isAdmin,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateApplication(req)
+				}
+			})
+		]
+	},
+	{
 		path: '/users/users/admin',
 		method: 'get',
 		controllers: [

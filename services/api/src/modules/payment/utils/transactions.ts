@@ -17,6 +17,7 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 		await sendNotification([transaction.userId], {
 			title: 'Wallet Funded',
 			body: `Your wallet has been funded with ${transaction.amount} ${transaction.currency}`,
+			sendEmail: true,
 			data: { type: NotificationType.WalletFundSuccessful, amount: transaction.amount, currency: transaction.currency }
 		})
 	}

@@ -169,9 +169,18 @@ export class UserRepository implements IUserRepository {
 	async updateType (userId: string, data: UserTypeData) {
 		const user = await User.findOneAndUpdate(
 			{ _id: userId, $or: [{ type: null }, { 'type.type': data.type }] },
-			{ $set: { type: data } },
+			{ $set: { type: data, 'account.application': null } },
 			{ new: true }
 		)
 		return this.mapper.mapFrom(user)
+	}
+
+	async updateApplication (userId: string, data: UserAccount['application']) {
+		const user = await User.findByIdAndUpdate(
+			{ _id: userId, 'account.application': null },
+			{ $set: { 'account.application': data } },
+			{ new: true }
+		)
+		return !!user
 	}
 }

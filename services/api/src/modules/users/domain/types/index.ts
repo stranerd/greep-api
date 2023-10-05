@@ -52,6 +52,10 @@ export type EmbeddedUser = {
 export type UserAccount = {
 	rankings: Record<UserRankings, { value: number, lastUpdatedAt: number }>
 	meta: Record<UserMeta, number>
+	application: {
+		accepted: boolean
+		message: string
+	} | null
 }
 
 export enum UserRankings {

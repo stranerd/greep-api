@@ -11,5 +11,6 @@ export interface NotificationToModel {
 	title: string
 	body: string
 	userId: string
+	sendEmail: boolean
 	data: NotificationData
 }

@@ -22,6 +22,11 @@ const NotificationSchema = new appInstance.dbs.mongo.Schema<NotificationFromMode
 		required: false,
 		default: false
 	},
+	sendEmail: {
+		type: Boolean,
+		required: false,
+		default: false
+	},
 	data: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true,

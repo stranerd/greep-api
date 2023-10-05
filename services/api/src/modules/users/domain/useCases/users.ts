@@ -77,4 +77,8 @@ export class UsersUseCase {
 	async updateType (params: { userId: string, data: UserTypeData }) {
 		return await this.repository.updateType(params.userId, params.data)
 	}
+
+	async updateApplication (params: { userId: string, data: UserAccount['application'] }) {
+		return await this.repository.updateApplication(params.userId, params.data)
+	}
 }
