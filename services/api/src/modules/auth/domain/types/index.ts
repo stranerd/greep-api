@@ -1,9 +1,15 @@
 import { MediaOutput } from 'equipped'
 
+export type Phone = {
+	code: string
+	number: string
+}
+
 export interface UserUpdateInput {
 	name: { first: string, last: string }
 	photo: MediaOutput | null
 	username: string
+	phone: Phone | null
 }
 
 export interface RoleInput {

@@ -1,4 +1,5 @@
 import { AuthRoles, AuthTypes, Enum, MediaOutput } from 'equipped'
+import { Phone } from '../../domain/types'
 
 export interface UserFromModel extends UserToModel {
 	_id: string
@@ -15,5 +16,6 @@ export interface UserToModel {
 	photo: MediaOutput | null
 	isVerified: boolean
 	authTypes: Enum<typeof AuthTypes>[]
+	phone: Phone | null
 	referrer: string | null
 }

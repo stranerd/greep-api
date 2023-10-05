@@ -26,16 +26,17 @@ export class UserController {
 				if (!usernameUser || usernameUser.id === userId) return Validation.isValid(username)
 				return Validation.isInvalid(['username already in use'], username)
 			}),
-			photo: Schema.file().image().nullable()
+			photo: Schema.file().image().nullable(),
+			phone: Schema.any().addRule(Validation.isValidPhone()).nullable()
 		}, { ...req.body, photo: uploadedPhoto })
-		const { firstName, lastName, username } = data
+		const { firstName, lastName, username, phone } = data
 		const photo = uploadedPhoto ? await StorageUseCases.upload('profiles', uploadedPhoto) : undefined
 
 		return await AuthUsersUseCases.updateProfile({
 			userId,
 			data: {
 				name: { first: firstName, last: lastName },
-				username,
+				username, phone,
 				...(changedPhoto ? { photo } : {}) as any
 			}
 		})

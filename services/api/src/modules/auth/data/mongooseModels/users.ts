@@ -37,6 +37,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		required: false,
 		default: null
 	},
+	phone: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
 	isVerified: {
 		type: Boolean,
 		required: false,

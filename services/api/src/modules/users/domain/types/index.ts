@@ -1,3 +1,4 @@
+import { Phone } from '@modules/auth'
 import { AuthRoles, MediaOutput } from 'equipped'
 import { UserMeta } from './activities'
 
@@ -12,6 +13,7 @@ export type UserBio = {
 		full: string
 	}
 	photo: MediaOutput | null
+	phone: Phone | null
 }
 
 export type UserRoles = AuthRoles

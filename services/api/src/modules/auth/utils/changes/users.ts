@@ -12,7 +12,8 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 				name: after.allNames,
 				email: after.email,
 				username: after.username,
-				photo: after.photo
+				photo: after.photo,
+				phone: after.phone
 			},
 			timestamp: after.signedUpAt
 		})
@@ -34,7 +35,8 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 				name: after.allNames,
 				email: after.email,
 				username: after.username,
-				photo: after.photo
+				photo: after.photo,
+				phone: after.phone
 			},
 			timestamp: Date.now()
 		})

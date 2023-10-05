@@ -27,7 +27,7 @@ export class EmailsController {
 		const validateData = {
 			name: { first: '', last: '' },
 			username: Random.string(9), email, password, photo: null,
-			referrer: await verifyReferrer(referrer)
+			referrer: await verifyReferrer(referrer), phone: null
 		}
 
 		const updatedUser = emailUser
