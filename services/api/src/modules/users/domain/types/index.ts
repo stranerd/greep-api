@@ -60,3 +60,18 @@ export enum UserRankings {
 	monthly = 'monthly',
 	overall = 'overall'
 }
+
+
+export enum UserType {
+	driver = 'driver',
+	customer = 'customer'
+}
+
+export type UserTypeData = {
+	type: UserType.driver,
+	license: MediaOutput
+} | {
+	type: UserType.customer,
+	passport: MediaOutput
+	studentId: MediaOutput
+}

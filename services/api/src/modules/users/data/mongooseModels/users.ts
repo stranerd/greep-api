@@ -65,6 +65,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			}])
 		)
 	},
+	type: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: false,
+		default: null
+	},
 	drivers: {
 		type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as UserFromModel['drivers'],
 		required: false,

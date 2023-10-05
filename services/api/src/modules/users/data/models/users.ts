@@ -6,7 +6,8 @@ import {
 	UserManager,
 	UserManagerRequests,
 	UserRoles,
-	UserStatus
+	UserStatus,
+	UserTypeData
 } from '../../domain/types'
 
 export interface UserFromModel extends UserToModel {
@@ -18,6 +19,7 @@ export interface UserToModel {
 	roles: UserRoles
 	dates: UserDates
 	status: UserStatus
+	type: UserTypeData
 	drivers: UserDrivers
 	manager: UserManager | null
 	managerRequests: UserManagerRequests

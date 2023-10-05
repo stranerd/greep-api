@@ -1,5 +1,6 @@
-import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
+import { StorageUseCases } from '@modules/storage'
+import { UserType, UsersUseCases } from '@modules/users'
+import { BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
 	static async getUsers (req: Request) {
@@ -90,5 +91,40 @@ export class UsersController {
 			driverId: Schema.string().min(1)
 		}, req.body)
 		return await UsersUseCases.removeDriver({ ...data, managerId: req.authUser!.id })
+	}
+
+	static async updateType (req: Request) {
+		const { data } = validate({
+			data: Schema.or([
+				Schema.object({
+					type: Schema.is(UserType.driver as const),
+					license: Schema.file().image()
+				}),
+				Schema.object({
+					type: Schema.is(UserType.customer as const),
+					passport: Schema.file().image(),
+					studentId: Schema.file().image(),
+				})
+			])
+		}, {
+			...req.body,
+			license: req.files.license?.at(0) ?? null,
+			passport: req.files.license?.at(0) ?? null,
+			studentId: req.files.license?.at(0) ?? null,
+		})
+
+
+		if (data.type === UserType.driver) {
+			const license = await StorageUseCases.upload('users/drivers/licenses', data.license)
+			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, license } })
+			if (updated) return updated
+		} else if (data.type === UserType.customer) {
+			const passport = await StorageUseCases.upload('users/students/passport', data.passport)
+			const studentId = await StorageUseCases.upload('users/students/studentId', data.studentId)
+			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, passport, studentId } })
+			if (updated) return updated
+		}
+
+		throw new NotAuthorizedError('cannot update user type')
 	}
 }

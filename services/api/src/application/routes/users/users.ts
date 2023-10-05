@@ -1,8 +1,21 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { makeController, Route, StatusCodes } from 'equipped'
+import { Route, StatusCodes, makeController } from 'equipped'
 import { UsersController } from '../../controllers/users/users'
 
 export const usersRoutes: Route[] = [
+	{
+		path: '/users/users/type',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateType(req)
+				}
+			})
+		]
+	},
 	{
 		path: '/users/users/admin',
 		method: 'get',

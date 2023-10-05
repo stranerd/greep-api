@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/environment'
 import { IUserRepository } from '../../domain/i-repositories/users'
-import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles } from '../../domain/types'
+import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
 
@@ -164,5 +164,14 @@ export class UserRepository implements IUserRepository {
 				[`account.meta.${UserMeta.total}`]: value
 			}
 		})
+	}
+
+	async updateType (userId: string, data: UserTypeData) {
+		const user = await User.findOneAndUpdate(
+			{ _id: userId, $or: [{ type: null }, { 'type.type': data.type }] },
+			{ $set: { type: data } },
+			{ new: true }
+		)
+		return this.mapper.mapFrom(user)
 	}
 }

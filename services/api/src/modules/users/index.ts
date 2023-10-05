@@ -13,4 +13,4 @@ export const UsersUseCases = new UsersUseCase(userRepository)
 export const ReferralsUseCases = new ReferralsUseCase(referralRepository)
 export const ActivitiesUseCases = new ActivitiesUseCase(activityRepository)
 
-export { ActivityScores, EmbeddedUser, UserMeta, UserRankings } from './domain/types'
+export { ActivityScores, EmbeddedUser, UserMeta, UserRankings, UserType } from './domain/types'

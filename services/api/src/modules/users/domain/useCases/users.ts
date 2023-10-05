@@ -1,6 +1,6 @@
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
-import { UserAccount, UserBio, UserRoles } from '../types'
+import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -72,5 +72,9 @@ export class UsersUseCase {
 
 	async updateScore (params: { userId: string, amount: number }) {
 		return await this.repository.updateScore(params.userId, params.amount)
+	}
+
+	async updateType (params: { userId: string, data: UserTypeData }) {
+		return await this.repository.updateType(params.userId, params.data)
 	}
 }

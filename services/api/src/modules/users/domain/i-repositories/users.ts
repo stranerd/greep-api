@@ -1,6 +1,6 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { UserEntity } from '../entities/users'
-import { ActivityScores, UserAccount, UserBio, UserRoles } from '../types'
+import { ActivityScores, UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
 
 export interface IUserRepository {
 	get(query: QueryParams): Promise<QueryResults<UserEntity>>
@@ -31,5 +31,7 @@ export interface IUserRepository {
 
 	updateDriverCommission(managerId: string, driverId: string, commission: number): Promise<boolean>
 
-	removeDriver(managerId: string, driverId: string): Promise<boolean>
+	removeDriver (managerId: string, driverId: string): Promise<boolean>
+
+	updateType (userId: string, data: UserTypeData): Promise<UserEntity | null>
 }

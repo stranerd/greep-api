@@ -8,7 +8,8 @@ import {
 	UserManager,
 	UserManagerRequests,
 	UserRoles,
-	UserStatus
+	UserStatus,
+	UserTypeData
 } from '../types'
 
 export class UserEntity extends BaseEntity {
@@ -18,6 +19,7 @@ export class UserEntity extends BaseEntity {
 	public readonly dates: UserDates
 	public readonly status: UserStatus
 	public readonly account: UserAccount
+	public readonly type: UserTypeData
 	public readonly drivers: UserDrivers
 	public readonly manager: UserManager | null
 	public readonly managerRequests: UserManagerRequests
@@ -31,6 +33,7 @@ export class UserEntity extends BaseEntity {
 		dates,
 		status,
 		account,
+		type,
 		drivers,
 		manager,
 		managerRequests,
@@ -42,6 +45,7 @@ export class UserEntity extends BaseEntity {
 		this.dates = dates
 		this.status = status
 		this.account = account
+		this.type = type
 		this.drivers = drivers
 		this.manager = manager
 		this.managerRequests = managerRequests
@@ -71,6 +75,7 @@ type UserConstructorArgs = {
 	dates: UserDates
 	status: UserStatus
 	account: UserAccount
+	type: UserTypeData
 	drivers: UserDrivers
 	manager: UserManager | null
 	managerRequests: UserManagerRequests
