@@ -1,5 +1,5 @@
 import { ChatMetasUseCases } from '@modules/messaging'
-import { QueryParams, Request } from 'equipped'
+import { NotFoundError, QueryParams, Request } from 'equipped'
 
 export class ChatMetaController {
 	static async get (req: Request) {
@@ -10,7 +10,7 @@ export class ChatMetaController {
 
 	static async find (req: Request) {
 		const chatMeta = await ChatMetasUseCases.find(req.params.id)
-		if (!chatMeta || !chatMeta.members.includes(req.authUser!.id)) return null
+		if (!chatMeta || !chatMeta.members.includes(req.authUser!.id)) throw new NotFoundError()
 		return chatMeta
 	}
 }

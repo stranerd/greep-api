@@ -1,6 +1,6 @@
 import { Currencies, fulfillTransaction, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate, ValidationError } from 'equipped'
+import { BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class TransactionsController {
 	static async getSecrets (_: Request) {
@@ -9,7 +9,7 @@ export class TransactionsController {
 
 	static async find (req: Request) {
 		const transaction = await TransactionsUseCases.find(req.params.id)
-		if (!transaction || transaction.userId !== req.authUser!.id) return null
+		if (!transaction || transaction.userId !== req.authUser!.id) throw new NotFoundError()
 		return transaction
 	}
 

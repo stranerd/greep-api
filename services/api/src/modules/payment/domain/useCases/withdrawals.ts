@@ -20,4 +20,12 @@ export class WithdrawalsUseCase {
 	async update (data: { id: string, data: Partial<WithdrawalToModel> }) {
 		return await this.repository.update(data.id, data.data)
 	}
+
+	async generateToken (data: { id: string, userId: string }) {
+		return await this.repository.generateToken(data.id, data.userId)
+	}
+
+	async complete (data: { id: string, userId: string, token: string }) {
+		return await this.repository.complete(data.id, data.userId, data.token)
+	}
 }

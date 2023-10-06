@@ -6,18 +6,16 @@ import { TransactionStatus, TransactionType, WithdrawalStatus } from '../domain/
 
 export const processCreatedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	if (withdrawal.status !== WithdrawalStatus.created) return
+	if (withdrawal.agentId) return
+	// TODO: get agent and assign to withdrawal
 	/* await WithdrawalsUseCases.update({
 		id: withdrawal.id,
-		data: {	status: WithdrawalStatus.inProgress	}
+		data: {	status: WithdrawalStatus.inProgress, agentId: '' }
 	}) */
 }
 
 export const processInProgressWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	if (withdrawal.status !== WithdrawalStatus.inProgress) return
-	/* await WithdrawalsUseCases.update({
-		id: withdrawal.id,
-		data: {	status: status === 'successful' ? WithdrawalStatus.completed : WithdrawalStatus.failed	}
-	}) */
 }
 
 export const processFailedWithdrawal = async (withdrawal: WithdrawalEntity) => {

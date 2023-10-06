@@ -40,7 +40,7 @@ export class WalletsController {
 		const { amount } = validate({
 			pin: Schema.string().min(4).max(4)
 				.eq(wallet.pin, (val, comp) => val === comp, 'invalid pin'),
-			amount: Schema.number().gte(1000),
+			amount: Schema.number().gte(100),
 		}, req.body)
 
 		return await WalletsUseCases.withdraw({

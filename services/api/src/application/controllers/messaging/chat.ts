@@ -3,6 +3,7 @@ import { StorageUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
+	NotFoundError,
 	QueryParams,
 	Request,
 	Schema,
@@ -19,7 +20,7 @@ export class ChatController {
 
 	static async find (req: Request) {
 		const chat = await ChatsUseCases.find(req.params.id)
-		if (!chat || !chat.data.members.includes(req.authUser!.id)) return null
+		if (!chat || !chat.data.members.includes(req.authUser!.id)) throw new NotFoundError()
 		return chat
 	}
 

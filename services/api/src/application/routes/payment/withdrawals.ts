@@ -27,5 +27,29 @@ export const withdrawalsRoutes = groupRoutes('/withdrawals', [
 				}
 			})
 		]
+	}, {
+		path: '/:id/token',
+		method: 'get',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WithdrawalsController.generateToken(req)
+				}
+			})
+		]
+	}, {
+		path: '/:id/complete',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WithdrawalsController.complete(req)
+				}
+			})
+		]
 	}
 ])

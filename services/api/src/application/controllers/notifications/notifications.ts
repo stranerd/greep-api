@@ -1,5 +1,5 @@
 import { NotificationsUseCases } from '@modules/notifications'
-import { QueryParams, Request, Schema, validate } from 'equipped'
+import { NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class NotificationsController {
 	static async get (req: Request) {
@@ -10,7 +10,7 @@ export class NotificationsController {
 
 	static async find (req: Request) {
 		const notification = await NotificationsUseCases.find(req.params.id)
-		if (!notification || notification.userId !== req.authUser!.id) return null
+		if (!notification || notification.userId !== req.authUser!.id) throw new NotFoundError()
 		return notification
 	}
 

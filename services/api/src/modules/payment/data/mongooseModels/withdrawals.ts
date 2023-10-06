@@ -12,6 +12,11 @@ const WithdrawalSchema = new appInstance.dbs.mongo.Schema<WithdrawalFromModel>({
 		type: String,
 		required: true
 	},
+	agentId: {
+		type: String,
+		required: false,
+		default: null
+	},
 	email: {
 		type: String,
 		required: true

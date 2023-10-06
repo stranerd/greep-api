@@ -9,7 +9,8 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 	created: async ({ after }) => {
 		await appInstance.listener.created([
 			`payment/withdrawals/${after.userId}`,
-			`payment/withdrawals/${after.id}/${after.userId}`
+			`payment/withdrawals/${after.id}/${after.userId}`,
+			...(after.id ? [`payment/withdrawals/${after.agentId}`, `payment/withdrawals/${after.id}/${after.agentId}`,] : [])
 		], after)
 
 		await processCreatedWithdrawal(after)
@@ -17,7 +18,8 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated([
 			`payment/withdrawals/${after.userId}`,
-			`payment/withdrawals/${after.id}/${after.userId}`
+			`payment/withdrawals/${after.id}/${after.userId}`,
+			...(after.id ? [`payment/withdrawals/${after.agentId}`, `payment/withdrawals/${after.id}/${after.agentId}`,] : [])
 		], after)
 
 		if (changes.status) {
@@ -29,7 +31,8 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
 			`payment/withdrawals/${before.userId}`,
-			`payment/withdrawals/${before.id}/${before.userId}`
+			`payment/withdrawals/${before.id}/${before.userId}`,
+			...(before.id ? [`payment/withdrawals/${before.agentId}`, `payment/withdrawals/${before.id}/${before.agentId}`,] : [])
 		], before)
 	}
 }
