@@ -1,11 +1,13 @@
-import { BadRequestError } from 'equipped'
+import { appInstance } from '@utils/environment'
+import { publishers } from '@utils/events'
+import { BadRequestError, EmailsList, Random, readEmailFromPug } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
 import { TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
 import { WalletMapper } from '../mappers/wallets'
 import { TransactionToModel } from '../models/transactions'
+import { WithdrawalToModel } from '../models/withdrawals'
 import { Transaction } from '../mongooseModels/transactions'
 import { Wallet } from '../mongooseModels/wallets'
-import { WithdrawalToModel } from '../models/withdrawals'
 import { Withdrawal } from '../mongooseModels/withdrawals'
 
 export class WalletRepository implements IWalletRepository {
@@ -127,9 +129,34 @@ export class WalletRepository implements IWalletRepository {
 		return res
 	}
 
+	async sendPinResetMail(userId: string, email: string) {
+		const token = Random.number(1e5, 1e6).toString()
+
+		await appInstance.cache.set('transaction-pin-reset-' + token, userId, 60 * 60)
+		const emailContent = await readEmailFromPug('emails/sendOTP.pug', { token })
+		await publishers.SENDMAIL.publish({
+			to: email,
+			subject: 'Reset Your Transaction Pin',
+			from: EmailsList.NO_REPLY,
+			content: emailContent,
+			data: {}
+		})
+
+		return true
+	}
+
+	async resetPin(userId: string, token: string, pin: string) {
+		const cachedUserId = await appInstance.cache.get('transaction-pin-reset-' + token)
+		if (!cachedUserId || cachedUserId !== userId) throw new BadRequestError('Invalid token')
+		await appInstance.cache.delete('transaction-pin-reset-' + token)
+
+		const wallet = await WalletRepository.getUserWallet(userId)!
+		return !!await Wallet.findByIdAndUpdate(wallet.id, { $set: { pin } }, { new: true })
+	}
+
 	async updatePin (userId: string, oldPin: string | null, pin: string) {
 		const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId))!
 		if (wallet.pin !== oldPin) throw new BadRequestError('invalid pin')
-		return !!await Wallet.findByIdAndUpdate(wallet.id, { pin }, { new: true })
+		return !!await Wallet.findByIdAndUpdate(wallet.id, { $set: { pin } }, { new: true })
 	}
 }

@@ -42,6 +42,32 @@ export const walletsRoutes = groupRoutes('/wallets', [
 		]
 	},
 	{
+		path: '/pin/reset/mail',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.sendPinResetMail(req)
+				}
+			})
+		]
+	},
+	{
+		path: '/pin/reset',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WalletsController.resetPin(req)
+				}
+			})
+		]
+	},
+	{
 		path: '/pin',
 		method: 'post',
 		controllers: [

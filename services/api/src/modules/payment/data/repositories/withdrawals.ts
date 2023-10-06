@@ -43,7 +43,7 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 		if (!withdrawal || withdrawal.userId !== userId) throw new NotAuthorizedError()
 		if (withdrawal.status !== WithdrawalStatus.inProgress) throw new NotAuthorizedError('Withdrawal is not in progress')
 		const token = Random.string(12)
-		await appInstance.cache.set(`withdrawal-${id}-token`, token, 60 * 3)
+		await appInstance.cache.set(`withdrawal-token-${token}`, id, 60 * 3)
 		return token
 	}
 
@@ -51,8 +51,8 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 		const withdrawal = await Withdrawal.findById(id)
 		if (!withdrawal || withdrawal.userId !== userId) throw new NotAuthorizedError()
 		if (withdrawal.status !== WithdrawalStatus.inProgress) throw new NotAuthorizedError('Withdrawal is not in progress')
-		const cachedToken = await appInstance.cache.get(`withdrawal-${id}-token`)
-		if (cachedToken !== token) throw new NotAuthorizedError('invalid token')
+		const cachedId = await appInstance.cache.get(`withdrawal-token-${token}`)
+		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
 		const completed = await Withdrawal.findByIdAndUpdate(id, { $set: { status: WithdrawalStatus.completed } }, { new: true })
 		return this.mapper.mapFrom(completed)
 	}

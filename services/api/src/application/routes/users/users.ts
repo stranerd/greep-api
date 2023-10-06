@@ -1,4 +1,4 @@
-import { isAdmin, isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
 import { Route, StatusCodes, makeController } from 'equipped'
 import { UsersController } from '../../controllers/users/users'
 
@@ -7,7 +7,7 @@ export const usersRoutes: Route[] = [
 		path: '/users/users/type',
 		method: 'post',
 		controllers: [
-			isAuthenticated,
+			isAuthenticatedButIgnoreVerified,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,

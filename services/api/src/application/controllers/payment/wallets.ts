@@ -50,6 +50,22 @@ export class WalletsController {
 		})
 	}
 
+	static async sendPinResetMail (req: Request) {
+		return await WalletsUseCases.sendPinResetMail({
+			userId: req.authUser!.id,
+			email: req.authUser!.email,
+		})
+	}
+
+	static async resetPin (req: Request) {
+		const { token, pin } = validate({
+			token: Schema.force.string(),
+			pin: Schema.string().min(4).max(4),
+		}, req.body)
+
+		return await WalletsUseCases.resetPin({ userId: req.authUser!.id, token, pin })
+	}
+
 	static async updatePin (req: Request) {
 		const { oldPin, pin } = validate({
 			oldPin: Schema.string().min(4).max(4).nullable().default(null),

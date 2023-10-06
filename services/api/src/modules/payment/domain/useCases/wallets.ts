@@ -24,6 +24,14 @@ export class WalletsUseCase {
 		return await this.repository.withdraw(data)
 	}
 
+	async sendPinResetMail (data: { userId: string, email: string }) {
+		return await this.repository.sendPinResetMail(data.userId, data.email)
+	}
+
+	async resetPin (data: { userId: string, token: string, pin: string }) {
+		return await this.repository.resetPin(data.userId, data.token, data.pin)
+	}
+
 	async updatePin (data: { userId: string, oldPin: string | null, pin: string }) {
 		return await this.repository.updatePin(data.userId, data.oldPin, data.pin)
 	}
