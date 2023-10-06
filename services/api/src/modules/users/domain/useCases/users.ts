@@ -65,4 +65,12 @@ export class UsersUseCase {
 	async updateApplication (params: { userId: string, data: UserAccount['application'] }) {
 		return await this.repository.updateApplication(params.userId, params.data)
 	}
+
+	async updateTrip(data: { driverId: string, userId: string, count: number }) {
+		return await this.repository.updateTrip(data)
+	}
+
+	async updateDebt(data: { driverId: string, userId: string, count: number }) {
+		return await this.repository.updateDebt(data)
+	}
 }

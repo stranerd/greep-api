@@ -41,6 +41,10 @@ export type UserAccount = {
 		accepted: boolean
 		message: string
 	} | null
+	trips: Record<string, {
+		trips: number
+		debt: number
+	}>
 }
 
 export enum UserRankings {

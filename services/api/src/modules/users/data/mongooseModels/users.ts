@@ -69,6 +69,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			required: false,
 			default: null
 		},
+		trips: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: {}
+		}
 	},
 	type: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,

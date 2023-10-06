@@ -28,4 +28,8 @@ export interface IUserRepository {
 	updateType (userId: string, data: UserTypeData): Promise<UserEntity | null>
 
 	updateApplication (userId, data: UserAccount['application']): Promise<boolean>
+
+	updateTrip(data: { driverId: string, userId: string, count: number }): Promise<boolean>
+
+	updateDebt(data: { driverId: string, userId: string, count: number }): Promise<boolean>
 }

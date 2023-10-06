@@ -114,4 +114,20 @@ export class UserRepository implements IUserRepository {
 		)
 		return !!user
 	}
+
+	async updateTrip ({ driverId, userId, count }: { driverId: string, userId: string, count: number }) {
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{ $inc: { [`account.trips.${driverId}.trips`]: count } },
+			{ new: true })
+		return !!user
+	}
+
+	async updateDebt ({ driverId, userId, count }: { driverId: string, userId: string, count: number }) {
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{ $inc: { [`account.trips.${driverId}.debt`]: count } },
+			{ new: true })
+		return !!user
+	}
 }
