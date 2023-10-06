@@ -107,7 +107,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async updateApplication (userId: string, data: UserAccount['application']) {
-		const user = await User.findByIdAndUpdate(
+		const user = await User.findOneAndUpdate(
 			{ _id: userId, 'account.application': null },
 			{ $set: { 'account.application': data } },
 			{ new: true }

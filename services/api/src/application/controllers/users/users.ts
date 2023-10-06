@@ -64,12 +64,13 @@ export class UsersController {
 	}
 
 	static async updateApplication (req: Request) {
-		const data = validate({
+		const { userId, accepted, message } = validate({
+			userId: Schema.string(),
 			accepted: Schema.boolean(),
 			message: Schema.string()
 		}, req.body)
 
-		const updated = await UsersUseCases.updateApplication({ userId: req.authUser!.id, data })
+		const updated = await UsersUseCases.updateApplication({ userId, data: { accepted, message } })
 		if (updated) return updated
 		throw new NotAuthorizedError('cannot update user application')
 	}
