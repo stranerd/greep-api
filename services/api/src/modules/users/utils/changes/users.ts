@@ -1,8 +1,9 @@
+import { AuthUsersUseCases } from '@modules/auth'
+import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/environment'
-import { DbChangeCallbacks } from 'equipped'
+import { AuthRole, DbChangeCallbacks } from 'equipped'
 import { UserFromModel } from '../../data/models/users'
 import { UserEntity } from '../../domain/entities/users'
-import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {
@@ -19,6 +20,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 
 		if (changes.account?.application && !before.account.application && after.account.application) {
 			const { accepted, message } = after.account.application
+			if (accepted) await AuthUsersUseCases.updateRole({ userId: after.id, roles: { [AuthRole.isActive]: accepted }})
 			await sendNotification([after.id], {
 				title: `Account Application ${accepted ? 'Accepted' : 'Rejected'}`,
 				body: `Your account application was ${accepted ? 'accepted' : 'rejected'}.${message ? message : ''}`,
