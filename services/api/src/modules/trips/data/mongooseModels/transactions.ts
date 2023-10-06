@@ -12,10 +12,6 @@ const TransactionSchema = new appInstance.dbs.mongo.Schema<TransactionFromModel>
 		type: String,
 		required: true
 	},
-	managerId: {
-		type: String,
-		required: true
-	},
 	amount: {
 		type: Number,
 		required: true

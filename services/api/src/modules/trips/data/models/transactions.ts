@@ -8,7 +8,6 @@ export interface TransactionFromModel extends TransactionToModel {
 
 export interface TransactionToModel {
 	driverId: string
-	managerId: string
 	amount: number
 	description: string
 	recordedAt: number

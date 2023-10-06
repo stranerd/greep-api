@@ -33,13 +33,13 @@ export class TransactionRepository implements ITransactionRepository {
 		return this.mapper.mapFrom(transaction)!
 	}
 
-	async update ({ id, managerId, data }: { id: string, managerId: string, data: Partial<TransactionToModel> }) {
-		const transaction = await Transaction.findOneAndUpdate({ _id: id, managerId }, { $set: data }, { new: true })
+	async update ({ id, driverId, data }: { id: string, driverId: string, data: Partial<TransactionToModel> }) {
+		const transaction = await Transaction.findOneAndUpdate({ _id: id, driverId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(transaction)
 	}
 
-	async delete ({ id, managerId }: { id: string, managerId: string }) {
-		const transaction = await Transaction.findOneAndDelete({ _id: id, managerId })
+	async delete ({ id, driverId }: { id: string, driverId: string }) {
+		const transaction = await Transaction.findOneAndDelete({ _id: id, driverId })
 		return !!transaction
 	}
 

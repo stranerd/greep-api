@@ -4,7 +4,6 @@ import {
 	BadRequestError,
 	NotAuthorizedError,
 	NotFoundError,
-	QueryKeys,
 	QueryParams,
 	Request,
 	Schema, validate
@@ -13,8 +12,7 @@ import {
 export class TransactionsController {
 	static async getTransactions (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'driverId', value: req.authUser!.id }, { field: 'managerId', value: req.authUser!.id }]
-		query.authType = QueryKeys.or
+		query.auth = [{ field: 'driverId', value: req.authUser!.id }]
 		return await TransactionsUseCases.get(query)
 	}
 
@@ -25,7 +23,7 @@ export class TransactionsController {
 
 	static async findTransaction (req: Request) {
 		const transaction = await TransactionsUseCases.find(req.params.id)
-		if (!transaction || ![transaction.managerId, transaction.driverId].includes(req.authUser!.id)) throw new NotFoundError()
+		if (!transaction || transaction.driverId !== req.authUser!.id) throw new NotFoundError()
 		return transaction
 	}
 
@@ -79,8 +77,8 @@ export class TransactionsController {
 		}
 
 		return await TransactionsUseCases.create({
-			driverId, managerId: driver.manager?.managerId ?? driverId,
 			...data,
+			driverId,
 			data: data.data.type === TransactionType.trip ? {
 				...data.data,
 				tripId: null,
@@ -90,7 +88,7 @@ export class TransactionsController {
 	}
 
 	static async deleteTransaction (req: Request) {
-		const isDeleted = await TransactionsUseCases.delete({ id: req.params.id, managerId: req.authUser!.id })
+		const isDeleted = await TransactionsUseCases.delete({ id: req.params.id, driverId: req.authUser!.id })
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
 	}

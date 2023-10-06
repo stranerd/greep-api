@@ -78,57 +78,5 @@ export const usersRoutes: Route[] = [
 				}
 			})
 		]
-	},
-	{
-		path: '/users/users/managers/accept',
-		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.acceptManager(req)
-				}
-			})
-		]
-	},
-	{
-		path: '/users/users/drivers/add',
-		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.addDriver(req)
-				}
-			})
-		]
-	},
-	{
-		path: '/users/users/drivers/update',
-		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.updateDriverCommission(req)
-				}
-			})
-		]
-	},
-	{
-		path: '/users/users/drivers/remove',
-		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.removeDriver(req)
-				}
-			})
-		]
 	}
 ]

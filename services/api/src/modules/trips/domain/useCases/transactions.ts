@@ -13,11 +13,11 @@ export class TransactionsUseCase {
 		return await this.repository.create(input)
 	}
 
-	async update(input: { managerId: string, id: string, data: Partial<TransactionToModel> }) {
+	async update(input: { driverId: string, id: string, data: Partial<TransactionToModel> }) {
 		return await this.repository.update(input)
 	}
 
-	async delete(input: { managerId: string, id: string }) {
+	async delete(input: { driverId: string, id: string }) {
 		return await this.repository.delete(input)
 	}
 

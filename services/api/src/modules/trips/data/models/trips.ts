@@ -8,7 +8,6 @@ export interface TripFromModel extends TripToModel {
 
 export interface TripToModel {
 	driverId: string
-	managerId: string
 	status: TripStatus
 	data: Partial<Record<TripStatus, TripData>>
 }

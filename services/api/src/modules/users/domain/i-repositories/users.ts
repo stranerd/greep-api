@@ -25,14 +25,6 @@ export interface IUserRepository {
 
 	resetRankings (key: keyof UserAccount['rankings']): Promise<boolean>
 
-	requestAddDriver (managerId: string, driverId: string, commission: number, add: boolean): Promise<boolean>
-
-	acceptManager(managerId: string, driverId: string, commission: number, accept: boolean): Promise<boolean>
-
-	updateDriverCommission(managerId: string, driverId: string, commission: number): Promise<boolean>
-
-	removeDriver (managerId: string, driverId: string): Promise<boolean>
-
 	updateType (userId: string, data: UserTypeData): Promise<UserEntity | null>
 
 	updateApplication (userId, data: UserAccount['application']): Promise<boolean>

@@ -4,7 +4,6 @@ import {
 	BadRequestError,
 	NotAuthorizedError,
 	NotFoundError,
-	QueryKeys,
 	QueryParams,
 	Request,
 	Schema,
@@ -15,8 +14,7 @@ import {
 export class TripsController {
 	static async getTrips (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'driverId', value: req.authUser!.id }, { field: 'managerId', value: req.authUser!.id }]
-		query.authType = QueryKeys.or
+		query.auth = [{ field: 'driverId', value: req.authUser!.id }]
 		return await TripsUseCases.get(query)
 	}
 
@@ -27,7 +25,7 @@ export class TripsController {
 
 	static async findTrip (req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
-		if (!trip || ![trip.managerId, trip.driverId].includes(req.authUser!.id)) throw new NotFoundError()
+		if (!trip || trip.driverId !== req.authUser!.id) throw new NotFoundError()
 		return trip
 	}
 
@@ -48,7 +46,7 @@ export class TripsController {
 		if (!driver) throw new BadRequestError('profile not found')
 
 		return await TripsUseCases.create({
-			driverId, managerId: driver.manager?.managerId ?? driverId,
+			driverId,
 			status: TripStatus.gotten,
 			data: {
 				[TripStatus.gotten]: { ...data, timestamp: Date.now() }
@@ -108,7 +106,7 @@ export class TripsController {
 		const transaction = await TripsUseCases.detail({
 			id: trip.id, driverId: trip.driverId,
 			data: {
-				...data, driverId: trip.driverId, managerId: trip.managerId,
+				...data, driverId: trip.driverId,
 				data: {
 					type: TransactionType.trip,
 					...data.data,

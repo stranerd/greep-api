@@ -4,9 +4,6 @@ import {
 	UserAccount,
 	UserBio,
 	UserDates,
-	UserDrivers,
-	UserManager,
-	UserManagerRequests,
 	UserRoles,
 	UserStatus,
 	UserTypeData
@@ -20,9 +17,6 @@ export class UserEntity extends BaseEntity {
 	public readonly status: UserStatus
 	public readonly account: UserAccount
 	public readonly type: UserTypeData
-	public readonly drivers: UserDrivers
-	public readonly manager: UserManager | null
-	public readonly managerRequests: UserManagerRequests
 
 	ignoreInJSON = ['bio.email']
 
@@ -34,9 +28,6 @@ export class UserEntity extends BaseEntity {
 		status,
 		account,
 		type,
-		drivers,
-		manager,
-		managerRequests,
 	}: UserConstructorArgs) {
 		super()
 		this.id = id
@@ -46,9 +37,6 @@ export class UserEntity extends BaseEntity {
 		this.status = status
 		this.account = account
 		this.type = type
-		this.drivers = drivers
-		this.manager = manager
-		this.managerRequests = managerRequests
 	}
 
 	isAdmin() {
@@ -76,7 +64,4 @@ type UserConstructorArgs = {
 	status: UserStatus
 	account: UserAccount
 	type: UserTypeData
-	drivers: UserDrivers
-	manager: UserManager | null
-	managerRequests: UserManagerRequests
 }

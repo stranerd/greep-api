@@ -4,7 +4,6 @@ import { TransactionData } from '../types'
 export class TransactionEntity extends BaseEntity {
 	public readonly id: string
 	public readonly driverId: string
-	public readonly managerId: string
 	public readonly amount: number
 	public readonly description: string
 	public readonly data: TransactionData
@@ -15,7 +14,6 @@ export class TransactionEntity extends BaseEntity {
 	constructor ({
 		id,
 		driverId,
-		managerId,
 		amount,
 		description,
 		data,
@@ -26,7 +24,6 @@ export class TransactionEntity extends BaseEntity {
 		super()
 		this.id = id
 		this.driverId = driverId
-		this.managerId = managerId
 		this.amount = amount
 		this.description = description
 		this.data = data
@@ -38,5 +35,5 @@ export class TransactionEntity extends BaseEntity {
 
 type TransactionConstructorArgs = {
 	id: string, createdAt: number, updatedAt: number, recordedAt: number,
-	driverId: string, managerId: string, amount: number, description: string, data: TransactionData
+	driverId: string, amount: number, description: string, data: TransactionData
 }

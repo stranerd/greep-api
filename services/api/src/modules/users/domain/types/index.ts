@@ -28,21 +28,6 @@ export type UserStatus = {
 	lastUpdatedAt: number
 }
 
-export type UserDrivers = {
-	driverId: string
-	commission: number
-}[]
-
-export type UserManager = {
-	managerId: string
-	commission: number
-}
-
-export type UserManagerRequests = {
-	managerId: string
-	commission: number
-}[]
-
 export type EmbeddedUser = {
 	id: string
 	bio: UserBio

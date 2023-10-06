@@ -2,9 +2,6 @@ import {
 	UserAccount,
 	UserBio,
 	UserDates,
-	UserDrivers,
-	UserManager,
-	UserManagerRequests,
 	UserRoles,
 	UserStatus,
 	UserTypeData
@@ -20,8 +17,5 @@ export interface UserToModel {
 	dates: UserDates
 	status: UserStatus
 	type: UserTypeData
-	drivers: UserDrivers
-	manager: UserManager | null
-	managerRequests: UserManagerRequests
 	account: UserAccount
 }

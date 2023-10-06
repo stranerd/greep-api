@@ -12,10 +12,6 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>({
 		type: String,
 		required: true
 	},
-	managerId: {
-		type: String,
-		required: true
-	},
 	status: {
 		type: String,
 		required: true
