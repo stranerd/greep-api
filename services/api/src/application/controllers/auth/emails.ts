@@ -4,8 +4,8 @@ import { AuthTypes, Random, Request, Schema, Validation, ValidationError, valida
 export class EmailsController {
 	static async signup (req: Request) {
 		const userCredential = {
+			...req.body,
 			email: req.body.email ?? '',
-			password: req.body.password
 		}
 
 		const users = await AuthUsersUseCases.findUsersByEmailorUsername(userCredential.email)

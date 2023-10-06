@@ -68,6 +68,7 @@ export class UserController {
 		return await AuthUsersUseCases.updateRole({
 			userId: user.id,
 			roles: {
+				[AuthRole.isActive]: true,
 				[AuthRole.isAdmin]: true,
 				[AuthRole.isSuperAdmin]: true
 			}

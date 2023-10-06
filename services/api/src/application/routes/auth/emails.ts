@@ -1,6 +1,6 @@
+import { isAuthenticatedButIgnoreVerified } from '@application/middlewares'
 import { makeController, Route, StatusCodes } from 'equipped'
 import { EmailsController } from '../../controllers/auth/emails'
-import { isAuthenticated } from '@application/middlewares'
 
 const emailSignIn: Route = {
 	path: '/auth/emails/signin',
@@ -32,7 +32,7 @@ const sendVerificationEmail: Route = {
 	path: '/auth/emails/verify/mail',
 	method: 'post',
 	controllers: [
-		isAuthenticated,
+		isAuthenticatedButIgnoreVerified,
 		makeController(async (req) => {
 			return {
 				status: StatusCodes.Ok,
