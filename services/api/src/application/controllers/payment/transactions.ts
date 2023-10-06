@@ -1,10 +1,17 @@
-import { Currencies, fulfillTransaction, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
+import { Currencies, fulfillTransaction, Rates, TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import { flutterwaveConfig } from '@utils/environment'
 import { BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate, ValidationError } from 'equipped'
 
 export class TransactionsController {
 	static async getSecrets (_: Request) {
 		return { publicKey: flutterwaveConfig.publicKey }
+	}
+
+	static async getRates (_: Request) {
+		const entries = Object.entries(Rates)
+			.map(async ([key, value]) => [key, await value()] as const)
+		const awaitedEntries = await Promise.all(entries)
+		return Object.fromEntries(awaitedEntries)
 	}
 
 	static async find (req: Request) {
@@ -25,19 +32,19 @@ export class TransactionsController {
 		const wallet = await WalletsUseCases.get(authUser.id)
 		if (!wallet.pin) throw new ValidationError([{ field: 'pin', messages: ['pin is not set'] }])
 
-		const { amount } = validate({
+		const { amount, currency } = validate({
 			pin: Schema.string().min(4).max(4)
 				.eq(wallet.pin, (val, comp) => val === comp, 'invalid pin'),
-			amount: Schema.number().gt(0)
+			amount: Schema.number().gt(0),
+			currency: Schema.in(Object.values(Currencies)).default(Currencies.NGN)
 		}, req.body)
 
 		return await TransactionsUseCases.create({
 			title: 'Fund wallet',
-			currency: Currencies.TRY,
-			amount,
+			currency, amount,
 			userId: authUser.id, email: authUser.email,
 			status: TransactionStatus.initialized,
-			data: { type: TransactionType.FundWallet }
+			data: { type: TransactionType.FundWallet, exchangeRate: await Rates[currency]() }
 		})
 	}
 

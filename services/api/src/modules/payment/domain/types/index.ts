@@ -1,5 +1,6 @@
 export enum Currencies {
-	TRY = 'TRY'
+	TRY = 'TRY',
+	NGN = 'NGN',
 }
 
 export enum TransactionStatus {
@@ -19,6 +20,7 @@ export enum TransactionType {
 
 export type TransactionData = {
 	type: TransactionType.FundWallet
+	exchangeRate: number
 } | {
 	type: TransactionType.Sent
 	note: string

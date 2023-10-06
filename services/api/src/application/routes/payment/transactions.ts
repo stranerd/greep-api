@@ -16,6 +16,18 @@ export const transactionsRoutes = groupRoutes('/transactions', [
 		]
 	},
 	{
+		path: '/rates',
+		method: 'get',
+		controllers: [
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TransactionsController.getRates(req)
+				}
+			})
+		]
+	},
+	{
 		path: '/',
 		method: 'get',
 		controllers: [

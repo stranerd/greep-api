@@ -8,7 +8,7 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.FundWallet) {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY)
+			amount: transaction.amount * transaction.data.exchangeRate
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
