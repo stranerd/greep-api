@@ -1,9 +1,10 @@
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
-import { CustomersUseCases, TransactionsUseCases } from '../..'
+import { TransactionsUseCases } from '../..'
 import { TransactionFromModel } from '../../data/models/transactions'
 import { TransactionEntity } from '../../domain/entities/transactions'
 import { TransactionType } from '../../domain/types'
+import { UsersUseCases } from '@modules/users'
 
 export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromModel, TransactionEntity> = {
 	created: async ({ after }) => {
@@ -18,14 +19,14 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 		})
 
 		if (after.data.type === TransactionType.trip) {
-			await CustomersUseCases.updateTrip({
+			await UsersUseCases.updateTrip({
 				driverId: after.driverId,
-				name: after.data.customerName,
+				userId: after.data.customerId,
 				count: 1
 			})
-			if (after.data.debt !== 0) await CustomersUseCases.updateDebt({
+			if (after.data.debt !== 0) await UsersUseCases.updateDebt({
 				driverId: after.driverId,
-				name: after.data.customerName,
+				userId: after.data.customerId,
 				count: after.data.debt
 			})
 		}
@@ -36,9 +37,9 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 		].map((c) => `trips/transactions/${c}`), after)
 
 		const debtChanged = after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt
-		if (debtChanged) await CustomersUseCases.updateDebt({
+		if (debtChanged) await UsersUseCases.updateDebt({
 			driverId: after.driverId,
-			name: after.data.customerName,
+			userId: after.data.customerId,
 			count: after.data.debt - before.data.debt
 		})
 	},
@@ -48,14 +49,14 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 		].map((c) => `trips/transactions/${c}`), before)
 
 		if (before.data.type === TransactionType.trip) {
-			await CustomersUseCases.updateTrip({
+			await UsersUseCases.updateTrip({
 				driverId: before.driverId,
-				name: before.data.customerName,
+				userId: before.data.customerId,
 				count: -1
 			})
-			if (before.data.debt !== 0) await CustomersUseCases.updateDebt({
+			if (before.data.debt !== 0) await UsersUseCases.updateDebt({
 				driverId: before.driverId,
-				name: before.data.customerName,
+				userId: before.data.customerId,
 				count: -before.data.debt
 			})
 		}

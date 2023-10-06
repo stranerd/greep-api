@@ -91,14 +91,14 @@ export class TripsController {
 			description: Schema.string(),
 			recordedAt: Schema.time().asStamp(),
 			data: Schema.object({
-				customerName: Schema.string().min(1),
+				customerId: Schema.string().min(1),
 				paidAmount: Schema.number(),
 				paymentType: Schema.in(Object.values(PaymentType))
 			})
 		}, req.body)
 
-		const { results } = await UsersUseCases.get({ where: [{ field: 'bio.username', value: data.data.customerName }] })
-		if (results.length === 0) throw new BadRequestError('customer not found')
+		const customer = await UsersUseCases.find(data.data.customerId)
+		if (!customer || customer.isDeleted()) throw new BadRequestError('customer not found')
 
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || trip.driverId !== req.authUser!.id) throw new NotAuthorizedError()
