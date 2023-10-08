@@ -18,7 +18,6 @@ export class ActivityMapper extends BaseMapper<ActivityFromModel, ActivityToMode
 		return {
 			userId: param.userId,
 			data: param.data,
-			score: param.score,
 		}
 	}
 }

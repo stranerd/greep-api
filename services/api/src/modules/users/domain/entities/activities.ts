@@ -1,5 +1,5 @@
 import { BaseEntity } from 'equipped'
-import { ActivityData } from '../types'
+import { ActivityData, ActivityType } from '../types'
 
 export class ActivityEntity extends BaseEntity {
 	public readonly id: string
@@ -17,6 +17,13 @@ export class ActivityEntity extends BaseEntity {
 		this.score = score
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
+	}
+
+	static getScore (data: ActivityData) {
+		if (data.type === ActivityType.referrals) return 100
+		if (data.type === ActivityType.tripDiscount) return - data.discount * 25
+		if (data.type === ActivityType.refundTripDiscount) return data.discount * 25
+		return 0
 	}
 }
 

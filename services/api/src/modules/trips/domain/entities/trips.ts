@@ -16,11 +16,12 @@ export class TripEntity extends BaseEntity {
 		location: string
 		description: string
 	}
+	public readonly discount: number
 	public readonly data: Partial<Record<TripStatus, TripData>>
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, customerId, driverId, status, from, to, data, createdAt, updatedAt }: TripConstructorArgs) {
+	constructor ({ id, customerId, driverId, status, from, to, discount, data, createdAt, updatedAt }: TripConstructorArgs) {
 		super()
 		this.id = id
 		this.customerId = customerId
@@ -28,6 +29,7 @@ export class TripEntity extends BaseEntity {
 		this.status = status
 		this.from = from
 		this.to = to
+		this.discount = discount
 		this.data = data
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
@@ -49,6 +51,7 @@ type TripConstructorArgs = {
 		location: string
 		description: string
 	}
+	discount: number
 	data: Partial<Record<TripStatus, TripData>>
 	createdAt: number
 	updatedAt: number

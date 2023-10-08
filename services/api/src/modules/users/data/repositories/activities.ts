@@ -4,6 +4,7 @@ import { IActivityRepository } from '../../domain/i-repositories/activities'
 import { ActivityMapper } from '../mappers/activities'
 import { ActivityToModel } from '../models/activities'
 import { Activity } from '../mongooseModels/activities'
+import { ActivityEntity } from '../../domain/entities/activities'
 
 export class ActivityRepository implements IActivityRepository {
 	private static instance: ActivityRepository
@@ -28,7 +29,9 @@ export class ActivityRepository implements IActivityRepository {
 	}
 
 	async create (data: ActivityToModel) {
-		const activity = await new Activity(data).save()
+		const activity = await new Activity({
+			...data, score: ActivityEntity.getScore(data.data)
+		}).save()
 		return this.mapper.mapFrom(activity)!
 	}
 }

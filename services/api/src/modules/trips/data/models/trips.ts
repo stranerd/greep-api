@@ -11,6 +11,7 @@ export interface TripToModel {
 	status: TripStatus
 	driverId: string | null
 	data: Partial<Record<TripStatus, TripData>>
+	discount: number
 	from: {
 		coords: [number, number] | null
 		location: string

@@ -11,6 +11,7 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 			status: param.status,
 			from: param.from,
 			to: param.to,
+			discount: param.discount,
 			data: param.data,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
@@ -24,6 +25,7 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 			status: param.status,
 			from: param.from,
 			to: param.to,
+			discount: param.discount,
 			data: param.data
 		}
 	}

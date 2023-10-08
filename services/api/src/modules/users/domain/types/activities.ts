@@ -4,11 +4,21 @@ export enum UserMeta {
 	total = 'total'
 }
 
-export type ActivityData = {
-	type: UserMeta.referrals,
-	referralId: string
+export enum ActivityType {
+	referrals = 'referrals',
+	tripDiscount = 'tripDiscount',
+	refundTripDiscount = 'refundTripDiscount'
 }
 
-export enum ActivityScores {
-	newReferral = 100
+export type ActivityData = {
+	type: ActivityType.referrals,
+	referralId: string
+} | {
+	type: ActivityType.tripDiscount,
+	discount: number
+	tripId: string
+} | {
+	type: ActivityType.refundTripDiscount,
+	discount: number
+	tripId: string
 }

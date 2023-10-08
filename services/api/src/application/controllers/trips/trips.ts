@@ -1,5 +1,5 @@
 import { PaymentType, TransactionType, TripStatus, TripsUseCases } from '@modules/trips'
-import { UsersUseCases } from '@modules/users'
+import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
 import {
 	BadRequestError,
 	NotAuthorizedError,
@@ -49,12 +49,15 @@ export class TripsController {
 				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
 				location: Schema.string().min(1),
 				description: Schema.string().min(1)
-			})
+			}),
+			discount: Schema.number().gte(0).lte(100)
 		}, req.body)
 
 		const customerId = req.authUser!.id
 		const customer = await UsersUseCases.find(customerId)
 		if (!customer) throw new BadRequestError('profile not found')
+		const score = ActivityEntity.getScore({ type: ActivityType.tripDiscount, discount: data.discount, tripId: '' })
+		if ((customer.account.rankings.overall.value + score) < 0) throw new BadRequestError('not enough points for this discount')
 
 		if (data.driverId) {
 			const driver = await UsersUseCases.find(data.driverId)

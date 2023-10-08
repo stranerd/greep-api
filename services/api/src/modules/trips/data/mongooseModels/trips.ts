@@ -34,6 +34,11 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: true
 	},
+	discount: {
+		type: Number,
+		required: false,
+		default: 0
+	},
 	createdAt: {
 		type: Number,
 		required: false,

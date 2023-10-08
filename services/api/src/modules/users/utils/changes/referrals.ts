@@ -3,7 +3,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { ActivitiesUseCases, UsersUseCases } from '../..'
 import { ReferralFromModel } from '../../data/models/referrals'
 import { ReferralEntity } from '../../domain/entities/referrals'
-import { ActivityScores, UserMeta } from '../../domain/types'
+import { ActivityType, UserMeta } from '../../domain/types'
 
 export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, ReferralEntity> = {
 	created: async ({ after }) => {
@@ -14,10 +14,9 @@ export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, Ref
 
 		await Promise.all([
 			ActivitiesUseCases.create({
-				score: ActivityScores.newReferral,
 				userId: after.userId,
 				data: {
-					type: UserMeta.referrals,
+					type: ActivityType.referrals,
 					referralId: after.id
 				}
 			}),
