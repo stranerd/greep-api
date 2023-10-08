@@ -45,6 +45,7 @@ export type UserAccount = {
 		trips: number
 		debt: number
 	}>
+	location: [number, number] | null
 }
 
 export enum UserRankings {

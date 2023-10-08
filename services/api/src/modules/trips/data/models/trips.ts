@@ -12,11 +12,13 @@ export interface TripToModel {
 	driverId: string | null
 	data: Partial<Record<TripStatus, TripData>>
 	from: {
-		coords: [number, number]
+		coords: [number, number] | null
 		location: string
+		description: string
 	}
 	to: {
-		coords: [number, number]
+		coords: [number, number] | null
 		location: string
+		description: string
 	}
 }

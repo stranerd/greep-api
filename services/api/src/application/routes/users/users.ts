@@ -1,4 +1,4 @@
-import { isAdmin, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
+import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 import { UsersController } from '../../controllers/users/users'
 
@@ -25,6 +25,19 @@ export const usersRoutes = groupRoutes('/users', [
 				return {
 					status: StatusCodes.Ok,
 					result: await UsersController.updateApplication(req)
+				}
+			})
+		]
+	},
+	{
+		path: '/location',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateLocation(req)
 				}
 			})
 		]

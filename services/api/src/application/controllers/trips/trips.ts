@@ -41,12 +41,14 @@ export class TripsController {
 		const data = validate({
 			driverId: Schema.string().min(1).nullable(),
 			from: Schema.object({
-				coords: Schema.tuple([Schema.number(), Schema.number()]),
-				location: Schema.string().min(1)
+				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
+				location: Schema.string().min(1),
+				description: Schema.string().min(1)
 			}),
 			to: Schema.object({
-				coords: Schema.tuple([Schema.number(), Schema.number()]),
-				location: Schema.string().min(1)
+				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
+				location: Schema.string().min(1),
+				description: Schema.string().min(1)
 			})
 		}, req.body)
 

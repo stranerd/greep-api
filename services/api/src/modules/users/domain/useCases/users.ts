@@ -73,4 +73,8 @@ export class UsersUseCase {
 	async updateDebt(data: { driverId: string, userId: string, count: number }) {
 		return await this.repository.updateDebt(data)
 	}
+
+	async updateLocation (data: { userId: string, location: [number, number] }) {
+		return await this.repository.updateLocation(data)
+	}
 }

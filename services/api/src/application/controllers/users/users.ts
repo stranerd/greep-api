@@ -74,4 +74,14 @@ export class UsersController {
 		if (updated) return updated
 		throw new NotAuthorizedError('cannot update user application')
 	}
+
+	static async updateLocation (req: Request) {
+		const { location } = validate({
+			location: Schema.tuple([Schema.number(), Schema.number()])
+		}, req.body)
+
+		const updated = await UsersUseCases.updateLocation({ userId: req.authUser!.id, location })
+		if (updated) return updated
+		throw new NotAuthorizedError('cannot update user location')
+	}
 }

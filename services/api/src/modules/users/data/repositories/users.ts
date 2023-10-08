@@ -130,4 +130,12 @@ export class UserRepository implements IUserRepository {
 			{ new: true })
 		return !!user
 	}
+
+	async updateLocation({ userId, location }: { userId: string; location: [number, number]; }) {
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{ $set: { ['account.location']: location } },
+			{ new: true })
+		return !!user
+	}
 }

@@ -31,5 +31,7 @@ export interface IUserRepository {
 
 	updateTrip(data: { driverId: string, userId: string, count: number }): Promise<boolean>
 
-	updateDebt(data: { driverId: string, userId: string, count: number }): Promise<boolean>
+	updateDebt (data: { driverId: string, userId: string, count: number }): Promise<boolean>
+
+	updateLocation(data: { userId: string, location: [number, number] }): Promise<boolean>
 }

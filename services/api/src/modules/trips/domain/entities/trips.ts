@@ -7,12 +7,14 @@ export class TripEntity extends BaseEntity {
 	public readonly driverId: string | null
 	public readonly status: TripStatus
 	public readonly from: {
-		coords: [number, number]
+		coords: [number, number] | null
 		location: string
+		description: string
 	}
 	public readonly to: {
-		coords: [number, number]
+		coords: [number, number] | null
 		location: string
+		description: string
 	}
 	public readonly data: Partial<Record<TripStatus, TripData>>
 	public readonly createdAt: number
@@ -38,12 +40,14 @@ type TripConstructorArgs = {
 	driverId: string | null
 	status: TripStatus
 	from: {
-		coords: [number, number]
+		coords: [number, number] | null
 		location: string
+		description: string
 	}
 	to: {
-		coords: [number, number]
+		coords: [number, number] | null
 		location: string
+		description: string
 	}
 	data: Partial<Record<TripStatus, TripData>>
 	createdAt: number
