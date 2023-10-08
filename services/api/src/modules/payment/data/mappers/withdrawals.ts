@@ -13,6 +13,7 @@ export class WithdrawalMapper extends BaseMapper<WithdrawalFromModel, Withdrawal
 			fee: param.fee,
 			currency: param.currency,
 			status: param.status,
+			location: param.location,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
 		})
@@ -26,6 +27,7 @@ export class WithdrawalMapper extends BaseMapper<WithdrawalFromModel, Withdrawal
 			fee: param.fee,
 			currency: param.currency,
 			status: param.status,
+			location: param.location,
 		}
 	}
 }

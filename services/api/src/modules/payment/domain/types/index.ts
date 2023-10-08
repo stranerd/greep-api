@@ -62,4 +62,8 @@ export type WithdrawData = {
 	userId: string,
 	email: string,
 	amount: number,
+	location: {
+		coords: [number, number] | null
+		description: string
+	}
 }

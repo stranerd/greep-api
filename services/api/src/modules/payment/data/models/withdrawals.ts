@@ -14,4 +14,8 @@ export interface WithdrawalToModel {
 	fee: number
 	currency: Currencies
 	status: WithdrawalStatus
+	location: {
+		coords: [number, number] | null
+		description: string
+	}
 }

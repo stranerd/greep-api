@@ -37,16 +37,20 @@ export class WalletsController {
 		const wallet = await WalletsUseCases.get(authUser.id)
 		if (!wallet.pin) throw new ValidationError([{ field: 'pin', messages: ['pin is not set'] }])
 
-		const { amount } = validate({
+		const { amount, location } = validate({
 			pin: Schema.string().min(4).max(4)
 				.eq(wallet.pin, (val, comp) => val === comp, 'invalid pin'),
 			amount: Schema.number().gte(100),
+			location: Schema.object({
+				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
+				description: Schema.string().min(1)
+			})
 		}, req.body)
 
 		return await WalletsUseCases.withdraw({
 			userId: authUser.id,
 			email: authUser.email,
-			amount,
+			amount, location
 		})
 	}
 

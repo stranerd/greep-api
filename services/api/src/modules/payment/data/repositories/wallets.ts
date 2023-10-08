@@ -104,6 +104,7 @@ export class WalletRepository implements IWalletRepository {
 				userId: data.userId,
 				email: data.email,
 				amount: data.amount,
+				location: data.location,
 				fee,
 				currency: wallet.balance.currency,
 				status: WithdrawalStatus.created,

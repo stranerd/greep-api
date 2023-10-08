@@ -10,11 +10,15 @@ export class WithdrawalEntity extends BaseEntity {
 	public readonly fee: number
 	public readonly currency: Currencies
 	public readonly status: WithdrawalStatus
+	public readonly location: {
+		coords: [number, number] | null
+		description: string
+	}
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
 	constructor ({
-		id, userId, agentId, email, amount, fee, currency, status, createdAt, updatedAt
+		id, userId, agentId, email, amount, location, fee, currency, status, createdAt, updatedAt
 	}: WithdrawalConstructorArgs) {
 		super()
 		this.id = id
@@ -25,6 +29,7 @@ export class WithdrawalEntity extends BaseEntity {
 		this.fee = fee
 		this.currency = currency
 		this.status = status
+		this.location = location
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 	}
@@ -43,6 +48,10 @@ type WithdrawalConstructorArgs = {
 	fee: number
 	currency: Currencies
 	status: WithdrawalStatus
+	location: {
+		coords: [number, number] | null
+		description: string
+	}
 	createdAt: number
 	updatedAt: number
 }

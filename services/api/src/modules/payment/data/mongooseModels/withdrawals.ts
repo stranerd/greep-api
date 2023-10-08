@@ -38,6 +38,10 @@ const WithdrawalSchema = new appInstance.dbs.mongo.Schema<WithdrawalFromModel>({
 		type: String,
 		required: true
 	},
+	location: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
+	},
 	createdAt: {
 		type: Number,
 		required: false,
