@@ -1,12 +1,13 @@
 export enum TripStatus {
-	gotten = 'gotten',
+	created = 'created',
+	driverAssigned = 'driverAssigned',
+	driverArrived = 'driverArrived',
 	started = 'started',
 	ended = 'ended',
-	detailed = 'detailed'
+	detailed = 'detailed',
+	cancelled = 'cancelled'
 }
 
 export type TripData = {
 	timestamp: number
-	coords: [number, number]
-	location: string
 }

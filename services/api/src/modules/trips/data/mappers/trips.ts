@@ -6,8 +6,11 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 	mapFrom(param: TripFromModel | null) {
 		return !param ? null : new TripEntity({
 			id: param._id.toString(),
+			customerId: param.customerId,
 			driverId: param.driverId,
 			status: param.status,
+			from: param.from,
+			to: param.to,
 			data: param.data,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt
@@ -16,8 +19,11 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 
 	mapTo(param: TripEntity) {
 		return {
+			customerId: param.customerId,
 			driverId: param.driverId,
 			status: param.status,
+			from: param.from,
+			to: param.to,
 			data: param.data
 		}
 	}

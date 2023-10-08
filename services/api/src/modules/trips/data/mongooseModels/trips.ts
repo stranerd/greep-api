@@ -8,9 +8,14 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>({
 		type: String,
 		default: () => appInstance.dbs.mongo.Id.toString()
 	},
-	driverId: {
+	customerId: {
 		type: String,
 		required: true
+	},
+	driverId: {
+		type: String,
+		required: false,
+		default: null
 	},
 	status: {
 		type: String,
@@ -20,6 +25,14 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>({
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
 		default: {}
+	},
+	from: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
+	},
+	to: {
+		type: appInstance.dbs.mongo.Schema.Types.Mixed,
+		required: true
 	},
 	createdAt: {
 		type: Number,
@@ -33,6 +46,6 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>({
 	}
 }, { timestamps: { currentTime: Date.now }, minimize: false })
 
-export const Trip = appInstance.dbs.mongo.use().model<TripFromModel>('UsersTrip', TripSchema)
+export const Trip = appInstance.dbs.mongo.use().model<TripFromModel>('Trip', TripSchema)
 
 export const TripChange = appInstance.dbs.mongo.change(Trip, TripDbChangeCallbacks, new TripMapper().mapFrom)

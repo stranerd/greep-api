@@ -1,10 +1,10 @@
 import { isAdmin, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
-import { Route, StatusCodes, makeController } from 'equipped'
+import { StatusCodes, groupRoutes, makeController } from 'equipped'
 import { UsersController } from '../../controllers/users/users'
 
-export const usersRoutes: Route[] = [
+export const usersRoutes = groupRoutes('/users', [
 	{
-		path: '/users/users/type',
+		path: '/type',
 		method: 'post',
 		controllers: [
 			isAuthenticatedButIgnoreVerified,
@@ -17,7 +17,7 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/users/application',
+		path: '/application',
 		method: 'post',
 		controllers: [
 			isAdmin,
@@ -30,7 +30,7 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/users/admin',
+		path: '/admin',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -43,7 +43,7 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/users/admin/:id',
+		path: '/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -56,7 +56,7 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/users/',
+		path: '/',
 		method: 'get',
 		controllers: [
 			makeController(async (req) => {
@@ -68,7 +68,7 @@ export const usersRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/users/:id',
+		path: '/:id',
 		method: 'get',
 		controllers: [
 			makeController(async (req) => {
@@ -79,4 +79,4 @@ export const usersRoutes: Route[] = [
 			})
 		]
 	}
-]
+])

@@ -1,10 +1,10 @@
 import { isAuthenticated } from '@application/middlewares'
-import { Route, StatusCodes, makeController } from 'equipped'
+import { StatusCodes, groupRoutes, makeController } from 'equipped'
 import { ActivitiesController } from '../../controllers/users/activities'
 
-export const activitiesRoutes: Route[] = [
+export const activitiesRoutes = groupRoutes('/activites', [
 	{
-		path: '/users/activities/',
+		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -17,7 +17,7 @@ export const activitiesRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/activities/:id',
+		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -29,4 +29,4 @@ export const activitiesRoutes: Route[] = [
 			})
 		]
 	}
-]
+])

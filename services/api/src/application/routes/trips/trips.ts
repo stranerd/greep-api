@@ -1,11 +1,11 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { TripStatus } from '@modules/trips'
-import { Route, StatusCodes, makeController } from 'equipped'
+import { StatusCodes, groupRoutes, makeController } from 'equipped'
 import { TripsController } from '../../controllers/trips/trips'
 
-export const tripsRoutes: Route[] = [
+export const tripsRoutes = groupRoutes('/trips', [
 	{
-		path: '/trips/trips/admin',
+		path: '/admin',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -18,7 +18,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/trips/admin/:id',
+		path: '/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -31,7 +31,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/trips/',
+		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -44,7 +44,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/trips/:id',
+		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -57,7 +57,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/trips/',
+		path: '/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -70,7 +70,20 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/trips/:id/start',
+		path: '/:id/driverArrive',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TripsController.updateTrip(req, TripStatus.driverArrived)
+				}
+			})
+		]
+	},
+	{
+		path: '/:id/start',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -83,7 +96,7 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/trips/:id/end',
+		path: '/:id/end',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -96,7 +109,20 @@ export const tripsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/trips/:id/detail',
+		path: '/:id/cancel',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TripsController.cancelTrip(req)
+				}
+			})
+		]
+	},
+	{
+		path: '/:id/detail',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -108,4 +134,4 @@ export const tripsRoutes: Route[] = [
 			})
 		]
 	}
-]
+])

@@ -1,10 +1,10 @@
 import { isAuthenticated } from '@application/middlewares'
-import { Route, StatusCodes, makeController } from 'equipped'
+import { StatusCodes, groupRoutes, makeController } from 'equipped'
 import { ReferralsController } from '../../controllers/users/referrals'
 
-export const referralsRoutes: Route[] = [
+export const referralsRoutes = groupRoutes('/referrals', [
 	{
-		path: '/users/referrals/',
+		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -17,7 +17,7 @@ export const referralsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/users/referrals/:id',
+		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -29,4 +29,4 @@ export const referralsRoutes: Route[] = [
 			})
 		]
 	}
-]
+])

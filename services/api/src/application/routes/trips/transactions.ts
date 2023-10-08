@@ -1,10 +1,10 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { makeController, Route, StatusCodes } from 'equipped'
+import { StatusCodes, groupRoutes, makeController } from 'equipped'
 import { TransactionsController } from '../../controllers/trips/transactions'
 
-export const transactionsRoutes: Route[] = [
+export const transactionsRoutes = groupRoutes('/transactions', [
 	{
-		path: '/trips/transactions/admin',
+		path: '/admin',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -17,7 +17,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/transactions/admin/:id',
+		path: '/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
@@ -30,7 +30,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/transactions/',
+		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -43,7 +43,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/transactions/:id',
+		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
@@ -56,7 +56,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/transactions/',
+		path: '/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
@@ -69,7 +69,7 @@ export const transactionsRoutes: Route[] = [
 		]
 	},
 	{
-		path: '/trips/transactions/:id',
+		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
@@ -81,4 +81,4 @@ export const transactionsRoutes: Route[] = [
 			})
 		]
 	}
-]
+])

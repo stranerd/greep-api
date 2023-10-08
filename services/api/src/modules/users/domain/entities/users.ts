@@ -6,6 +6,7 @@ import {
 	UserDates,
 	UserRoles,
 	UserStatus,
+	UserType,
 	UserTypeData
 } from '../types'
 
@@ -45,6 +46,14 @@ export class UserEntity extends BaseEntity {
 
 	isDeleted() {
 		return this.dates.deletedAt !== null
+	}
+
+	isDriver () {
+		return this.type?.type === UserType.driver
+	}
+
+	isCustomer () {
+		return this.type?.type === UserType.customer
 	}
 
 	getEmbedded(): EmbeddedUser {

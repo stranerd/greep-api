@@ -1,7 +1,7 @@
 import { QueryParams } from 'equipped'
-import { ITripRepository } from '../i-repositories/trips'
-import { TripToModel } from '../../data/models/trips'
 import { TransactionToModel } from '../../data/models/transactions'
+import { TripToModel } from '../../data/models/trips'
+import { ITripRepository } from '../i-repositories/trips'
 
 export class TripsUseCase {
 	repository: ITripRepository
@@ -14,8 +14,12 @@ export class TripsUseCase {
 		return await this.repository.create(input)
 	}
 
-	async update(input: { driverId: string, id: string, data: Partial<TripToModel> }) {
+	async update(input: { userId: string, id: string, data: Partial<TripToModel> }) {
 		return await this.repository.update(input)
+	}
+
+	async cancel (input: { customerId: string, id: string }) {
+		return await this.repository.cancel(input)
 	}
 
 	async detail(input: { driverId: string, id: string, data: TransactionToModel }) {

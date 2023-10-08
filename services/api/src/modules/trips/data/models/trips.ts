@@ -7,7 +7,16 @@ export interface TripFromModel extends TripToModel {
 }
 
 export interface TripToModel {
-	driverId: string
+	customerId: string
 	status: TripStatus
+	driverId: string | null
 	data: Partial<Record<TripStatus, TripData>>
+	from: {
+		coords: [number, number]
+		location: string
+	}
+	to: {
+		coords: [number, number]
+		location: string
+	}
 }

@@ -4,6 +4,7 @@ import {
 	BadRequestError,
 	NotAuthorizedError,
 	NotFoundError,
+	QueryKeys,
 	QueryParams,
 	Request,
 	Schema,
@@ -14,7 +15,8 @@ import {
 export class TripsController {
 	static async getTrips (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'driverId', value: req.authUser!.id }]
+		query.auth = [{ field: 'driverId', value: req.authUser!.id }, { field: 'customerId', value: req.authUser!.id }]
+		query.authType = QueryKeys.or
 		return await TripsUseCases.get(query)
 	}
 
@@ -25,7 +27,7 @@ export class TripsController {
 
 	static async findTrip (req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
-		if (!trip || trip.driverId !== req.authUser!.id) throw new NotFoundError()
+		if (!trip || (trip.driverId !== req.authUser!.id && trip.customerId !== req.authUser!.id)) throw new NotFoundError()
 		return trip
 	}
 
@@ -37,19 +39,32 @@ export class TripsController {
 
 	static async createTrip (req: Request) {
 		const data = validate({
-			coords: Schema.tuple([Schema.number(), Schema.number()]),
-			location: Schema.string().min(1)
+			driverId: Schema.string().min(1).nullable(),
+			from: Schema.object({
+				coords: Schema.tuple([Schema.number(), Schema.number()]),
+				location: Schema.string().min(1)
+			}),
+			to: Schema.object({
+				coords: Schema.tuple([Schema.number(), Schema.number()]),
+				location: Schema.string().min(1)
+			})
 		}, req.body)
 
-		const driverId = req.authUser!.id
-		const driver = await UsersUseCases.find(driverId)
-		if (!driver) throw new BadRequestError('profile not found')
+		const customerId = req.authUser!.id
+		const customer = await UsersUseCases.find(customerId)
+		if (!customer) throw new BadRequestError('profile not found')
+
+		if (data.driverId) {
+			const driver = await UsersUseCases.find(data.driverId)
+			if (!driver || driver.isDeleted() || !driver.isDriver()) throw new BadRequestError('driver not found')
+		}
 
 		return await TripsUseCases.create({
-			driverId,
-			status: TripStatus.gotten,
+			...data,
+			customerId,
+			status: TripStatus.created,
 			data: {
-				[TripStatus.gotten]: { ...data, timestamp: Date.now() }
+				[TripStatus.created]: { timestamp: Date.now() }
 			}
 		})
 	}
@@ -63,7 +78,8 @@ export class TripsController {
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip) throw new BadRequestError('trip not found')
 		const supportedStatus = {
-			[TripStatus.started]: TripStatus.gotten,
+			[TripStatus.driverArrived]: TripStatus.driverAssigned,
+			[TripStatus.started]: TripStatus.driverArrived,
 			[TripStatus.ended]: TripStatus.started
 		}
 		if (supportedStatus[status] !== trip.status) throw new ValidationError([{
@@ -72,15 +88,19 @@ export class TripsController {
 		}])
 
 		const updated = await TripsUseCases.update({
-			id: trip.id, driverId: req.authUser!.id,
+			id: trip.id, userId: req.authUser!.id,
 			data: {
 				status,
-				data: {
-					[status]: { ...data, timestamp: Date.now() }
-				}
+				data: { [status]: { ...data, timestamp: Date.now() } }
 			}
 		})
 
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async cancelTrip (req: Request) {
+		const updated = await TripsUseCases.cancel({ id: req.params.id, customerId: req.authUser!.id })
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
@@ -91,14 +111,10 @@ export class TripsController {
 			description: Schema.string(),
 			recordedAt: Schema.time().asStamp(),
 			data: Schema.object({
-				customerId: Schema.string().min(1),
 				paidAmount: Schema.number(),
 				paymentType: Schema.in(Object.values(PaymentType))
 			})
 		}, req.body)
-
-		const customer = await UsersUseCases.find(data.data.customerId)
-		if (!customer || customer.isDeleted()) throw new BadRequestError('customer not found')
 
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || trip.driverId !== req.authUser!.id) throw new NotAuthorizedError()
@@ -108,8 +124,9 @@ export class TripsController {
 			data: {
 				...data, driverId: trip.driverId,
 				data: {
-					type: TransactionType.trip,
 					...data.data,
+					type: TransactionType.trip,
+					customerId: trip.customerId,
 					tripId: trip.id,
 					debt: data.amount - data.data.paidAmount,
 				}

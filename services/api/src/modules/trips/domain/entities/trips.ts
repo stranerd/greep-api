@@ -3,17 +3,29 @@ import { TripData, TripStatus } from '../types'
 
 export class TripEntity extends BaseEntity {
 	public readonly id: string
-	public readonly driverId: string
+	public readonly customerId: string
+	public readonly driverId: string | null
 	public readonly status: TripStatus
+	public readonly from: {
+		coords: [number, number]
+		location: string
+	}
+	public readonly to: {
+		coords: [number, number]
+		location: string
+	}
 	public readonly data: Partial<Record<TripStatus, TripData>>
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, driverId, status, data, createdAt, updatedAt }: TripConstructorArgs) {
+	constructor ({ id, customerId, driverId, status, from, to, data, createdAt, updatedAt }: TripConstructorArgs) {
 		super()
 		this.id = id
+		this.customerId = customerId
 		this.driverId = driverId
 		this.status = status
+		this.from = from
+		this.to = to
 		this.data = data
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
@@ -22,8 +34,17 @@ export class TripEntity extends BaseEntity {
 
 type TripConstructorArgs = {
 	id: string
-	driverId: string
+	customerId: string
+	driverId: string | null
 	status: TripStatus
+	from: {
+		coords: [number, number]
+		location: string
+	}
+	to: {
+		coords: [number, number]
+		location: string
+	}
 	data: Partial<Record<TripStatus, TripData>>
 	createdAt: number
 	updatedAt: number

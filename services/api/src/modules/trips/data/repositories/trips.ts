@@ -36,19 +36,34 @@ export class TripRepository implements ITripRepository {
 		data[`data.${data.status}`] = data.data[data.status]
 		// @ts-ignore
 		if (data.data) delete data.data
-		const trip = await Trip.findOneAndUpdate(
-			{ driverId: data.driverId, status: { $ne: TripStatus.detailed } },
-			{ $setOnInsert: data },
-			{ new: true, upsert: true }
-		)
+		const ongoingTrip = await Trip.findOne({ customerId: data.customerId, status: { $ne: TripStatus.detailed } })
+		if (ongoingTrip) throw new Error('You have an ongoing trip')
+		const trip = await new Trip(data).save()
 		return this.mapper.mapFrom(trip)!
 	}
 
-	async update ({ id, driverId, data }: { id: string, driverId: string, data: Partial<TripToModel> }) {
+	async update ({ id, userId, data }: { id: string, userId: string, data: Partial<TripToModel> }) {
 		if (data.status && data.data) data[`data.${data.status}`] = data.data[data.status]
 		if (data.data) delete data.data
-		const trip = await Trip.findOneAndUpdate({ _id: id, driverId }, { $set: data }, { new: true })
+		const trip = await Trip.findOneAndUpdate({ _id: id, $or: [{ driverId: userId }, { customerId: userId }] }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(trip)
+	}
+
+	async cancel ({ id, customerId }: { id: string, customerId: string }) {
+		let res = null as any
+		await Trip.collection.conn.transaction(async (session) => {
+			const trip = this.mapper.mapFrom(await Trip.findOne({ _id: id, customerId }, {}, { session }))
+			if (!trip) return
+			if (![TripStatus.created].includes(trip.status)) return
+			res = await Trip.findByIdAndUpdate(trip.id, {
+				$set: {
+					status: TripStatus.cancelled,
+					[`data.${TripStatus.cancelled}`]: { timestamp: Date.now() }
+				}
+			}, { session })
+			return res
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async detail ({ id, driverId, data }: { id: string, driverId: string, data: TransactionToModel }) {
