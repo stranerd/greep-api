@@ -21,6 +21,7 @@ export class ActivityEntity extends BaseEntity {
 
 	static getScore (data: ActivityData) {
 		if (data.type === ActivityType.referrals) return 100
+		if (data.type === ActivityType.completedTrip) return 10
 		if (data.type === ActivityType.tripDiscount) return - data.discount * 25
 		if (data.type === ActivityType.refundTripDiscount) return data.discount * 25
 		return 0

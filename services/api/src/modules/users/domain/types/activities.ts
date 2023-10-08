@@ -6,6 +6,7 @@ export enum UserMeta {
 
 export enum ActivityType {
 	referrals = 'referrals',
+	completedTrip = 'completedTrip',
 	tripDiscount = 'tripDiscount',
 	refundTripDiscount = 'refundTripDiscount'
 }
@@ -20,5 +21,8 @@ export type ActivityData = {
 } | {
 	type: ActivityType.refundTripDiscount,
 	discount: number
+	tripId: string
+} | {
+	type: ActivityType.completedTrip,
 	tripId: string
 }

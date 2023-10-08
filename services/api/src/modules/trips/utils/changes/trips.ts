@@ -47,6 +47,14 @@ export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity>
 				discount: after.discount
 			}
 		})
+
+		if (changes.status && after.status === TripStatus.ended) await ActivitiesUseCases.create({
+			userId: after.customerId,
+			data: {
+				type: ActivityType.completedTrip,
+				tripId: after.id
+			}
+		})
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
