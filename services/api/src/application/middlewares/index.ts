@@ -34,3 +34,19 @@ export const isAdmin = makeMiddleware(
 		if (!isAdmin) throw new NotAuthorizedError()
 	}
 )
+
+export const isDriver = makeMiddleware(
+	async (request) => {
+		const isDriver = request.authUser?.roles?.[AuthRole.isDriver]
+		if (!request.authUser) throw new NotAuthenticatedError()
+		if (!isDriver) throw new NotAuthorizedError()
+	}
+)
+
+export const isCustomer = makeMiddleware(
+	async (request) => {
+		const isCustomer = request.authUser?.roles?.[AuthRole.isCustomer]
+		if (!request.authUser) throw new NotAuthenticatedError()
+		if (!isCustomer) throw new NotAuthorizedError()
+	}
+)

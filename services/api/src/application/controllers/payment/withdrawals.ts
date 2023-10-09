@@ -1,29 +1,32 @@
-import { WithdrawalsUseCases } from '@modules/payment'
-import { UsersUseCases } from '@modules/users'
+import { WithdrawalsUseCases, WithdrawalStatus } from '@modules/payment'
 import { NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class WithdrawalsController {
 	static async find (req: Request) {
 		const withdrawal = await WithdrawalsUseCases.find(req.params.id)
-		if (!withdrawal || withdrawal.userId !== req.authUser!.id) throw new NotFoundError()
+		if (!withdrawal) throw new NotFoundError()
+		const hasAccess = withdrawal.userId === req.authUser!.id || withdrawal.agentId === req.authUser!.id || withdrawal.status === WithdrawalStatus.created
+		if (!hasAccess) throw new NotFoundError()
 		return withdrawal
 	}
 
 	static async get (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'userId', value: req.authUser!.id }]
+		query.auth = [
+			{ field: 'userId', value: req.authUser!.id },
+			{ field: 'agentId', value: req.authUser!.id },
+			{ field: 'status', value: WithdrawalStatus.created },
+		]
 		return await WithdrawalsUseCases.get(query)
 	}
 
 	static async assignAgent (req: Request) {
-		const user = await UsersUseCases.find(req.authUser!.id)
-		if (!user || user.isDeleted()) throw new NotFoundError('profile not found')
-		if (!user.isDriver()) throw new NotAuthorizedError()
-
-		return await WithdrawalsUseCases.assignAgent({
+		const updated = await WithdrawalsUseCases.assignAgent({
 			id: req.params.id,
 			agentId: req.authUser!.id
 		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
 	}
 
 	static async generateToken (req: Request) {
@@ -38,10 +41,12 @@ export class WithdrawalsController {
 			token: Schema.string().min(1)
 		}, req.body)
 
-		return await WithdrawalsUseCases.complete({
+		const updated = await WithdrawalsUseCases.complete({
 			id: req.params.id,
 			userId: req.authUser!.id,
 			token
 		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
 	}
 }

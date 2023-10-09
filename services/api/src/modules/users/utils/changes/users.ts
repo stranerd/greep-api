@@ -21,7 +21,14 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 
 		if (changes.account?.application && !before.account.application && after.account.application) {
 			const { accepted, message } = after.account.application
-			if (accepted) await AuthUsersUseCases.updateRole({ userId: after.id, roles: { [AuthRole.isActive]: accepted }})
+			if (accepted) await AuthUsersUseCases.updateRole({
+				userId: after.id,
+				roles: {
+					[AuthRole.isActive]: accepted,
+					[AuthRole.isDriver]: after.isDriver(),
+					[AuthRole.isCustomer]: after.isCustomer(),
+				}
+			})
 			await sendNotification([after.id], {
 				title: `Account Application ${accepted ? 'Accepted' : 'Rejected'}`,
 				body: `Your account application was ${accepted ? 'accepted' : 'rejected'}.${message ? message : ''}`,

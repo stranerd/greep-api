@@ -13,7 +13,7 @@ export const TransactionsUseCases = new TransactionsUseCase(transactionRepositor
 export const WalletsUseCases = new WalletsUseCase(walletRepository)
 export const WithdrawalsUseCases = new WithdrawalsUseCase(withdrawalRepository)
 
-export { Currencies, TransactionStatus, TransactionType } from './domain/types'
+export { Currencies, TransactionStatus, TransactionType, WithdrawalStatus } from './domain/types'
 export { Rates } from './utils/exchange'
 export { FlutterwavePayment } from './utils/flutterwave'
 export { fulfillTransaction, processTransactions } from './utils/transactions'

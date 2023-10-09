@@ -1,5 +1,5 @@
 import { WithdrawalsController } from '@application/controllers/payment/withdrawals'
-import { isAuthenticated } from '@application/middlewares'
+import { isAuthenticated, isDriver } from '@application/middlewares'
 import { groupRoutes, makeController, StatusCodes } from 'equipped'
 
 export const withdrawalsRoutes = groupRoutes('/withdrawals', [
@@ -31,7 +31,7 @@ export const withdrawalsRoutes = groupRoutes('/withdrawals', [
 		path: '/:id/assignAgent',
 		method: 'post',
 		controllers: [
-			isAuthenticated,
+			isAuthenticated, isDriver,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,

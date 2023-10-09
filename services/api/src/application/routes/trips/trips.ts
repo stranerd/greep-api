@@ -1,4 +1,4 @@
-import { isAdmin, isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticated, isDriver } from '@application/middlewares'
 import { TripStatus } from '@modules/trips'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 import { TripsController } from '../../controllers/trips/trips'
@@ -151,7 +151,7 @@ export const tripsRoutes = groupRoutes('/trips', [
 		path: '/:id/accept/nonrequested',
 		method: 'post',
 		controllers: [
-			isAuthenticated,
+			isAuthenticated, isDriver,
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,

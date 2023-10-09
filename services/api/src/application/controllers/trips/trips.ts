@@ -15,7 +15,11 @@ import {
 export class TripsController {
 	static async getTrips (req: Request) {
 		const query = req.query as QueryParams
-		query.auth = [{ field: 'driverId', value: req.authUser!.id }, { field: 'customerId', value: req.authUser!.id }]
+		query.auth = [
+			{ field: 'driverId', value: req.authUser!.id },
+			{ field: 'status', value: TripStatus.created },
+			{ field: 'customerId', value: req.authUser!.id }
+		]
 		query.authType = QueryKeys.or
 		return await TripsUseCases.get(query)
 	}
@@ -27,7 +31,9 @@ export class TripsController {
 
 	static async findTrip (req: Request) {
 		const trip = await TripsUseCases.find(req.params.id)
-		if (!trip || (trip.driverId !== req.authUser!.id && trip.customerId !== req.authUser!.id)) throw new NotFoundError()
+		if (!trip) throw new NotFoundError()
+		const hasAccess = trip.driverId === req.authUser!.id || trip.customerId === req.authUser!.id || trip.status === TripStatus.created
+		if (!hasAccess) throw new NotFoundError()
 		return trip
 	}
 
@@ -150,11 +156,8 @@ export class TripsController {
 	}
 
 	static async acceptNonRequestedTrip (req: Request) {
-		const driver = await UsersUseCases.find(req.authUser!.id)
-		if (!driver || driver.isDeleted() || !driver.isDriver()) throw new NotAuthorizedError()
-
 		const updated = await TripsUseCases.accept({
-			id: req.params.id, driverId: driver.id,
+			id: req.params.id, driverId: req.authUser!.id,
 			requested: false, accepted: true
 		})
 		if (updated) return updated
