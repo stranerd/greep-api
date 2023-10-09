@@ -33,4 +33,8 @@ export class TripsUseCase {
 	async find(id: string) {
 		return await this.repository.find(id)
 	}
+
+	async accept(input: { driverId: string, id: string, requested: boolean, accepted: boolean }) {
+		return await this.repository.accept(input)
+	}
 }

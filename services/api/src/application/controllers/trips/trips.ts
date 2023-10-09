@@ -140,4 +140,29 @@ export class TripsController {
 		if (transaction) return transaction
 		throw new NotAuthorizedError()
 	}
+
+	static async acceptRequestedTrip (req: Request) {
+		const { accepted } = validate({
+			accepted: Schema.boolean()
+		}, req.body)
+
+		const updated = await TripsUseCases.accept({
+			id: req.params.id, driverId: req.authUser!.id,
+			requested: true, accepted
+		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async acceptNonRequestedTrip (req: Request) {
+		const driver = await UsersUseCases.find(req.authUser!.id)
+		if (!driver || driver.isDeleted() || !driver.isDriver()) throw new NotAuthorizedError()
+
+		const updated = await TripsUseCases.accept({
+			id: req.params.id, driverId: driver.id,
+			requested: false, accepted: true
+		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
 }

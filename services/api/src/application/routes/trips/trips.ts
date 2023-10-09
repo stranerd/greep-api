@@ -133,5 +133,31 @@ export const tripsRoutes = groupRoutes('/trips', [
 				}
 			})
 		]
+	},
+	{
+		path: '/:id/accept/requested',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TripsController.acceptRequestedTrip(req)
+				}
+			})
+		]
+	},
+	{
+		path: '/:id/accept/nonrequested',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await TripsController.acceptNonRequestedTrip(req)
+				}
+			})
+		]
 	}
 ])

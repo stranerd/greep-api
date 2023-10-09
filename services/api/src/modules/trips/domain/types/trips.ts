@@ -1,5 +1,7 @@
 export enum TripStatus {
 	created = 'created',
+	requestedDriverAccepted = 'requestedDriverAccepted',
+	requestedDriverRejected = 'requestedDriverRejected',
 	driverAssigned = 'driverAssigned',
 	driverArrived = 'driverArrived',
 	started = 'started',

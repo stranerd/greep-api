@@ -1,4 +1,3 @@
-import { Transaction } from '../mongooseModels/transactions'
 import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { ITripRepository } from '../../domain/i-repositories/trips'
@@ -7,6 +6,7 @@ import { TransactionMapper } from '../mappers/transactions'
 import { TripMapper } from '../mappers/trips'
 import { TransactionToModel } from '../models/transactions'
 import { TripToModel } from '../models/trips'
+import { Transaction } from '../mongooseModels/transactions'
 import { Trip } from '../mongooseModels/trips'
 
 export class TripRepository implements ITripRepository {
@@ -77,5 +77,22 @@ export class TripRepository implements ITripRepository {
 			return res
 		})
 		return this.transactionMapper.mapFrom(res)
+	}
+
+	async accept ({ id, driverId, requested, accepted }: { id: string; driverId: string; requested: boolean; accepted: boolean }) {
+		if (!requested && !accepted) return null
+		const updates: Record<string, unknown> = {}
+		if (accepted) {
+			updates.driverId = driverId
+			updates[`data.${TripStatus.driverAssigned}`] = { timestamp: Date.now() }
+			if (requested) updates[`data.${TripStatus.requestedDriverAccepted}`] = { timestamp: Date.now() }
+		} else {
+			if (requested) updates[`data.${TripStatus.requestedDriverRejected}`] = { timestamp: Date.now() }
+		}
+		const trip = await Trip.findOneAndUpdate({
+			_id: id, driverId: null, status: TripStatus.created,
+			...(requested ? { requestedDriverId: driverId } : {})
+		}, { $set: updates }, { new: true })
+		return this.mapper.mapFrom(trip)
 	}
 }

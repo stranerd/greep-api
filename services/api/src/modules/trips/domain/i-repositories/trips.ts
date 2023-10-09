@@ -15,5 +15,7 @@ export interface ITripRepository {
 
 	cancel (data: { id: string, customerId: string }): Promise<TripEntity | null>
 
-	detail(data: { id: string, driverId: string, data: TransactionToModel }): Promise<TransactionEntity | null>
+	detail (data: { id: string, driverId: string, data: TransactionToModel }): Promise<TransactionEntity | null>
+
+	accept (data: { id: string, driverId: string, requested: boolean, accepted: boolean }): Promise<TripEntity | null>
 }
