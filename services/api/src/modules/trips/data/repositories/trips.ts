@@ -33,10 +33,11 @@ export class TripRepository implements ITripRepository {
 	}
 
 	async create (data: TripToModel) {
+		const endedStatuses = [TripStatus.ended, TripStatus.detailed, TripStatus.requestedDriverAccepted, TripStatus.cancelled]
 		data[`data.${data.status}`] = data.data[data.status]
 		// @ts-ignore
 		if (data.data) delete data.data
-		const ongoingTrip = await Trip.findOne({ customerId: data.customerId, status: { $ne: TripStatus.detailed } })
+		const ongoingTrip = await Trip.findOne({ customerId: data.customerId, status: { $nin: endedStatuses } })
 		if (ongoingTrip) throw new Error('You have an ongoing trip')
 		const trip = await new Trip(data).save()
 		return this.mapper.mapFrom(trip)!
@@ -60,7 +61,7 @@ export class TripRepository implements ITripRepository {
 					status: TripStatus.cancelled,
 					[`data.${TripStatus.cancelled}`]: { timestamp: Date.now() }
 				}
-			}, { session })
+			}, { session, new: true })
 			return res
 		})
 		return this.mapper.mapFrom(res)
@@ -71,7 +72,12 @@ export class TripRepository implements ITripRepository {
 		await Trip.collection.conn.transaction(async (session) => {
 			const trip = this.mapper.mapFrom(await Trip.findOneAndUpdate({
 				_id: id, driverId, status: TripStatus.ended
-			}, { $set: { status: TripStatus.detailed } }, { session }))
+			}, {
+				$set: {
+					status: TripStatus.detailed,
+					[`data.${TripStatus.detailed}`]: { timestamp: Date.now() }
+				}
+			}, { session }))
 			if (!trip) return null
 			res = await new Transaction(data).save()
 			return res
@@ -85,9 +91,13 @@ export class TripRepository implements ITripRepository {
 		if (accepted) {
 			updates.driverId = driverId
 			updates[`data.${TripStatus.driverAssigned}`] = { timestamp: Date.now() }
+			updates.status = TripStatus.driverAssigned
 			if (requested) updates[`data.${TripStatus.requestedDriverAccepted}`] = { timestamp: Date.now() }
 		} else {
-			if (requested) updates[`data.${TripStatus.requestedDriverRejected}`] = { timestamp: Date.now() }
+			if (requested) {
+				updates[`data.${TripStatus.requestedDriverRejected}`] = { timestamp: Date.now() }
+				updates.status = TripStatus.requestedDriverRejected
+			}
 		}
 		const trip = await Trip.findOneAndUpdate({
 			_id: id, driverId: null, status: TripStatus.created,

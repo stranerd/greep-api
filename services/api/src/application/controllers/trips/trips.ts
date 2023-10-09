@@ -75,11 +75,6 @@ export class TripsController {
 	}
 
 	static async updateTrip (req: Request, status: TripStatus) {
-		const data = validate({
-			coords: Schema.tuple([Schema.number(), Schema.number()]),
-			location: Schema.string().min(1)
-		}, req.body)
-
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip) throw new BadRequestError('trip not found')
 		const supportedStatus = {
@@ -96,7 +91,7 @@ export class TripsController {
 			id: trip.id, userId: req.authUser!.id,
 			data: {
 				status,
-				data: { [status]: { ...data, timestamp: Date.now() } }
+				data: { [status]: { timestamp: Date.now() } }
 			}
 		})
 

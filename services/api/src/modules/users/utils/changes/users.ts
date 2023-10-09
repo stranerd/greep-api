@@ -2,7 +2,7 @@ import { AuthUsersUseCases } from '@modules/auth'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/environment'
 import { publishers } from '@utils/events'
-import { AuthRole, DbChangeCallbacks } from 'equipped'
+import { AuthRole, DbChangeCallbacks, Validation } from 'equipped'
 import { UserFromModel } from '../../data/models/users'
 import { UserEntity } from '../../domain/entities/users'
 
@@ -30,9 +30,11 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			})
 		}
 
-		if (changes.type && 'license' in changes.type && 'license' in before.type) await publishers.DELETEFILE.publish(before.type.license)
-		if (changes.type && 'passport' in changes.type && 'passport' in before.type) await publishers.DELETEFILE.publish(before.type.passport)
-		if (changes.type && 'studentId' in changes.type && 'studentId' in before.type) await publishers.DELETEFILE.publish(before.type.studentId)
+		if (changes.type && !Validation.isBoolean()(changes.type)) {
+			if ('license' in changes.type && 'license' in before.type) await publishers.DELETEFILE.publish(before.type.license)
+			if ('passport' in changes.type && 'passport' in before.type) await publishers.DELETEFILE.publish(before.type.passport)
+			if ('studentId' in changes.type && 'studentId' in before.type) await publishers.DELETEFILE.publish(before.type.studentId)
+		}
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([

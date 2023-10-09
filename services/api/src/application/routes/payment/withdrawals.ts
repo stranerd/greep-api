@@ -29,7 +29,7 @@ export const withdrawalsRoutes = groupRoutes('/withdrawals', [
 		]
 	}, {
 		path: '/:id/assignAgent',
-		method: 'get',
+		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
