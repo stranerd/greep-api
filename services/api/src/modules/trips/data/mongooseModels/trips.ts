@@ -17,6 +17,11 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>({
 		required: false,
 		default: null
 	},
+	requestedDriverId: {
+		type: String,
+		required: false,
+		default: null
+	},
 	status: {
 		type: String,
 		required: true

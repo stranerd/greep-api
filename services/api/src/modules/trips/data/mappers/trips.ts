@@ -8,6 +8,7 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 			id: param._id.toString(),
 			customerId: param.customerId,
 			driverId: param.driverId,
+			requestedDriverId: param.requestedDriverId,
 			status: param.status,
 			from: param.from,
 			to: param.to,
@@ -22,6 +23,7 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 		return {
 			customerId: param.customerId,
 			driverId: param.driverId,
+			requestedDriverId: param.driverId,
 			status: param.status,
 			from: param.from,
 			to: param.to,

@@ -9,7 +9,7 @@ import { ActivitiesUseCases, ActivityType } from '@modules/users'
 export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created([
-			after.customerId, after.driverId!,
+			after.customerId, after.driverId!, after.requestedDriverId!
 		].filter(Boolean)
 			.map((c) => [`trips/trips/${c}`, `trips/trips/${after.id}/${c}`]).flat(), after)
 
@@ -35,7 +35,7 @@ export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity>
 	},
 	updated: async ({ after, changes }) => {
 		await appInstance.listener.updated([
-			after.customerId, after.driverId!,
+			after.customerId, after.driverId!, after.requestedDriverId!
 		].filter(Boolean)
 			.map((c) => [`trips/trips/${c}`, `trips/trips/${after.id}/${c}`]).flat(), after)
 
@@ -58,7 +58,7 @@ export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity>
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([
-			before.customerId, before.driverId!,
+			before.customerId, before.driverId!, before.requestedDriverId!
 		].filter(Boolean)
 			.map((c) => [`trips/trips/${c}`, `trips/trips/${before.id}/${c}`]).flat(), before)
 	}

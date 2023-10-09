@@ -10,6 +10,7 @@ export interface TripToModel {
 	customerId: string
 	status: TripStatus
 	driverId: string | null
+	requestedDriverId: string | null
 	data: Partial<Record<TripStatus, TripData>>
 	discount: number
 	from: {

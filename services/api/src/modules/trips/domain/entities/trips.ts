@@ -5,6 +5,7 @@ export class TripEntity extends BaseEntity {
 	public readonly id: string
 	public readonly customerId: string
 	public readonly driverId: string | null
+	public readonly requestedDriverId: string | null
 	public readonly status: TripStatus
 	public readonly from: {
 		coords: [number, number] | null
@@ -21,11 +22,12 @@ export class TripEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, customerId, driverId, status, from, to, discount, data, createdAt, updatedAt }: TripConstructorArgs) {
+	constructor ({ id, customerId, driverId, requestedDriverId, status, from, to, discount, data, createdAt, updatedAt }: TripConstructorArgs) {
 		super()
 		this.id = id
 		this.customerId = customerId
 		this.driverId = driverId
+		this.requestedDriverId = requestedDriverId
 		this.status = status
 		this.from = from
 		this.to = to
@@ -40,6 +42,7 @@ type TripConstructorArgs = {
 	id: string
 	customerId: string
 	driverId: string | null
+	requestedDriverId: string | null
 	status: TripStatus
 	from: {
 		coords: [number, number] | null

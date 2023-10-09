@@ -39,7 +39,7 @@ export class TripsController {
 
 	static async createTrip (req: Request) {
 		const data = validate({
-			driverId: Schema.string().min(1).nullable(),
+			requestedDriverId: Schema.string().min(1).nullable(),
 			from: Schema.object({
 				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
 				location: Schema.string().min(1),
@@ -59,14 +59,14 @@ export class TripsController {
 		const score = ActivityEntity.getScore({ type: ActivityType.tripDiscount, discount: data.discount, tripId: '' })
 		if ((customer.account.rankings.overall.value + score) < 0) throw new BadRequestError('not enough points for this discount')
 
-		if (data.driverId) {
-			const driver = await UsersUseCases.find(data.driverId)
+		if (data.requestedDriverId) {
+			const driver = await UsersUseCases.find(data.requestedDriverId)
 			if (!driver || driver.isDeleted() || !driver.isDriver()) throw new BadRequestError('driver not found')
 		}
 
 		return await TripsUseCases.create({
 			...data,
-			customerId,
+			customerId, driverId: null,
 			status: TripStatus.created,
 			data: {
 				[TripStatus.created]: { timestamp: Date.now() }
