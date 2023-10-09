@@ -67,3 +67,10 @@ export type WithdrawData = {
 		description: string
 	}
 }
+
+export enum RequestStatus {
+	created = 'created',
+	paid = 'paid',
+	rejected = 'rejected',
+	acknowledged = 'acknowledged',
+}
