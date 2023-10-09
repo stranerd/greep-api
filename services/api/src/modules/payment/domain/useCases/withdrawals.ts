@@ -21,6 +21,10 @@ export class WithdrawalsUseCase {
 		return await this.repository.update(data.id, data.data)
 	}
 
+	async assignAgent (data: { id: string, agentId: string }) {
+		return await this.repository.assignAgent(data.id, data.agentId)
+	}
+
 	async generateToken (data: { id: string, userId: string }) {
 		return await this.repository.generateToken(data.id, data.userId)
 	}

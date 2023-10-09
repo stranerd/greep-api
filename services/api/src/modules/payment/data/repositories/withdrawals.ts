@@ -38,6 +38,13 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 		return this.mapper.mapFrom(withdrawal)
 	}
 
+	async assignAgent (id: string, agentId: string) {
+		const withdrawal = await Withdrawal.findOneAndUpdate({
+			_id: id, agentId: null, status: WithdrawalStatus.created
+		}, { $set: { agentId, status: WithdrawalStatus.inProgress } }, { new: true })
+		return this.mapper.mapFrom(withdrawal)
+	}
+
 	async generateToken (id: string, userId: string) {
 		const withdrawal = await Withdrawal.findById(id)
 		if (!withdrawal || withdrawal.userId !== userId) throw new NotAuthorizedError()

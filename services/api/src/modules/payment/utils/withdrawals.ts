@@ -6,12 +6,6 @@ import { TransactionStatus, TransactionType, WithdrawalStatus } from '../domain/
 
 export const processCreatedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	if (withdrawal.status !== WithdrawalStatus.created) return
-	if (withdrawal.agentId) return
-	// TODO: get agent and assign to withdrawal
-	/* await WithdrawalsUseCases.update({
-		id: withdrawal.id,
-		data: {	status: WithdrawalStatus.inProgress, agentId: '' }
-	}) */
 }
 
 export const processInProgressWithdrawal = async (withdrawal: WithdrawalEntity) => {

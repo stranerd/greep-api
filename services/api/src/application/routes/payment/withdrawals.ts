@@ -28,6 +28,18 @@ export const withdrawalsRoutes = groupRoutes('/withdrawals', [
 			})
 		]
 	}, {
+		path: '/:id/assignAgent',
+		method: 'get',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await WithdrawalsController.assignAgent(req)
+				}
+			})
+		]
+	},{
 		path: '/:id/token',
 		method: 'get',
 		controllers: [

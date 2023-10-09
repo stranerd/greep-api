@@ -1,5 +1,6 @@
 import { WithdrawalsUseCases } from '@modules/payment'
-import { NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
+import { UsersUseCases } from '@modules/users'
+import { NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class WithdrawalsController {
 	static async find (req: Request) {
@@ -12,6 +13,17 @@ export class WithdrawalsController {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'userId', value: req.authUser!.id }]
 		return await WithdrawalsUseCases.get(query)
+	}
+
+	static async assignAgent (req: Request) {
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new NotFoundError('profile not found')
+		if (!user.isDriver()) throw new NotAuthorizedError()
+
+		return await WithdrawalsUseCases.assignAgent({
+			id: req.params.id,
+			agentId: req.authUser!.id
+		})
 	}
 
 	static async generateToken (req: Request) {
