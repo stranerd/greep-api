@@ -36,4 +36,6 @@ export interface IUserRepository {
 	updateLocation (data: { userId: string, location: [number, number] }): Promise<boolean>
 
 	updateSettings (userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
+
+	updateSavedLocations (userId: string, savedLocations: UserAccount['savedLocations']): Promise<UserEntity | null>
 }

@@ -1,3 +1,5 @@
+import { Location } from '@utils/types'
+
 export enum Currencies {
 	TRY = 'TRY',
 	NGN = 'NGN',
@@ -62,10 +64,7 @@ export type WithdrawData = {
 	userId: string,
 	email: string,
 	amount: number,
-	location: {
-		coords: [number, number] | null
-		description: string
-	}
+	location: Location
 }
 
 export enum RequestStatus {

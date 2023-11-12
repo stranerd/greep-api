@@ -43,7 +43,8 @@ export class WalletsController {
 			amount: Schema.number().gte(100),
 			location: Schema.object({
 				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
-				description: Schema.string().min(1)
+				location: Schema.string().min(1),
+				description: Schema.string().min(1),
 			})
 		}, req.body)
 

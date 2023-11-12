@@ -147,4 +147,9 @@ export class UserRepository implements IUserRepository {
 		const user = await User.findByIdAndUpdate(userId, { $set: settings }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
+
+	async updateSavedLocations (userId: string, savedLocations: UserAccount['savedLocations']) {
+		const user = await User.findByIdAndUpdate(userId, { $set: { 'account.savedLocations': savedLocations } }, { new: true })
+		return this.mapper.mapFrom(user)
+	}
 }

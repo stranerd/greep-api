@@ -1,3 +1,4 @@
+import { Location } from '@utils/types'
 import { Currencies, WithdrawalStatus } from '../../domain/types'
 
 export interface WithdrawalFromModel extends WithdrawalToModel {
@@ -14,8 +15,5 @@ export interface WithdrawalToModel {
 	fee: number
 	currency: Currencies
 	status: WithdrawalStatus
-	location: {
-		coords: [number, number] | null
-		description: string
-	}
+	location: Location
 }

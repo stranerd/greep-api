@@ -90,4 +90,18 @@ export class UsersController {
 		const user = await UsersUseCases.updateSettings({ userId: req.authUser!.id, settings: { driverAvailable: available } })
 		return !!user
 	}
+
+	static async updateSavedLocations (req: Request) {
+		const { savedLocations } = validate({
+			savedLocations: Schema.array(Schema.object({
+				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
+				location: Schema.string().min(1),
+				description: Schema.string().min(1)
+			}))
+		}, req.body)
+
+		const user = await UsersUseCases.updateSavedLocations({ userId: req.authUser!.id, savedLocations })
+		if (user) return user
+		throw new NotAuthorizedError('cannot update user saved locations')
+	}
 }

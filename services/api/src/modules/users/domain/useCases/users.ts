@@ -81,4 +81,8 @@ export class UsersUseCase {
 	async updateSettings (params: { userId: string, settings: Partial<UserAccount['settings']>; }) {
 		return await this.repository.updateSettings(params.userId, params.settings)
 	}
+
+	async updateSavedLocations (params: { userId: string, savedLocations: UserAccount['savedLocations'] }) {
+		return await this.repository.updateSavedLocations(params.userId, params.savedLocations)
+	}
 }

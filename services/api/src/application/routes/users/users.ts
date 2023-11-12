@@ -105,4 +105,17 @@ export const usersRoutes = groupRoutes('/users', [
 			})
 		]
 	},
+	{
+		path: '/savedLocations',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateSavedLocations(req)
+				}
+			})
+		]
+	},
 ])

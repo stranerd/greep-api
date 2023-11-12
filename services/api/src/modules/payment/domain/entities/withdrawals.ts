@@ -1,3 +1,4 @@
+import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { Currencies, WithdrawalStatus } from '../types'
 
@@ -10,10 +11,7 @@ export class WithdrawalEntity extends BaseEntity {
 	public readonly fee: number
 	public readonly currency: Currencies
 	public readonly status: WithdrawalStatus
-	public readonly location: {
-		coords: [number, number] | null
-		description: string
-	}
+	public readonly location: Location
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
@@ -48,10 +46,7 @@ type WithdrawalConstructorArgs = {
 	fee: number
 	currency: Currencies
 	status: WithdrawalStatus
-	location: {
-		coords: [number, number] | null
-		description: string
-	}
+	location: Location
 	createdAt: number
 	updatedAt: number
 }

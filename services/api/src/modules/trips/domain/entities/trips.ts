@@ -1,3 +1,4 @@
+import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { TripData, TripStatus } from '../types'
 
@@ -7,16 +8,8 @@ export class TripEntity extends BaseEntity {
 	public readonly driverId: string | null
 	public readonly requestedDriverId: string | null
 	public readonly status: TripStatus
-	public readonly from: {
-		coords: [number, number] | null
-		location: string
-		description: string
-	}
-	public readonly to: {
-		coords: [number, number] | null
-		location: string
-		description: string
-	}
+	public readonly from: Location
+	public readonly to: Location
 	public readonly discount: number
 	public readonly data: Partial<Record<TripStatus, TripData>>
 	public readonly createdAt: number
@@ -44,16 +37,8 @@ type TripConstructorArgs = {
 	driverId: string | null
 	requestedDriverId: string | null
 	status: TripStatus
-	from: {
-		coords: [number, number] | null
-		location: string
-		description: string
-	}
-	to: {
-		coords: [number, number] | null
-		location: string
-		description: string
-	}
+	from: Location
+	to: Location
 	discount: number
 	data: Partial<Record<TripStatus, TripData>>
 	createdAt: number

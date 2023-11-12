@@ -1,3 +1,4 @@
+import { Location } from '@utils/types'
 import { TripData, TripStatus } from '../../domain/types'
 
 export interface TripFromModel extends TripToModel {
@@ -13,14 +14,6 @@ export interface TripToModel {
 	requestedDriverId: string | null
 	data: Partial<Record<TripStatus, TripData>>
 	discount: number
-	from: {
-		coords: [number, number] | null
-		location: string
-		description: string
-	}
-	to: {
-		coords: [number, number] | null
-		location: string
-		description: string
-	}
+	from: Location
+	to: Location
 }

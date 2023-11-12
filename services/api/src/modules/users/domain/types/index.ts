@@ -1,6 +1,7 @@
 import { Phone } from '@modules/auth'
 import { AuthRoles, MediaOutput } from 'equipped'
 import { UserMeta } from './activities'
+import { Location } from '@utils/types'
 
 export * from './activities'
 
@@ -46,6 +47,7 @@ export type UserAccount = {
 		debt: number
 	}>
 	location: [number, number] | null
+	savedLocations: Location[]
 	settings: {
 		notifications: boolean
 		driverAvailable: boolean
