@@ -92,8 +92,8 @@ export class UsersController {
 	}
 
 	static async updateSavedLocations (req: Request) {
-		const { savedLocations } = validate({
-			savedLocations: Schema.array(Schema.object({
+		const { locations: savedLocations } = validate({
+			locations: Schema.array(Schema.object({
 				coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
 				location: Schema.string().min(1),
 				description: Schema.string().min(1)

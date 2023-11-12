@@ -19,7 +19,7 @@ export class UserEntity extends BaseEntity {
 	public readonly account: UserAccount
 	public readonly type: UserTypeData
 
-	ignoreInJSON = ['bio.email']
+	ignoreInJSON = ['bio.email', 'bio.phone']
 
 	constructor ({
 		id,
@@ -59,7 +59,7 @@ export class UserEntity extends BaseEntity {
 	getEmbedded(): EmbeddedUser {
 		return {
 			id: this.id,
-			bio: this.bio,
+			bio: { username: this.bio.username, name: this.bio.name, photo: this.bio.photo },
 			roles: this.roles
 		}
 	}

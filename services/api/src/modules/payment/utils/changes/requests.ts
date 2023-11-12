@@ -21,7 +21,7 @@ export const RequestDbChangeCallbacks: DbChangeCallbacks<RequestFromModel, Reque
 		if (changes.status && [RequestStatus.paid, RequestStatus.rejected].includes(after.status)) {
 			const isPaid = after.status === RequestStatus.paid
 			await sendNotification([after.from], {
-				title: `Payment Request Paid${isPaid ? 'Paid' : 'Rejected'}`,
+				title: `Payment Request ${isPaid ? 'Paid' : 'Rejected'}`,
 				body: `Your payment request of ${after.amount} ${after.currency} has been ${isPaid ? 'paid' : 'rejected'}.`,
 				sendEmail: true,
 				data: {

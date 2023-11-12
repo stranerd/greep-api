@@ -1,7 +1,7 @@
 import { Phone } from '@modules/auth'
+import { Location } from '@utils/types'
 import { AuthRoles, MediaOutput } from 'equipped'
 import { UserMeta } from './activities'
-import { Location } from '@utils/types'
 
 export * from './activities'
 
@@ -31,7 +31,7 @@ export type UserStatus = {
 
 export type EmbeddedUser = {
 	id: string
-	bio: UserBio
+	bio: Omit<UserBio, 'email' | 'phone'>
 	roles: UserRoles
 }
 
