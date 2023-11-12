@@ -78,6 +78,18 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 			type: [Number],
 			required: false,
 			default: null
+		},
+		settings: {
+			notifications: {
+				type: Boolean,
+				required: false,
+				default: true
+			},
+			driverAvailable: {
+				type: Boolean,
+				required: false,
+				default: true
+			},
 		}
 	},
 	type: {

@@ -1,6 +1,6 @@
 import { TransactionType, TransactionsUseCases } from '@modules/payment'
 import { UserType, UsersUseCases } from '@modules/users'
-import { Conditions, QueryParams, Request } from 'equipped'
+import { Conditions, QueryKeys, QueryParams, Request } from 'equipped'
 
 export class MyController {
 	static async quickSend (req: Request) {
@@ -24,8 +24,8 @@ export class MyController {
 
 	static async drivers (req: Request) {
 		const query = req.query as QueryParams
-		// TODO: add availability check
-		query.auth = [{ field: 'type.type', value: UserType.driver }]
+		query.authType = QueryKeys.and
+		query.auth = [{ field: 'type.type', value: UserType.driver }, { field: 'account.settings.driverAvailable', value: true }]
 		return await UsersUseCases.get(query)
 	}
 }

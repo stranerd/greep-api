@@ -91,5 +91,18 @@ export const usersRoutes = groupRoutes('/users', [
 				}
 			})
 		]
-	}
+	},
+	{
+		path: '/driverAvailability',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await UsersController.updateDriverAvailability(req)
+				}
+			})
+		]
+	},
 ])

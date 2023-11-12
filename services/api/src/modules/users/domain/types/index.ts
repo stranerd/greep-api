@@ -46,6 +46,10 @@ export type UserAccount = {
 		debt: number
 	}>
 	location: [number, number] | null
+	settings: {
+		notifications: boolean
+		driverAvailable: boolean
+	}
 }
 
 export enum UserRankings {

@@ -84,4 +84,10 @@ export class UsersController {
 		if (updated) return updated
 		throw new NotAuthorizedError('cannot update user location')
 	}
+
+	static async updateDriverAvailability (req: Request) {
+		const { available } = validate({ available: Schema.boolean() }, req.body)
+		const user = await UsersUseCases.updateSettings({ userId: req.authUser!.id, settings: { driverAvailable: available } })
+		return !!user
+	}
 }

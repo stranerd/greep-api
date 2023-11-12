@@ -77,4 +77,8 @@ export class UsersUseCase {
 	async updateLocation (data: { userId: string, location: [number, number] }) {
 		return await this.repository.updateLocation(data)
 	}
+
+	async updateSettings (params: { userId: string, settings: Partial<UserAccount['settings']>; }) {
+		return await this.repository.updateSettings(params.userId, params.settings)
+	}
 }

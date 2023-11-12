@@ -138,4 +138,13 @@ export class UserRepository implements IUserRepository {
 			{ new: true })
 		return !!user
 	}
+
+	async updateSettings (userId: string, settings: Partial<UserAccount['settings']>) {
+		settings = Object.fromEntries(
+			Object.entries(settings)
+				.map(([key, value]) => [`account.settings.${key}`, value])
+		)
+		const user = await User.findByIdAndUpdate(userId, { $set: settings }, { new: true })
+		return this.mapper.mapFrom(user)
+	}
 }

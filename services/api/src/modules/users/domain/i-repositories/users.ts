@@ -33,5 +33,7 @@ export interface IUserRepository {
 
 	updateDebt (data: { driverId: string, userId: string, count: number }): Promise<boolean>
 
-	updateLocation(data: { userId: string, location: [number, number] }): Promise<boolean>
+	updateLocation (data: { userId: string, location: [number, number] }): Promise<boolean>
+
+	updateSettings (userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
 }
