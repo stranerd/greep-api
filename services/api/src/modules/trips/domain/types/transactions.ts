@@ -1,7 +1,8 @@
 export enum TransactionType {
 	expense = 'expense',
 	trip = 'trip',
-	balance = 'balance'
+	balance = 'balance',
+	withdrawal = 'withdrawal',
 }
 
 type ExpenseType = {
@@ -28,4 +29,9 @@ type BalanceType = {
 	parentId: string
 }
 
-export type TransactionData = ExpenseType | TripType | BalanceType
+type WithdrawalType = {
+	type: TransactionType.withdrawal
+	withdrawalId: string
+}
+
+export type TransactionData = ExpenseType | TripType | BalanceType | WithdrawalType

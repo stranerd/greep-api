@@ -3,6 +3,7 @@ import { Conditions } from 'equipped'
 import { TransactionsUseCases, WithdrawalsUseCases } from '..'
 import { WithdrawalEntity } from '../domain/entities/withdrawals'
 import { TransactionStatus, TransactionType, WithdrawalStatus } from '../domain/types'
+import { TransactionsUseCases as TripTransactionsUseCases, TransactionType as TripTransactionType } from '@modules/trips'
 
 export const processCreatedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	if (withdrawal.status !== WithdrawalStatus.created) return
@@ -36,12 +37,24 @@ export const processFailedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 }
 
 export const processCompletedWithdrawal = async (withdrawal: WithdrawalEntity) => {
-	await sendNotification([withdrawal.userId], {
-		title: 'Withdrawal successful',
-		body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} was successful!`,
-		sendEmail: true,
-		data: { type: NotificationType.WithdrawalSuccessful, withdrawalId: withdrawal.id, amount: withdrawal.amount, currency: withdrawal.currency }
-	})
+	await Promise.all([
+		sendNotification([withdrawal.userId], {
+			title: 'Withdrawal successful',
+			body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} was successful!`,
+			sendEmail: true,
+			data: { type: NotificationType.WithdrawalSuccessful, withdrawalId: withdrawal.id, amount: withdrawal.amount, currency: withdrawal.currency }
+		}),
+		TripTransactionsUseCases.create({
+			driverId: withdrawal.userId,
+			amount: withdrawal.amount,
+			recordedAt: Date.now(),
+			description: 'Withdrawal',
+			data: {
+				type: TripTransactionType.withdrawal,
+				withdrawalId: withdrawal.id
+			}
+		})
+	])
 }
 
 export const processWithdrawals = async (timeInMs: number) => {
