@@ -3,9 +3,11 @@ import { publishers } from '@utils/events'
 import { BadRequestError, EmailsList, Random, readEmailFromPug } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
 import { TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
+import { TransactionMapper } from '../mappers/transactions'
 import { WalletMapper } from '../mappers/wallets'
-import { TransactionToModel } from '../models/transactions'
-import { WithdrawalToModel } from '../models/withdrawals'
+import { WithdrawalMapper } from '../mappers/withdrawals'
+import { TransactionFromModel, TransactionToModel } from '../models/transactions'
+import { WithdrawalFromModel, WithdrawalToModel } from '../models/withdrawals'
 import { Transaction } from '../mongooseModels/transactions'
 import { Wallet } from '../mongooseModels/wallets'
 import { Withdrawal } from '../mongooseModels/withdrawals'
@@ -13,9 +15,13 @@ import { Withdrawal } from '../mongooseModels/withdrawals'
 export class WalletRepository implements IWalletRepository {
 	private static instance: WalletRepository
 	private mapper: WalletMapper
+	private transactionMapper: TransactionMapper
+	private withdrawalMapper: WithdrawalMapper
 
 	private constructor () {
 		this.mapper = new WalletMapper()
+		this.transactionMapper = new TransactionMapper()
+		this.withdrawalMapper = new WithdrawalMapper()
 	}
 
 	static getInstance () {
@@ -52,7 +58,7 @@ export class WalletRepository implements IWalletRepository {
 	}
 
 	async transfer (data: TransferData) {
-		let res = false
+		let res = null as TransactionFromModel | null
 		await Wallet.collection.conn.transaction(async (session) => {
 			const fromWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.from, session))!
 			const toWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.to, session))!
@@ -77,23 +83,23 @@ export class WalletRepository implements IWalletRepository {
 					data: { type: TransactionType.Received, note: data.note, from: data.from, fromName: data.fromName }
 				}
 			]
-			await Transaction.insertMany(transactions, { session })
-			const updatedFromWallet =  await Wallet.findByIdAndUpdate(fromWallet.id,
+			const transactionModels = await Transaction.insertMany(transactions, { session })
+			await Wallet.findByIdAndUpdate(fromWallet.id,
 				{ $inc: { 'balance.amount': 0 - data.amount } },
 				{ new: true, session }
 			)
-			const updatedToWallet =  await Wallet.findByIdAndUpdate(toWallet.id,
+			await Wallet.findByIdAndUpdate(toWallet.id,
 				{ $inc: { 'balance.amount': data.amount } },
 				{ new: true, session }
 			)
-			res = !!updatedFromWallet && !!updatedToWallet
+			res = transactionModels[0]
 			return res
 		})
-		return res
+		return this.transactionMapper.mapFrom(res)!
 	}
 
 	async withdraw (data: WithdrawData) {
-		let res = false
+		let res = null as WithdrawalFromModel | null
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.userId, session))!
 			const fee = 0
@@ -120,14 +126,14 @@ export class WalletRepository implements IWalletRepository {
 				data: { type: TransactionType.Withdrawal, withdrawalId: withdrawal._id }
 			}
 			await new Transaction(transaction).save({ session })
-			const updatedWallet = await Wallet.findByIdAndUpdate(wallet.id,
+			await Wallet.findByIdAndUpdate(wallet.id,
 				{ $inc: { 'balance.amount': transaction.amount } },
 				{ new: true, session }
 			)
-			res = !!updatedWallet
+			res = withdrawal
 			return res
 		})
-		return res
+		return this.withdrawalMapper.mapFrom(res)!
 	}
 
 	async sendPinResetMail(userId: string, email: string) {
