@@ -1,6 +1,5 @@
 import { QueryParams } from 'equipped'
 import { ChatFromModel } from '../../data/models/chat'
-import { ChatMetaToModel } from '../../data/models/chatMeta'
 import { IChatMetaRepository } from '../irepositories/chatMeta'
 
 export class ChatMetasUseCase {
@@ -8,10 +7,6 @@ export class ChatMetasUseCase {
 
 	constructor (repository: IChatMetaRepository) {
 		this.repository = repository
-	}
-
-	async add (data: ChatMetaToModel) {
-		return await this.repository.add(data)
 	}
 
 	async find (id: string) {
@@ -24,5 +19,9 @@ export class ChatMetasUseCase {
 
 	async updateLastChat (chat: ChatFromModel) {
 		return await this.repository.updateLastChat(chat)
+	}
+
+	async delete (data: { id: string, userId: string }) {
+		return await this.repository.delete(data.id, data.userId)
 	}
 }

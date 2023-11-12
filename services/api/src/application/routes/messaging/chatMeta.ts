@@ -28,5 +28,18 @@ export const chatMetaRoutes = groupRoutes('/chatMetas', [
 				}
 			})
 		]
+	},
+	{
+		path: '/:id',
+		method: 'delete',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await ChatMetaController.delete(req)
+				}
+			})
+		]
 	}
 ])

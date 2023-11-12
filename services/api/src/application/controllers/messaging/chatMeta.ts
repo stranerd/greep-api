@@ -1,5 +1,5 @@
 import { ChatMetasUseCases } from '@modules/messaging'
-import { NotFoundError, QueryParams, Request } from 'equipped'
+import { NotAuthorizedError, NotFoundError, QueryParams, Request } from 'equipped'
 
 export class ChatMetaController {
 	static async get (req: Request) {
@@ -12,5 +12,11 @@ export class ChatMetaController {
 		const chatMeta = await ChatMetasUseCases.find(req.params.id)
 		if (!chatMeta || !chatMeta.members.includes(req.authUser!.id)) throw new NotFoundError()
 		return chatMeta
+	}
+
+	static async delete (req: Request) {
+		const deleted = await ChatMetasUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
+		if (deleted) return deleted
+		throw new NotAuthorizedError()
 	}
 }
