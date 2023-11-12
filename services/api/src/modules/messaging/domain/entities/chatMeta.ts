@@ -1,3 +1,4 @@
+import { EmbeddedUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { ChatEntity } from './chat'
 
@@ -9,6 +10,8 @@ export class ChatMetaEntity extends BaseEntity {
 	public readonly updatedAt: number
 	public readonly readAt: Record<string, number>
 
+	public users: Record<string, EmbeddedUser | null> = {}
+
 	constructor ({
 		             id, members, last, createdAt, updatedAt, readAt
 	             }: ChatMetaConstructorArgs) {
@@ -19,6 +22,11 @@ export class ChatMetaEntity extends BaseEntity {
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt
 		this.readAt = readAt
+	}
+
+	withUsers (users: Record<string, EmbeddedUser | null>) {
+		this.users = users
+		return this
 	}
 }
 
