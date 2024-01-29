@@ -8,77 +8,65 @@ export const transactionsRoutes = groupRoutes('/transactions', [
 		method: 'get',
 		controllers: [
 			isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TransactionsController.getTransactionsAdmin(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TransactionsController.getTransactionsAdmin(req),
+			})),
+		],
 	},
 	{
 		path: '/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TransactionsController.findTransactionAdmin(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TransactionsController.findTransactionAdmin(req),
+			})),
+		],
 	},
 	{
 		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TransactionsController.getTransactions(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TransactionsController.getTransactions(req),
+			})),
+		],
 	},
 	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TransactionsController.findTransaction(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TransactionsController.findTransaction(req),
+			})),
+		],
 	},
 	{
 		path: '/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TransactionsController.createTransaction(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TransactionsController.createTransaction(req),
+			})),
+		],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TransactionsController.deleteTransaction(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TransactionsController.deleteTransaction(req),
+			})),
+		],
+	},
 ])

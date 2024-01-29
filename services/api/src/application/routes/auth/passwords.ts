@@ -6,26 +6,22 @@ const resetPasswordEmail: Route = {
 	path: '/auth/passwords/reset/mail',
 	method: 'post',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await PasswordsController.sendResetMail(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await PasswordsController.sendResetMail(req),
+		})),
+	],
 }
 
 const resetPassword: Route = {
 	path: '/auth/passwords/reset',
 	method: 'post',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await PasswordsController.resetPassword(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await PasswordsController.resetPassword(req),
+		})),
+	],
 }
 
 const updatePassword: Route = {
@@ -33,13 +29,11 @@ const updatePassword: Route = {
 	method: 'post',
 	controllers: [
 		isAuthenticated,
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await PasswordsController.updatePassword(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await PasswordsController.updatePassword(req),
+		})),
+	],
 }
 
 const routes: Route[] = [resetPasswordEmail, resetPassword, updatePassword]

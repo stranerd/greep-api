@@ -15,9 +15,7 @@ export class WithdrawalEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id, userId, agentId, email, amount, location, fee, currency, status, createdAt, updatedAt
-	}: WithdrawalConstructorArgs) {
+	constructor({ id, userId, agentId, email, amount, location, fee, currency, status, createdAt, updatedAt }: WithdrawalConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId
@@ -32,7 +30,7 @@ export class WithdrawalEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-	getChargedAmount () {
+	getChargedAmount() {
 		return this.amount + this.fee
 	}
 }

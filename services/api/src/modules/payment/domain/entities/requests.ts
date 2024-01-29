@@ -14,7 +14,7 @@ export class RequestEntity extends BaseEntity {
 
 	ignoreInJSON = ['pin']
 
-	constructor ({ id, description, from, to, status, amount, currency, createdAt, updatedAt }: RequestConstructorArgs) {
+	constructor({ id, description, from, to, status, amount, currency, createdAt, updatedAt }: RequestConstructorArgs) {
 		super()
 		this.id = id
 		this.description = description

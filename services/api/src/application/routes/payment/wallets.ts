@@ -8,76 +8,65 @@ export const walletsRoutes = groupRoutes('/wallets', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await WalletsController.get(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await WalletsController.get(req),
+			})),
+		],
 	},
 	{
 		path: '/transfer',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await WalletsController.transfer(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await WalletsController.transfer(req),
+			})),
+		],
+	},
+	{
 		path: '/withdraw',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await WalletsController.withdraw(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await WalletsController.withdraw(req),
+			})),
+		],
 	},
 	{
 		path: '/pin/reset/mail',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await WalletsController.sendPinResetMail(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await WalletsController.sendPinResetMail(req),
+			})),
+		],
 	},
 	{
 		path: '/pin/reset',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await WalletsController.resetPin(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await WalletsController.resetPin(req),
+			})),
+		],
 	},
 	{
 		path: '/pin',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await WalletsController.updatePin(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await WalletsController.updatePin(req),
+			})),
+		],
+	},
 ])

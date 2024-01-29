@@ -6,7 +6,7 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly username: string
 	public readonly email: string
 	public readonly password: string
-	public readonly name: { first: string, last: string }
+	public readonly name: { first: string; last: string }
 	public readonly photo: MediaOutput | null
 	public readonly phone: Phone | null
 	public readonly isVerified: boolean
@@ -16,7 +16,7 @@ export class AuthUserEntity extends BaseEntity {
 	public readonly lastSignedInAt: number
 	public readonly signedUpAt: number
 
-	constructor (data: UserConstructorArgs) {
+	constructor(data: UserConstructorArgs) {
 		super()
 		this.id = data.id
 		this.username = data.username
@@ -36,7 +36,7 @@ export class AuthUserEntity extends BaseEntity {
 	get allNames() {
 		return {
 			...this.name,
-			full: [this.name.first, this.name.last].join(' ').replaceAll('  ', ' ')
+			full: [this.name.first, this.name.last].join(' ').replaceAll('  ', ' '),
 		}
 	}
 
@@ -51,7 +51,7 @@ interface UserConstructorArgs {
 	email: string
 	password: string
 	roles: AuthRoles
-	name: { first: string, last: string }
+	name: { first: string; last: string }
 	photo: MediaOutput | null
 	phone: Phone | null
 	isVerified: boolean

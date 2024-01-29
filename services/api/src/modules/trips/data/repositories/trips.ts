@@ -14,25 +14,25 @@ export class TripRepository implements ITripRepository {
 	private mapper = new TripMapper()
 	private transactionMapper = new TransactionMapper()
 
-	static getInstance (): TripRepository {
+	static getInstance(): TripRepository {
 		if (!TripRepository.instance) TripRepository.instance = new TripRepository()
 		return TripRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Trip, query)
 		return {
 			...data,
-			results: data.results.map((n) => this.mapper.mapFrom(n)!)
+			results: data.results.map((n) => this.mapper.mapFrom(n)!),
 		}
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		const trip = await Trip.findById(id)
 		return this.mapper.mapFrom(trip)
 	}
 
-	async create (data: TripToModel) {
+	async create(data: TripToModel) {
 		const endedStatuses = [TripStatus.ended, TripStatus.detailed, TripStatus.requestedDriverAccepted, TripStatus.cancelled]
 		data[`data.${data.status}`] = data.data[data.status]
 		// @ts-ignore
@@ -43,41 +43,57 @@ export class TripRepository implements ITripRepository {
 		return this.mapper.mapFrom(trip)!
 	}
 
-	async update ({ id, userId, data }: { id: string, userId: string, data: Partial<TripToModel> }) {
+	async update({ id, userId, data }: { id: string; userId: string; data: Partial<TripToModel> }) {
 		if (data.status && data.data) data[`data.${data.status}`] = data.data[data.status]
 		if (data.data) delete data.data
-		const trip = await Trip.findOneAndUpdate({ _id: id, $or: [{ driverId: userId }, { customerId: userId }] }, { $set: data }, { new: true })
+		const trip = await Trip.findOneAndUpdate(
+			{ _id: id, $or: [{ driverId: userId }, { customerId: userId }] },
+			{ $set: data },
+			{ new: true },
+		)
 		return this.mapper.mapFrom(trip)
 	}
 
-	async cancel ({ id, customerId }: { id: string, customerId: string }) {
+	async cancel({ id, customerId }: { id: string; customerId: string }) {
 		let res = null as any
 		await Trip.collection.conn.transaction(async (session) => {
 			const trip = this.mapper.mapFrom(await Trip.findOne({ _id: id, customerId }, {}, { session }))
 			if (!trip) return
 			if (![TripStatus.created].includes(trip.status)) return
-			res = await Trip.findByIdAndUpdate(trip.id, {
-				$set: {
-					status: TripStatus.cancelled,
-					[`data.${TripStatus.cancelled}`]: { timestamp: Date.now() }
-				}
-			}, { session, new: true })
+			res = await Trip.findByIdAndUpdate(
+				trip.id,
+				{
+					$set: {
+						status: TripStatus.cancelled,
+						[`data.${TripStatus.cancelled}`]: { timestamp: Date.now() },
+					},
+				},
+				{ session, new: true },
+			)
 			return res
 		})
 		return this.mapper.mapFrom(res)
 	}
 
-	async detail ({ id, driverId, data }: { id: string, driverId: string, data: TransactionToModel }) {
+	async detail({ id, driverId, data }: { id: string; driverId: string; data: TransactionToModel }) {
 		let res = null as any
 		await Trip.collection.conn.transaction(async (session) => {
-			const trip = this.mapper.mapFrom(await Trip.findOneAndUpdate({
-				_id: id, driverId, status: TripStatus.ended
-			}, {
-				$set: {
-					status: TripStatus.detailed,
-					[`data.${TripStatus.detailed}`]: { timestamp: Date.now() }
-				}
-			}, { session }))
+			const trip = this.mapper.mapFrom(
+				await Trip.findOneAndUpdate(
+					{
+						_id: id,
+						driverId,
+						status: TripStatus.ended,
+					},
+					{
+						$set: {
+							status: TripStatus.detailed,
+							[`data.${TripStatus.detailed}`]: { timestamp: Date.now() },
+						},
+					},
+					{ session },
+				),
+			)
 			if (!trip) return null
 			res = await new Transaction(data).save()
 			return res
@@ -85,7 +101,7 @@ export class TripRepository implements ITripRepository {
 		return this.transactionMapper.mapFrom(res)
 	}
 
-	async accept ({ id, driverId, requested, accepted }: { id: string; driverId: string; requested: boolean; accepted: boolean }) {
+	async accept({ id, driverId, requested, accepted }: { id: string; driverId: string; requested: boolean; accepted: boolean }) {
 		if (!requested && !accepted) return null
 		const updates: Record<string, unknown> = {}
 		if (accepted) {
@@ -99,10 +115,16 @@ export class TripRepository implements ITripRepository {
 				updates.status = TripStatus.requestedDriverRejected
 			}
 		}
-		const trip = await Trip.findOneAndUpdate({
-			_id: id, driverId: null, status: TripStatus.created,
-			...(requested ? { requestedDriverId: driverId } : {})
-		}, { $set: updates }, { new: true })
+		const trip = await Trip.findOneAndUpdate(
+			{
+				_id: id,
+				driverId: null,
+				status: TripStatus.created,
+				...(requested ? { requestedDriverId: driverId } : {}),
+			},
+			{ $set: updates },
+			{ new: true },
+		)
 		return this.mapper.mapFrom(trip)
 	}
 }

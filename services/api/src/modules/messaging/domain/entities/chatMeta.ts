@@ -12,9 +12,7 @@ export class ChatMetaEntity extends BaseEntity {
 
 	public users: Record<string, EmbeddedUser | null> = {}
 
-	constructor ({
-		             id, members, last, createdAt, updatedAt, readAt
-	             }: ChatMetaConstructorArgs) {
+	constructor({ id, members, last, createdAt, updatedAt, readAt }: ChatMetaConstructorArgs) {
 		super()
 		this.id = id
 		this.members = members
@@ -24,14 +22,14 @@ export class ChatMetaEntity extends BaseEntity {
 		this.readAt = readAt
 	}
 
-	withUsers (users: Record<string, EmbeddedUser | null>) {
+	withUsers(users: Record<string, EmbeddedUser | null>) {
 		this.users = users
 		return this
 	}
 }
 
 type ChatMetaConstructorArgs = {
-	id: string,
+	id: string
 	members: string[]
 	last: ChatEntity | null
 	createdAt: number

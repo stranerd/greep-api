@@ -6,16 +6,18 @@ import { PhoneErrorsUseCases } from '../'
 const termiiAPIKey = ''
 
 const sendText = async (text: PhoneText) => {
-	await axios.post('https://termii.com/api/sms/send', {
-		to: text.to,
-		from: text.from,
-		sms: text.content,
-		type: 'plain',
-		channel: 'generic',
-		api_key: termiiAPIKey
-	}).catch((err) => {
-		throw new Error(`Failed to send text: ${err.response.data.message}`)
-	})
+	await axios
+		.post('https://termii.com/api/sms/send', {
+			to: text.to,
+			from: text.from,
+			sms: text.content,
+			type: 'plain',
+			channel: 'generic',
+			api_key: termiiAPIKey,
+		})
+		.catch((err) => {
+			throw new Error(`Failed to send text: ${err.response.data.message}`)
+		})
 }
 
 export const sendTextAndCatchError = async (text: PhoneText) => {
@@ -25,7 +27,7 @@ export const sendTextAndCatchError = async (text: PhoneText) => {
 	} catch (e) {
 		await PhoneErrorsUseCases.add({
 			...text,
-			error: (e as Error).message
+			error: (e as Error).message,
 		})
 	}
 }

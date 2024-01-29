@@ -36,16 +36,19 @@ export type EmbeddedUser = {
 }
 
 export type UserAccount = {
-	rankings: Record<UserRankings, { value: number, lastUpdatedAt: number }>
+	rankings: Record<UserRankings, { value: number; lastUpdatedAt: number }>
 	meta: Record<UserMeta, number>
 	application: {
 		accepted: boolean
 		message: string
 	} | null
-	trips: Record<string, {
-		trips: number
-		debt: number
-	}>
+	trips: Record<
+		string,
+		{
+			trips: number
+			debt: number
+		}
+	>
 	location: [number, number] | null
 	savedLocations: Location[]
 	settings: {
@@ -58,20 +61,21 @@ export enum UserRankings {
 	daily = 'daily',
 	weekly = 'weekly',
 	monthly = 'monthly',
-	overall = 'overall'
+	overall = 'overall',
 }
-
 
 export enum UserType {
 	driver = 'driver',
-	customer = 'customer'
+	customer = 'customer',
 }
 
-export type UserTypeData = {
-	type: UserType.driver,
-	license: MediaOutput
-} | {
-	type: UserType.customer,
-	passport: MediaOutput
-	studentId: MediaOutput
-}
+export type UserTypeData =
+	| {
+			type: UserType.driver
+			license: MediaOutput
+	  }
+	| {
+			type: UserType.customer
+			passport: MediaOutput
+			studentId: MediaOutput
+	  }

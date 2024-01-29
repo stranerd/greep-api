@@ -1,28 +1,32 @@
 export enum UserMeta {
 	referrals = 'referrals',
 	trips = 'trips',
-	total = 'total'
+	total = 'total',
 }
 
 export enum ActivityType {
 	referrals = 'referrals',
 	completedTrip = 'completedTrip',
 	tripDiscount = 'tripDiscount',
-	refundTripDiscount = 'refundTripDiscount'
+	refundTripDiscount = 'refundTripDiscount',
 }
 
-export type ActivityData = {
-	type: ActivityType.referrals,
-	referralId: string
-} | {
-	type: ActivityType.tripDiscount,
-	discount: number
-	tripId: string
-} | {
-	type: ActivityType.refundTripDiscount,
-	discount: number
-	tripId: string
-} | {
-	type: ActivityType.completedTrip,
-	tripId: string
-}
+export type ActivityData =
+	| {
+			type: ActivityType.referrals
+			referralId: string
+	  }
+	| {
+			type: ActivityType.tripDiscount
+			discount: number
+			tripId: string
+	  }
+	| {
+			type: ActivityType.refundTripDiscount
+			discount: number
+			tripId: string
+	  }
+	| {
+			type: ActivityType.completedTrip
+			tripId: string
+	  }

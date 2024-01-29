@@ -16,7 +16,10 @@ export interface IAuthRepository {
 
 	resetPassword(input: PasswordResetInput): Promise<AuthUserEntity>
 
-	googleSignIn (tokenId: string, referrer: string | null): Promise<AuthUserEntity>
+	googleSignIn(tokenId: string, referrer: string | null): Promise<AuthUserEntity>
 
-	appleSignIn (data: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }, referrer: string | null): Promise<AuthUserEntity>
+	appleSignIn(
+		data: { idToken: string; email: string | null; firstName: string | null; lastName: string | null },
+		referrer: string | null,
+	): Promise<AuthUserEntity>
 }

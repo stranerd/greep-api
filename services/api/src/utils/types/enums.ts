@@ -9,20 +9,20 @@ const Ar = makeEnum('AuthRole', {
 } as const)
 
 const El = makeEnum('EmailsList', {
-	NO_REPLY: 'no-reply@stranerd.com'
+	NO_REPLY: 'no-reply@stranerd.com',
 } as const)
 
 const Ev = makeEnum('EventTypes', {
 	SENDMAIL: 'SENDMAIL',
 	SENDTEXT: 'SENDTEXT',
-	DELETEFILE: 'DELETEFILE'
+	DELETEFILE: 'DELETEFILE',
 } as const)
 
 declare module 'equipped/lib/enums/types' {
 	type TAr = typeof Ar
 	type TEl = typeof El
 	type TEv = typeof Ev
-	interface IAuthRole extends TAr { }
-	interface IEmailsList extends TEl { }
-	interface IEventTypes extends TEv { }
+	interface IAuthRole extends TAr {}
+	interface IEmailsList extends TEl {}
+	interface IEventTypes extends TEv {}
 }

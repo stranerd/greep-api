@@ -13,20 +13,24 @@ export const superAdminEmail = getEnvOrFail('SUPER_ADMIN')
 
 const mails = JSON.parse(getEnvOrFail('EMAILS') || '{}')
 export const emails = Object.fromEntries(
-	Object.entries(EmailsList).map(([key, value]) => [value, {
-		privateKey: mails[key.toLowerCase()]?.private_key,
-		clientId: mails[key.toLowerCase()]?.client_id
-	}])
+	Object.entries(EmailsList).map(([key, value]) => [
+		value,
+		{
+			privateKey: mails[key.toLowerCase()]?.private_key,
+			clientId: mails[key.toLowerCase()]?.client_id,
+		},
+	]),
 )
 
 const flutterwave = JSON.parse(getEnvOrFail('FLUTTERWAVE') || '{}')
 export const flutterwaveConfig = {
 	secretKey: flutterwave.secretKey,
-	publicKey: flutterwave.publicKey
+	publicKey: flutterwave.publicKey,
 }
 
 Instance.initialize({
-	isDev, appId,
+	isDev,
+	appId,
 	accessTokenKey: getEnvOrFail('ACCESS_TOKEN_KEY'),
 	refreshTokenKey: getEnvOrFail('REFRESH_TOKEN_KEY'),
 	bullQueueName: 'greep-task-queues',
@@ -34,6 +38,6 @@ Instance.initialize({
 	redisURI: getEnvOrFail('REDIS_URI'),
 	kafkaURIs: getEnvOrFail('KAFKA_URIS').split(','),
 	debeziumUrl: getEnvOrFail('DEBEZIUM_URL'),
-	eventColumnName: 'Greep'
+	eventColumnName: 'Greep',
 })
 export const appInstance = Instance.get()

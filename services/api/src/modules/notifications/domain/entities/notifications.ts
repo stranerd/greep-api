@@ -12,17 +12,7 @@ export class NotificationEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id,
-		title,
-		body,
-		data,
-		userId,
-		createdAt,
-		seen,
-		sendEmail,
-		updatedAt
-	}: NotificationConstructorArgs) {
+	constructor({ id, title, body, data, userId, createdAt, seen, sendEmail, updatedAt }: NotificationConstructorArgs) {
 		super()
 		this.id = id
 		this.title = title
@@ -37,6 +27,13 @@ export class NotificationEntity extends BaseEntity {
 }
 
 type NotificationConstructorArgs = {
-	id: string, title: string, body: string, userId: string, data: NotificationData, sendEmail: boolean
-	createdAt: number, seen: boolean, updatedAt: number
+	id: string
+	title: string
+	body: string
+	userId: string
+	data: NotificationData
+	sendEmail: boolean
+	createdAt: number
+	seen: boolean
+	updatedAt: number
 }

@@ -22,17 +22,22 @@ export const processFailedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 		currency: withdrawal.currency,
 		title: 'Withdrawal failed. Amount refunded to wallet',
 		status: TransactionStatus.fulfilled,
-		data: { type: TransactionType.WithdrawalRefund, withdrawalId: withdrawal.id }
+		data: { type: TransactionType.WithdrawalRefund, withdrawalId: withdrawal.id },
 	})
 	await WithdrawalsUseCases.update({
 		id: withdrawal.id,
-		data: {	status: WithdrawalStatus.refunded }
+		data: { status: WithdrawalStatus.refunded },
 	})
 	await sendNotification([withdrawal.userId], {
 		title: 'Withdrawal failed',
 		body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} failed. Amount has been refunded to your wallet`,
 		sendEmail: true,
-		data: { type: NotificationType.WithdrawalFailed, withdrawalId: withdrawal.id, amount: withdrawal.amount, currency: withdrawal.currency }
+		data: {
+			type: NotificationType.WithdrawalFailed,
+			withdrawalId: withdrawal.id,
+			amount: withdrawal.amount,
+			currency: withdrawal.currency,
+		},
 	})
 }
 
@@ -42,7 +47,12 @@ export const processCompletedWithdrawal = async (withdrawal: WithdrawalEntity) =
 			title: 'Withdrawal successful',
 			body: `Your withdrawal of ${withdrawal.amount} ${withdrawal.currency} was successful!`,
 			sendEmail: true,
-			data: { type: NotificationType.WithdrawalSuccessful, withdrawalId: withdrawal.id, amount: withdrawal.amount, currency: withdrawal.currency }
+			data: {
+				type: NotificationType.WithdrawalSuccessful,
+				withdrawalId: withdrawal.id,
+				amount: withdrawal.amount,
+				currency: withdrawal.currency,
+			},
 		}),
 		TripTransactionsUseCases.create({
 			driverId: withdrawal.userId,
@@ -51,9 +61,9 @@ export const processCompletedWithdrawal = async (withdrawal: WithdrawalEntity) =
 			description: 'Withdrawal',
 			data: {
 				type: TripTransactionType.withdrawal,
-				withdrawalId: withdrawal.id
-			}
-		})
+				withdrawalId: withdrawal.id,
+			},
+		}),
 	])
 }
 
@@ -61,23 +71,23 @@ export const processWithdrawals = async (timeInMs: number) => {
 	const { results: createdWithdrawals } = await WithdrawalsUseCases.get({
 		where: [
 			{ field: 'status', value: WithdrawalStatus.created },
-			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs }
+			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs },
 		],
-		all: true
+		all: true,
 	})
 	const { results: inProgressWithdrawals } = await WithdrawalsUseCases.get({
 		where: [
 			{ field: 'status', value: WithdrawalStatus.inProgress },
-			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs }
+			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs },
 		],
-		all: true
+		all: true,
 	})
 	const { results: failedWithdrawals } = await WithdrawalsUseCases.get({
 		where: [
 			{ field: 'status', value: WithdrawalStatus.failed },
-			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs }
+			{ field: 'createdAt', condition: Conditions.lt, value: Date.now() - timeInMs },
 		],
-		all: true
+		all: true,
 	})
 	await Promise.all(createdWithdrawals.map(processCreatedWithdrawal))
 	await Promise.all(inProgressWithdrawals.map(processInProgressWithdrawal))

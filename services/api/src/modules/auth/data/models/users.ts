@@ -12,7 +12,7 @@ export interface UserToModel {
 	username: string
 	email: string
 	password: string
-	name: { first: string, last: string }
+	name: { first: string; last: string }
 	photo: MediaOutput | null
 	isVerified: boolean
 	authTypes: Enum<typeof AuthTypes>[]

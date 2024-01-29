@@ -12,7 +12,7 @@ type ExpenseType = {
 
 export enum PaymentType {
 	card = 'card',
-	cash = 'cash'
+	cash = 'cash',
 }
 
 type TripType = {

@@ -13,7 +13,7 @@ export class EmailErrorEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor (data: ErrorConstructor) {
+	constructor(data: ErrorConstructor) {
 		super()
 		this.id = data.id
 		this.error = data.error
@@ -29,11 +29,11 @@ export class EmailErrorEntity extends BaseEntity {
 
 type ErrorConstructor = {
 	id: string
-	error: string,
-	subject: string,
-	to: string,
-	content: string,
-	from: string,
+	error: string
+	subject: string
+	to: string
+	content: string
+	from: string
 	data: {
 		attachments?: Record<string, boolean>
 	}

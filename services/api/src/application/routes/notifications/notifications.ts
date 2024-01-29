@@ -8,48 +8,43 @@ export const notificationsRoutes = groupRoutes('/notifications', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await NotificationsController.get(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await NotificationsController.get(req),
+			})),
+		],
+	},
+	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await NotificationsController.find(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await NotificationsController.find(req),
+			})),
+		],
+	},
+	{
 		path: '/seen',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await NotificationsController.markAllSeen(req)
-				}
-			})
-		]
-	}, {
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await NotificationsController.markAllSeen(req),
+			})),
+		],
+	},
+	{
 		path: '/:id/seen',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await NotificationsController.markSeen(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await NotificationsController.markSeen(req),
+			})),
+		],
+	},
 ])

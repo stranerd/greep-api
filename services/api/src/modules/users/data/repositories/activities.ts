@@ -10,27 +10,28 @@ export class ActivityRepository implements IActivityRepository {
 	private static instance: ActivityRepository
 	private mapper = new ActivityMapper()
 
-	static getInstance (): ActivityRepository {
+	static getInstance(): ActivityRepository {
 		if (!ActivityRepository.instance) ActivityRepository.instance = new ActivityRepository()
 		return ActivityRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Activity, query)
 		return {
 			...data,
-			results: data.results.map((n) => this.mapper.mapFrom(n)!)
+			results: data.results.map((n) => this.mapper.mapFrom(n)!),
 		}
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		const activity = await Activity.findById(id)
 		return this.mapper.mapFrom(activity)
 	}
 
-	async create (data: ActivityToModel) {
+	async create(data: ActivityToModel) {
 		const activity = await new Activity({
-			...data, score: ActivityEntity.getScore(data.data)
+			...data,
+			score: ActivityEntity.getScore(data.data),
 		}).save()
 		return this.mapper.mapFrom(activity)!
 	}

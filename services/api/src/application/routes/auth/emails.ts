@@ -6,26 +6,22 @@ const emailSignIn: Route = {
 	path: '/auth/emails/signin',
 	method: 'post',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.signin(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await EmailsController.signin(req),
+		})),
+	],
 }
 
 const emailSignUp: Route = {
 	path: '/auth/emails/signup',
 	method: 'post',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.signup(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await EmailsController.signup(req),
+		})),
+	],
 }
 
 const sendVerificationEmail: Route = {
@@ -33,26 +29,22 @@ const sendVerificationEmail: Route = {
 	method: 'post',
 	controllers: [
 		isAuthenticatedButIgnoreVerified,
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.sendVerificationMail(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await EmailsController.sendVerificationMail(req),
+		})),
+	],
 }
 
 const verifyEmail: Route = {
 	path: '/auth/emails/verify',
 	method: 'post',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.verifyEmail(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await EmailsController.verifyEmail(req),
+		})),
+	],
 }
 
 const routes: Route[] = [emailSignIn, emailSignUp, sendVerificationEmail, verifyEmail]

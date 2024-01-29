@@ -5,7 +5,7 @@ import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
 export class UsersUseCase {
 	repository: IUserRepository
 
-	constructor (repo: IUserRepository) {
+	constructor(repo: IUserRepository) {
 		this.repository = repo
 	}
 
@@ -18,7 +18,7 @@ export class UsersUseCase {
 		return results.at(0) ?? null
 	}
 
-	async createUserWithBio(params: { id: string, data: UserBio, timestamp: number }) {
+	async createUserWithBio(params: { id: string; data: UserBio; timestamp: number }) {
 		return await this.repository.createUserWithBio(params.id, params.data, params.timestamp)
 	}
 
@@ -26,7 +26,7 @@ export class UsersUseCase {
 		return await this.repository.get(query)
 	}
 
-	async markUserAsDeleted(params: { id: string, timestamp: number }) {
+	async markUserAsDeleted(params: { id: string; timestamp: number }) {
 		return await this.repository.markUserAsDeleted(params.id, params.timestamp)
 	}
 
@@ -34,55 +34,55 @@ export class UsersUseCase {
 		return await this.repository.resetAllUsersStatus()
 	}
 
-	async updateUserStatus(input: { userId: string, socketId: string, add: boolean }) {
+	async updateUserStatus(input: { userId: string; socketId: string; add: boolean }) {
 		return await this.repository.updateUserStatus(input.userId, input.socketId, input.add)
 	}
 
-	async updateUserWithBio(params: { id: string, data: UserBio, timestamp: number }) {
+	async updateUserWithBio(params: { id: string; data: UserBio; timestamp: number }) {
 		return await this.repository.updateUserWithBio(params.id, params.data, params.timestamp)
 	}
 
-	async updateUserWithRoles(params: { id: string, data: UserRoles, timestamp: number }) {
+	async updateUserWithRoles(params: { id: string; data: UserRoles; timestamp: number }) {
 		return await this.repository.updateUserWithRoles(params.id, params.data, params.timestamp)
 	}
 
-	async incrementMeta (params: { id: string, value: 1 | -1, property: keyof UserAccount['meta'] }) {
+	async incrementMeta(params: { id: string; value: 1 | -1; property: keyof UserAccount['meta'] }) {
 		return await this.repository.incrementUserMetaProperty(params.id, params.property, params.value)
 	}
 
-	async resetRankings (key: keyof UserAccount['rankings']) {
+	async resetRankings(key: keyof UserAccount['rankings']) {
 		return await this.repository.resetRankings(key)
 	}
 
-	async updateScore (params: { userId: string, amount: number }) {
+	async updateScore(params: { userId: string; amount: number }) {
 		return await this.repository.updateScore(params.userId, params.amount)
 	}
 
-	async updateType (params: { userId: string, data: UserTypeData }) {
+	async updateType(params: { userId: string; data: UserTypeData }) {
 		return await this.repository.updateType(params.userId, params.data)
 	}
 
-	async updateApplication (params: { userId: string, data: UserAccount['application'] }) {
+	async updateApplication(params: { userId: string; data: UserAccount['application'] }) {
 		return await this.repository.updateApplication(params.userId, params.data)
 	}
 
-	async updateTrip(data: { driverId: string, userId: string, count: number }) {
+	async updateTrip(data: { driverId: string; userId: string; count: number }) {
 		return await this.repository.updateTrip(data)
 	}
 
-	async updateDebt(data: { driverId: string, userId: string, count: number }) {
+	async updateDebt(data: { driverId: string; userId: string; count: number }) {
 		return await this.repository.updateDebt(data)
 	}
 
-	async updateLocation (data: { userId: string, location: [number, number] }) {
+	async updateLocation(data: { userId: string; location: [number, number] }) {
 		return await this.repository.updateLocation(data)
 	}
 
-	async updateSettings (params: { userId: string, settings: Partial<UserAccount['settings']>; }) {
+	async updateSettings(params: { userId: string; settings: Partial<UserAccount['settings']> }) {
 		return await this.repository.updateSettings(params.userId, params.settings)
 	}
 
-	async updateSavedLocations (params: { userId: string, savedLocations: UserAccount['savedLocations'] }) {
+	async updateSavedLocations(params: { userId: string; savedLocations: UserAccount['savedLocations'] }) {
 		return await this.repository.updateSavedLocations(params.userId, params.savedLocations)
 	}
 }

@@ -5,7 +5,7 @@ import { TransactionToModel } from '../../data/models/transactions'
 export class TransactionsUseCase {
 	repository: ITransactionRepository
 
-	constructor (repo: ITransactionRepository) {
+	constructor(repo: ITransactionRepository) {
 		this.repository = repo
 	}
 
@@ -13,11 +13,11 @@ export class TransactionsUseCase {
 		return await this.repository.create(input)
 	}
 
-	async update(input: { driverId: string, id: string, data: Partial<TransactionToModel> }) {
+	async update(input: { driverId: string; id: string; data: Partial<TransactionToModel> }) {
 		return await this.repository.update(input)
 	}
 
-	async delete(input: { driverId: string, id: string }) {
+	async delete(input: { driverId: string; id: string }) {
 		return await this.repository.delete(input)
 	}
 
@@ -29,7 +29,7 @@ export class TransactionsUseCase {
 		return await this.repository.find(id)
 	}
 
-	async updateTripDebt(input: { id: string, driverId: string, amount: number }) {
+	async updateTripDebt(input: { id: string; driverId: string; amount: number }) {
 		return await this.repository.updateTripDebt(input)
 	}
 }

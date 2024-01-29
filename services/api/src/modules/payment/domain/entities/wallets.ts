@@ -5,13 +5,13 @@ export class WalletEntity extends BaseEntity {
 	public readonly id: string
 	public readonly userId: string
 	public readonly pin: string | null
-	public readonly balance: { amount: number, currency: Currencies }
+	public readonly balance: { amount: number; currency: Currencies }
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
 	ignoreInJSON = ['pin']
 
-	constructor ({ id, userId, pin, balance, createdAt, updatedAt }: WalletConstructorArgs) {
+	constructor({ id, userId, pin, balance, createdAt, updatedAt }: WalletConstructorArgs) {
 		super()
 		this.id = id
 		this.userId = userId
@@ -21,7 +21,7 @@ export class WalletEntity extends BaseEntity {
 		this.updatedAt = updatedAt
 	}
 
-	get hasPin () {
+	get hasPin() {
 		return !!this.pin
 	}
 }
@@ -30,7 +30,7 @@ type WalletConstructorArgs = {
 	id: string
 	userId: string
 	pin: string | null
-	balance: { amount: number, currency: Currencies }
+	balance: { amount: number; currency: Currencies }
 	createdAt: number
 	updatedAt: number
 }

@@ -9,9 +9,9 @@ export interface ITransactionRepository {
 
 	get(query: QueryParams): Promise<QueryResults<TransactionEntity>>
 
-	update(data: { id: string, driverId: string, data: Partial<TransactionToModel> }): Promise<TransactionEntity | null>
+	update(data: { id: string; driverId: string; data: Partial<TransactionToModel> }): Promise<TransactionEntity | null>
 
-	delete(data: { id: string, driverId: string }): Promise<boolean>
+	delete(data: { id: string; driverId: string }): Promise<boolean>
 
-	updateTripDebt(data: { id: string, driverId: string, amount: number }): Promise<boolean>
+	updateTripDebt(data: { id: string; driverId: string; amount: number }): Promise<boolean>
 }

@@ -11,7 +11,7 @@ import {
 	ValidationError,
 	readEmailFromPug,
 	signinWithApple,
-	signinWithGoogle
+	signinWithGoogle,
 } from 'equipped'
 import { IAuthRepository } from '../../domain/i-repositories/auth'
 import { Credential, PasswordResetInput } from '../../domain/types'
@@ -67,7 +67,7 @@ export class AuthRepository implements IAuthRepository {
 			subject: 'Verify Your Email',
 			from: EmailsList.NO_REPLY,
 			content: emailContent,
-			data: {}
+			data: {},
 		})
 
 		return true
@@ -99,7 +99,7 @@ export class AuthRepository implements IAuthRepository {
 			subject: 'Reset Your Password',
 			from: EmailsList.NO_REPLY,
 			content: emailContent,
-			data: {}
+			data: {},
 		})
 
 		return true
@@ -111,30 +111,39 @@ export class AuthRepository implements IAuthRepository {
 		if (!userEmail) throw new BadRequestError('Invalid token')
 		await appInstance.cache.delete('password-reset-token-' + input.token)
 
-		const user = await User.findOneAndUpdate({ email: userEmail }, {
-			$set: { password: await Hash.hash(input.password) },
-			$addToSet: { authTypes: AuthTypes.email }
-		}, { new: true })
+		const user = await User.findOneAndUpdate(
+			{ email: userEmail },
+			{
+				$set: { password: await Hash.hash(input.password) },
+				$addToSet: { authTypes: AuthTypes.email },
+			},
+			{ new: true },
+		)
 		if (!user) throw new BadRequestError('No account with saved email exists')
 
 		return this.mapper.mapFrom(user)!
 	}
 
-	async googleSignIn (idToken: string, referrer: string | null) {
+	async googleSignIn(idToken: string, referrer: string | null) {
 		const data = await signinWithGoogle(idToken)
 		const email = data.email!.toLowerCase()
 
-		const photo = data.picture ? {
-			link: data.picture
-		} as unknown as MediaOutput : null
+		const photo = data.picture
+			? ({
+				link: data.picture,
+			} as unknown as MediaOutput)
+			: null
 
 		return this.authorizeSocial(AuthTypes.google, {
-			email, photo, name: { first: data.first_name, last: data.last_name },
-			isVerified: data.email_verified === 'true', referrer
+			email,
+			photo,
+			name: { first: data.first_name, last: data.last_name },
+			isVerified: data.email_verified === 'true',
+			referrer,
 		})
 	}
 
-	async appleSignIn ({ idToken, firstName, lastName }, referrer) {
+	async appleSignIn({ idToken, firstName, lastName }, referrer) {
 		const data = await signinWithApple(idToken).catch((e: any) => {
 			throw new BadRequestError(e.message)
 		})
@@ -142,37 +151,55 @@ export class AuthRepository implements IAuthRepository {
 		if (!email) throw new BadRequestError('can\'t access your email. Signin another way')
 
 		return this.authorizeSocial(AuthTypes.apple, {
-			email, photo: null, name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
-			isVerified: data.email_verified === 'true', referrer
+			email,
+			photo: null,
+			name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
+			isVerified: data.email_verified === 'true',
+			referrer,
 		})
 	}
 
-	private async authorizeSocial (type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified' | 'referrer'>) {
+	private async authorizeSocial(
+		type: Enum<typeof AuthTypes>,
+		data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified' | 'referrer'>,
+	) {
 		const userData = await User.findOne({ email: data.email })
 
-		if (!userData) return await this.addNewUser({
-			name: data.name,
-			username: Random.string(9),
-			email: data.email,
-			photo: data.photo,
-			phone: null,
-			authTypes: [type],
-			password: '',
-			isVerified: data.isVerified,
-			referrer: data.referrer
-		}, type)
+		if (!userData)
+			return await this.addNewUser(
+				{
+					name: data.name,
+					username: Random.string(9),
+					email: data.email,
+					photo: data.photo,
+					phone: null,
+					authTypes: [type],
+					password: '',
+					isVerified: data.isVerified,
+					referrer: data.referrer,
+				},
+				type,
+			)
 
-		return await this.authenticateUser({
-			email: userData.email,
-			password: ''
-		}, false, type)
+		return await this.authenticateUser(
+			{
+				email: userData.email,
+				password: '',
+			},
+			false,
+			type,
+		)
 	}
 
 	private async signInUser(user: UserFromModel, type: Enum<typeof AuthTypes>) {
-		const userUpdated = await User.findByIdAndUpdate(user._id, {
-			$set: { lastSignedInAt: Date.now(), ...(user.username ? {} : { username: Random.string(9) } ) },
-			$addToSet: { authTypes: [type] }
-		}, { new: true })
+		const userUpdated = await User.findByIdAndUpdate(
+			user._id,
+			{
+				$set: { lastSignedInAt: Date.now(), ...(user.username ? {} : { username: Random.string(9) }) },
+				$addToSet: { authTypes: [type] },
+			},
+			{ new: true },
+		)
 
 		return this.mapper.mapFrom(userUpdated)!
 	}

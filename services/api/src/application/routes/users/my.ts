@@ -8,25 +8,21 @@ export const myRoutes = groupRoutes('/my', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await MyController.quickSend(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await MyController.quickSend(req),
+			})),
+		],
 	},
 	{
 		path: '/drivers',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await MyController.drivers(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await MyController.drivers(req),
+			})),
+		],
+	},
 ])

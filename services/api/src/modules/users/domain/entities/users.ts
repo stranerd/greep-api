@@ -1,14 +1,5 @@
 import { BaseEntity } from 'equipped'
-import {
-	EmbeddedUser,
-	UserAccount,
-	UserBio,
-	UserDates,
-	UserRoles,
-	UserStatus,
-	UserType,
-	UserTypeData
-} from '../types'
+import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData } from '../types'
 
 export class UserEntity extends BaseEntity {
 	public readonly id: string
@@ -21,15 +12,7 @@ export class UserEntity extends BaseEntity {
 
 	ignoreInJSON = ['bio.email', 'bio.phone']
 
-	constructor ({
-		id,
-		bio,
-		roles,
-		dates,
-		status,
-		account,
-		type,
-	}: UserConstructorArgs) {
+	constructor({ id, bio, roles, dates, status, account, type }: UserConstructorArgs) {
 		super()
 		this.id = id
 		this.bio = bio ?? {}
@@ -48,11 +31,11 @@ export class UserEntity extends BaseEntity {
 		return this.dates.deletedAt !== null
 	}
 
-	isDriver () {
+	isDriver() {
 		return this.type?.type === UserType.driver
 	}
 
-	isCustomer () {
+	isCustomer() {
 		return this.type?.type === UserType.customer
 	}
 
@@ -60,7 +43,7 @@ export class UserEntity extends BaseEntity {
 		return {
 			id: this.id,
 			bio: { username: this.bio.username, name: this.bio.name, photo: this.bio.photo },
-			roles: this.roles
+			roles: this.roles,
 		}
 	}
 }

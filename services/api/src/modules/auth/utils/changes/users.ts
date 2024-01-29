@@ -13,14 +13,14 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 				email: after.email,
 				username: after.username,
 				photo: after.photo,
-				phone: after.phone
+				phone: after.phone,
 			},
-			timestamp: after.signedUpAt
+			timestamp: after.signedUpAt,
 		})
 		await UsersUseCases.updateUserWithRoles({
 			id: after.id,
 			data: after.roles,
-			timestamp: Date.now()
+			timestamp: Date.now(),
 		})
 
 		if (after.referrer && after.isVerified) await ReferralsUseCases.create({ userId: after.referrer, referred: after.id })
@@ -29,32 +29,35 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, AuthUserEnt
 		if (changes.photo && before.photo) await publishers.DELETEFILE.publish(before.photo)
 
 		const updatedBio = AuthUserEntity.bioKeys().some((key) => changes[key])
-		if (updatedBio) await UsersUseCases.updateUserWithBio({
-			id: after.id,
-			data: {
-				name: after.allNames,
-				email: after.email,
-				username: after.username,
-				photo: after.photo,
-				phone: after.phone
-			},
-			timestamp: Date.now()
-		})
+		if (updatedBio)
+			await UsersUseCases.updateUserWithBio({
+				id: after.id,
+				data: {
+					name: after.allNames,
+					email: after.email,
+					username: after.username,
+					photo: after.photo,
+					phone: after.phone,
+				},
+				timestamp: Date.now(),
+			})
 
 		const updatedRoles = changes.roles
-		if (updatedRoles) await UsersUseCases.updateUserWithRoles({
-			id: after.id,
-			data: after.roles,
-			timestamp: Date.now()
-		})
+		if (updatedRoles)
+			await UsersUseCases.updateUserWithRoles({
+				id: after.id,
+				data: after.roles,
+				timestamp: Date.now(),
+			})
 
-		if ((changes.referrer || changes.isVerified) && after.referrer && after.isVerified) await ReferralsUseCases.create({
-			userId: after.referrer,
-			referred: after.id
-		})
+		if ((changes.referrer || changes.isVerified) && after.referrer && after.isVerified)
+			await ReferralsUseCases.create({
+				userId: after.referrer,
+				referred: after.id,
+			})
 	},
 	deleted: async ({ before }) => {
 		await UsersUseCases.markUserAsDeleted({ id: before.id, timestamp: Date.now() })
 		if (before.photo) await publishers.DELETEFILE.publish(before.photo)
-	}
+	},
 }

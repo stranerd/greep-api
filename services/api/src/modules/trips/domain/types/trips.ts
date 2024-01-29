@@ -7,7 +7,7 @@ export enum TripStatus {
 	started = 'started',
 	ended = 'ended',
 	detailed = 'detailed',
-	cancelled = 'cancelled'
+	cancelled = 'cancelled',
 }
 
 export type TripData = {

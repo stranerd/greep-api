@@ -18,46 +18,44 @@ export class WalletRepository implements IWalletRepository {
 	private transactionMapper: TransactionMapper
 	private withdrawalMapper: WithdrawalMapper
 
-	private constructor () {
+	private constructor() {
 		this.mapper = new WalletMapper()
 		this.transactionMapper = new TransactionMapper()
 		this.withdrawalMapper = new WithdrawalMapper()
 	}
 
-	static getInstance () {
+	static getInstance() {
 		if (!WalletRepository.instance) WalletRepository.instance = new WalletRepository()
 		return WalletRepository.instance
 	}
 
-	private static async getUserWallet (userId: string, session?: any) {
+	private static async getUserWallet(userId: string, session?: any) {
 		const wallet = await Wallet.findOneAndUpdate(
 			{ userId },
 			{ $setOnInsert: { userId } },
-			{ upsert: true, new: true, ...(session ? { session } : {}) })
+			{ upsert: true, new: true, ...(session ? { session } : {}) },
+		)
 		return wallet!
 	}
 
-	async get (userId: string) {
+	async get(userId: string) {
 		const wallet = await WalletRepository.getUserWallet(userId)
 		return this.mapper.mapFrom(wallet)!
 	}
 
-	async updateAmount (userId: string, amount: number) {
+	async updateAmount(userId: string, amount: number) {
 		let res = false
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId, session))!
 			const updatedBalance = wallet.balance.amount + amount
 			if (updatedBalance < 0) throw new BadRequestError('wallet balance can\'t go below 0')
-			res = !!(await Wallet.findByIdAndUpdate(wallet.id,
-				{ $inc: { 'balance.amount': amount } },
-				{ new: true, session }
-			))
+			res = !!(await Wallet.findByIdAndUpdate(wallet.id, { $inc: { 'balance.amount': amount } }, { new: true, session }))
 			return res
 		})
 		return res
 	}
 
-	async transfer (data: TransferData) {
+	async transfer(data: TransferData) {
 		let res = null as TransactionFromModel | null
 		await Wallet.collection.conn.transaction(async (session) => {
 			const fromWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.from, session))!
@@ -72,33 +70,28 @@ export class WalletRepository implements IWalletRepository {
 					amount: 0 - data.amount,
 					currency: fromWallet.balance.currency,
 					status: TransactionStatus.settled,
-					data: { type: TransactionType.Sent, note: data.note, to: data.to, toName: data.toName }
-				}, {
+					data: { type: TransactionType.Sent, note: data.note, to: data.to, toName: data.toName },
+				},
+				{
 					userId: data.to,
 					email: data.toEmail,
 					title: `You received money from ${data.fromName}`,
 					amount: data.amount,
 					currency: fromWallet.balance.currency,
 					status: TransactionStatus.settled,
-					data: { type: TransactionType.Received, note: data.note, from: data.from, fromName: data.fromName }
-				}
+					data: { type: TransactionType.Received, note: data.note, from: data.from, fromName: data.fromName },
+				},
 			]
 			const transactionModels = await Transaction.insertMany(transactions, { session })
-			await Wallet.findByIdAndUpdate(fromWallet.id,
-				{ $inc: { 'balance.amount': 0 - data.amount } },
-				{ new: true, session }
-			)
-			await Wallet.findByIdAndUpdate(toWallet.id,
-				{ $inc: { 'balance.amount': data.amount } },
-				{ new: true, session }
-			)
+			await Wallet.findByIdAndUpdate(fromWallet.id, { $inc: { 'balance.amount': 0 - data.amount } }, { new: true, session })
+			await Wallet.findByIdAndUpdate(toWallet.id, { $inc: { 'balance.amount': data.amount } }, { new: true, session })
 			res = transactionModels[0]
 			return res
 		})
 		return this.transactionMapper.mapFrom(res)!
 	}
 
-	async withdraw (data: WithdrawData) {
+	async withdraw(data: WithdrawData) {
 		let res = null as WithdrawalFromModel | null
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.userId, session))!
@@ -123,13 +116,10 @@ export class WalletRepository implements IWalletRepository {
 				amount: 0 - deductingAmount,
 				currency: wallet.balance.currency,
 				status: TransactionStatus.settled,
-				data: { type: TransactionType.Withdrawal, withdrawalId: withdrawal._id }
+				data: { type: TransactionType.Withdrawal, withdrawalId: withdrawal._id },
 			}
 			await new Transaction(transaction).save({ session })
-			await Wallet.findByIdAndUpdate(wallet.id,
-				{ $inc: { 'balance.amount': transaction.amount } },
-				{ new: true, session }
-			)
+			await Wallet.findByIdAndUpdate(wallet.id, { $inc: { 'balance.amount': transaction.amount } }, { new: true, session })
 			res = withdrawal
 			return res
 		})
@@ -146,7 +136,7 @@ export class WalletRepository implements IWalletRepository {
 			subject: 'Reset Your Transaction Pin',
 			from: EmailsList.NO_REPLY,
 			content: emailContent,
-			data: {}
+			data: {},
 		})
 
 		return true
@@ -158,12 +148,12 @@ export class WalletRepository implements IWalletRepository {
 		await appInstance.cache.delete('transaction-pin-reset-' + token)
 
 		const wallet = await WalletRepository.getUserWallet(userId)!
-		return !!await Wallet.findByIdAndUpdate(wallet.id, { $set: { pin } }, { new: true })
+		return !!(await Wallet.findByIdAndUpdate(wallet.id, { $set: { pin } }, { new: true }))
 	}
 
-	async updatePin (userId: string, oldPin: string | null, pin: string) {
+	async updatePin(userId: string, oldPin: string | null, pin: string) {
 		const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId))!
 		if (wallet.pin !== oldPin) throw new BadRequestError('invalid pin')
-		return !!await Wallet.findByIdAndUpdate(wallet.id, { $set: { pin } }, { new: true })
+		return !!(await Wallet.findByIdAndUpdate(wallet.id, { $set: { pin } }, { new: true }))
 	}
 }

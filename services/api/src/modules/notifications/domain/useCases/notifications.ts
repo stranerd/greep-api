@@ -5,27 +5,27 @@ import { INotificationRepository } from '../irepositories/notifications'
 export class NotificationsUseCase {
 	repository: INotificationRepository
 
-	constructor (repo: INotificationRepository) {
+	constructor(repo: INotificationRepository) {
 		this.repository = repo
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		return await this.repository.find(id)
 	}
 
-	async get (input: QueryParams) {
+	async get(input: QueryParams) {
 		return await this.repository.get(input)
 	}
 
-	async create (input: NotificationToModel[]) {
+	async create(input: NotificationToModel[]) {
 		return await this.repository.create(input)
 	}
 
-	async deleteOldSeen () {
+	async deleteOldSeen() {
 		return await this.repository.deleteOldSeen()
 	}
 
-	async markSeen (input: { userId: string, ids?: string[], seen: boolean }) {
+	async markSeen(input: { userId: string; ids?: string[]; seen: boolean }) {
 		return await this.repository.markSeen(input)
 	}
 }

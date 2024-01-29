@@ -5,13 +5,11 @@ const getNewTokens: Route = {
 	path: '/auth/token',
 	method: 'post',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await TokenController.getNewTokens(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await TokenController.getNewTokens(req),
+		})),
+	],
 }
 
 const routes: Route[] = [getNewTokens]

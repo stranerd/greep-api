@@ -7,42 +7,33 @@ import { ActivityType, UserMeta } from '../../domain/types'
 
 export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, ReferralEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created([
-			`users/referrals/${after.userId}`,
-			`users/referrals/${after.id}/${after.userId}`,
-		], after)
+		await appInstance.listener.created([`users/referrals/${after.userId}`, `users/referrals/${after.id}/${after.userId}`], after)
 
 		await Promise.all([
 			ActivitiesUseCases.create({
 				userId: after.userId,
 				data: {
 					type: ActivityType.referrals,
-					referralId: after.id
-				}
+					referralId: after.id,
+				},
 			}),
 			UsersUseCases.incrementMeta({
 				id: after.userId,
 				value: 1,
-				property: UserMeta.referrals
-			})
+				property: UserMeta.referrals,
+			}),
 		])
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.updated([
-			`users/referrals/${after.userId}`,
-			`users/referrals/${after.id}/${after.userId}`,
-		], after)
+		await appInstance.listener.updated([`users/referrals/${after.userId}`, `users/referrals/${after.id}/${after.userId}`], after)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted([
-			`users/referrals/${before.userId}`,
-			`users/referrals/${before.id}/${before.userId}`,
-		], before)
+		await appInstance.listener.deleted([`users/referrals/${before.userId}`, `users/referrals/${before.id}/${before.userId}`], before)
 
 		await UsersUseCases.incrementMeta({
 			id: before.userId,
 			value: -1,
-			property: UserMeta.referrals
+			property: UserMeta.referrals,
 		})
-	}
+	},
 }

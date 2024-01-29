@@ -13,5 +13,5 @@ export interface ChatToModel {
 	to: string
 	media: Media | null
 	body: string
-	links: { original: string, normalized: string }[]
+	links: { original: string; normalized: string }[]
 }

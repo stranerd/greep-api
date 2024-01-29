@@ -9,7 +9,7 @@ export enum TransactionStatus {
 	initialized = 'initialized',
 	fulfilled = 'fulfilled',
 	failed = 'failed',
-	settled = 'settled'
+	settled = 'settled',
 }
 
 export enum TransactionType {
@@ -20,35 +20,40 @@ export enum TransactionType {
 	WithdrawalRefund = 'WithdrawalRefund',
 }
 
-export type TransactionData = {
-	type: TransactionType.FundWallet
-	exchangeRate: number
-} | {
-	type: TransactionType.Sent
-	note: string
-	to: string
-	toName: string
-} | {
-	type: TransactionType.Received
-	note: string
-	from: string
-	fromName: string
-} | {
-	type: TransactionType.Withdrawal
-	withdrawalId: string
-} | {
-	type: TransactionType.WithdrawalRefund
-	withdrawalId: string
-}
+export type TransactionData =
+	| {
+			type: TransactionType.FundWallet
+			exchangeRate: number
+	  }
+	| {
+			type: TransactionType.Sent
+			note: string
+			to: string
+			toName: string
+	  }
+	| {
+			type: TransactionType.Received
+			note: string
+			from: string
+			fromName: string
+	  }
+	| {
+			type: TransactionType.Withdrawal
+			withdrawalId: string
+	  }
+	| {
+			type: TransactionType.WithdrawalRefund
+			withdrawalId: string
+	  }
 
 export type TransferData = {
-	from: string,
-	to: string,
-	fromName: string,
-	fromEmail: string,
-	toName: string,
-	toEmail: string,
-	amount: number,
+	from: string
+	to: string
+	fromName: string
+	fromEmail: string
+	toName: string
+	toEmail: string
+	amount: number
 	note: string
 }
 
@@ -61,9 +66,9 @@ export enum WithdrawalStatus {
 }
 
 export type WithdrawData = {
-	userId: string,
-	email: string,
-	amount: number,
+	userId: string
+	email: string
+	amount: number
 	location: Location
 }
 

@@ -5,19 +5,19 @@ import { IReferralRepository } from '../i-repositories/referrals'
 export class ReferralsUseCase {
 	repository: IReferralRepository
 
-	constructor (repo: IReferralRepository) {
+	constructor(repo: IReferralRepository) {
 		this.repository = repo
 	}
 
-	async create (input: ReferralToModel) {
+	async create(input: ReferralToModel) {
 		return await this.repository.create(input)
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		return await this.repository.find(id)
 	}
 
-	async get (input: QueryParams) {
+	async get(input: QueryParams) {
 		return await this.repository.getReferrals(input)
 	}
 }
