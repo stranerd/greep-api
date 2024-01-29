@@ -1,4 +1,5 @@
 import { authRoutes } from './auth'
+import { categoriesRoutes } from './categories'
 import { messagingRoutes } from './messaging'
 import { notificationRoutes } from './notifications'
 import { paymentRoutes } from './payment'
@@ -11,5 +12,6 @@ export const routes = [
 	...notificationRoutes,
 	...paymentRoutes,
 	...tripRoutes,
-	...userRoutes
+	...userRoutes,
+	...categoriesRoutes,
 ]
