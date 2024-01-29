@@ -1,24 +1,17 @@
 module.exports = {
 	root: true,
 	env: {
-		node: true
+		node: true,
 	},
-	extends: [
-		'eslint:recommended',
-		'eslint-config-prettier',
-		'plugin:prettier/recommended',
-	],
-	plugins: [
-		'promise',
-		'@typescript-eslint'
-	],
+	extends: ['eslint:recommended', 'eslint-config-prettier', 'plugin:prettier/recommended'],
+	plugins: ['promise', '@typescript-eslint'],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		sourceType: 'module',
-		ecmaVersion: 2021
+		ecmaVersion: 2021,
 	},
 	rules: {
-		'prettier/prettier': 'warn',
+		'prettier/prettier': 'error',
 		'no-console': 'warn',
 		'no-debugger': 'error',
 		'no-tabs': 'off',
@@ -37,14 +30,14 @@ module.exports = {
 		curly: 'off',
 		'object-property-newline': 'off',
 		'require-atomic-updates': 'off',
-		'require-await': 'off'
+		'require-await': 'off',
 	},
 	overrides: [
 		{
 			files: ['tests/**/*.[jt]s?(x)', 'tests/**/*.spec.[jt]s?(x)'],
 			env: {
-				jest: true
-			}
-		}
-	]
+				jest: true,
+			},
+		},
+	],
 }
