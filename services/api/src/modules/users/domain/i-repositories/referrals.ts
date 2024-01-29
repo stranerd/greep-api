@@ -3,9 +3,9 @@ import { ReferralToModel } from '../../data/models/referrals'
 import { ReferralEntity } from '../entities/referrals'
 
 export interface IReferralRepository {
-	find (id: string): Promise<ReferralEntity | null>
+	find(id: string): Promise<ReferralEntity | null>
 
-	create (data: ReferralToModel): Promise<ReferralEntity>
+	create(data: ReferralToModel): Promise<ReferralEntity>
 
-	getReferrals (query: QueryParams): Promise<QueryResults<ReferralEntity>>
+	getReferrals(query: QueryParams): Promise<QueryResults<ReferralEntity>>
 }

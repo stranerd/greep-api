@@ -19,23 +19,23 @@ export interface IUserRepository {
 
 	resetAllUsersStatus(): Promise<boolean>
 
-	incrementUserMetaProperty (userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1): Promise<void>
+	incrementUserMetaProperty(userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1): Promise<void>
 
-	updateScore (userId: string, amount: number): Promise<boolean>
+	updateScore(userId: string, amount: number): Promise<boolean>
 
-	resetRankings (key: keyof UserAccount['rankings']): Promise<boolean>
+	resetRankings(key: keyof UserAccount['rankings']): Promise<boolean>
 
-	updateType (userId: string, data: UserTypeData): Promise<UserEntity | null>
+	updateType(userId: string, data: UserTypeData): Promise<UserEntity | null>
 
-	updateApplication (userId, data: UserAccount['application']): Promise<boolean>
+	updateApplication(userId, data: UserAccount['application']): Promise<boolean>
 
-	updateTrip(data: { driverId: string, userId: string, count: number }): Promise<boolean>
+	updateTrip(data: { driverId: string; userId: string; count: number }): Promise<boolean>
 
-	updateDebt (data: { driverId: string, userId: string, count: number }): Promise<boolean>
+	updateDebt(data: { driverId: string; userId: string; count: number }): Promise<boolean>
 
-	updateLocation (data: { userId: string, location: [number, number] }): Promise<boolean>
+	updateLocation(data: { userId: string; location: [number, number] }): Promise<boolean>
 
-	updateSettings (userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
+	updateSettings(userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
 
-	updateSavedLocations (userId: string, savedLocations: UserAccount['savedLocations']): Promise<UserEntity | null>
+	updateSavedLocations(userId: string, savedLocations: UserAccount['savedLocations']): Promise<UserEntity | null>
 }

@@ -9,7 +9,7 @@ export class PhoneErrorEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor (data: ErrorConstructor) {
+	constructor(data: ErrorConstructor) {
 		super()
 		this.id = data.id
 		this.error = data.error
@@ -23,9 +23,9 @@ export class PhoneErrorEntity extends BaseEntity {
 
 type ErrorConstructor = {
 	id: string
-	error: string,
-	to: string,
-	content: string,
+	error: string
+	to: string
+	content: string
 	from: string
 	createdAt: number
 	updatedAt: number

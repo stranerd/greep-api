@@ -11,22 +11,24 @@ const sendMail = async (email: Email) => {
 	const transporter = createTransport({
 		service: 'gmail',
 		auth: { type: 'OAuth2', user: from, serviceClient: clientId, privateKey },
-		tls: { rejectUnauthorized: false }
+		tls: { rejectUnauthorized: false },
 	})
 	await transporter.verify()
 
-	const attachments = [] as { filename: string, path: string, cid: string }[]
+	const attachments = [] as { filename: string; path: string; cid: string }[]
 
 	attachments.push({
 		filename: 'logo.png',
 		path: path.join('emails/attachments/logo.png'),
-		cid: 'logo'
+		cid: 'logo',
 	})
 
 	await transporter.sendMail({
 		from: `Stranerd ${from}`,
 		html: content,
-		to, subject, attachments
+		to,
+		subject,
+		attachments,
 	})
 }
 
@@ -37,7 +39,7 @@ export const sendMailAndCatchError = async (email: Email) => {
 	} catch (e) {
 		await EmailErrorsUseCases.add({
 			...email,
-			error: (e as Error).message
+			error: (e as Error).message,
 		})
 	}
 }

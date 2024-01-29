@@ -4,10 +4,4 @@ import passwordRoutes from './passwords'
 import tokenRoutes from './token'
 import userRoutes from './user'
 
-export const authRoutes = [
-	...emailRoutes,
-	...passwordRoutes,
-	...userRoutes,
-	...tokenRoutes,
-	...identityRoutes
-]
+export const authRoutes = [...emailRoutes, ...passwordRoutes, ...userRoutes, ...tokenRoutes, ...identityRoutes]

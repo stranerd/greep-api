@@ -91,5 +91,3 @@ $ make prod-start-detach
 # ensure all services have a lint script defined in it
 $ make lint-all
 ```
-
-`cat /etc/synthetic.conf`

@@ -7,16 +7,26 @@ import { RequestStatus } from '../../domain/types'
 
 export const RequestDbChangeCallbacks: DbChangeCallbacks<RequestFromModel, RequestEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created([
-			`payment/requests/${after.from}`, `payment/requests/${after.to}`,
-			`payment/requests/${after.id}/${after.from}`, `payment/requests/${after.id}/${after.to}`,
-		], after)
+		await appInstance.listener.created(
+			[
+				`payment/requests/${after.from}`,
+				`payment/requests/${after.to}`,
+				`payment/requests/${after.id}/${after.from}`,
+				`payment/requests/${after.id}/${after.to}`,
+			],
+			after,
+		)
 	},
 	updated: async ({ after, changes }) => {
-		await appInstance.listener.updated([
-			`payment/requests/${after.from}`, `payment/requests/${after.to}`,
-			`payment/requests/${after.id}/${after.from}`, `payment/requests/${after.id}/${after.to}`,
-		], after)
+		await appInstance.listener.updated(
+			[
+				`payment/requests/${after.from}`,
+				`payment/requests/${after.to}`,
+				`payment/requests/${after.id}/${after.from}`,
+				`payment/requests/${after.id}/${after.to}`,
+			],
+			after,
+		)
 
 		if (changes.status && [RequestStatus.paid, RequestStatus.rejected].includes(after.status)) {
 			const isPaid = after.status === RequestStatus.paid
@@ -28,8 +38,8 @@ export const RequestDbChangeCallbacks: DbChangeCallbacks<RequestFromModel, Reque
 					type: isPaid ? NotificationType.RequestPaid : NotificationType.RequestRejected,
 					requestId: after.id,
 					amount: after.amount,
-					currency: after.currency
-				}
+					currency: after.currency,
+				},
 			})
 		}
 
@@ -42,15 +52,20 @@ export const RequestDbChangeCallbacks: DbChangeCallbacks<RequestFromModel, Reque
 					type: NotificationType.RequestAcknowledged,
 					requestId: after.id,
 					amount: after.amount,
-					currency: after.currency
-				}
+					currency: after.currency,
+				},
 			})
 		}
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted([
-			`payment/requests/${before.from}`, `payment/requests/${before.to}`,
-			`payment/requests/${before.id}/${before.from}`, `payment/requests/${before.id}/${before.to}`,
-		], before)
-	}
+		await appInstance.listener.deleted(
+			[
+				`payment/requests/${before.from}`,
+				`payment/requests/${before.to}`,
+				`payment/requests/${before.id}/${before.from}`,
+				`payment/requests/${before.id}/${before.to}`,
+			],
+			before,
+		)
+	},
 }

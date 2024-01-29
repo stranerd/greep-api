@@ -5,7 +5,7 @@ import { RegisterInput, RoleInput, UserUpdateInput } from '../types'
 export class AuthUsersUseCase {
 	private repository: IUserRepository
 
-	constructor (repository: IUserRepository) {
+	constructor(repository: IUserRepository) {
 		this.repository = repository
 	}
 
@@ -19,9 +19,12 @@ export class AuthUsersUseCase {
 
 	async findUsersByEmailorUsername(value: string) {
 		const res = await this.repository.getUsers({
-			where: [{ field: 'email', value: value.toLowerCase() }, { field: 'username', value: value.toLowerCase() }],
+			where: [
+				{ field: 'email', value: value.toLowerCase() },
+				{ field: 'username', value: value.toLowerCase() },
+			],
 			whereType: QueryKeys.or,
-			limit: 1
+			limit: 1,
 		})
 		return res.results
 	}
@@ -29,7 +32,7 @@ export class AuthUsersUseCase {
 	async findUserByEmail(value: string) {
 		const res = await this.repository.getUsers({
 			where: [{ field: 'email', value: value.toLowerCase() }],
-			limit: 1
+			limit: 1,
 		})
 		return res.results.at(0) ?? null
 	}
@@ -38,15 +41,15 @@ export class AuthUsersUseCase {
 		return await this.repository.getUsers(data)
 	}
 
-	async updatePassword(input: { userId: string, password: string }) {
+	async updatePassword(input: { userId: string; password: string }) {
 		return await this.repository.updatePassword(input.userId, input.password)
 	}
 
-	async updateDetails(input: { userId: string, data: RegisterInput }) {
+	async updateDetails(input: { userId: string; data: RegisterInput }) {
 		return await this.repository.updateDetails(input.userId, input.data)
 	}
 
-	async updateProfile(input: { userId: string, data: UserUpdateInput }) {
+	async updateProfile(input: { userId: string; data: UserUpdateInput }) {
 		return await this.repository.updateUserProfile(input.userId, input.data)
 	}
 

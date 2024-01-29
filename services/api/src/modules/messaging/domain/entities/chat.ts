@@ -8,12 +8,12 @@ export class ChatEntity extends BaseEntity {
 	public readonly data: ChatData
 	public readonly body: string
 	public readonly media: Media | null
-	public readonly links: { original: string, normalized: string }[]
+	public readonly links: { original: string; normalized: string }[]
 	public readonly createdAt: number
 	public readonly updatedAt: number
 	public readonly readAt: Record<string, number>
 
-	constructor ({ id, from, to, data, body, links, media, createdAt, updatedAt, readAt }: ChatConstructorArgs) {
+	constructor({ id, from, to, data, body, links, media, createdAt, updatedAt, readAt }: ChatConstructorArgs) {
 		super()
 		this.id = id
 		this.from = from
@@ -35,7 +35,7 @@ type ChatConstructorArgs = {
 	data: ChatData
 	body: string
 	media: Media | null
-	links: { original: string, normalized: string }[]
+	links: { original: string; normalized: string }[]
 	createdAt: number
 	updatedAt: number
 	readAt: Record<string, number>

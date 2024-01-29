@@ -7,7 +7,7 @@ export class TokenEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor (data: TokenConstructor) {
+	constructor(data: TokenConstructor) {
 		super()
 		this.id = data.id
 		this.tokens = data.tokens
@@ -19,8 +19,8 @@ export class TokenEntity extends BaseEntity {
 
 type TokenConstructor = {
 	id: string
-	tokens: string[],
-	userId: string,
+	tokens: string[]
+	userId: string
 	createdAt: number
 	updatedAt: number
 }

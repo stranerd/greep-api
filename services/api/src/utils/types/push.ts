@@ -16,7 +16,7 @@ type ChatPushData = {
 }
 
 export type PushNotification = {
-	userIds: string[],
+	userIds: string[]
 	title: string
 	body: string
 	data: NotificationPushData | ChatPushData

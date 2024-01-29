@@ -7,13 +7,11 @@ const getUserDetails: Route = {
 	method: 'get',
 	controllers: [
 		isAuthenticatedButIgnoreVerified,
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await UserController.findUser(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await UserController.findUser(req),
+		})),
+	],
 }
 
 const updateUser: Route = {
@@ -21,53 +19,46 @@ const updateUser: Route = {
 	method: 'put',
 	controllers: [
 		isAuthenticated,
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await UserController.updateUser(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await UserController.updateUser(req),
+		})),
+	],
 }
 
 const updateUserRole: Route = {
 	path: '/auth/user/roles',
 	method: 'post',
 	controllers: [
-		isAuthenticated, isAdmin,
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await UserController.updateUserRole(req)
-			}
-		})
-	]
+		isAuthenticated,
+		isAdmin,
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await UserController.updateUserRole(req),
+		})),
+	],
 }
 
 const signout: Route = {
 	path: '/auth/user/signout',
 	method: 'post',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await UserController.signout(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await UserController.signout(req),
+		})),
+	],
 }
 
 const superAdmin: Route = {
 	path: '/auth/user/superAdmin',
 	method: 'get',
 	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await UserController.superAdmin(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await UserController.superAdmin(req),
+		})),
+	],
 }
 
 const deleteAccount: Route = {
@@ -75,13 +66,11 @@ const deleteAccount: Route = {
 	method: 'delete',
 	controllers: [
 		isAuthenticated,
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await UserController.delete(req)
-			}
-		})
-	]
+		makeController(async (req) => ({
+			status: StatusCodes.Ok,
+			result: await UserController.delete(req),
+		})),
+	],
 }
 
 const routes: Route[] = [getUserDetails, updateUserRole, updateUser, signout, superAdmin, deleteAccount]

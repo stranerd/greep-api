@@ -10,13 +10,12 @@ const start = async () => {
 	if (!isDev) initializeApp()
 	await appInstance.startConnections()
 	await Promise.all(
-		Object.values(subscribers)
-			.map(async (subscriber) => {
-				await subscriber.subscribe()
-			})
+		Object.values(subscribers).map(async (subscriber) => {
+			await subscriber.subscribe()
+		}),
 	)
 
-	const isMine: OnJoinFn = async ({ channel, user }) => user ? `${channel}/${user.id}` : null
+	const isMine: OnJoinFn = async ({ channel, user }) => (user ? `${channel}/${user.id}` : null)
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
 	appInstance.listener
@@ -46,7 +45,7 @@ const start = async () => {
 		},
 		onDisconnect: async (userId, socketId) => {
 			await UsersUseCases.updateUserStatus({ userId, socketId, add: false })
-		}
+		},
 	}
 
 	const app = appInstance.server

@@ -14,10 +14,10 @@ export const tokenRoutes = groupRoutes('/tokens', [
 				const user = await UsersUseCases.updateSettings({ userId: req.authUser!.id, settings: { notifications: enable } })
 				return {
 					status: StatusCodes.Ok,
-					result: !!user
+					result: !!user,
 				}
-			})
-		]
+			}),
+		],
 	},
 	{
 		path: '/devices/subscribe',
@@ -25,31 +25,38 @@ export const tokenRoutes = groupRoutes('/tokens', [
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
-				const { token } = validate({
-					token: Schema.string().min(1)
-				}, req.body)
+				const { token } = validate(
+					{
+						token: Schema.string().min(1),
+					},
+					req.body,
+				)
 				const res = await TokensUseCases.update({ userId: req.authUser!.id, tokens: [token], add: true })
 				return {
 					status: StatusCodes.Ok,
-					result: !!res
+					result: !!res,
 				}
-			})
-		]
-	}, {
+			}),
+		],
+	},
+	{
 		path: '/devices/unsubscribe',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
 			makeController(async (req) => {
-				const { token } = validate({
-					token: Schema.string().min(1)
-				}, req.body)
+				const { token } = validate(
+					{
+						token: Schema.string().min(1),
+					},
+					req.body,
+				)
 				const res = await TokensUseCases.update({ userId: req.authUser!.id, tokens: [token], add: false })
 				return {
 					status: StatusCodes.Ok,
-					result: !!res
+					result: !!res,
 				}
-			})
-		]
-	}
+			}),
+		],
+	},
 ])

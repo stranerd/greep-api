@@ -3,7 +3,11 @@ module.exports = {
 	env: {
 		node: true
 	},
-	extends: ['eslint:recommended'],
+	extends: [
+		'eslint:recommended',
+		'eslint-config-prettier',
+		'plugin:prettier/recommended',
+	],
 	plugins: [
 		'promise',
 		'@typescript-eslint'
@@ -14,12 +18,14 @@ module.exports = {
 		ecmaVersion: 2021
 	},
 	rules: {
+		'prettier/prettier': 'warn',
 		'no-console': 'warn',
 		'no-debugger': 'error',
 		'no-tabs': 'off',
 		'no-var': 'error',
 		'accessor-pairs': 'off',
 		'no-unused-vars': 0,
+		'arrow-body-style': ['error', 'as-needed'],
 		indent: ['error', 'tab', { SwitchCase: 1 }],
 		'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
 		semi: ['error', 'never'],

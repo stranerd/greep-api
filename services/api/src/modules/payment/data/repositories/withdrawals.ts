@@ -10,42 +10,48 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 	private static instance: WithdrawalRepository
 	private mapper: WithdrawalMapper
 
-	private constructor () {
+	private constructor() {
 		this.mapper = new WithdrawalMapper()
 	}
 
-	static getInstance () {
+	static getInstance() {
 		if (!WithdrawalRepository.instance) WithdrawalRepository.instance = new WithdrawalRepository()
 		return WithdrawalRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Withdrawal, query)
 
 		return {
 			...data,
-			results: data.results.map((r) => this.mapper.mapFrom(r)!)
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
 		}
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		const withdrawal = await Withdrawal.findById(id)
 		return this.mapper.mapFrom(withdrawal)
 	}
 
-	async update (id: string, data: Partial<WithdrawalToModel>) {
+	async update(id: string, data: Partial<WithdrawalToModel>) {
 		const withdrawal = await Withdrawal.findByIdAndUpdate(id, { $set: data }, { new: true })
 		return this.mapper.mapFrom(withdrawal)
 	}
 
-	async assignAgent (id: string, agentId: string) {
-		const withdrawal = await Withdrawal.findOneAndUpdate({
-			_id: id, agentId: null, status: WithdrawalStatus.created
-		}, { $set: { agentId, status: WithdrawalStatus.inProgress } }, { new: true })
+	async assignAgent(id: string, agentId: string) {
+		const withdrawal = await Withdrawal.findOneAndUpdate(
+			{
+				_id: id,
+				agentId: null,
+				status: WithdrawalStatus.created,
+			},
+			{ $set: { agentId, status: WithdrawalStatus.inProgress } },
+			{ new: true },
+		)
 		return this.mapper.mapFrom(withdrawal)
 	}
 
-	async generateToken (id: string, userId: string) {
+	async generateToken(id: string, userId: string) {
 		const withdrawal = await Withdrawal.findById(id)
 		if (!withdrawal || withdrawal.userId !== userId) throw new NotAuthorizedError()
 		if (withdrawal.status !== WithdrawalStatus.inProgress) throw new NotAuthorizedError('Withdrawal is not in progress')
@@ -54,7 +60,7 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 		return token
 	}
 
-	async complete (id: string, userId: string, token: string) {
+	async complete(id: string, userId: string, token: string) {
 		const withdrawal = await Withdrawal.findById(id)
 		if (!withdrawal || withdrawal.userId !== userId) throw new NotAuthorizedError()
 		if (withdrawal.status !== WithdrawalStatus.inProgress) throw new NotAuthorizedError('Withdrawal is not in progress')

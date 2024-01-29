@@ -9,155 +9,132 @@ export const tripsRoutes = groupRoutes('/trips', [
 		method: 'get',
 		controllers: [
 			isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.getTripsAdmin(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.getTripsAdmin(req),
+			})),
+		],
 	},
 	{
 		path: '/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.findTripAdmin(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.findTripAdmin(req),
+			})),
+		],
 	},
 	{
 		path: '/',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.getTrips(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.getTrips(req),
+			})),
+		],
 	},
 	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.findTrip(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.findTrip(req),
+			})),
+		],
 	},
 	{
 		path: '/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.createTrip(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.createTrip(req),
+			})),
+		],
 	},
 	{
 		path: '/:id/driverArrive',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.updateTrip(req, TripStatus.driverArrived)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.updateTrip(req, TripStatus.driverArrived),
+			})),
+		],
 	},
 	{
 		path: '/:id/start',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.updateTrip(req, TripStatus.started)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.updateTrip(req, TripStatus.started),
+			})),
+		],
 	},
 	{
 		path: '/:id/end',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.updateTrip(req, TripStatus.ended)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.updateTrip(req, TripStatus.ended),
+			})),
+		],
 	},
 	{
 		path: '/:id/cancel',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.cancelTrip(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.cancelTrip(req),
+			})),
+		],
 	},
 	{
 		path: '/:id/detail',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.detailTrip(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.detailTrip(req),
+			})),
+		],
 	},
 	{
 		path: '/:id/accept/requested',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.acceptRequestedTrip(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.acceptRequestedTrip(req),
+			})),
+		],
 	},
 	{
 		path: '/:id/accept/nonrequested',
 		method: 'post',
 		controllers: [
-			isAuthenticated, isDriver,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await TripsController.acceptNonRequestedTrip(req)
-				}
-			})
-		]
-	}
+			isAuthenticated,
+			isDriver,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await TripsController.acceptNonRequestedTrip(req),
+			})),
+		],
+	},
 ])

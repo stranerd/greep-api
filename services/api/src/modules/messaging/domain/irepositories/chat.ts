@@ -3,7 +3,7 @@ import { ChatToModel } from '../../data/models/chat'
 import { ChatEntity } from '../entities/chat'
 
 export interface IChatRepository {
-	add: (data: ChatToModel) => Promise<ChatEntity>,
+	add: (data: ChatToModel) => Promise<ChatEntity>
 	get: (query: QueryParams) => Promise<QueryResults<ChatEntity>>
 	find: (id: string) => Promise<ChatEntity | null>
 	update: (id: string, userId: string, data: Partial<ChatToModel>) => Promise<ChatEntity | null>

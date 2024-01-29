@@ -15,7 +15,19 @@ export class TripEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, customerId, driverId, requestedDriverId, status, from, to, discount, data, createdAt, updatedAt }: TripConstructorArgs) {
+	constructor({
+		id,
+		customerId,
+		driverId,
+		requestedDriverId,
+		status,
+		from,
+		to,
+		discount,
+		data,
+		createdAt,
+		updatedAt,
+	}: TripConstructorArgs) {
 		super()
 		this.id = id
 		this.customerId = customerId

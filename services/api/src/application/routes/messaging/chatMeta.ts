@@ -8,38 +8,32 @@ export const chatMetaRoutes = groupRoutes('/chatMetas', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ChatMetaController.get(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ChatMetaController.get(req),
+			})),
+		],
 	},
 	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ChatMetaController.find(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ChatMetaController.find(req),
+			})),
+		],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ChatMetaController.delete(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ChatMetaController.delete(req),
+			})),
+		],
+	},
 ])

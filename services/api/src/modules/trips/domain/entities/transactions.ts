@@ -11,16 +11,7 @@ export class TransactionEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({
-		id,
-		driverId,
-		amount,
-		description,
-		data,
-		recordedAt,
-		createdAt,
-		updatedAt
-	}: TransactionConstructorArgs) {
+	constructor({ id, driverId, amount, description, data, recordedAt, createdAt, updatedAt }: TransactionConstructorArgs) {
 		super()
 		this.id = id
 		this.driverId = driverId
@@ -34,6 +25,12 @@ export class TransactionEntity extends BaseEntity {
 }
 
 type TransactionConstructorArgs = {
-	id: string, createdAt: number, updatedAt: number, recordedAt: number,
-	driverId: string, amount: number, description: string, data: TransactionData
+	id: string
+	createdAt: number
+	updatedAt: number
+	recordedAt: number
+	driverId: string
+	amount: number
+	description: string
+	data: TransactionData
 }

@@ -1,11 +1,4 @@
-import {
-	UserAccount,
-	UserBio,
-	UserDates,
-	UserRoles,
-	UserStatus,
-	UserTypeData
-} from '../../domain/types'
+import { UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserTypeData } from '../../domain/types'
 
 export interface UserFromModel extends UserToModel {
 	_id: string

@@ -5,14 +5,14 @@ import { MediaInput } from '../models/media'
 import { appId, baseDomain, environment } from '@utils/environment'
 
 export class LocalUploaderRepository implements IUploaderRepository {
-	async delete (path: string) {
+	async delete(path: string) {
 		const mediaPath = resolve(join(process.cwd(), 'public', decodeURI(path)))
 		const exists = !!(await fs.stat(mediaPath).catch(() => false))
 		if (exists) fs.unlink(mediaPath)
 		return exists
 	}
 
-	async upload (path: string, media: MediaInput) {
+	async upload(path: string, media: MediaInput) {
 		const timestamp = Date.now()
 		media.name = media.name.toLowerCase()
 		path = `storage/${environment}/${path}/${timestamp}-${media.name}`
@@ -27,8 +27,9 @@ export class LocalUploaderRepository implements IUploaderRepository {
 			type: media.type,
 			size: media.size,
 			duration: media.duration,
-			path, timestamp,
-			link: `${baseDomain}/${appId}/${path}`
+			path,
+			timestamp,
+			link: `${baseDomain}/${appId}/${path}`,
 		}
 	}
 }

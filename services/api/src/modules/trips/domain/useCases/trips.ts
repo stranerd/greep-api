@@ -6,7 +6,7 @@ import { ITripRepository } from '../i-repositories/trips'
 export class TripsUseCase {
 	repository: ITripRepository
 
-	constructor (repo: ITripRepository) {
+	constructor(repo: ITripRepository) {
 		this.repository = repo
 	}
 
@@ -14,15 +14,15 @@ export class TripsUseCase {
 		return await this.repository.create(input)
 	}
 
-	async update(input: { userId: string, id: string, data: Partial<TripToModel> }) {
+	async update(input: { userId: string; id: string; data: Partial<TripToModel> }) {
 		return await this.repository.update(input)
 	}
 
-	async cancel (input: { customerId: string, id: string }) {
+	async cancel(input: { customerId: string; id: string }) {
 		return await this.repository.cancel(input)
 	}
 
-	async detail(input: { driverId: string, id: string, data: TransactionToModel }) {
+	async detail(input: { driverId: string; id: string; data: TransactionToModel }) {
 		return await this.repository.detail(input)
 	}
 
@@ -34,7 +34,7 @@ export class TripsUseCase {
 		return await this.repository.find(id)
 	}
 
-	async accept(input: { driverId: string, id: string, requested: boolean, accepted: boolean }) {
+	async accept(input: { driverId: string; id: string; requested: boolean; accepted: boolean }) {
 		return await this.repository.accept(input)
 	}
 }

@@ -10,44 +10,45 @@ export class TransactionRepository implements ITransactionRepository {
 	private static instance: TransactionRepository
 	private mapper = new TransactionMapper()
 
-	static getInstance (): TransactionRepository {
+	static getInstance(): TransactionRepository {
 		if (!TransactionRepository.instance) TransactionRepository.instance = new TransactionRepository()
 		return TransactionRepository.instance
 	}
 
-	async get (query: QueryParams) {
+	async get(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(Transaction, query)
 		return {
 			...data,
-			results: data.results.map((n) => this.mapper.mapFrom(n)!)
+			results: data.results.map((n) => this.mapper.mapFrom(n)!),
 		}
 	}
 
-	async find (id: string) {
+	async find(id: string) {
 		const transaction = await Transaction.findById(id)
 		return this.mapper.mapFrom(transaction)
 	}
 
-	async create (data: TransactionToModel) {
+	async create(data: TransactionToModel) {
 		const transaction = await new Transaction(data).save()
 		return this.mapper.mapFrom(transaction)!
 	}
 
-	async update ({ id, driverId, data }: { id: string, driverId: string, data: Partial<TransactionToModel> }) {
+	async update({ id, driverId, data }: { id: string; driverId: string; data: Partial<TransactionToModel> }) {
 		const transaction = await Transaction.findOneAndUpdate({ _id: id, driverId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(transaction)
 	}
 
-	async delete ({ id, driverId }: { id: string, driverId: string }) {
+	async delete({ id, driverId }: { id: string; driverId: string }) {
 		const transaction = await Transaction.findOneAndDelete({ _id: id, driverId })
 		return !!transaction
 	}
 
-	async updateTripDebt ({ id, driverId, amount }: { id: string, driverId: string, amount: number }) {
+	async updateTripDebt({ id, driverId, amount }: { id: string; driverId: string; amount: number }) {
 		const transaction = await Transaction.findOneAndUpdate(
 			{ _id: id, driverId, 'data.type': TransactionType.trip },
 			{ $inc: { 'data.debt': -amount } },
-			{ new: true })
+			{ new: true },
+		)
 		return !!transaction
 	}
 }

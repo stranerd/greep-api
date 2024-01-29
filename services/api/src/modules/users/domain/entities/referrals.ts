@@ -7,7 +7,7 @@ export class ReferralEntity extends BaseEntity {
 	public readonly createdAt: number
 	public readonly updatedAt: number
 
-	constructor ({ id, referred, userId, createdAt, updatedAt }: ReferralConstructorArgs) {
+	constructor({ id, referred, userId, createdAt, updatedAt }: ReferralConstructorArgs) {
 		super()
 		this.id = id
 		this.referred = referred
@@ -18,6 +18,9 @@ export class ReferralEntity extends BaseEntity {
 }
 
 type ReferralConstructorArgs = {
-	id: string, referred: string, userId: string,
-	createdAt: number, updatedAt: number
+	id: string
+	referred: string
+	userId: string
+	createdAt: number
+	updatedAt: number
 }

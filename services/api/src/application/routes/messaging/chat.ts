@@ -8,51 +8,43 @@ export const chatRoutes = groupRoutes('/chats', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ChatController.get(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ChatController.get(req),
+			})),
+		],
 	},
 	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ChatController.find(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ChatController.find(req),
+			})),
+		],
 	},
 	{
 		path: '/',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ChatController.add(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ChatController.add(req),
+			})),
+		],
 	},
 	{
 		path: '/read',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ChatController.markRead(req)
-				}
-			})
-		]
-	}
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ChatController.markRead(req),
+			})),
+		],
+	},
 ])

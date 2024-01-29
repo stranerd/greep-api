@@ -8,32 +8,35 @@ import { UserEntity } from '../../domain/entities/users'
 
 export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created([
-			'', `/${after.id}`
-		].map((c) => `users/users${c}`), after)
+		await appInstance.listener.created(
+			['', `/${after.id}`].map((c) => `users/users${c}`),
+			after,
+		)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated([
-			'', `/${after.id}`
-		].map((c) => `users/users${c}`), after)
+		await appInstance.listener.updated(
+			['', `/${after.id}`].map((c) => `users/users${c}`),
+			after,
+		)
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
 		if (updatedBioOrRoles) await Promise.all([].map(async (useCase: any) => await useCase.updateUserBio(after.getEmbedded())))
 
 		if (changes.account?.application && !before.account.application && after.account.application) {
 			const { accepted, message } = after.account.application
-			if (accepted) await AuthUsersUseCases.updateRole({
-				userId: after.id,
-				roles: {
-					[AuthRole.isActive]: accepted,
-					[AuthRole.isDriver]: after.isDriver(),
-					[AuthRole.isCustomer]: after.isCustomer(),
-				}
-			})
+			if (accepted)
+				await AuthUsersUseCases.updateRole({
+					userId: after.id,
+					roles: {
+						[AuthRole.isActive]: accepted,
+						[AuthRole.isDriver]: after.isDriver(),
+						[AuthRole.isCustomer]: after.isCustomer(),
+					},
+				})
 			await sendNotification([after.id], {
 				title: `Account Application ${accepted ? 'Accepted' : 'Rejected'}`,
 				body: `Your account application was ${accepted ? 'accepted' : 'rejected'}.${message ? message : ''}`,
 				sendEmail: true,
-				data: { type: NotificationType.AccountApplication, accepted, message }
+				data: { type: NotificationType.AccountApplication, accepted, message },
 			})
 		}
 
@@ -44,12 +47,13 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 		}
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted([
-			'', `/${before.id}`
-		].map((c) => `users/users${c}`), before)
+		await appInstance.listener.deleted(
+			['', `/${before.id}`].map((c) => `users/users${c}`),
+			before,
+		)
 
 		if ('license' in before.type) await publishers.DELETEFILE.publish(before.type.license)
 		if ('passport' in before.type) await publishers.DELETEFILE.publish(before.type.passport)
 		if ('studentId' in before.type) await publishers.DELETEFILE.publish(before.type.studentId)
-	}
+	},
 }

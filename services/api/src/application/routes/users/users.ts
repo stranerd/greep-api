@@ -8,114 +8,96 @@ export const usersRoutes = groupRoutes('/users', [
 		method: 'post',
 		controllers: [
 			isAuthenticatedButIgnoreVerified,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.updateType(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.updateType(req),
+			})),
+		],
 	},
 	{
 		path: '/application',
 		method: 'post',
 		controllers: [
 			isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.updateApplication(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.updateApplication(req),
+			})),
+		],
 	},
 	{
 		path: '/location',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.updateLocation(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.updateLocation(req),
+			})),
+		],
 	},
 	{
 		path: '/admin',
 		method: 'get',
 		controllers: [
 			isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.getUsersAdmin(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.getUsersAdmin(req),
+			})),
+		],
 	},
 	{
 		path: '/admin/:id',
 		method: 'get',
 		controllers: [
 			isAdmin,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.findUserAdmin(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.findUserAdmin(req),
+			})),
+		],
 	},
 	{
 		path: '/',
 		method: 'get',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.getUsers(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.getUsers(req),
+			})),
+		],
 	},
 	{
 		path: '/:id',
 		method: 'get',
 		controllers: [
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.findUser(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.findUser(req),
+			})),
+		],
 	},
 	{
 		path: '/driverAvailability',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.updateDriverAvailability(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.updateDriverAvailability(req),
+			})),
+		],
 	},
 	{
 		path: '/savedLocations',
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await UsersController.updateSavedLocations(req)
-				}
-			})
-		]
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await UsersController.updateSavedLocations(req),
+			})),
+		],
 	},
 ])
