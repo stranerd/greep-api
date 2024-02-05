@@ -3,7 +3,7 @@ import { CategoryController } from '@application/controllers/categories'
 import { isAuthenticated } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 
-export const categoriesRoutes = groupRoutes('/categories', [
+export const cartRoutes = groupRoutes('/categories', [
 	{
 		path: '/',
 		method: 'get',

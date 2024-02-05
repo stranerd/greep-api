@@ -1,4 +1,4 @@
-import { CartUseCases } from '@modules/cart'
+import { CartUseCases } from '@modules/marketplace'
 import { Request, Schema, validate } from 'equipped'
 
 export class CartController {
@@ -17,4 +17,4 @@ export class CartController {
 		const cart = await CartUseCases.create(data)
 		return cart
 	}
-}
+} 

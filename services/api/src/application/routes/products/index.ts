@@ -1,8 +1,8 @@
-import { CategoryController } from '@application/controllers/categories'
+import { ProductController } from '@application/controllers/products'
 import { isAuthenticated } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 
-export const categoriesRoutes = groupRoutes('/products', [
+export const productRoutes = groupRoutes('/products', [
 	{
 		path: '/',
 		method: 'get',
@@ -11,7 +11,7 @@ export const categoriesRoutes = groupRoutes('/products', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CategoryController.get(req)
+					result: await ProductController.get(req)
 				}
 			})
 		]
@@ -24,7 +24,7 @@ export const categoriesRoutes = groupRoutes('/products', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CategoryController.create(req)
+					result: await ProductController.create(req)
 				}
 			})
 		]

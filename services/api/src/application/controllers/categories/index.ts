@@ -1,4 +1,4 @@
-import { CategoryUserCases } from '@modules/categories'
+import { CategoryUserCases } from '@modules/marketplace/'
 import { Request, Schema, validate } from 'equipped'
 
 export class CategoryController {
@@ -8,10 +8,10 @@ export class CategoryController {
 	
 	static async create (req: Request) {
 		const data = validate({
-			category: Schema.string().min(2),
+			title: Schema.string().min(2),
 		}, { ...req.body })
 		
-		const category = CategoryUserCases.createCategory(data.category)
+		const category = CategoryUserCases.createCategory(data.title)
 		return category
 	}
 }
