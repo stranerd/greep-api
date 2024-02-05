@@ -22,4 +22,8 @@ export class CategoryRepository implements ICategoryRepository {
 	async getAllCategories() {
 		return await Category.find({})
 	}
+
+	async get(category) {
+		return await Category.findOne({title: category});
+	}
 }

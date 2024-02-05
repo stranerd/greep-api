@@ -1,9 +1,8 @@
 import { CartController } from '@application/controllers/cart'
-import { CategoryController } from '@application/controllers/categories'
 import { isAuthenticated } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 
-export const cartRoutes = groupRoutes('/categories', [
+export const cartRoutes = groupRoutes('/cart', [
 	{
 		path: '/',
 		method: 'get',
@@ -25,7 +24,7 @@ export const cartRoutes = groupRoutes('/categories', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await CategoryController.create(req)
+					result: await CartController.create(req)
 				}
 			})
 		]
