@@ -18,7 +18,7 @@ Software requirements
 $ git clone https://github.com/stranerd/greep-api
 
 # setup git hooks
-$ npx husky install
+$ npx husky@8 install
 
 # create symbolic links for common types
 $ make link-commons

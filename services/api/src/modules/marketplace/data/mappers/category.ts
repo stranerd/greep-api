@@ -1,6 +1,6 @@
+import { CategoryEntity } from '@modules/marketplace/domain/entities/categoryEntities'
 import { BaseMapper } from 'equipped'
 import { ICategoryFromModel, ICategoryToModel } from '../models/categories'
-import { CategoryEntity } from '@modules/marketplace/domain/entities/categoryEntities'
 
 export class CategoryMapper extends BaseMapper<ICategoryFromModel, ICategoryToModel, CategoryEntity> {
 	mapFrom(param: ICategoryFromModel | null) {
@@ -14,7 +14,7 @@ export class CategoryMapper extends BaseMapper<ICategoryFromModel, ICategoryToMo
 
 	mapTo(param: CategoryEntity) {
 		return {
-			category: param.category,
+			title: param.title,
 		}
 	}
 }
