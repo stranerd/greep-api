@@ -11,12 +11,13 @@ export class CartRepository implements ICartRepository {
 		return CartRepository.instance
 	}
 
-	async create(cart: ICartToModel, userId: string) {
+	async create(cart: ICartToModel) {
 		//TODO: check if the product id is already in the database, if its there.. add to the quantity...  -> Done
-		const foundCart = await Cart.findOne({ productId: cart.productId, userId })
+		const { productId, userId } = cart
+		const foundCart = await Cart.findOne({ productId, userId })
 
 		if (foundCart) {
-			const newCart = await foundCart.updateOne(cart, { new: true })
+			const newCart = await Cart.findByIdAndUpdate(foundCart.id, cart, { new: true })
 			return newCart
 		}
 

@@ -11,12 +11,11 @@ export class CartController {
 			{
 				productId: Schema.string().min(1),
 				quantity: Schema.number(),
-				userId: Schema.string().min(1),
 			},
 			{ ...req.body },
 		)
 
-		const cart = await CartUseCases.create(data, req.authUser?.id!)
+		const cart = await CartUseCases.create({ ...data, userId: req.authUser?.id! })
 		return cart
 	}
 

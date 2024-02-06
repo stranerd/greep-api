@@ -8,12 +8,10 @@ export const cartRoutes = groupRoutes('/cart', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await CartController.get(req),
-				}
-			}),
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await CartController.get(req),
+			})),
 		],
 	},
 	{
@@ -21,12 +19,10 @@ export const cartRoutes = groupRoutes('/cart', [
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await CartController.create(req),
-				}
-			}),
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await CartController.create(req),
+			})),
 		],
 	},
 	{
@@ -34,12 +30,10 @@ export const cartRoutes = groupRoutes('/cart', [
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await CartController.remove(req),
-				}
-			}),
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await CartController.remove(req),
+			})),
 		],
 	},
 ])

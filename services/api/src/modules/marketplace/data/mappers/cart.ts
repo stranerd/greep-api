@@ -6,12 +6,7 @@ export class CartMapper extends BaseMapper<ICartFromModel, ICartToModel, CartEnt
 	mapFrom(param: ICartFromModel | null) {
 		return !param
 			? null
-			: new CartEntity({
-					_id: param._id,
-					productId: param.productId,
-					quantity: param.quantity,
-					userId: param.userId,
-				})
+			: new CartEntity({ _id: param._id, productId: param.productId, quantity: param.quantity, userId: param.userId })
 	}
 
 	mapTo(param: CartEntity) {

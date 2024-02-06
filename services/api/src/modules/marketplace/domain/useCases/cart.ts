@@ -8,8 +8,8 @@ export class CartUseCase {
 		this.repository = repository
 	}
 
-	async create(product: ICartToModel, userId: string) {
-		return await this.repository.create(product, userId)
+	async create(product: ICartToModel) {
+		return await this.repository.create(product)
 	}
 
 	async get(userId: string) {
