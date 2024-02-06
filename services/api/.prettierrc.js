@@ -1,5 +1,5 @@
 export default {
-  tabWidth: 2,
-  singleQuoute: true,
-  semi: true,
-};
+	tabWidth: 2,
+	singleQuoute: true,
+	semi: true,
+}

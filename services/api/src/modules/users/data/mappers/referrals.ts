@@ -7,12 +7,12 @@ export class ReferralMapper extends BaseMapper<ReferralFromModel, ReferralToMode
 		return !param
 			? null
 			: new ReferralEntity({
-				id: param._id.toString(),
-				referred: param.referred,
-				userId: param.userId,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					referred: param.referred,
+					userId: param.userId,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: ReferralEntity) {

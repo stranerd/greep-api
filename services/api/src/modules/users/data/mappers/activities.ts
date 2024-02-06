@@ -7,13 +7,13 @@ export class ActivityMapper extends BaseMapper<ActivityFromModel, ActivityToMode
 		return !param
 			? null
 			: new ActivityEntity({
-				id: param._id.toString(),
-				userId: param.userId,
-				data: param.data,
-				score: param.score,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					userId: param.userId,
+					data: param.data,
+					score: param.score,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: ActivityEntity) {

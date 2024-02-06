@@ -4,10 +4,12 @@ import { CategoryEntity } from '@modules/marketplace/domain/entities/categoryEnt
 
 export class CategoryMapper extends BaseMapper<ICategoryFromModel, ICategoryToModel, CategoryEntity> {
 	mapFrom(param: ICategoryFromModel | null) {
-		return !param ? null : new CategoryEntity({
-			_id: param._id,
-			title: param.title,
-		})
+		return !param
+			? null
+			: new CategoryEntity({
+					_id: param._id,
+					title: param.title,
+				})
 	}
 
 	mapTo(param: CategoryEntity) {

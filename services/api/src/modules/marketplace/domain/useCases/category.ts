@@ -3,12 +3,11 @@ import { ICategoryRepository } from '../i-repositories/category'
 export class CategoryUseCase {
 	private repository: ICategoryRepository
 
-
-	constructor (repository: ICategoryRepository) {
+	constructor(repository: ICategoryRepository) {
 		this.repository = repository
 	}
 
-	async createCategory(category : string) {
+	async createCategory(category: string) {
 		return await this.repository.createCategory(category)
 	}
 
@@ -18,5 +17,4 @@ export class CategoryUseCase {
 	async get(category: string) {
 		return await this.repository.get(category)
 	}
-	
 }

@@ -2,12 +2,11 @@ import { IProductRepository } from '@modules/marketplace/domain/i-repositories/p
 import Product from '../mongooseModels/product'
 import { IProductToModel } from '../models'
 
-
 export class ProductRepository implements IProductRepository {
 	private static instance: ProductRepository
 	// private mapper = new UserMapper()
 
-	static getInstance (): ProductRepository {
+	static getInstance(): ProductRepository {
 		if (!ProductRepository.instance) ProductRepository.instance = new ProductRepository()
 		return ProductRepository.instance
 	}

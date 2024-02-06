@@ -1,12 +1,11 @@
-import { ICategoryRepository, } from '@modules/marketplace/domain/i-repositories/category'
+import { ICategoryRepository } from '@modules/marketplace/domain/i-repositories/category'
 import Category from '../mongooseModels/category'
 
-
-export class CategoryRepository implements ICategoryRepository {    
+export class CategoryRepository implements ICategoryRepository {
 	private static instance: CategoryRepository
 	// private mapper = new UserMapper()
 
-	static getInstance (): CategoryRepository {
+	static getInstance(): CategoryRepository {
 		if (!CategoryRepository.instance) CategoryRepository.instance = new CategoryRepository()
 		return CategoryRepository.instance
 	}
@@ -24,6 +23,6 @@ export class CategoryRepository implements ICategoryRepository {
 	}
 
 	async get(category) {
-		return await Category.findOne({title: category});
+		return await Category.findOne({ title: category })
 	}
 }

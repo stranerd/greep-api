@@ -7,8 +7,6 @@ import { CategoryUseCase } from './domain/useCases/category'
 import { CartRepository } from './data/repositories/cart'
 import { CartUseCase } from './domain/useCases/cart'
 
-
-
 const cartRepository = CartRepository.getInstance()
 export const CartUseCases = new CartUseCase(cartRepository)
 
@@ -17,4 +15,3 @@ export const CategoryUserCases = new CategoryUseCase(categoryRepository)
 
 const productRepository = ProductRepository.getInstance()
 export const ProductUseCases = new ProductUseCase(productRepository)
-

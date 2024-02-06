@@ -7,15 +7,15 @@ export class TransactionMapper extends BaseMapper<TransactionFromModel, Transact
 		return !param
 			? null
 			: new TransactionEntity({
-				id: param._id.toString(),
-				driverId: param.driverId,
-				amount: param.amount,
-				description: param.description,
-				data: param.data,
-				recordedAt: param.recordedAt,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					driverId: param.driverId,
+					amount: param.amount,
+					description: param.description,
+					data: param.data,
+					recordedAt: param.recordedAt,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: TransactionEntity) {

@@ -1,11 +1,9 @@
-
 export interface ICartFromModel extends ICartToModel {
-    _id: string; 
+	_id: string
 }
 
-export interface ICartToModel  {
-    productId: string;
-    userId: string;
-    quantity: number;
+export interface ICartToModel {
+	productId: string
+	userId: string
+	quantity: number
 }
-  

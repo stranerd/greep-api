@@ -7,7 +7,7 @@ export class CartEntity extends BaseEntity {
 	public readonly quantity: number
 	public readonly userId: string
 
-	constructor (data: ICartFromModel) {
+	constructor(data: ICartFromModel) {
 		super()
 		this.id = data._id
 		this.productId = data.productId

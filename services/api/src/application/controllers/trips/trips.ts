@@ -96,7 +96,7 @@ export class TripsController {
 			throw new ValidationError([
 				{
 					field: 'status',
-					messages: ['can\'t update this trip with: ' + status],
+					messages: ["can't update this trip with: " + status],
 				},
 			])
 

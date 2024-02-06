@@ -9,9 +9,9 @@ export const categoriesRoutes = groupRoutes('/uploads', [
 			makeController(async (req) => {
 				return {
 					status: StatusCodes.Ok,
-					result: await UploadsController.upload(req)
+					result: await UploadsController.upload(req),
 				}
-			})
-		]
-	}
+			}),
+		],
+	},
 ])

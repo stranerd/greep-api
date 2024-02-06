@@ -61,7 +61,7 @@ export class TransactionsController {
 		if (data.data.type === TransactionType.balance) {
 			const parent = await TransactionsUseCases.find(data.data.parentId)
 			if (!parent) throw new BadRequestError('parent transaction not found')
-			if (parent.driverId !== driverId) throw new BadRequestError('parent transaction isn\'t yours')
+			if (parent.driverId !== driverId) throw new BadRequestError("parent transaction isn't yours")
 			if (parent.data.type !== TransactionType.trip) throw new BadRequestError('parent transaction is not a trip')
 			if (parent.data.debt === 0) throw new BadRequestError('parent transaction is settled already')
 			if (Math.abs(parent.data.debt) < Math.abs(data.amount)) throw new BadRequestError('amount is greater than the debt to settle')
@@ -78,10 +78,10 @@ export class TransactionsController {
 			data:
 				data.data.type === TransactionType.trip
 					? {
-						...data.data,
-						tripId: null,
-						debt: data.amount - data.data.paidAmount,
-					}
+							...data.data,
+							tripId: null,
+							debt: data.amount - data.data.paidAmount,
+						}
 					: data.data,
 		})
 	}

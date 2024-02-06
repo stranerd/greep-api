@@ -10,14 +10,14 @@ export class ProductEntity extends BaseEntity {
 	public readonly quantity: number
 	public readonly categories: string[]
 
-	constructor (data: IProductFromModel) {
+	constructor(data: IProductFromModel) {
 		super()
 		this.id = data._id
 		this.name = data.name
 		this.price = data.price
 		this.images = data.images
-		this.quantity =  data.quantity
+		this.quantity = data.quantity
 		this.description = data.description
-		this.categories =  data.categories
+		this.categories = data.categories
 	}
 }

@@ -1,9 +1,7 @@
-
 export interface ICategoryFromModel extends ICategoryToModel {
-    _id: string;
-    
+	_id: string
 }
 
-export interface ICategoryToModel  {
-    title: string,  
+export interface ICategoryToModel {
+	title: string
 }

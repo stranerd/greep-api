@@ -4,15 +4,17 @@ import { ProductEntity } from '@modules/marketplace/domain/entities/productEntit
 
 export class ProductMapper extends BaseMapper<IProductFromModel, IProductToModel, ProductEntity> {
 	mapFrom(param: IProductFromModel | null) {
-		return !param ? null : new ProductEntity({
-			_id: param._id,
-			name: param.name,
-			description: param.description,
-			images: param.images,
-			price: param.price,
-			quantity: param.quantity,
-			categories: param.categories
-		})
+		return !param
+			? null
+			: new ProductEntity({
+					_id: param._id,
+					name: param.name,
+					description: param.description,
+					images: param.images,
+					price: param.price,
+					quantity: param.quantity,
+					categories: param.categories,
+				})
 	}
 
 	mapTo(param: ProductEntity) {
@@ -22,7 +24,7 @@ export class ProductMapper extends BaseMapper<IProductFromModel, IProductToModel
 			images: param.images,
 			price: param.price,
 			quantity: param.quantity,
-			categories: param.categories
+			categories: param.categories,
 		}
 	}
 }

@@ -7,18 +7,18 @@ export class TripMapper extends BaseMapper<TripFromModel, TripToModel, TripEntit
 		return !param
 			? null
 			: new TripEntity({
-				id: param._id.toString(),
-				customerId: param.customerId,
-				driverId: param.driverId,
-				requestedDriverId: param.requestedDriverId,
-				status: param.status,
-				from: param.from,
-				to: param.to,
-				discount: param.discount,
-				data: param.data,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					customerId: param.customerId,
+					driverId: param.driverId,
+					requestedDriverId: param.requestedDriverId,
+					status: param.status,
+					from: param.from,
+					to: param.to,
+					discount: param.discount,
+					data: param.data,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: TripEntity) {

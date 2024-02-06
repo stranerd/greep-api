@@ -17,5 +17,5 @@ export const routes = [
 	...userRoutes,
 	...categoriesRoutes,
 	...productRoutes,
-	...cartRoutes
+	...cartRoutes,
 ]
