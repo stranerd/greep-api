@@ -29,4 +29,17 @@ export const cartRoutes = groupRoutes('/cart', [
 			}),
 		],
 	},
+	{
+		path: '/',
+		method: 'delete',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => {
+				return {
+					status: StatusCodes.Ok,
+					result: await CartController.remove(req),
+				}
+			}),
+		],
+	},
 ])

@@ -3,7 +3,7 @@ import { ICartFromModel } from '../models/cart'
 
 const cartSchema = new Schema<ICartFromModel>(
 	{
-		productId: { type: String, unique: true },
+		productId: String,
 		userId: String,
 		quantity: Number,
 	},
