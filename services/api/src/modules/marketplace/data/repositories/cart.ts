@@ -1,6 +1,6 @@
 import { ICartRepository } from '../../domain/i-repositories/cart'
-import Cart from '../mongooseModels/cart'
 import { ICartToModel } from '../models/cart'
+import Cart from '../mongooseModels/cart'
 
 export class CartRepository implements ICartRepository {
 	private static instance: CartRepository
@@ -13,6 +13,8 @@ export class CartRepository implements ICartRepository {
 
 	async create(cart: ICartToModel) {
 		//TODO: check if the product id is already in the database, if its there.. add to the quantity...  -> Done
+		// not safe enough, when running multple commands like this that affect the db based on a condition, it is safer to run inside a transaction
+		// luckily, it is not even needed here, cause mongo provides a way to do upserts
 		const { productId, userId } = cart
 		const foundCart = await Cart.findOne({ productId, userId })
 
@@ -33,6 +35,7 @@ export class CartRepository implements ICartRepository {
 	}
 
 	async remove(productId: string, userId: string) {
+		// why multiple operations when one can do the job, findOneAndDelete
 		const foundCart = await Cart.findOne({ productId, userId })
 		return await foundCart?.deleteOne()
 	}
