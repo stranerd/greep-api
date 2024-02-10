@@ -1,3 +1,4 @@
+import { NotFoundError } from 'equipped'
 import { ICartRepository } from '../../domain/i-repositories/cart'
 import { ICartToModel } from '../models/cart'
 import Cart from '../mongooseModels/cart'
@@ -37,6 +38,7 @@ export class CartRepository implements ICartRepository {
 	async remove(productId: string, userId: string) {
 		// why multiple operations when one can do the job, findOneAndDelete
 		const foundCart = await Cart.findOne({ productId, userId })
+		if (!foundCart) throw new NotFoundError('Cart not found')
 		return await foundCart?.deleteOne()
 	}
 }
