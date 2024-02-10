@@ -1,3 +1,5 @@
+import { MediaOutput } from 'equipped'
+
 export interface IProductFromModel extends IProductToModel {
 	_id: string
 }
@@ -7,6 +9,6 @@ export interface IProductToModel {
 	price: number
 	quantity: number
 	description: string
-	images: string[]
+	images: MediaOutput[]
 	categories: string[]
 }

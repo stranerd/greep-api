@@ -1,5 +1,5 @@
 import { ProductController } from '@application/controllers/products'
-import { isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 
 export const productRoutes = groupRoutes('/products', [
@@ -8,12 +8,10 @@ export const productRoutes = groupRoutes('/products', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ProductController.get(req),
-				}
-			}),
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ProductController.get(req),
+			})),
 		],
 	},
 	{
@@ -21,12 +19,37 @@ export const productRoutes = groupRoutes('/products', [
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await ProductController.create(req),
-				}
-			}),
+			isAdmin,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ProductController.create(req),
+			})),
+		],
+	},
+
+	{
+		path: '/',
+		method: 'put',
+		controllers: [
+			isAuthenticated,
+			isAdmin,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ProductController.update(req),
+			})),
+		],
+	},
+
+	{
+		path: '/',
+		method: 'delete',
+		controllers: [
+			isAuthenticated,
+			isAdmin,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await ProductController.delete(req),
+			})),
 		],
 	},
 ])

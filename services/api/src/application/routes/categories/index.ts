@@ -1,5 +1,5 @@
 import { CategoryController } from '@application/controllers/categories'
-import { isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { StatusCodes, groupRoutes, makeController } from 'equipped'
 
 export const categoriesRoutes = groupRoutes('/categories', [
@@ -19,6 +19,7 @@ export const categoriesRoutes = groupRoutes('/categories', [
 		method: 'post',
 		controllers: [
 			isAuthenticated,
+			isAdmin,
 			makeController(async (req) => ({
 				status: StatusCodes.Ok,
 				result: await CategoryController.create(req),

@@ -3,6 +3,7 @@ import { ProductEntity } from '../entities/productEntities'
 
 export interface IProductRepository {
 	update(id: string, update: Partial<IProductToModel>): Promise<ProductEntity | null>
-	create(product: IProductToModel): Promise<any | null>
+	delete(id: string): Promise<any | null>
+	create(product: IProductToModel): Promise<ProductEntity | null>
 	get(): Promise<any[] | null>
 }

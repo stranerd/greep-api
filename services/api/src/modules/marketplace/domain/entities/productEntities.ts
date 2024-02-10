@@ -1,11 +1,11 @@
 import { IProductFromModel } from '@modules/marketplace/data/models/product'
-import { BaseEntity } from 'equipped'
+import { BaseEntity, MediaOutput } from 'equipped'
 
 export class ProductEntity extends BaseEntity {
 	public readonly id: string
 	public readonly name: string
 	public readonly price: number
-	public readonly images: string[]
+	public readonly images: MediaOutput[]
 	public readonly description: string
 	public readonly quantity: number
 	public readonly categories: string[]

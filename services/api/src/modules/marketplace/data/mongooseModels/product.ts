@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { IProductFromModel } from '../models/product'
+import { mongoose } from '@utils/index'
 
 const productSchema = new Schema<IProductFromModel>(
 	{
@@ -9,7 +10,7 @@ const productSchema = new Schema<IProductFromModel>(
 		quantity: { type: Number, required: true },
 		images: [
 			{
-				type: String,
+				type: mongoose.Schema.Types.Mixed,
 			},
 		],
 		categories: [

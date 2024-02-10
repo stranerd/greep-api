@@ -14,9 +14,9 @@ export class ProductRepository implements IProductRepository {
 	}
 
 	async create(product: IProductToModel) {
-		const newCategory = await Product.create(product)
-		await newCategory.save()
-		return newCategory
+		const newProduct = await Product.create(product)
+		await newProduct.save()
+		return new ProductEntity(newProduct)
 	}
 
 	async get() {

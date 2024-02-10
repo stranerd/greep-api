@@ -15,4 +15,12 @@ export class ProductUseCase {
 	async get() {
 		return await this.repository.get()
 	}
+
+	async update(id: string, product: IProductToModel) {
+		return this.repository.update(id, product)
+	}
+
+	async delete(id: string) {
+		return this.repository.delete(id)
+	}
 }
