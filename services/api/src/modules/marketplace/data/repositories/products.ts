@@ -1,6 +1,6 @@
 import { IProductRepository } from '@modules/marketplace/domain/i-repositories/product'
 import Product from '../mongooseModels/product'
-import { IProductToModel } from '../models'
+import { IProductToModel } from '../models/product'
 
 export class ProductRepository implements IProductRepository {
 	private static instance: ProductRepository

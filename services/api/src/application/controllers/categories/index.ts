@@ -2,7 +2,7 @@ import { CategoryUserCases } from '@modules/marketplace/'
 import { Request, Schema, validate } from 'equipped'
 
 export class CategoryController {
-	static async get() {
+	static async get(_req: Request) {
 		return await CategoryUserCases.getCategories()
 	}
 

@@ -8,12 +8,10 @@ export const categoriesRoutes = groupRoutes('/categories', [
 		method: 'get',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await CategoryController.get(req),
-				}
-			}),
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await CategoryController.get(req),
+			})),
 		],
 	},
 	{
@@ -21,12 +19,10 @@ export const categoriesRoutes = groupRoutes('/categories', [
 		method: 'post',
 		controllers: [
 			isAuthenticated,
-			makeController(async (req) => {
-				return {
-					status: StatusCodes.Ok,
-					result: await CategoryController.create(req),
-				}
-			}),
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await CategoryController.create(req),
+			})),
 		],
 	},
 ])

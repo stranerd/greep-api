@@ -1,10 +1,9 @@
-import { CategoryUserCases } from '@modules/marketplace'
 import { ProductUseCases } from '@modules/marketplace'
 import { StorageUseCases } from '@modules/storage'
 import { Request, Schema, validate } from 'equipped'
 
 export class ProductController {
-	static async get(req: Request) {
+	static async get(_req: Request) {
 		return await ProductUseCases.get()
 	}
 

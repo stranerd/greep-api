@@ -1,4 +1,4 @@
-import { IProductToModel } from '@modules/marketplace/data/models'
+import { IProductToModel } from '@modules/marketplace/data/models/product'
 import { IProductRepository } from '../i-repositories/product'
 
 export class ProductUseCase {

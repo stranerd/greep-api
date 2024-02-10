@@ -1,4 +1,4 @@
-import { IProductFromModel } from '@modules/marketplace/data/models'
+import { IProductFromModel } from '@modules/marketplace/data/models/product'
 import { BaseEntity } from 'equipped'
 
 export class ProductEntity extends BaseEntity {

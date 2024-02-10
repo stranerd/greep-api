@@ -1,5 +1,5 @@
 import { BaseMapper } from 'equipped'
-import { IProductFromModel, IProductToModel } from '../models'
+import { IProductFromModel, IProductToModel } from '../models/product'
 import { ProductEntity } from '@modules/marketplace/domain/entities/productEntities'
 
 export class ProductMapper extends BaseMapper<IProductFromModel, IProductToModel, ProductEntity> {

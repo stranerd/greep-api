@@ -1,4 +1,4 @@
-import { CartEntity } from '@modules/marketplace/domain/entities/entities'
+import { CartEntity } from '@modules/marketplace/domain/entities/cartEntities'
 import { BaseMapper } from 'equipped'
 import { ICartFromModel, ICartToModel } from '../models/cart'
 

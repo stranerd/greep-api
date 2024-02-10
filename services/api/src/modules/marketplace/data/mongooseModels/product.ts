@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { IProductFromModel } from '../models'
+import { IProductFromModel } from '../models/product'
 
 const productSchema = new Schema<IProductFromModel>(
 	{
