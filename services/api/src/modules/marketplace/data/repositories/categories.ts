@@ -1,5 +1,6 @@
 import { ICategoryRepository } from '@modules/marketplace/domain/i-repositories/category'
 import Category from '../mongooseModels/category'
+import { CategoryEntity } from '@modules/marketplace/domain/entities/categoryEntities'
 
 export class CategoryRepository implements ICategoryRepository {
 	private static instance: CategoryRepository
@@ -15,14 +16,14 @@ export class CategoryRepository implements ICategoryRepository {
 			title: category,
 		})
 		await newCategory.save()
-		return newCategory
+		return new CategoryEntity(newCategory)
 	}
 
 	async getAllCategories() {
 		return await Category.find({})
 	}
 
-	async get(category) {
-		return await Category.findOne({ title: category })
-	}
+	// async get(category: string) {
+	// 	return (await Category.findOne({ title: category }))
+	// }
 }

@@ -14,7 +14,7 @@ export class CategoryUseCase {
 	async getCategories() {
 		return await this.repository.getAllCategories()
 	}
-	async get(category: string) {
-		return await this.repository.get(category)
-	}
+	// async get(category: string) {
+	// 	return await this.repository.get(category)
+	// }
 }

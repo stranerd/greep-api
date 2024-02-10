@@ -4,7 +4,7 @@ import { BaseEntity } from 'equipped'
 export class CategoryEntity extends BaseEntity {
 	public readonly id: string
 	public readonly title: string = 'Pancake Options'
-	public readonly parent: string | null = 'id of Breakfast category'
+	// public readonly parent: string | null = 'id of Breakfast category'
 
 	constructor(data: ICategoryFromModel) {
 		super()

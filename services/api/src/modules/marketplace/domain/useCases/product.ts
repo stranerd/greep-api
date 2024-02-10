@@ -16,7 +16,7 @@ export class ProductUseCase {
 		return await this.repository.get()
 	}
 
-	async update(id: string, product: IProductToModel) {
+	async update(id: string, product: Partial<IProductToModel>) {
 		return this.repository.update(id, product)
 	}
 
