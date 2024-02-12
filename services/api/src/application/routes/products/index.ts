@@ -28,7 +28,7 @@ export const productRoutes = groupRoutes('/products', [
 	},
 
 	{
-		path: '/',
+		path: '/:id',
 		method: 'put',
 		controllers: [
 			isAuthenticated,
@@ -41,7 +41,7 @@ export const productRoutes = groupRoutes('/products', [
 	},
 
 	{
-		path: '/',
+		path: '/:id',
 		method: 'delete',
 		controllers: [
 			isAuthenticated,
