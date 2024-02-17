@@ -14,6 +14,7 @@ export interface ProductToModel {
 		currency: Currencies
 	}
 	description: string
-	images: MediaOutput[]
+	banner: MediaOutput
 	categoryIds: string[]
+	inStock: boolean
 }

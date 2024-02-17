@@ -23,6 +23,11 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 				required: true,
 			},
 		},
+		inStock: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 		description: {
 			type: String,
 			required: false,
@@ -33,10 +38,9 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: [],
 		},
-		images: {
-			type: [appInstance.dbs.mongo.Schema.Types.Mixed as unknown] as ProductFromModel['images'],
-			required: false,
-			default: [],
+		banner: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
 		},
 		createdAt: {
 			type: Number,

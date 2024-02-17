@@ -6,6 +6,7 @@ import { AddToCartInput } from '../../domain/types'
 import { CartMapper } from '../mappers/carts'
 import { CartFromModel } from '../models/carts'
 import { Cart } from '../mongooseModels/carts'
+import { Product } from '../mongooseModels/products'
 
 export class CartRepository implements ICartRepository {
 	private static instance: CartRepository
@@ -37,6 +38,8 @@ export class CartRepository implements ICartRepository {
 			const products = structuredClone(cart.products)
 			const productIndex = cart.products.findIndex((p) => p.id === data.productId)
 			if (data.add) {
+				const product = await Product.findById(data.productId)
+				if (!product || !product.inStock) throw new Error('product not available')
 				if (productIndex !== -1) products[productIndex].quantity += data.quantity
 				else products.push({ id: data.productId, quantity: data.quantity })
 			} else {

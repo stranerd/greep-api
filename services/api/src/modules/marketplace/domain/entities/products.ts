@@ -8,9 +8,10 @@ type ProductEntityProps = {
 		amount: number
 		currency: Currencies
 	}
-	images: MediaOutput[]
+	banner: MediaOutput
 	description: string
 	categoryIds: string[]
+	inStock: boolean
 	createdAt: number
 	updatedAt: number
 }
