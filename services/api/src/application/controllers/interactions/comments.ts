@@ -1,6 +1,6 @@
 import { CommentsUseCases, InteractionEntities, verifyInteractionAndGetUserId } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class CommentsController {
 	private static schema = () => ({
@@ -13,7 +13,9 @@ export class CommentsController {
 	}
 
 	static async find(req: Request) {
-		return await CommentsUseCases.find(req.params.id)
+		const comment = await CommentsUseCases.find(req.params.id)
+		if (!comment) throw new NotFoundError()
+		return comment
 	}
 
 	static async create(req: Request) {

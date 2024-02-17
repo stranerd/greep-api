@@ -3,7 +3,7 @@ import { BadRequestError } from 'equipped'
 import { CommentsUseCases } from '..'
 import { InteractionEntities } from '../domain/types'
 
-type Interactions = 'comments' | 'likes' | 'dislikes' | 'reports' | 'reviews' | 'views'
+type Interactions = 'comments' | 'likes' | 'dislikes' | 'reports' | 'reviews' | 'views' | 'media'
 
 const finders = {
 	[InteractionEntities.comments]: async (id: string) => {
@@ -23,6 +23,7 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 		if (interaction === 'views') return []
 		if (interaction === 'reports') return []
 		if (interaction === 'reviews') return []
+		if (interaction === 'media') return [InteractionEntities.products]
 		return []
 	})().reduce(
 		(acc, cur) => {

@@ -1,6 +1,6 @@
 import { InteractionEntities, verifyInteractionAndGetUserId, ViewsUseCases } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ViewsController {
 	static async get(req: Request) {
@@ -9,7 +9,9 @@ export class ViewsController {
 	}
 
 	static async find(req: Request) {
-		return await ViewsUseCases.find(req.params.id)
+		const view = await ViewsUseCases.find(req.params.id)
+		if (!view) throw new NotFoundError()
+		return view
 	}
 
 	static async create(req: Request) {

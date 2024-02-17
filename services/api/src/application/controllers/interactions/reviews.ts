@@ -1,6 +1,6 @@
 import { InteractionEntities, ReviewsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ReviewsController {
 	static async get(req: Request) {
@@ -9,7 +9,9 @@ export class ReviewsController {
 	}
 
 	static async find(req: Request) {
-		return await ReviewsUseCases.find(req.params.id)
+		const review = await ReviewsUseCases.find(req.params.id)
+		if (!review) throw new NotFoundError()
+		return review
 	}
 
 	static async add(req: Request) {

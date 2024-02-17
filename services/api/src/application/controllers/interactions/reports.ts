@@ -1,6 +1,6 @@
 import { InteractionEntities, ReportsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class ReportController {
 	static async get(req: Request) {
@@ -9,7 +9,9 @@ export class ReportController {
 	}
 
 	static async find(req: Request) {
-		return await ReportsUseCases.find(req.params.id)
+		const report = await ReportsUseCases.find(req.params.id)
+		if (!report) throw new NotFoundError()
+		return report
 	}
 
 	static async delete(req: Request) {

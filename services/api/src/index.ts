@@ -26,6 +26,7 @@ const start = async () => {
 
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)
+		.register('interactions/media', isOpen)
 		.register('interactions/reports', isAdmin)
 		.register('interactions/reviews', isOpen)
 		.register('interactions/tags', isOpen)

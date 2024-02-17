@@ -1,5 +1,5 @@
 import { TagsUseCases, TagTypes } from '@modules/interactions'
-import { NotAuthorizedError, QueryParams, Request, Schema, validate } from 'equipped'
+import { NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class TagController {
 	private static schema = () => ({
@@ -7,7 +7,9 @@ export class TagController {
 	})
 
 	static async find(req: Request) {
-		return await TagsUseCases.find(req.params.id)
+		const tag = await TagsUseCases.find(req.params.id)
+		if (!tag) throw new NotFoundError()
+		return tag
 	}
 
 	static async get(req: Request) {

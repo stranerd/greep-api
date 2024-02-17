@@ -1,6 +1,6 @@
 import { InteractionEntities, LikesUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { BadRequestError, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class LikesController {
 	static async get(req: Request) {
@@ -9,7 +9,9 @@ export class LikesController {
 	}
 
 	static async find(req: Request) {
-		return await LikesUseCases.find(req.params.id)
+		const like = await LikesUseCases.find(req.params.id)
+		if (!like) throw new NotFoundError()
+		return like
 	}
 
 	static async create(req: Request) {
