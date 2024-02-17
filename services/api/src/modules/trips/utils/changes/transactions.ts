@@ -1,10 +1,10 @@
+import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
 import { TransactionsUseCases } from '../..'
 import { TransactionFromModel } from '../../data/models/transactions'
 import { TransactionEntity } from '../../domain/entities/transactions'
 import { TransactionType } from '../../domain/types'
-import { UsersUseCases } from '@modules/users'
 
 export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromModel, TransactionEntity> = {
 	created: async ({ after }) => {
@@ -40,9 +40,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 			after,
 		)
 
-		const debtChanged =
-			after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt
-		if (debtChanged)
+		if (after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt)
 			await UsersUseCases.updateDebt({
 				driverId: after.driverId,
 				userId: after.data.customerId,

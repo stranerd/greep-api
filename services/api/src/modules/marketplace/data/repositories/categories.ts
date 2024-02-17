@@ -1,29 +1,45 @@
-import { ICategoryRepository } from '@modules/marketplace/domain/i-repositories/category'
-import Category from '../mongooseModels/category'
-import { CategoryEntity } from '@modules/marketplace/domain/entities/categoryEntities'
+import { appInstance } from '@utils/environment'
+import { QueryParams } from 'equipped'
+import { ICategoryRepository } from '../../domain/irepositories/categories'
+import { CategoryMapper } from '../mappers/categories'
+import { CategoryToModel } from '../models/categories'
+import { Category } from '../mongooseModels/categories'
 
 export class CategoryRepository implements ICategoryRepository {
 	private static instance: CategoryRepository
-	// private mapper = new UserMapper()
+	private mapper = new CategoryMapper()
 
 	static getInstance(): CategoryRepository {
 		if (!CategoryRepository.instance) CategoryRepository.instance = new CategoryRepository()
 		return CategoryRepository.instance
 	}
 
-	async createCategory(category: string) {
-		const newCategory = await Category.create({
-			title: category,
-		})
-		await newCategory.save()
-		return new CategoryEntity(newCategory)
+	async create(data: CategoryToModel) {
+		const category = await new Category(data).save()
+		return this.mapper.mapFrom(category)!
 	}
 
-	async getAllCategories() {
-		return await Category.find({})
+	async get(query: QueryParams) {
+		const data = await appInstance.dbs.mongo.query(Category, query)
+
+		return {
+			...data,
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
+		}
 	}
 
-	// async get(category: string) {
-	// 	return (await Category.findOne({ title: category }))
-	// }
+	async find(id: string) {
+		const category = await Category.findById(id)
+		return this.mapper.mapFrom(category)
+	}
+
+	async update(id: string, data: Partial<CategoryToModel>) {
+		const category = await Category.findOneAndUpdate({ _id: id }, { $set: data }, { new: true })
+		return this.mapper.mapFrom(category)
+	}
+
+	async delete(id: string) {
+		const category = await Category.findOneAndDelete({ _id: id })
+		return !!category
+	}
 }

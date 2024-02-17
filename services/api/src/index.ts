@@ -23,6 +23,10 @@ const start = async () => {
 		.register('users/transactions', isMine)
 		.register('users/trips', isMine)
 
+		.register('marketplace/carts', isMine)
+		.register('marketplace/categories', isOpen)
+		.register('marketplace/products', isOpen)
+
 		.register('messaging/chats', isMine)
 		.register('messaging/chatMetas', isMine)
 

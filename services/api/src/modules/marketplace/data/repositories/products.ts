@@ -1,39 +1,46 @@
-import { IProductRepository } from '@modules/marketplace/domain/i-repositories/product'
-import { NotFoundError } from 'equipped'
-import { IProductFromModel, IProductToModel } from '../models/product'
-import Product from '../mongooseModels/product'
-import { ProductEntity } from '@modules/marketplace/domain/entities/productEntities'
+import { appInstance } from '@utils/environment'
+import { QueryParams } from 'equipped'
+import { IProductRepository } from '../../domain/irepositories/products'
+import { ProductMapper } from '../mappers/products'
+import { CategoryToModel } from '../models/categories'
+import { ProductToModel } from '../models/products'
+import { Product } from '../mongooseModels/products'
 
 export class ProductRepository implements IProductRepository {
 	private static instance: ProductRepository
-	// private mapper = new UserMapper()
+	private mapper = new ProductMapper()
 
 	static getInstance(): ProductRepository {
 		if (!ProductRepository.instance) ProductRepository.instance = new ProductRepository()
 		return ProductRepository.instance
 	}
 
-	async create(product: IProductToModel) {
-		const newProduct = await Product.create(product)
-		await newProduct.save()
-		return new ProductEntity(newProduct)
+	async create(data: ProductToModel) {
+		const product = await new Product(data).save()
+		return this.mapper.mapFrom(product)!
 	}
 
-	async get() {
-		return await Product.find({}).sort({ createdAt: -1 })
+	async get(query: QueryParams) {
+		const data = await appInstance.dbs.mongo.query(Product, query)
+
+		return {
+			...data,
+			results: data.results.map((r) => this.mapper.mapFrom(r)!),
+		}
 	}
 
-	async update(id: string, product: IProductFromModel) {
-		const _product = await Product.findById(id)
-		if (_product) throw new NotFoundError('Product not found')
-
-		const update = await Product.findByIdAndUpdate(id, { product })
-		return new ProductEntity(update!)
-	}
-
-	async delete(id: string) {
+	async find(id: string) {
 		const product = await Product.findById(id)
-		if (!product) throw new NotFoundError('Product not found')
-		return await product.deleteOne()
+		return this.mapper.mapFrom(product)
+	}
+
+	async update(id: string, data: Partial<CategoryToModel>, userId: string) {
+		const product = await Product.findOneAndUpdate({ _id: id, userId }, { $set: data }, { new: true })
+		return this.mapper.mapFrom(product)
+	}
+
+	async delete(id: string, userId: string) {
+		const product = await Product.findOneAndDelete({ _id: id, userId })
+		return !!product
 	}
 }

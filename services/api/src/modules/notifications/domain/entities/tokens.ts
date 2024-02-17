@@ -1,23 +1,12 @@
 import { BaseEntity } from 'equipped'
 
-export class TokenEntity extends BaseEntity {
-	public readonly id: string
-	public readonly tokens: string[]
-	public readonly userId: string
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor(data: TokenConstructor) {
-		super()
-		this.id = data.id
-		this.tokens = data.tokens
-		this.userId = data.userId
-		this.createdAt = data.createdAt
-		this.updatedAt = data.updatedAt
+export class TokenEntity extends BaseEntity<TokenConstructorArgs> {
+	constructor(data: TokenConstructorArgs) {
+		super(data)
 	}
 }
 
-type TokenConstructor = {
+type TokenConstructorArgs = {
 	id: string
 	tokens: string[]
 	userId: string

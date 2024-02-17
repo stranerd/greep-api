@@ -1,26 +1,13 @@
 import { BaseEntity } from 'equipped'
 import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData } from '../types'
 
-export class UserEntity extends BaseEntity {
-	public readonly id: string
-	public readonly bio: UserBio
-	public readonly roles: UserRoles
-	public readonly dates: UserDates
-	public readonly status: UserStatus
-	public readonly account: UserAccount
-	public readonly type: UserTypeData
-
+export class UserEntity extends BaseEntity<UserConstructorArgs> {
 	ignoreInJSON = ['bio.email', 'bio.phone']
 
-	constructor({ id, bio, roles, dates, status, account, type }: UserConstructorArgs) {
-		super()
-		this.id = id
-		this.bio = bio ?? {}
-		this.roles = roles ?? {}
-		this.dates = dates
-		this.status = status
-		this.account = account
-		this.type = type
+	constructor(data: UserConstructorArgs) {
+		super(data)
+		this.bio = data.bio ?? {}
+		this.roles = data.roles ?? {}
 	}
 
 	isAdmin() {
