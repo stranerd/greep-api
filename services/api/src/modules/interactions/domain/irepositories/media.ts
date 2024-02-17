@@ -11,4 +11,5 @@ export interface IMediaRepository {
 	delete: (id: string, userId: string) => Promise<boolean>
 	deleteEntityMedias: (entity: Interaction) => Promise<boolean>
 	updateUserBio: (user: MediaToModel['user']) => Promise<boolean>
+	reorder: (entity: MediaToModel['entity'], ids: string[]) => Promise<MediaEntity[]>
 }

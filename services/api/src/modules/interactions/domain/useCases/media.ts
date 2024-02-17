@@ -37,4 +37,8 @@ export class MediaUseCase {
 	async updateUserBio(user: MediaToModel['user']) {
 		return await this.repository.updateUserBio(user)
 	}
+
+	async reorder(input: { entity: MediaToModel['entity']; ids: string[] }) {
+		return await this.repository.reorder(input.entity, input.ids)
+	}
 }

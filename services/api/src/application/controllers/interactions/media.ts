@@ -34,6 +34,7 @@ export class MediasController {
 		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'media')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+		if (userId !== user.id) throw new NotAuthorizedError()
 
 		const file = await StorageUseCases.upload('interactions/media', data.file!)
 
@@ -70,5 +71,23 @@ export class MediasController {
 		})
 		if (isDeleted) return isDeleted
 		throw new NotAuthorizedError()
+	}
+
+	static async reorder(req: Request) {
+		const { entity, ids } = validate(
+			{
+				entity: Schema.object({
+					id: Schema.string().min(1),
+					type: Schema.in(Object.values(InteractionEntities)),
+				}),
+				ids: Schema.array(Schema.string().min(1)),
+			},
+			req.body,
+		)
+
+		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'media')
+		if (userId !== req.authUser!.id) throw new NotAuthorizedError()
+
+		return await MediaUseCases.reorder({ entity: { ...entity, userId }, ids })
 	}
 }

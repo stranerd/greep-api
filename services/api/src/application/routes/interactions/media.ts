@@ -56,4 +56,15 @@ export const mediaRoutes = groupRoutes('/media', [
 			})),
 		],
 	},
+	{
+		path: '/reorder',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await MediaController.reorder(req),
+			})),
+		],
+	},
 ])

@@ -10,6 +10,7 @@ export class MediaMapper extends BaseMapper<MediaFromModel, MediaToModel, MediaE
 			file: param.file,
 			entity: param.entity,
 			user: param.user,
+			order: param.order,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})

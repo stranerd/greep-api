@@ -21,6 +21,11 @@ const MediaSchema = new appInstance.dbs.mongo.Schema<MediaFromModel>(
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},
+		order: {
+			type: Number,
+			required: false,
+			default: 0,
+		},
 		createdAt: {
 			type: Number,
 			required: false,

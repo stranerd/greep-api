@@ -14,6 +14,7 @@ type MediaConstructorArgs = {
 	file: MediaOutput
 	entity: InteractionEntity
 	user: EmbeddedUser
+	order: number
 	createdAt: number
 	updatedAt: number
 }

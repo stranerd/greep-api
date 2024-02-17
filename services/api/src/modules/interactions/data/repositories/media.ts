@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { IMediaRepository } from '../../domain/irepositories/media'
 import { Interaction } from '../../domain/types'
 import { MediaMapper } from '../mappers/media'
-import { MediaToModel } from '../models/media'
+import { MediaFromModel, MediaToModel } from '../models/media'
 import { Media } from '../mongooseModels/media'
 
 export class MediaRepository implements IMediaRepository {
@@ -29,8 +29,14 @@ export class MediaRepository implements IMediaRepository {
 	}
 
 	async add(data: MediaToModel) {
-		const media = await new Media(data).save()
-		return this.mapper.mapFrom(media)!
+		let res = null as MediaFromModel | null
+		await Media.collection.conn.transaction(async (session) => {
+			const highestOrderedMedia = await Media.findOne({ entity: data.entity }, {}, { session }).sort({ order: 'desc' })
+			const order = (highestOrderedMedia?.order ?? -1) + 1
+			const media = await new Media({ ...data, order }).save()
+			return (res = media)
+		})
+		return this.mapper.mapFrom(res)!
 	}
 
 	async find(id: string) {
@@ -56,5 +62,30 @@ export class MediaRepository implements IMediaRepository {
 	async updateUserBio(user: MediaToModel['user']) {
 		const medias = await Media.updateMany({ 'user.id': user.id }, { $set: { user } })
 		return !!medias.acknowledged
+	}
+
+	async reorder(entity: MediaToModel['entity'], ids: string[]) {
+		const res: MediaFromModel[] = []
+		await Media.collection.conn.transaction(async (session) => {
+			const media = await Media.find({ entity }, {}, { session })
+			const allMedia = media.map((m) => this.mapper.mapFrom(m)!)
+			const map = Object.fromEntries(allMedia.map((m) => [m.id, m]))
+			const mapped = ids.map((id) => map[id]).filter(Boolean)
+			const unOrdered = allMedia.filter((m) => ids.includes(m.id))
+			const ordered = [...mapped, ...unOrdered]
+			const bulk = Media.collection.initializeUnorderedBulkOp()
+			for (const media of ordered) {
+				media.order = ordered.indexOf(media)
+				bulk.find({ _id: media.id }).updateOne({
+					$set: {
+						order: media.order,
+					},
+				})
+			}
+			await bulk.execute({ session })
+			const updated = await Media.find({ entity }, {}, { new: true })
+			res.splice(0, res.length, ...updated)
+		})
+		return res.map((m) => this.mapper.mapFrom(m)!)
 	}
 }
