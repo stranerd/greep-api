@@ -1,5 +1,5 @@
-import { ProductToModel } from '@modules/marketplace/data/models/products'
 import { QueryParams } from 'equipped'
+import { ProductToModel } from '../../data/models/products'
 import { IProductRepository } from '../irepositories/products'
 
 export class ProductUseCase {
@@ -27,5 +27,9 @@ export class ProductUseCase {
 
 	async delete(input: { id: string; userId: string }) {
 		return this.repository.delete(input.id, input.userId)
+	}
+
+	async updateUserBio(user: ProductToModel['user']) {
+		return await this.repository.updateUserBio(user)
 	}
 }

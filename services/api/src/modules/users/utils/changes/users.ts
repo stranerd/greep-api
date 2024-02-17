@@ -1,4 +1,6 @@
 import { AuthUsersUseCases } from '@modules/auth'
+import { CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases } from '@modules/interactions'
+import { ProductsUseCases } from '@modules/marketplace'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { appInstance } from '@utils/environment'
 import { publishers } from '@utils/events'
@@ -19,7 +21,12 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			after,
 		)
 		const updatedBioOrRoles = !!changes.bio || !!changes.roles
-		if (updatedBioOrRoles) await Promise.all([].map(async (useCase: any) => await useCase.updateUserBio(after.getEmbedded())))
+		if (updatedBioOrRoles)
+			await Promise.all(
+				[ProductsUseCases, CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases].map(
+					async (useCase) => await useCase.updateUserBio(after.getEmbedded()),
+				),
+			)
 
 		if (changes.account?.application && !before.account.application && after.account.application) {
 			const { accepted, message } = after.account.application

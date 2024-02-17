@@ -8,4 +8,5 @@ export interface IProductRepository {
 	create(data: ProductToModel): Promise<ProductEntity>
 	get(query: QueryParams): Promise<QueryResults<ProductEntity>>
 	find(id: string): Promise<ProductEntity | null>
+	updateUserBio: (user: ProductToModel['user']) => Promise<boolean>
 }
