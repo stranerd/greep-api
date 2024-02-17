@@ -1,4 +1,5 @@
 import { Currencies } from '@modules/payment'
+import { EmbeddedUser } from '@modules/users'
 import { MediaOutput } from 'equipped'
 
 export interface ProductFromModel extends ProductToModel {
@@ -13,6 +14,7 @@ export interface ProductToModel {
 		amount: number
 		currency: Currencies
 	}
+	user: EmbeddedUser
 	description: string
 	banner: MediaOutput
 	categoryIds: string[]

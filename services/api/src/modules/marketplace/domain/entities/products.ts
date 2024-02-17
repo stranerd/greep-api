@@ -1,4 +1,5 @@
 import { Currencies } from '@modules/payment'
+import { EmbeddedUser, generateDefaultUser } from '@modules/users'
 import { BaseEntity, MediaOutput } from 'equipped'
 
 type ProductEntityProps = {
@@ -8,6 +9,7 @@ type ProductEntityProps = {
 		amount: number
 		currency: Currencies
 	}
+	user: EmbeddedUser
 	banner: MediaOutput
 	description: string
 	categoryIds: string[]
@@ -18,6 +20,7 @@ type ProductEntityProps = {
 
 export class ProductEntity extends BaseEntity<ProductEntityProps> {
 	constructor(data: ProductEntityProps) {
+		data.user = generateDefaultUser(data.user)
 		super(data)
 	}
 }

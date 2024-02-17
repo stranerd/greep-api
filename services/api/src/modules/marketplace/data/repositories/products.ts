@@ -35,12 +35,12 @@ export class ProductRepository implements IProductRepository {
 	}
 
 	async update(id: string, data: Partial<CategoryToModel>, userId: string) {
-		const product = await Product.findOneAndUpdate({ _id: id, userId }, { $set: data }, { new: true })
+		const product = await Product.findOneAndUpdate({ _id: id, 'user.id': userId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(product)
 	}
 
 	async delete(id: string, userId: string) {
-		const product = await Product.findOneAndDelete({ _id: id, userId })
+		const product = await Product.findOneAndDelete({ _id: id, 'user.id': userId })
 		return !!product
 	}
 }

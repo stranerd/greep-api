@@ -3,7 +3,7 @@ import { UsersUseCases } from '@modules/users'
 import { appInstance, isDev, port } from '@utils/environment'
 import { subscribers } from '@utils/events'
 import { startJobs } from '@utils/jobs'
-import { OnJoinFn } from 'equipped'
+import { AuthRole, OnJoinFn } from 'equipped'
 import { initializeApp } from 'firebase-admin/app'
 
 const start = async () => {
@@ -15,6 +15,7 @@ const start = async () => {
 		}),
 	)
 
+	const isAdmin: OnJoinFn = async ({ channel, user }) => (user?.roles?.[AuthRole.isAdmin] ? channel : null)
 	const isMine: OnJoinFn = async ({ channel, user }) => (user ? `${channel}/${user.id}` : null)
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
@@ -22,6 +23,13 @@ const start = async () => {
 		.register('users/customers', isMine)
 		.register('users/transactions', isMine)
 		.register('users/trips', isMine)
+
+		.register('interactions/comments', isOpen)
+		.register('interactions/likes', isOpen)
+		.register('interactions/reports', isAdmin)
+		.register('interactions/reviews', isOpen)
+		.register('interactions/tags', isOpen)
+		.register('interactions/views', isOpen)
 
 		.register('marketplace/carts', isMine)
 		.register('marketplace/categories', isOpen)
