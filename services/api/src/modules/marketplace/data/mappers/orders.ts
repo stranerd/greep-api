@@ -18,6 +18,7 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 			discount: param.discount,
 			payment: param.payment,
 			price: param.price,
+			accepted: param.accepted,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})

@@ -23,3 +23,10 @@ export enum OrderPayment {
 	wallet = 'wallet',
 	cash = 'cash',
 }
+
+export type AcceptOrderInput = {
+	id: string
+	userId: string
+	message: string
+	accepted: boolean
+}

@@ -56,6 +56,11 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},
+		accepted: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['accepted'],
+			required: false,
+			default: null,
+		},
 		createdAt: {
 			type: Number,
 			required: false,

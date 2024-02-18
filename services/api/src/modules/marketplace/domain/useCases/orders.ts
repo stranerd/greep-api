@@ -1,6 +1,7 @@
-import { OrderToModel } from '../../data/models/orders'
 import { QueryParams } from 'equipped'
+import { OrderToModel } from '../../data/models/orders'
 import { IOrderRepository } from '../irepositories/orders'
+import { AcceptOrderInput } from '../types'
 
 export class OrderUseCase {
 	private repository: IOrderRepository
@@ -19,5 +20,9 @@ export class OrderUseCase {
 
 	async find(id: string) {
 		return await this.repository.find(id)
+	}
+
+	async accept(input: AcceptOrderInput) {
+		return await this.repository.accept(input)
 	}
 }

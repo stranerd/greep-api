@@ -10,6 +10,11 @@ export interface OrderFromModel extends OrderToModel {
 		amount: number
 		currency: Currencies
 	}
+	accepted: {
+		at: number
+		message: number
+		is: boolean
+	} | null
 	createdAt: number
 	updatedAt: number
 }

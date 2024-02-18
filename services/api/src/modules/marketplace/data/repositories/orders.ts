@@ -1,6 +1,7 @@
 import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { IOrderRepository } from '../../domain/irepositories/orders'
+import { AcceptOrderInput } from '../../domain/types'
 import { OrderMapper } from '../mappers/orders'
 import { OrderFromModel, OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
@@ -60,5 +61,14 @@ export class OrderRepository implements IOrderRepository {
 	async find(id: string) {
 		const chat = await Order.findById(id)
 		return this.mapper.mapFrom(chat)
+	}
+
+	async accept({ id, userId: vendorId, accepted, message }: AcceptOrderInput) {
+		const order = await Order.findOneAndUpdate(
+			{ _id: id, vendorId, accepted: null },
+			{ $set: { accepted: { is: accepted, at: Date.now(), message } } },
+			{ new: true },
+		)
+		return this.mapper.mapFrom(order)
 	}
 }
