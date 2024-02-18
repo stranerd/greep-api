@@ -1,6 +1,15 @@
+import { Currencies } from '@modules/payment'
+
 export type AddToCartInput = {
 	productId: string
 	quantity: number
 	userId: string
 	add: boolean
+}
+
+export type CartProductItem = {
+	id: string
+	quantity: number
+	amount: number
+	currency: Currencies
 }

@@ -18,6 +18,11 @@ const Schema = new appInstance.dbs.mongo.Schema<CartFromModel>(
 			type: String,
 			required: true,
 		},
+		active: {
+			type: Boolean,
+			required: false,
+			default: true,
+		},
 		createdAt: {
 			type: Number,
 			required: false,

@@ -19,8 +19,8 @@ export class CartRepository implements ICartRepository {
 
 	private async getUserCart(userId: string, session?: ClientSession) {
 		const cart = await Cart.findOneAndUpdate(
-			{ userId },
-			{ $setOnInsert: { userId } },
+			{ userId, active: true },
+			{ $setOnInsert: { userId, active: true, products: [] } },
 			{ upsert: true, new: true, ...(session ? { session } : {}) },
 		)
 		return cart!
@@ -41,7 +41,7 @@ export class CartRepository implements ICartRepository {
 				const product = await Product.findById(data.productId)
 				if (!product || !product.inStock) throw new Error('product not available')
 				if (productIndex !== -1) products[productIndex].quantity += data.quantity
-				else products.push({ id: data.productId, quantity: data.quantity })
+				else products.push({ ...product.price, id: data.productId, quantity: data.quantity })
 			} else {
 				if (productIndex !== -1) products[productIndex].quantity -= data.quantity
 				if (products[productIndex].quantity <= 0) products.splice(productIndex, 1)

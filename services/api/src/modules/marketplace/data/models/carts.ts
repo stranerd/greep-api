@@ -1,3 +1,5 @@
+import { CartProductItem } from '../../domain/types'
+
 export interface CartFromModel extends CartToModel {
 	_id: string
 	createdAt: number
@@ -6,5 +8,6 @@ export interface CartFromModel extends CartToModel {
 
 export interface CartToModel {
 	userId: string
-	products: { id: string; quantity: number }[]
+	active: boolean
+	products: CartProductItem[]
 }

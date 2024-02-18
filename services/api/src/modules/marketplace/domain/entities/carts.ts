@@ -1,8 +1,10 @@
 import { BaseEntity } from 'equipped'
+import { CartProductItem } from '../types'
 
 type CartEntityProps = {
 	id: string
-	products: { id: string; quantity: number }[]
+	active: boolean
+	products: CartProductItem[]
 	userId: string
 	createdAt: number
 	updatedAt: number
