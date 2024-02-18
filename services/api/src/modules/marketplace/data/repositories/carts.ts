@@ -31,8 +31,10 @@ export class CartRepository implements ICartRepository {
 			const productIndex = cart.products.findIndex((p) => p.id === data.productId)
 			if (data.add) {
 				if (!product.inStock) throw new Error('product not available')
-				if (productIndex !== -1) products[productIndex].quantity += data.quantity
-				else products.push({ ...product.price, id: data.productId, quantity: data.quantity })
+				if (productIndex !== -1) {
+					products[productIndex].quantity += data.quantity
+					products[productIndex].amount = product.price.amount
+				} else products.push({ ...product.price, id: data.productId, quantity: data.quantity })
 			} else {
 				if (productIndex !== -1) products[productIndex].quantity -= data.quantity
 			}
