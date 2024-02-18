@@ -33,7 +33,7 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: '',
 		},
-		categoryIds: {
+		tagIds: {
 			type: [String],
 			required: false,
 			default: [],

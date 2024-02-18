@@ -33,7 +33,6 @@ const start = async () => {
 		.register('interactions/views', isOpen)
 
 		.register('marketplace/carts', isMine)
-		.register('marketplace/categories', isOpen)
 		.register('marketplace/orders', isMine)
 		.register('marketplace/products', isOpen)
 

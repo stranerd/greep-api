@@ -12,7 +12,7 @@ type ProductEntityProps = {
 	user: EmbeddedUser
 	banner: MediaOutput
 	description: string
-	categoryIds: string[]
+	tagIds: string[]
 	inStock: boolean
 	createdAt: number
 	updatedAt: number

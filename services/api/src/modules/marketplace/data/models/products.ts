@@ -17,6 +17,6 @@ export interface ProductToModel {
 	user: EmbeddedUser
 	description: string
 	banner: MediaOutput
-	categoryIds: string[]
+	tagIds: string[]
 	inStock: boolean
 }

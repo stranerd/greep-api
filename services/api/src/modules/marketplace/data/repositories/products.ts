@@ -2,7 +2,6 @@ import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { IProductRepository } from '../../domain/irepositories/products'
 import { ProductMapper } from '../mappers/products'
-import { CategoryToModel } from '../models/categories'
 import { ProductToModel } from '../models/products'
 import { Product } from '../mongooseModels/products'
 
@@ -34,7 +33,7 @@ export class ProductRepository implements IProductRepository {
 		return this.mapper.mapFrom(product)
 	}
 
-	async update(id: string, data: Partial<CategoryToModel>, userId: string) {
+	async update(id: string, data: Partial<ProductToModel>, userId: string) {
 		const product = await Product.findOneAndUpdate({ _id: id, 'user.id': userId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(product)
 	}
