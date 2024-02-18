@@ -15,20 +15,6 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 			after,
 		)
 
-		if (after.payment === OrderPayment.wallet)
-			await TransactionsUseCases.create({
-				title: `Order payment for order #${after.id}`,
-				status: TransactionStatus.initialized,
-				userId: after.userId,
-				email: after.email,
-				amount: after.price.amount,
-				currency: after.price.currency,
-				data: {
-					type: TransactionType.OrderPayment,
-					orderId: after.id,
-				},
-			})
-
 		if (after.discount > 0)
 			await ActivitiesUseCases.create({
 				userId: after.userId,
@@ -39,13 +25,41 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				},
 			})
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(
 			[after.userId, after.vendorId, `${after.userId}/${after.id}`, `${after.vendorId}/${after.id}`].map(
 				(d) => `marketplace/orders/${d}`,
 			),
 			after,
 		)
+
+		if (changes.accepted && !before.accepted && after.accepted) {
+			const rejected = !after.accepted.is
+			if (rejected) {
+				if (after.payment === OrderPayment.wallet)
+					await TransactionsUseCases.create({
+						title: `Payment refund for order #${after.id}`,
+						status: TransactionStatus.fulfilled,
+						userId: after.userId,
+						email: after.email,
+						amount: after.price.amount,
+						currency: after.price.currency,
+						data: {
+							type: TransactionType.OrderPaymentRefund,
+							orderId: after.id,
+						},
+					})
+				if (after.discount > 0)
+					await ActivitiesUseCases.create({
+						userId: after.userId,
+						data: {
+							type: ActivityType.refundOrderDiscount,
+							orderId: after.id,
+							discount: after.discount,
+						},
+					})
+			}
+		}
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
