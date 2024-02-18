@@ -15,3 +15,6 @@ export const CategoriesUseCases = new CategoryUseCase(categoryRepository)
 
 const productRepository = ProductRepository.getInstance()
 export const ProductsUseCases = new ProductUseCase(productRepository)
+
+export { OrderPayment } from './domain/types'
+export type { CheckoutCart } from './domain/types'

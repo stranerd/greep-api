@@ -25,4 +25,15 @@ export const cartsRoutes = groupRoutes('/carts', [
 			})),
 		],
 	},
+	{
+		path: '/:id/checkout',
+		method: 'post',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await CartsController.checkout(req),
+			})),
+		],
+	},
 ])

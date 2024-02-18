@@ -1,6 +1,6 @@
 import { QueryParams } from 'equipped'
 import { ICartRepository } from '../irepositories/carts'
-import { AddToCartInput } from '../types'
+import { AddToCartInput, CheckoutCart } from '../types'
 
 export class CartUseCase {
 	private repository: ICartRepository
@@ -23,5 +23,9 @@ export class CartUseCase {
 
 	async getForUser(userId: string) {
 		return await this.repository.getForUser(userId)
+	}
+
+	async checkout(data: CheckoutCart) {
+		return await this.repository.checkout(data)
 	}
 }
