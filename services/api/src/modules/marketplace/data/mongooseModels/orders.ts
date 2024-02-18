@@ -22,6 +22,10 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: String,
 			required: true,
 		},
+		vendorId: {
+			type: String,
+			required: true,
+		},
 		location: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
 			required: true,
@@ -42,6 +46,10 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 		},
 		payment: {
 			type: String,
+			required: true,
+		},
+		price: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},
 		createdAt: {

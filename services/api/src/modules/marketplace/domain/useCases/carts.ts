@@ -1,5 +1,4 @@
 import { QueryParams } from 'equipped'
-import { OrderToModel } from '../../data/models/orders'
 import { ICartRepository } from '../irepositories/carts'
 import { AddToCartInput } from '../types'
 
@@ -20,9 +19,5 @@ export class CartUseCase {
 
 	async find(id: string) {
 		return await this.repository.find(id)
-	}
-
-	async checkout(data: OrderToModel) {
-		return await this.repository.checkout(data)
 	}
 }

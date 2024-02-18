@@ -4,7 +4,6 @@ import { ICartRepository } from '../../domain/irepositories/carts'
 import { AddToCartInput } from '../../domain/types'
 import { CartMapper } from '../mappers/carts'
 import { CartFromModel } from '../models/carts'
-import { OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
 import { Product } from '../mongooseModels/products'
 
@@ -40,8 +39,7 @@ export class CartRepository implements ICartRepository {
 			const filteredProducts = products.filter((p) => p.quantity > 0)
 
 			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: { products: filteredProducts } }, { new: true, session })
-			res = updatedCart
-			return updatedCart
+			return (res = updatedCart)
 		})
 		return this.mapper.mapFrom(res)!
 	}
@@ -58,12 +56,5 @@ export class CartRepository implements ICartRepository {
 	async find(id: string) {
 		const chat = await Cart.findById(id)
 		return this.mapper.mapFrom(chat)
-	}
-
-	async checkout(data: OrderToModel) {
-		// TODO: Implement
-		console.log('checkout', data)
-		if (data) throw new Error('Not implemented')
-		return data as unknown as never
 	}
 }

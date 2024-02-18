@@ -1,3 +1,4 @@
+import { OrderToModel } from '../../data/models/orders'
 import { QueryParams } from 'equipped'
 import { IOrderRepository } from '../irepositories/orders'
 
@@ -6,6 +7,10 @@ export class OrderUseCase {
 
 	constructor(repository: IOrderRepository) {
 		this.repository = repository
+	}
+
+	async checkout(data: OrderToModel) {
+		return await this.repository.checkout(data)
 	}
 
 	async get(query: QueryParams) {
