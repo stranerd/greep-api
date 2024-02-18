@@ -6,6 +6,7 @@ type CartEntityProps = {
 	active: boolean
 	products: CartProductItem[]
 	userId: string
+	vendorId: string
 	createdAt: number
 	updatedAt: number
 }

@@ -1,6 +1,5 @@
 import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
-import { ClientSession } from 'mongoose'
 import { ICartRepository } from '../../domain/irepositories/carts'
 import { AddToCartInput } from '../../domain/types'
 import { CartMapper } from '../mappers/carts'
@@ -18,37 +17,29 @@ export class CartRepository implements ICartRepository {
 		return CartRepository.instance
 	}
 
-	private async getUserCart(userId: string, session?: ClientSession) {
-		const cart = await Cart.findOneAndUpdate(
-			{ userId, active: true },
-			{ $setOnInsert: { userId, active: true, products: [] } },
-			{ upsert: true, new: true, ...(session ? { session } : {}) },
-		)
-		return cart!
-	}
-
-	async getForUser(userId: string) {
-		return this.mapper.mapFrom(await this.getUserCart(userId))!
-	}
-
 	async add(data: AddToCartInput) {
 		let res = null as CartFromModel | null
 		await Cart.collection.conn.transaction(async (session) => {
-			const cart = await this.getUserCart(data.userId, session)
+			const product = await Product.findById(data.productId)
+			if (!product) throw new Error('product not found')
+			const cart = await Cart.findOneAndUpdate(
+				{ userId: data.userId, active: true, vendorId: product.user.id },
+				{ $setOnInsert: { userId: data.userId, active: true, vendorId: product.user.id, products: [] } },
+				{ upsert: true, new: true, ...(session ? { session } : {}) },
+			)
 
 			const products = structuredClone(cart.products)
 			const productIndex = cart.products.findIndex((p) => p.id === data.productId)
 			if (data.add) {
-				const product = await Product.findById(data.productId)
-				if (!product || !product.inStock) throw new Error('product not available')
+				if (!product.inStock) throw new Error('product not available')
 				if (productIndex !== -1) products[productIndex].quantity += data.quantity
 				else products.push({ ...product.price, id: data.productId, quantity: data.quantity })
 			} else {
 				if (productIndex !== -1) products[productIndex].quantity -= data.quantity
-				if (products[productIndex].quantity <= 0) products.splice(productIndex, 1)
 			}
+			const filteredProducts = products.filter((p) => p.quantity > 0)
 
-			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: products }, { new: true, session })
+			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: { products: filteredProducts } }, { new: true, session })
 			res = updatedCart
 			return updatedCart
 		})

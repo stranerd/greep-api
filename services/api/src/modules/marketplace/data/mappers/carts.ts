@@ -9,6 +9,7 @@ export class CartMapper extends BaseMapper<CartFromModel, CartToModel, CartEntit
 			id: param._id,
 			products: param.products,
 			userId: param.userId,
+			vendorId: param.vendorId,
 			active: param.active,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
@@ -18,6 +19,7 @@ export class CartMapper extends BaseMapper<CartFromModel, CartToModel, CartEntit
 	mapTo(param: CartEntity) {
 		return {
 			userId: param.userId,
+			vendorId: param.vendorId,
 			products: param.products,
 			active: param.active,
 		}

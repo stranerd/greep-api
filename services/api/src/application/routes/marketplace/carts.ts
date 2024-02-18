@@ -15,6 +15,17 @@ export const cartsRoutes = groupRoutes('/carts', [
 		],
 	},
 	{
+		path: '/:id',
+		method: 'get',
+		controllers: [
+			isAuthenticated,
+			makeController(async (req) => ({
+				status: StatusCodes.Ok,
+				result: await CartsController.find(req),
+			})),
+		],
+	},
+	{
 		path: '/',
 		method: 'post',
 		controllers: [

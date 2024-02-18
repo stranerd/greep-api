@@ -8,6 +8,7 @@ export interface CartFromModel extends CartToModel {
 
 export interface CartToModel {
 	userId: string
+	vendorId: string
 	active: boolean
 	products: CartProductItem[]
 }

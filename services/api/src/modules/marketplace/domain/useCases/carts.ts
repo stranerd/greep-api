@@ -22,10 +22,6 @@ export class CartUseCase {
 		return await this.repository.find(id)
 	}
 
-	async getForUser(userId: string) {
-		return await this.repository.getForUser(userId)
-	}
-
 	async checkout(data: OrderToModel) {
 		return await this.repository.checkout(data)
 	}

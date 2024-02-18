@@ -1,10 +1,19 @@
-import { CartsUseCases, OrderPayment, ProductsUseCases } from '@modules/marketplace'
+import { CartsUseCases, OrderPayment } from '@modules/marketplace'
 import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
-import { BadRequestError, NotFoundError, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class CartsController {
 	static async get(req: Request) {
-		return await CartsUseCases.getForUser(req.authUser!.id)
+		const query = req.query as QueryParams
+		query.authType = QueryKeys.and
+		query.auth = [{ field: 'userId', value: req.authUser!.id }]
+		return await CartsUseCases.get(query)
+	}
+
+	static async find(req: Request) {
+		const cart = await CartsUseCases.find(req.params.id)
+		if (!cart || cart.userId !== req.authUser!.id) throw new NotFoundError()
+		return cart
 	}
 
 	static async add(req: Request) {
@@ -16,11 +25,6 @@ export class CartsController {
 			},
 			req.body,
 		)
-
-		if (data.add) {
-			const product = await ProductsUseCases.find(data.productId)
-			if (!product) throw new NotFoundError('product not found')
-		}
 
 		return await CartsUseCases.add({ ...data, userId: req.authUser!.id })
 	}
