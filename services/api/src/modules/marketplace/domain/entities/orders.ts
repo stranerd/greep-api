@@ -7,6 +7,7 @@ type OrderEntityProps = {
 	id: string
 	products: CartProductItem[]
 	userId: string
+	email: string
 	vendorId: string
 	cartId: string
 	location: Location

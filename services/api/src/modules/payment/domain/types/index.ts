@@ -18,6 +18,7 @@ export enum TransactionType {
 	Received = 'Received',
 	Withdrawal = 'Withdrawal',
 	WithdrawalRefund = 'WithdrawalRefund',
+	OrderPayment = 'OrderPayment',
 }
 
 export type TransactionData =
@@ -44,6 +45,10 @@ export type TransactionData =
 	| {
 			type: TransactionType.WithdrawalRefund
 			withdrawalId: string
+	  }
+	| {
+			type: TransactionType.OrderPayment
+			orderId: string
 	  }
 
 export type TransferData = {

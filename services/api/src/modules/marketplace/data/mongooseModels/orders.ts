@@ -18,6 +18,10 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: String,
 			required: true,
 		},
+		email: {
+			type: String,
+			required: true,
+		},
 		cartId: {
 			type: String,
 			required: true,

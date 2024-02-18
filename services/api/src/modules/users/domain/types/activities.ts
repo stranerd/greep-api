@@ -9,6 +9,8 @@ export enum ActivityType {
 	completedTrip = 'completedTrip',
 	tripDiscount = 'tripDiscount',
 	refundTripDiscount = 'refundTripDiscount',
+	orderDiscount = 'orderDiscount',
+	refundOrderDiscount = 'refundOrderDiscount',
 }
 
 export type ActivityData =
@@ -29,4 +31,14 @@ export type ActivityData =
 	| {
 			type: ActivityType.completedTrip
 			tripId: string
+	  }
+	| {
+			type: ActivityType.orderDiscount
+			orderId: string
+			discount: number
+	  }
+	| {
+			type: ActivityType.refundOrderDiscount
+			orderId: string
+			discount: number
 	  }

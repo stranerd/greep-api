@@ -57,6 +57,6 @@ export class CartsController {
 		const score = ActivityEntity.getScore({ type: ActivityType.tripDiscount, discount: data.discount, tripId: '' })
 		if (user.account.rankings.overall.value + score < 0) throw new BadRequestError('not enough points for this discount')
 
-		return await OrdersUseCases.checkout({ ...data, userId, cartId: req.params.id })
+		return await OrdersUseCases.checkout({ ...data, userId, email: user.bio.email, cartId: req.params.id })
 	}
 }

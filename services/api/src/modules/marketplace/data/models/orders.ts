@@ -16,6 +16,7 @@ export interface OrderFromModel extends OrderToModel {
 
 export interface OrderToModel {
 	userId: string
+	email: string
 	cartId: string
 	location: Location
 	dropoffNote: string

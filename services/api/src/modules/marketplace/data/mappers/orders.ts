@@ -8,6 +8,7 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 		return new OrderEntity({
 			id: param._id,
 			userId: param.userId,
+			email: param.email,
 			products: param.products,
 			vendorId: param.vendorId,
 			cartId: param.cartId,
@@ -25,6 +26,7 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 	mapTo(param: OrderEntity) {
 		return {
 			userId: param.userId,
+			email: param.email,
 			cartId: param.cartId,
 			location: param.location,
 			dropoffNote: param.dropoffNote,

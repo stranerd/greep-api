@@ -11,6 +11,8 @@ export class ActivityEntity extends BaseEntity<ActivityConstructorArgs> {
 		if (data.type === ActivityType.completedTrip) return 10
 		if (data.type === ActivityType.tripDiscount) return -data.discount * 25
 		if (data.type === ActivityType.refundTripDiscount) return data.discount * 25
+		if (data.type === ActivityType.orderDiscount) return -data.discount * 25
+		if (data.type === ActivityType.refundOrderDiscount) return data.discount * 25
 		return 0
 	}
 }
