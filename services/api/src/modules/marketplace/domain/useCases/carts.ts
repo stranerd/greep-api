@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
+import { OrderToModel } from '../../data/models/orders'
 import { ICartRepository } from '../irepositories/carts'
-import { AddToCartInput, CheckoutCart } from '../types'
+import { AddToCartInput } from '../types'
 
 export class CartUseCase {
 	private repository: ICartRepository
@@ -25,7 +26,7 @@ export class CartUseCase {
 		return await this.repository.getForUser(userId)
 	}
 
-	async checkout(data: CheckoutCart) {
+	async checkout(data: OrderToModel) {
 		return await this.repository.checkout(data)
 	}
 }

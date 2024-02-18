@@ -1,5 +1,4 @@
 import { Currencies } from '@modules/payment'
-import { Location } from '@utils/types'
 
 export type AddToCartInput = {
 	productId: string
@@ -23,14 +22,4 @@ export type DeliveryTime = {
 export enum OrderPayment {
 	wallet = 'wallet',
 	cash = 'cash',
-}
-
-export type CheckoutCart = {
-	userId: string
-	cartId: string
-	location: Location
-	dropoffNote: string
-	time: DeliveryTime
-	discount: number
-	payment: OrderPayment
 }

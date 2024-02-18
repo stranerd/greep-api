@@ -2,9 +2,10 @@ import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { ClientSession } from 'mongoose'
 import { ICartRepository } from '../../domain/irepositories/carts'
-import { AddToCartInput, CheckoutCart } from '../../domain/types'
+import { AddToCartInput } from '../../domain/types'
 import { CartMapper } from '../mappers/carts'
 import { CartFromModel } from '../models/carts'
+import { OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
 import { Product } from '../mongooseModels/products'
 
@@ -68,7 +69,7 @@ export class CartRepository implements ICartRepository {
 		return this.mapper.mapFrom(chat)
 	}
 
-	async checkout(data: CheckoutCart) {
+	async checkout(data: OrderToModel) {
 		// TODO: Implement
 		console.log('checkout', data)
 		if (data) throw new Error('Not implemented')
