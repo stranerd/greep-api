@@ -15,15 +15,6 @@ services:
       - "./services/api/src:/app/src:ro"
     command: "sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- yarn dev"
 
-  admin:
-    restart: on-failure
-    build:
-      target: base
-    volumes:
-      - "./services/admin/build:/app/build"
-      - "./services/admin/src:/app/src:ro"
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- echo "Start dev server on your machine"'
-
   mongodb:
     ports:
       - "27017:27017"

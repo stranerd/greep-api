@@ -32,16 +32,6 @@ services:
       - '/c/data/docker/greep/files/api/:/app/public/'
     command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- node lib/index.js'
 
-  admin:
-    build:
-      context: ./services/admin
-      target: production
-    hostname: admin
-    restart: always
-    depends_on:
-      - api
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- yarn start'
-
   mongodb:
     image: 'mongo:7.0.5'
     hostname: mongodb
