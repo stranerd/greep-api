@@ -1,4 +1,4 @@
-FROM node:21.6.2-alpine3.18 as base
+FROM node:18.15.0-alpine3.17 as base
 WORKDIR /app
 COPY package.json ./
 RUN yarn install
