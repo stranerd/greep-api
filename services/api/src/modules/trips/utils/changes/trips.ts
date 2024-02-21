@@ -1,10 +1,10 @@
+import { ActivitiesUseCases, ActivityType } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
 import { TripsUseCases } from '../..'
 import { TripFromModel } from '../../data/models/trips'
 import { TripEntity } from '../../domain/entities/trips'
 import { TripStatus } from '../../domain/types'
-import { ActivitiesUseCases, ActivityType } from '@modules/users'
 
 export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity> = {
 	created: async ({ after }) => {
@@ -28,14 +28,15 @@ export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity>
 				},
 			})
 
-		await ActivitiesUseCases.create({
-			userId: after.customerId,
-			data: {
-				type: ActivityType.tripDiscount,
-				tripId: after.id,
-				discount: after.discount,
-			},
-		})
+		if (after.discount > 0)
+			await ActivitiesUseCases.create({
+				userId: after.customerId,
+				data: {
+					type: ActivityType.tripDiscount,
+					tripId: after.id,
+					discount: after.discount,
+				},
+			})
 	},
 	updated: async ({ after, changes }) => {
 		await appInstance.listener.updated(

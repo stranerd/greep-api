@@ -1,26 +1,9 @@
 import { BaseEntity } from 'equipped'
 import { TransactionData } from '../types'
 
-export class TransactionEntity extends BaseEntity {
-	public readonly id: string
-	public readonly driverId: string
-	public readonly amount: number
-	public readonly description: string
-	public readonly data: TransactionData
-	public readonly recordedAt: number
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor({ id, driverId, amount, description, data, recordedAt, createdAt, updatedAt }: TransactionConstructorArgs) {
-		super()
-		this.id = id
-		this.driverId = driverId
-		this.amount = amount
-		this.description = description
-		this.data = data
-		this.recordedAt = recordedAt
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+export class TransactionEntity extends BaseEntity<TransactionConstructorArgs> {
+	constructor(data: TransactionConstructorArgs) {
+		super(data)
 	}
 }
 

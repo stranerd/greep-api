@@ -18,7 +18,7 @@ export const processFailedWithdrawal = async (withdrawal: WithdrawalEntity) => {
 	await TransactionsUseCases.create({
 		userId: withdrawal.userId,
 		email: withdrawal.email,
-		amount: withdrawal.getChargedAmount(),
+		amount: withdrawal.charged,
 		currency: withdrawal.currency,
 		title: 'Withdrawal failed. Amount refunded to wallet',
 		status: TransactionStatus.fulfilled,

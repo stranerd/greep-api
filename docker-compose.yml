@@ -32,16 +32,6 @@ services:
       - '/c/data/docker/greep/files/api/:/app/public/'
     command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- node lib/index.js'
 
-  admin:
-    build:
-      context: ./services/admin
-      target: production
-    hostname: admin
-    restart: always
-    depends_on:
-      - api
-    command: 'sh ./wait-for-it.sh redis:6379 mongodb:27017 kafka:9092 debezium:8083 -- yarn start'
-
   mongodb:
     image: 'mongo:6.0.7'
     hostname: mongodb
@@ -52,7 +42,7 @@ services:
     command: '--quiet --bind_ip_all --replSet rs0'
 
   kafka:
-    image: bitnami/kafka:3.5.0
+    image: bitnami/kafka:3.6.1
     hostname: kafka
     restart: always
     volumes:
@@ -82,7 +72,7 @@ services:
       - kafka
 
   redis:
-    image: 'redis:6.2.13-alpine'
+    image: 'redis:7.2.4-alpine'
     hostname: redis
     restart: always
 

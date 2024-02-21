@@ -7,20 +7,20 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, AuthUserE
 		return !param
 			? null
 			: new AuthUserEntity({
-				id: param._id.toString(),
-				username: param.username,
-				email: param.email,
-				password: param.password,
-				roles: param.roles,
-				name: param.name,
-				photo: param.photo,
-				phone: param.phone,
-				isVerified: param.isVerified,
-				authTypes: param.authTypes,
-				referrer: param.referrer,
-				lastSignedInAt: param.lastSignedInAt,
-				signedUpAt: param.signedUpAt,
-			})
+					id: param._id.toString(),
+					username: param.username,
+					email: param.email,
+					password: param.password,
+					roles: param.roles,
+					name: param.name,
+					photo: param.photo,
+					phone: param.phone,
+					isVerified: param.isVerified,
+					authTypes: param.authTypes,
+					referrer: param.referrer,
+					lastSignedInAt: param.lastSignedInAt,
+					signedUpAt: param.signedUpAt,
+				})
 	}
 
 	mapTo(param: AuthUserEntity) {

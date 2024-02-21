@@ -13,9 +13,7 @@
 		"baseUrl": "./",
 		"outDir": "lib",
 		"moduleResolution": "Node",
-		"lib": [
-			"ES2021",
-		],
+		"lib": ["ES2021"],
 		"esModuleInterop": true,
 		"allowJs": false,
 		"sourceMap": false,
@@ -23,25 +21,12 @@
 		"noEmit": false,
 		"experimentalDecorators": true,
 		"paths": {
-			"@application/*": [
-				"./src/application/*"
-			],
-			"@modules/*": [
-				"./src/modules/*"
-			],
-			"@utils/*": [
-				"./src/utils/*"
-			]
+			"@application/*": ["./src/application/*"],
+			"@modules/*": ["./src/modules/*"],
+			"@utils/*": ["./src/utils/*"],
 		},
-		"types": [
-			"@types/node"
-		]
+		"types": ["@types/node"],
 	},
-	"include": [
-		"src",
-	],
-	"exclude": [
-		"node_modules",
-		"lib"
-	]
+	"include": ["src"],
+	"exclude": ["node_modules", "lib"],
 }

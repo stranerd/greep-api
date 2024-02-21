@@ -1,28 +1,9 @@
 import { BaseEntity } from 'equipped'
 import { NotificationData } from '../types'
 
-export class NotificationEntity extends BaseEntity {
-	public readonly id: string
-	public readonly title: string
-	public readonly body: string
-	public readonly data: NotificationData
-	public readonly userId: string
-	public readonly seen: boolean
-	public readonly sendEmail: boolean
-	public readonly createdAt: number
-	public readonly updatedAt: number
-
-	constructor({ id, title, body, data, userId, createdAt, seen, sendEmail, updatedAt }: NotificationConstructorArgs) {
-		super()
-		this.id = id
-		this.title = title
-		this.body = body
-		this.data = data ?? {}
-		this.userId = userId
-		this.seen = seen
-		this.sendEmail = sendEmail
-		this.createdAt = createdAt
-		this.updatedAt = updatedAt
+export class NotificationEntity extends BaseEntity<NotificationConstructorArgs> {
+	constructor(data: NotificationConstructorArgs) {
+		super(data)
 	}
 }
 

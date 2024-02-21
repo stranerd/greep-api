@@ -7,16 +7,16 @@ export class NotificationMapper extends BaseMapper<NotificationFromModel, Notifi
 		return !param
 			? null
 			: new NotificationEntity({
-				id: param._id.toString(),
-				title: param.title,
-				body: param.body,
-				data: param.data,
-				userId: param.userId,
-				seen: param.seen,
-				sendEmail: param.sendEmail,
-				createdAt: param.createdAt,
-				updatedAt: param.updatedAt,
-			})
+					id: param._id.toString(),
+					title: param.title,
+					body: param.body,
+					data: param.data,
+					userId: param.userId,
+					seen: param.seen,
+					sendEmail: param.sendEmail,
+					createdAt: param.createdAt,
+					updatedAt: param.updatedAt,
+				})
 	}
 
 	mapTo(param: NotificationEntity) {
