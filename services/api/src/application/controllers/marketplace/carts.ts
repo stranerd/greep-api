@@ -54,7 +54,7 @@ export class CartsController {
 		const userId = req.authUser!.id
 		const user = await UsersUseCases.find(userId)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
-		const score = ActivityEntity.getScore({ type: ActivityType.tripDiscount, discount: data.discount, tripId: '' })
+		const score = ActivityEntity.getScore({ type: ActivityType.orderDiscount, discount: data.discount, orderId: '' })
 		if (user.account.rankings.overall.value + score < 0) throw new BadRequestError('not enough points for this discount')
 
 		return await OrdersUseCases.checkout({ ...data, userId, email: user.bio.email, cartId: req.params.id })

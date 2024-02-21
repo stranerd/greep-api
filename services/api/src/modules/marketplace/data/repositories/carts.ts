@@ -27,7 +27,7 @@ export class CartRepository implements ICartRepository {
 				{ upsert: true, new: true, ...(session ? { session } : {}) },
 			)
 
-			const products = structuredClone(cart.products)
+			const products = [...cart.products]
 			const productIndex = cart.products.findIndex((p) => p.id === data.productId)
 			if (data.add) {
 				if (!product.inStock) throw new Error('product not available')

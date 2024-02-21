@@ -38,6 +38,10 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: [],
 		},
+		user: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
+		},
 		banner: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
