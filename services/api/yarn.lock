@@ -1566,10 +1566,10 @@ ent@^2.2.0:
   resolved "https://registry.yarnpkg.com/ent/-/ent-2.2.0.tgz#e964219325a21d05f44466a2f686ed6ce5f5dd1d"
   integrity sha512-GHrMyVZQWvTIdDtpiEXdHZnFQKzeO09apj8Cbl4pKWy4i0Oprcq17usfDt5aO63swf0JOeMWjWQE/LzgSRuWpA==
 
-equipped@4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.3.1.tgz#366bc4a1e5f498c29ad973edd264ce232506338c"
-  integrity sha512-9GLmYfsnqtjyplwdi6vHw7Dv+Ifl5cn6RckQhek9DbguM/F6D3jQYX6hvni5S/GV7SHQuQkIPR2R6unBlR5Aow==
+equipped@4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.3.2.tgz#c5e83a39bde114c0edb5e71f3cb3ebbc13a614c4"
+  integrity sha512-r31V10onC/+HAvrNfhAp4hzU+suh4AsY4EgTBCEs0L3JJPcn6Yx5doc96ojRWEi7qCOr+1GI+saNLTXuBeIXPw==
   dependencies:
     amqp-connection-manager "^4.1.14"
     amqplib "^0.10.3"
@@ -1600,7 +1600,7 @@ equipped@4.3.1:
     redis "^4.6.13"
     socket.io "4.7.4"
     supertest "^6.3.4"
-    valleyed "4.2.6"
+    valleyed "4.2.7"
 
 es-abstract@^1.17.0-next.1, es-abstract@^1.19.0, es-abstract@^1.20.4:
   version "1.21.1"
@@ -4562,10 +4562,10 @@ v8-compile-cache-lib@^3.0.1:
   resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
   integrity sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
 
-valleyed@4.2.6:
-  version "4.2.6"
-  resolved "https://registry.yarnpkg.com/valleyed/-/valleyed-4.2.6.tgz#fe17cf9019e8a7045875ff56baa61a0e900474f6"
-  integrity sha512-2nsO0JAbt6fTGQethC0+nlukq3ClacqXDSLd5gRYvwxID2whj9YlBnOvMtodjKkBY4ONkLhzWStRQnNytyTHzA==
+valleyed@4.2.7:
+  version "4.2.7"
+  resolved "https://registry.yarnpkg.com/valleyed/-/valleyed-4.2.7.tgz#fdea3237a4f721dadcc530d57a7a1f4a04fbdf2e"
+  integrity sha512-k7a4JY7a8hBHer8O/7/N1h4K1N8XYVQFriL/tgsY1FIkdGe3sgHkM3K3US2XD5sjEvANPVahCBZoC5FZ0H8/Gw==
   dependencies:
     url-regex-safe "^4.0.0"
 
