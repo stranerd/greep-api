@@ -88,7 +88,7 @@ export class TripsController {
 		const data = validate({
 			amount: Schema.number().gt(0),
 			description: Schema.string(),
-			recordedAt: Schema.time().asStamp(),
+			recordedAt: Schema.time().max(Date.now()).asStamp(),
 			data: Schema.object({
 				customerName: Schema.string().min(1),
 				paidAmount: Schema.number(),

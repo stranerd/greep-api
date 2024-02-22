@@ -40,7 +40,7 @@ export class TransactionsController {
 		const data = validate({
 			amount: Schema.number().gt(isBalance ? Number.NEGATIVE_INFINITY : 0),
 			description: Schema.string(),
-			recordedAt: Schema.time().asStamp(),
+			recordedAt: Schema.time().max(Date.now()).asStamp(),
 			data: Schema.or([
 				Schema.object({
 					type: Schema.is(TransactionType.expense as const),
