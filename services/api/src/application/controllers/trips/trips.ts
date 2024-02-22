@@ -124,7 +124,7 @@ export class TripsController {
 			{
 				amount: Schema.number().gt(0),
 				description: Schema.string(),
-				recordedAt: Schema.time().asStamp(),
+				recordedAt: Schema.time().max(Date.now()).asStamp(),
 				data: Schema.object({
 					paidAmount: Schema.number(),
 					paymentType: Schema.in(Object.values(PaymentType)),
