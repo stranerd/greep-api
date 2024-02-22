@@ -128,11 +128,7 @@ export class AuthRepository implements IAuthRepository {
 		const data = await signinWithGoogle(idToken)
 		const email = data.email!.toLowerCase()
 
-		const photo = data.picture
-			? ({
-					link: data.picture,
-				} as unknown as MediaOutput)
-			: null
+		const photo = data.picture ? ({ link: data.picture, type: 'image/png' } as unknown as MediaOutput) : null
 
 		return this.authorizeSocial(AuthTypes.google, {
 			email,
@@ -148,7 +144,7 @@ export class AuthRepository implements IAuthRepository {
 			throw new BadRequestError(e.message)
 		})
 		const email = data.email?.toLowerCase()
-		if (!email) throw new BadRequestError("can't access your email. Signin another way")
+		if (!email) throw new BadRequestError('cant access your email. Signin another way')
 
 		return this.authorizeSocial(AuthTypes.apple, {
 			email,
