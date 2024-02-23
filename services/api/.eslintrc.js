@@ -22,7 +22,6 @@ module.exports = {
 		'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
 		semi: ['error', 'never'],
 		'@typescript-eslint/semi': ['error', 'never'],
-		quotes: ['error', 'single'],
 		'prefer-const': ['error'],
 		'arrow-parens': ['error', 'always'],
 		'no-return-assign': 'off',
