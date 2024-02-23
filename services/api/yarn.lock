@@ -1566,10 +1566,10 @@ ent@^2.2.0:
   resolved "https://registry.yarnpkg.com/ent/-/ent-2.2.0.tgz#e964219325a21d05f44466a2f686ed6ce5f5dd1d"
   integrity sha512-GHrMyVZQWvTIdDtpiEXdHZnFQKzeO09apj8Cbl4pKWy4i0Oprcq17usfDt5aO63swf0JOeMWjWQE/LzgSRuWpA==
 
-equipped@4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.3.2.tgz#c5e83a39bde114c0edb5e71f3cb3ebbc13a614c4"
-  integrity sha512-r31V10onC/+HAvrNfhAp4hzU+suh4AsY4EgTBCEs0L3JJPcn6Yx5doc96ojRWEi7qCOr+1GI+saNLTXuBeIXPw==
+equipped@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/equipped/-/equipped-4.4.0.tgz#0864815efd6d25420a7123807b02bbda5e5e9b3b"
+  integrity sha512-8irE/maWshef8QplGxp3gyn1J1PEYr2DisLH1fHsW0tBguB7BrKLcX0+f5OOFb3wDb7OvpeE1yHDoowZ6R3eMw==
   dependencies:
     amqp-connection-manager "^4.1.14"
     amqplib "^0.10.3"
