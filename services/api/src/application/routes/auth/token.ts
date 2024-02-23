@@ -1,15 +1,10 @@
-import { makeController, Route, StatusCodes } from 'equipped'
+import { makeController, Route } from 'equipped'
 import { TokenController } from '../../controllers/auth/token'
 
 const getNewTokens: Route = {
 	path: '/auth/token',
 	method: 'post',
-	controllers: [
-		makeController(async (req) => ({
-			status: StatusCodes.Ok,
-			result: await TokenController.getNewTokens(req),
-		})),
-	],
+	controllers: [makeController(async (req) => TokenController.getNewTokens(req))],
 }
 
 const routes: Route[] = [getNewTokens]

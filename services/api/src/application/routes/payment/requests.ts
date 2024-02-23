@@ -1,72 +1,36 @@
 import { RequestsController } from '@application/controllers/payment/requests'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController, StatusCodes } from 'equipped'
+import { groupRoutes, makeController } from 'equipped'
 
 export const requestsRoutes = groupRoutes('/requests', [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await RequestsController.get(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => RequestsController.get(req))],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await RequestsController.find(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => RequestsController.find(req))],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await RequestsController.create(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => RequestsController.create(req))],
 	},
 	{
 		path: '/:id/reject',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await RequestsController.reject(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => RequestsController.reject(req))],
 	},
 	{
 		path: '/:id/accept',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await RequestsController.accept(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => RequestsController.accept(req))],
 	},
 	{
 		path: '/:id/acknowledge',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await RequestsController.acknowledge(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => RequestsController.acknowledge(req))],
 	},
 ])

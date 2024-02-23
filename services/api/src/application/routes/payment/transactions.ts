@@ -1,70 +1,36 @@
 import { TransactionsController } from '@application/controllers/payment/transactions'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController, StatusCodes } from 'equipped'
+import { groupRoutes, makeController } from 'equipped'
 
 export const transactionsRoutes = groupRoutes('/transactions', [
 	{
 		path: '/flutterwave/secrets',
 		method: 'get',
-		controllers: [
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TransactionsController.getSecrets(req),
-			})),
-		],
+		controllers: [makeController(async (req) => TransactionsController.getSecrets(req))],
 	},
 	{
 		path: '/rates',
 		method: 'get',
-		controllers: [
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TransactionsController.getRates(req),
-			})),
-		],
+		controllers: [makeController(async (req) => TransactionsController.getRates(req))],
 	},
 	{
 		path: '/',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TransactionsController.get(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.get(req))],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TransactionsController.find(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.find(req))],
 	},
 	{
 		path: '/fund',
 		method: 'post',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TransactionsController.fund(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.fund(req))],
 	},
 	{
 		path: '/:id/fulfill',
 		method: 'put',
-		controllers: [
-			isAuthenticated,
-			makeController(async (req) => ({
-				status: StatusCodes.Ok,
-				result: await TransactionsController.fulfill(req),
-			})),
-		],
+		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.fulfill(req))],
 	},
 ])

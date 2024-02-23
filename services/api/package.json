@@ -7,7 +7,7 @@
 		"start": "node lib/index.js",
 		"build": "tsc --build --force && resolve-tspaths",
 		"dev": "ts-node-dev -r tsconfig-paths/register --transpile-only src/index.ts",
-		"lint": "eslint --fix ./",
+		"lint": "eslint --ext ts,js --fix ./",
 		"doc": "ts-node-dev src/utils/doc.ts dist/doc.json && api-html -f dist/doc.json -o dist/doc-options.json"
 	},
 	"keywords": [],

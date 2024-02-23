@@ -1,7 +1,7 @@
 import { isAuthenticated } from '@application/middlewares'
 import { TokensUseCases } from '@modules/notifications'
 import { UsersUseCases } from '@modules/users'
-import { groupRoutes, makeController, Schema, StatusCodes, validate } from 'equipped'
+import { groupRoutes, makeController, Schema, validate } from 'equipped'
 
 export const tokenRoutes = groupRoutes('/tokens', [
 	{
@@ -12,10 +12,7 @@ export const tokenRoutes = groupRoutes('/tokens', [
 			makeController(async (req) => {
 				const { enable } = validate({ enable: Schema.boolean() }, req.body)
 				const user = await UsersUseCases.updateSettings({ userId: req.authUser!.id, settings: { notifications: enable } })
-				return {
-					status: StatusCodes.Ok,
-					result: !!user,
-				}
+				return !!user
 			}),
 		],
 	},
@@ -32,10 +29,7 @@ export const tokenRoutes = groupRoutes('/tokens', [
 					req.body,
 				)
 				const res = await TokensUseCases.update({ userId: req.authUser!.id, tokens: [token], add: true })
-				return {
-					status: StatusCodes.Ok,
-					result: !!res,
-				}
+				return !!res
 			}),
 		],
 	},
@@ -52,10 +46,7 @@ export const tokenRoutes = groupRoutes('/tokens', [
 					req.body,
 				)
 				const res = await TokensUseCases.update({ userId: req.authUser!.id, tokens: [token], add: false })
-				return {
-					status: StatusCodes.Ok,
-					result: !!res,
-				}
+				return !!res
 			}),
 		],
 	},
