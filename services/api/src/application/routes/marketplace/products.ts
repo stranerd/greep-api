@@ -6,7 +6,7 @@ export const productsRoutes = groupRoutes('/products', [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ProductsController.get(req))],
+		controllers: [makeController(async (req) => ProductsController.get(req))],
 	},
 	{
 		path: '/',
@@ -16,7 +16,7 @@ export const productsRoutes = groupRoutes('/products', [
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ProductsController.find(req))],
+		controllers: [makeController(async (req) => ProductsController.find(req))],
 	},
 	{
 		path: '/:id',
