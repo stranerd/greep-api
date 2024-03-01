@@ -1,7 +1,7 @@
-import { WithdrawalStatus } from '@modules/payment/domain/types'
 import { appInstance } from '@utils/environment'
 import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { IWithdrawalRepository } from '../../domain/irepositories/withdrawals'
+import { WithdrawalStatus } from '../../domain/types'
 import { WithdrawalMapper } from '../mappers/withdrawals'
 import { WithdrawalToModel } from '../models/withdrawals'
 import { Withdrawal } from '../mongooseModels/withdrawals'

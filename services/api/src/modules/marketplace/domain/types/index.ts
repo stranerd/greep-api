@@ -30,3 +30,10 @@ export type AcceptOrderInput = {
 	message: string
 	accepted: boolean
 }
+
+export enum DeliveryStatus {
+	created = 'created',
+	inProgress = 'inProgress',
+	failed = 'failed',
+	completed = 'completed',
+}

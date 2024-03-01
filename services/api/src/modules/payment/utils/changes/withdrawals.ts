@@ -11,7 +11,7 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 			[
 				`payment/withdrawals/${after.userId}`,
 				`payment/withdrawals/${after.id}/${after.userId}`,
-				...(after.id ? [`payment/withdrawals/${after.agentId}`, `payment/withdrawals/${after.id}/${after.agentId}`] : []),
+				...(after.agentId ? [`payment/withdrawals/${after.agentId}`, `payment/withdrawals/${after.id}/${after.agentId}`] : []),
 			],
 			after,
 		)
@@ -23,7 +23,7 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 			[
 				`payment/withdrawals/${after.userId}`,
 				`payment/withdrawals/${after.id}/${after.userId}`,
-				...(after.id ? [`payment/withdrawals/${after.agentId}`, `payment/withdrawals/${after.id}/${after.agentId}`] : []),
+				...(after.agentId ? [`payment/withdrawals/${after.agentId}`, `payment/withdrawals/${after.id}/${after.agentId}`] : []),
 			],
 			after,
 		)
@@ -42,7 +42,7 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 			[
 				`payment/withdrawals/${before.userId}`,
 				`payment/withdrawals/${before.id}/${before.userId}`,
-				...(before.id ? [`payment/withdrawals/${before.agentId}`, `payment/withdrawals/${before.id}/${before.agentId}`] : []),
+				...(before.agentId ? [`payment/withdrawals/${before.agentId}`, `payment/withdrawals/${before.id}/${before.agentId}`] : []),
 			],
 			before,
 		)
