@@ -65,6 +65,7 @@ export class RequestsController {
 				toEmail: user.bio.email,
 				toName: user.bio.username,
 				amount: request.amount,
+				currency: request.currency,
 				note: request.description,
 			})
 			if (!transferred) throw new BadRequestError('transfer failed')

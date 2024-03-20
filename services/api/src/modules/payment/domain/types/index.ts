@@ -64,6 +64,7 @@ export type TransferData = {
 	toName: string
 	toEmail: string
 	amount: number
+	currency: Currencies
 	note: string
 }
 

@@ -50,7 +50,7 @@ export class WalletRepository implements IWalletRepository {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId, session))!
 			const convertedAmount = await FlutterwavePayment.convertAmount(amount, currency, wallet.balance.currency)
 			const updatedBalance = wallet.balance.amount + convertedAmount
-			if (updatedBalance < 0) throw new BadRequestError('wallet balance cant go below 0')
+			if (updatedBalance < 0) return false
 			res = !!(await Wallet.findByIdAndUpdate(wallet.id, { $inc: { 'balance.amount': convertedAmount } }, { new: true, session }))
 			return res
 		})
@@ -62,7 +62,9 @@ export class WalletRepository implements IWalletRepository {
 		await Wallet.collection.conn.transaction(async (session) => {
 			const fromWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.from, session))!
 			const toWallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(data.to, session))!
-			const updatedBalance = fromWallet.balance.amount - data.amount
+			const fromConvertedAmount = await FlutterwavePayment.convertAmount(data.amount, data.currency, fromWallet.balance.currency)
+			const toConvertedAmount = await FlutterwavePayment.convertAmount(data.amount, data.currency, toWallet.balance.currency)
+			const updatedBalance = fromWallet.balance.amount - fromConvertedAmount
 			if (updatedBalance < 0) throw new BadRequestError('insufficient balance')
 			const transactions: TransactionToModel[] = [
 				{
@@ -70,7 +72,7 @@ export class WalletRepository implements IWalletRepository {
 					email: data.fromEmail,
 					title: `You sent money to ${data.toName}`,
 					amount: 0 - data.amount,
-					currency: fromWallet.balance.currency,
+					currency: data.currency,
 					status: TransactionStatus.settled,
 					data: { type: TransactionType.Sent, note: data.note, to: data.to, toName: data.toName },
 				},
@@ -79,14 +81,14 @@ export class WalletRepository implements IWalletRepository {
 					email: data.toEmail,
 					title: `You received money from ${data.fromName}`,
 					amount: data.amount,
-					currency: fromWallet.balance.currency,
+					currency: data.currency,
 					status: TransactionStatus.settled,
 					data: { type: TransactionType.Received, note: data.note, from: data.from, fromName: data.fromName },
 				},
 			]
 			const transactionModels = await Transaction.insertMany(transactions, { session })
-			await Wallet.findByIdAndUpdate(fromWallet.id, { $inc: { 'balance.amount': 0 - data.amount } }, { new: true, session })
-			await Wallet.findByIdAndUpdate(toWallet.id, { $inc: { 'balance.amount': data.amount } }, { new: true, session })
+			await Wallet.findByIdAndUpdate(fromWallet.id, { $inc: { 'balance.amount': 0 - fromConvertedAmount } }, { new: true, session })
+			await Wallet.findByIdAndUpdate(toWallet.id, { $inc: { 'balance.amount': toConvertedAmount } }, { new: true, session })
 			res = transactionModels[0]
 			return res
 		})
