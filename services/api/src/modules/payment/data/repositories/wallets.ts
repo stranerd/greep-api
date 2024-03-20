@@ -2,7 +2,8 @@ import { appInstance } from '@utils/environment'
 import { publishers } from '@utils/events'
 import { BadRequestError, EmailsList, Random, readEmailFromPug } from 'equipped'
 import { IWalletRepository } from '../../domain/irepositories/wallets'
-import { TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
+import { Currencies, TransactionStatus, TransactionType, TransferData, WithdrawData, WithdrawalStatus } from '../../domain/types'
+import { FlutterwavePayment } from '../../utils/flutterwave'
 import { TransactionMapper } from '../mappers/transactions'
 import { WalletMapper } from '../mappers/wallets'
 import { WithdrawalMapper } from '../mappers/withdrawals'
@@ -43,13 +44,14 @@ export class WalletRepository implements IWalletRepository {
 		return this.mapper.mapFrom(wallet)!
 	}
 
-	async updateAmount(userId: string, amount: number) {
+	async updateAmount(userId: string, amount: number, currency: Currencies) {
 		let res = false
 		await Wallet.collection.conn.transaction(async (session) => {
 			const wallet = this.mapper.mapFrom(await WalletRepository.getUserWallet(userId, session))!
-			const updatedBalance = wallet.balance.amount + amount
+			const convertedAmount = await FlutterwavePayment.convertAmount(amount, currency, wallet.balance.currency)
+			const updatedBalance = wallet.balance.amount + convertedAmount
 			if (updatedBalance < 0) throw new BadRequestError('wallet balance cant go below 0')
-			res = !!(await Wallet.findByIdAndUpdate(wallet.id, { $inc: { 'balance.amount': amount } }, { new: true, session }))
+			res = !!(await Wallet.findByIdAndUpdate(wallet.id, { $inc: { 'balance.amount': convertedAmount } }, { new: true, session }))
 			return res
 		})
 		return res

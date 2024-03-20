@@ -1,5 +1,5 @@
 import { OrderStatus, OrdersUseCases } from '@modules/marketplace'
-import { Currencies, FlutterwavePayment, TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
+import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
 import { NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class OrdersController {
@@ -83,7 +83,8 @@ export class OrdersController {
 
 		const successful = await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY),
+			amount: transaction.amount,
+			currency: transaction.currency,
 		})
 
 		await TransactionsUseCases.update({

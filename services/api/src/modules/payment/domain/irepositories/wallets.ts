@@ -1,11 +1,11 @@
 import { TransactionEntity } from '../entities/transactions'
 import { WalletEntity } from '../entities/wallets'
 import { WithdrawalEntity } from '../entities/withdrawals'
-import { TransferData, WithdrawData } from '../types'
+import { Currencies, TransferData, WithdrawData } from '../types'
 
 export interface IWalletRepository {
 	get: (userId: string) => Promise<WalletEntity>
-	updateAmount: (userId: string, amount: number) => Promise<boolean>
+	updateAmount: (userId: string, amount: number, currency: Currencies) => Promise<boolean>
 	transfer: (data: TransferData) => Promise<TransactionEntity>
 	withdraw: (data: WithdrawData) => Promise<WithdrawalEntity>
 	sendPinResetMail: (userId: string, email: string) => Promise<boolean>

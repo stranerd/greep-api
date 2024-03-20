@@ -1,5 +1,5 @@
 import { IWalletRepository } from '../irepositories/wallets'
-import { TransferData, WithdrawData } from '../types'
+import { Currencies, TransferData, WithdrawData } from '../types'
 
 export class WalletsUseCase {
 	repository: IWalletRepository
@@ -12,8 +12,8 @@ export class WalletsUseCase {
 		return await this.repository.get(userId)
 	}
 
-	async updateAmount(data: { userId: string; amount: number }) {
-		return await this.repository.updateAmount(data.userId, data.amount)
+	async updateAmount(data: { userId: string; amount: number; currency: Currencies }) {
+		return await this.repository.updateAmount(data.userId, data.amount, data.currency)
 	}
 
 	async transfer(data: TransferData) {

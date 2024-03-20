@@ -10,6 +10,7 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
 			amount: transaction.amount * transaction.data.exchangeRate,
+			currency: Currencies.TRY,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
@@ -25,7 +26,8 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.WithdrawalRefund) {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY),
+			amount: transaction.amount,
+			currency: transaction.currency,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
@@ -42,7 +44,8 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 	if (transaction.data.type === TransactionType.OrderPaymentRefund) {
 		await WalletsUseCases.updateAmount({
 			userId: transaction.userId,
-			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY),
+			amount: transaction.amount,
+			currency: transaction.currency,
 		})
 		await TransactionsUseCases.update({
 			id: transaction.id,
