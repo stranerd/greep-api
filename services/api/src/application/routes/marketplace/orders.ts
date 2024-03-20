@@ -18,4 +18,14 @@ export const ordersRoutes = groupRoutes('/orders', [
 		method: 'post',
 		controllers: [isAuthenticated, isAdmin, makeController(async (req) => OrdersController.accept(req))],
 	},
+	{
+		path: '/:id/token',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => OrdersController.generateToken(req))],
+	},
+	{
+		path: '/:id/complete',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => OrdersController.complete(req))],
+	},
 ])

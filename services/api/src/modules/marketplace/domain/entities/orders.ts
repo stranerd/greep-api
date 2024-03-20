@@ -1,7 +1,7 @@
 import { Currencies } from '@modules/payment'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { CartProductItem, DeliveryTime, OrderPayment } from '../types'
+import { CartProductItem, DeliveryTime, OrderPayment, OrderStatus } from '../types'
 
 type OrderEntityProps = {
 	id: string
@@ -9,6 +9,8 @@ type OrderEntityProps = {
 	userId: string
 	email: string
 	vendorId: string
+	driverId: string | null
+	status: OrderStatus
 	cartId: string
 	pickupLocation: Location
 	location: Location

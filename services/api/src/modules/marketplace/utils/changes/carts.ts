@@ -5,14 +5,14 @@ import { CartEntity } from '../../domain/entities/carts'
 
 export const CartDbChangeCallbacks: DbChangeCallbacks<CartFromModel, CartEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created([`marketplace/carts/${after.userId}`, `marketplace/carts/${after.userId}/${after.id}`], after)
+		await appInstance.listener.created([`marketplace/carts/${after.userId}`, `marketplace/carts/${after.id}/${after.userId}`], after)
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.updated([`marketplace/carts/${after.userId}`, `marketplace/carts/${after.userId}/${after.id}`], after)
+		await appInstance.listener.updated([`marketplace/carts/${after.userId}`, `marketplace/carts/${after.id}/${after.userId}`], after)
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
-			[`marketplace/carts/${before.userId}`, `marketplace/carts/${before.userId}/${before.id}`],
+			[`marketplace/carts/${before.userId}`, `marketplace/carts/${before.id}/${before.userId}`],
 			before,
 		)
 	},

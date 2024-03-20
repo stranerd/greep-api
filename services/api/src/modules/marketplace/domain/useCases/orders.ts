@@ -25,4 +25,16 @@ export class OrderUseCase {
 	async accept(input: AcceptOrderInput) {
 		return await this.repository.accept(input)
 	}
+
+	async assignDriver(data: { id: string; driverId: string }) {
+		return await this.repository.assignDriver(data.id, data.driverId)
+	}
+
+	async generateToken(data: { id: string; userId: string }) {
+		return await this.repository.generateToken(data.id, data.userId)
+	}
+
+	async complete(data: { id: string; userId: string; token: string }) {
+		return await this.repository.complete(data.id, data.userId, data.token)
+	}
 }

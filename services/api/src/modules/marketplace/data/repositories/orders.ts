@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/environment'
-import { QueryParams } from 'equipped'
+import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { IOrderRepository } from '../../domain/irepositories/orders'
-import { AcceptOrderInput } from '../../domain/types'
+import { AcceptOrderInput, OrderStatus } from '../../domain/types'
 import { OrderMapper } from '../mappers/orders'
 import { OrderFromModel, OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
@@ -70,5 +70,37 @@ export class OrderRepository implements IOrderRepository {
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
+	}
+
+	async assignDriver(id: string, driverId: string) {
+		const order = await Order.findOneAndUpdate(
+			{
+				_id: id,
+				agentId: null,
+				status: OrderStatus.created,
+			},
+			{ $set: { driverId, status: OrderStatus.inProgress } },
+			{ new: true },
+		)
+		return this.mapper.mapFrom(order)
+	}
+
+	async generateToken(id: string, userId: string) {
+		const order = await Order.findById(id)
+		if (!order || order.userId !== userId) throw new NotAuthorizedError()
+		if (order.status !== OrderStatus.inProgress) throw new NotAuthorizedError('Order delivery is not in progress')
+		const token = Random.string(12)
+		await appInstance.cache.set(`order-delivery-token-${token}`, id, 60 * 3)
+		return token
+	}
+
+	async complete(id: string, userId: string, token: string) {
+		const order = await Order.findById(id)
+		if (!order || order.driverId !== userId) throw new NotAuthorizedError()
+		if (order.status !== OrderStatus.inProgress) throw new NotAuthorizedError('Order delivery is not in progress')
+		const cachedId = await appInstance.cache.get(`order-delivery-token-${token}`)
+		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
+		const completed = await Order.findByIdAndUpdate(id, { $set: { status: OrderStatus.completed } }, { new: true })
+		return this.mapper.mapFrom(completed)
 	}
 }

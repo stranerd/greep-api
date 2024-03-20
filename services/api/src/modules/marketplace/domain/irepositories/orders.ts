@@ -8,4 +8,7 @@ export interface IOrderRepository {
 	get(query: QueryParams): Promise<QueryResults<OrderEntity>>
 	find(id: string): Promise<OrderEntity | null>
 	accept(input: AcceptOrderInput): Promise<OrderEntity | null>
+	assignDriver: (id: string, driverId: string) => Promise<OrderEntity | null>
+	generateToken: (id: string, userId: string) => Promise<string>
+	complete: (id: string, userId: string, token: string) => Promise<OrderEntity | null>
 }

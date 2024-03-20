@@ -9,9 +9,9 @@ import { OrderEntity } from '../../domain/entities/orders'
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created(
-			[after.userId, after.vendorId, `${after.userId}/${after.id}`, `${after.vendorId}/${after.id}`].map(
-				(d) => `marketplace/orders/${d}`,
-			),
+			[after.userId, after.vendorId, ...(after.driverId ? [after.driverId] : [])]
+				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
+				.flat(),
 			after,
 		)
 
@@ -27,9 +27,9 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 	},
 	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(
-			[after.userId, after.vendorId, `${after.userId}/${after.id}`, `${after.vendorId}/${after.id}`].map(
-				(d) => `marketplace/orders/${d}`,
-			),
+			[after.userId, after.vendorId, ...(after.driverId ? [after.driverId] : [])]
+				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
+				.flat(),
 			after,
 		)
 
@@ -63,9 +63,9 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
-			[before.userId, before.vendorId, `${before.userId}/${before.id}`, `${before.vendorId}/${before.id}`].map(
-				(d) => `marketplace/orders/${d}`,
-			),
+			[before.userId, before.vendorId, ...(before.driverId ? [before.driverId] : [])]
+				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${before.id}/${d}`])
+				.flat(),
 			before,
 		)
 	},

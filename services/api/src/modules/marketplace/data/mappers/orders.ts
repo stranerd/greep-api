@@ -11,6 +11,8 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 			email: param.email,
 			products: param.products,
 			vendorId: param.vendorId,
+			driverId: param.driverId,
+			status: param.status,
 			cartId: param.cartId,
 			pickupLocation: param.pickupLocation,
 			location: param.location,
