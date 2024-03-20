@@ -11,4 +11,5 @@ export interface IOrderRepository {
 	assignDriver: (id: string, driverId: string) => Promise<OrderEntity | null>
 	generateToken: (id: string, userId: string) => Promise<string>
 	complete: (id: string, userId: string, token: string) => Promise<OrderEntity | null>
+	markPaid: (id: string) => Promise<OrderEntity | null>
 }

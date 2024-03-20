@@ -1,4 +1,5 @@
-import { OrdersUseCases } from '@modules/marketplace'
+import { OrderStatus, OrdersUseCases } from '@modules/marketplace'
+import { Currencies, FlutterwavePayment, TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
 import { NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class OrdersController {
@@ -60,5 +61,36 @@ export class OrdersController {
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
+	}
+
+	static async pay(req: Request) {
+		const order = await OrdersUseCases.find(req.params.id)
+		if (!order || order.userId !== req.authUser!.id) throw new NotAuthorizedError()
+		if (order.status !== OrderStatus.pendingPayment) throw new NotAuthorizedError('order cannot be paid for')
+
+		const transaction = await TransactionsUseCases.create({
+			userId: order.userId,
+			email: order.email,
+			amount: 0 - order.totalFee,
+			currency: order.price.currency,
+			status: TransactionStatus.initialized,
+			title: `Payment for order #${order.id}`,
+			data: {
+				type: TransactionType.OrderPayment,
+				orderId: order.id,
+			},
+		})
+
+		const successful = await WalletsUseCases.updateAmount({
+			userId: transaction.userId,
+			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY),
+		})
+
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: successful ? TransactionStatus.fulfilled : TransactionStatus.failed },
+		})
+
+		return successful
 	}
 }

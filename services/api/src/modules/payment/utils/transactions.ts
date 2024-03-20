@@ -1,3 +1,4 @@
+import { OrdersUseCases } from '@modules/marketplace'
 import { NotificationType, sendNotification } from '@modules/notifications'
 import { Conditions } from 'equipped'
 import { FlutterwavePayment, TransactionsUseCases, WalletsUseCases } from '../'
@@ -26,6 +27,13 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 			userId: transaction.userId,
 			amount: await FlutterwavePayment.convertAmount(transaction.amount, transaction.currency, Currencies.TRY),
 		})
+		await TransactionsUseCases.update({
+			id: transaction.id,
+			data: { status: TransactionStatus.settled },
+		})
+	}
+	if (transaction.data.type === TransactionType.OrderPayment) {
+		await OrdersUseCases.markPaid(transaction.data.orderId)
 		await TransactionsUseCases.update({
 			id: transaction.id,
 			data: { status: TransactionStatus.settled },

@@ -32,7 +32,18 @@ type OrderEntityProps = {
 }
 
 export class OrderEntity extends BaseEntity<OrderEntityProps> {
+	ignoreInJSON = ['email']
+
 	constructor(data: OrderEntityProps) {
 		super(data)
+	}
+
+	get deliveryFee() {
+		// TODO: calculate based on distance between pickup and dropoff location
+		return 10
+	}
+
+	get totalFee() {
+		return this.deliveryFee + this.price.amount
 	}
 }

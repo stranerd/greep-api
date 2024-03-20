@@ -109,4 +109,16 @@ export class OrderRepository implements IOrderRepository {
 		const completed = await Order.findByIdAndUpdate(id, { $set: { status: OrderStatus.completed } }, { new: true })
 		return this.mapper.mapFrom(completed)
 	}
+
+	async markPaid(id: string) {
+		const order = await Order.findOneAndUpdate(
+			{
+				_id: id,
+				status: OrderStatus.pendingPayment,
+			},
+			{ $set: { status: OrderStatus.paid } },
+			{ new: true },
+		)
+		return this.mapper.mapFrom(order)
+	}
 }

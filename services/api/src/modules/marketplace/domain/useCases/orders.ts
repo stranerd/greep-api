@@ -37,4 +37,8 @@ export class OrderUseCase {
 	async complete(data: { id: string; userId: string; token: string }) {
 		return await this.repository.complete(data.id, data.userId, data.token)
 	}
+
+	async markPaid(id: string) {
+		return await this.repository.markPaid(id)
+	}
 }
