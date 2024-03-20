@@ -66,7 +66,12 @@ export class OrderRepository implements IOrderRepository {
 	async accept({ id, userId: vendorId, accepted, message }: AcceptOrderInput) {
 		const order = await Order.findOneAndUpdate(
 			{ _id: id, vendorId, accepted: null },
-			{ $set: { accepted: { is: accepted, at: Date.now(), message } } },
+			{
+				$set: {
+					accepted: { is: accepted, at: Date.now(), message },
+					status: accepted ? OrderStatus.accepted : OrderStatus.rejected,
+				},
+			},
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
@@ -77,9 +82,9 @@ export class OrderRepository implements IOrderRepository {
 			{
 				_id: id,
 				agentId: null,
-				status: OrderStatus.created,
+				status: OrderStatus.accepted,
 			},
-			{ $set: { driverId, status: OrderStatus.inProgress } },
+			{ $set: { driverId, status: OrderStatus.deliveryInProgress } },
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
@@ -88,7 +93,7 @@ export class OrderRepository implements IOrderRepository {
 	async generateToken(id: string, userId: string) {
 		const order = await Order.findById(id)
 		if (!order || order.userId !== userId) throw new NotAuthorizedError()
-		if (order.status !== OrderStatus.inProgress) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.status !== OrderStatus.deliveryInProgress) throw new NotAuthorizedError('Order delivery is not in progress')
 		const token = Random.string(12)
 		await appInstance.cache.set(`order-delivery-token-${token}`, id, 60 * 3)
 		return token
@@ -97,7 +102,7 @@ export class OrderRepository implements IOrderRepository {
 	async complete(id: string, userId: string, token: string) {
 		const order = await Order.findById(id)
 		if (!order || order.driverId !== userId) throw new NotAuthorizedError()
-		if (order.status !== OrderStatus.inProgress) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.status !== OrderStatus.deliveryInProgress) throw new NotAuthorizedError('Order delivery is not in progress')
 		const cachedId = await appInstance.cache.get(`order-delivery-token-${token}`)
 		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
 		const completed = await Order.findByIdAndUpdate(id, { $set: { status: OrderStatus.completed } }, { new: true })

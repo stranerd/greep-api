@@ -33,7 +33,10 @@ export type AcceptOrderInput = {
 
 export enum OrderStatus {
 	created = 'created',
-	inProgress = 'inProgress',
+	accepted = 'accepted',
+	rejected = 'rejected',
+	deliveryInProgress = 'deliveryInProgress',
 	failed = 'failed',
+	cancelled = 'cancelled',
 	completed = 'completed',
 }
