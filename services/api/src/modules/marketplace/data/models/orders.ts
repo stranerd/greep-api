@@ -23,6 +23,7 @@ export interface OrderToModel {
 	userId: string
 	email: string
 	cartId: string
+	pickupLocation: Location
 	location: Location
 	dropoffNote: string
 	time: DeliveryTime

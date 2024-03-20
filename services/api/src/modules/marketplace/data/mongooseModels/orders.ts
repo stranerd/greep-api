@@ -30,6 +30,10 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: String,
 			required: true,
 		},
+		pickupLocation: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
+			required: true,
+		},
 		location: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
 			required: true,

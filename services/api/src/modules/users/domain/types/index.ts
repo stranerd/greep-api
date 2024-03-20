@@ -51,6 +51,7 @@ export type UserAccount = {
 	>
 	location: [number, number] | null
 	savedLocations: Location[]
+	vendorLocation: Location | null
 	settings: {
 		notifications: boolean
 		driverAvailable: boolean

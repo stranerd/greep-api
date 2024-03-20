@@ -1,3 +1,4 @@
+import { Location } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
 import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
@@ -76,6 +77,10 @@ export class UsersUseCase {
 
 	async updateLocation(data: { userId: string; location: [number, number] }) {
 		return await this.repository.updateLocation(data)
+	}
+
+	async updateVendorLocation(data: { userId: string; location: Location }) {
+		return await this.repository.updateVendorLocation(data)
 	}
 
 	async updateSettings(params: { userId: string; settings: Partial<UserAccount['settings']> }) {

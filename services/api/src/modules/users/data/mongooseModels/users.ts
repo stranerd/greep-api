@@ -86,6 +86,11 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 				required: false,
 				default: null,
 			},
+			vendorLocation: {
+				type: [appInstance.dbs.mongo.Schema.Types.Mixed],
+				required: false,
+				default: null,
+			},
 			savedLocations: {
 				type: [appInstance.dbs.mongo.Schema.Types.Mixed],
 				required: false,

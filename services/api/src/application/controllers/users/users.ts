@@ -99,6 +99,23 @@ export class UsersController {
 		return !!user
 	}
 
+	static async updateVendorLocation(req: Request) {
+		const { location } = validate(
+			{
+				location: Schema.object({
+					coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
+					location: Schema.string().min(1),
+					description: Schema.string().min(1),
+				}),
+			},
+			req.body,
+		)
+
+		const user = await UsersUseCases.updateVendorLocation({ userId: req.authUser!.id, location })
+		if (user) return user
+		throw new NotAuthorizedError('cannot update user vendor location')
+	}
+
 	static async updateSavedLocations(req: Request) {
 		const { locations: savedLocations } = validate(
 			{

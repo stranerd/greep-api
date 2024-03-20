@@ -1,6 +1,6 @@
 import { CartsUseCases, OrderPayment, OrdersUseCases } from '@modules/marketplace'
 import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
-import { BadRequestError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { BadRequestError, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class CartsController {
 	static async get(req: Request) {
@@ -51,12 +51,23 @@ export class CartsController {
 			req.body,
 		)
 
-		const userId = req.authUser!.id
-		const user = await UsersUseCases.find(userId)
+		const cart = await CartsUseCases.find(req.params.id)
+		if (!cart || cart.userId !== req.authUser!.id) throw new NotAuthorizedError()
+
+		const user = await UsersUseCases.find(cart.userId)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+		const vendor = await UsersUseCases.find(cart.vendorId)
+		if (!vendor || user.isDeleted() || !vendor.account.vendorLocation) throw new BadRequestError('vendor not found')
+
 		const score = ActivityEntity.getScore({ type: ActivityType.orderDiscount, discount: data.discount, orderId: '' })
 		if (user.account.rankings.overall.value + score < 0) throw new BadRequestError('not enough points for this discount')
 
-		return await OrdersUseCases.checkout({ ...data, userId, email: user.bio.email, cartId: req.params.id })
+		return await OrdersUseCases.checkout({
+			...data,
+			pickupLocation: vendor.account.vendorLocation,
+			userId: user.id,
+			email: user.bio.email,
+			cartId: cart.id,
+		})
 	}
 }

@@ -10,6 +10,7 @@ type OrderEntityProps = {
 	email: string
 	vendorId: string
 	cartId: string
+	pickupLocation: Location
 	location: Location
 	dropoffNote: string
 	time: DeliveryTime

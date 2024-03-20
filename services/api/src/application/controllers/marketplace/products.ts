@@ -79,6 +79,8 @@ export class ProductsController {
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+		if (!user.account.vendorLocation)
+			throw new BadRequestError('you must set your vendor location before you can list products on the marketplace')
 
 		const banner = await StorageUseCases.upload('marketplace/banners', data.banner!)
 
