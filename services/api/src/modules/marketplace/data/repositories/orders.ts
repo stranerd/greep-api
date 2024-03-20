@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/environment'
 import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { IOrderRepository } from '../../domain/irepositories/orders'
-import { AcceptOrderInput, OrderStatus } from '../../domain/types'
+import { AcceptOrderInput, OrderPayment, OrderStatus } from '../../domain/types'
 import { OrderMapper } from '../mappers/orders'
 import { OrderFromModel, OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
@@ -36,6 +36,7 @@ export class OrderRepository implements IOrderRepository {
 
 			const order = await new Order({
 				...data,
+				status: data.payment === OrderPayment.cash ? OrderStatus.paid : OrderStatus.pendingPayment,
 				vendorId: cart.vendorId,
 				products: filteredProducts,
 				price: {

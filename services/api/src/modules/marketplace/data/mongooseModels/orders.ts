@@ -1,5 +1,4 @@
 import { appInstance } from '@utils/environment'
-import { OrderStatus } from '../../domain/types'
 import { OrderDbChangeCallbacks } from '../../utils/changes/orders'
 import { OrderMapper } from '../mappers/orders'
 import { OrderFromModel } from '../models/orders'
@@ -38,8 +37,7 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 		},
 		status: {
 			type: String,
-			required: false,
-			default: OrderStatus.created,
+			required: true,
 		},
 		pickupLocation: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],

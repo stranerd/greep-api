@@ -32,7 +32,8 @@ export type AcceptOrderInput = {
 }
 
 export enum OrderStatus {
-	created = 'created',
+	pendingPayment = 'pendingPayment',
+	paid = 'paid',
 	accepted = 'accepted',
 	rejected = 'rejected',
 	deliveryInProgress = 'deliveryInProgress',
