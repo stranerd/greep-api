@@ -6,9 +6,8 @@
 	"scripts": {
 		"start": "node lib/index.js",
 		"build": "tsc --build --force && resolve-tspaths",
-		"dev": "ts-node-dev -r tsconfig-paths/register --transpile-only src/index.ts",
-		"lint": "eslint --ext ts,js --fix ./",
-		"doc": "ts-node-dev src/utils/doc.ts dist/doc.json && api-html -f dist/doc.json -o dist/doc-options.json"
+		"dev": "tsx watch src/index.ts",
+		"lint": "eslint --ext ts,js --fix ./"
 	},
 	"keywords": [],
 	"author": "",
@@ -29,8 +28,7 @@
 		"eslint-plugin-promise": "^6.1.1",
 		"prettier": "^3.2.5",
 		"resolve-tspaths": "^0.8.18",
-		"ts-node-dev": "^2.0.0",
-		"tsconfig-paths": "^4.2.0",
+		"tsx": "^4.7.1",
 		"typescript": "^5.4.3"
 	}
 }

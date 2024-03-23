@@ -1,4 +1,5 @@
 import { Currencies } from '@modules/payment'
+export type { EmbeddedUser } from '@modules/users'
 
 export type AddToCartInput = {
 	productId: string
