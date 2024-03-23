@@ -1,4 +1,4 @@
-FROM traefik:2.10.3
+FROM traefik:3.0
 
 ARG BASE_DOMAIN
 ARG USE_SSL

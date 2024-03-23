@@ -7,7 +7,7 @@ Software requirements
 - docker/docker-compose
 - git
 - make
-- node/npm/npx
+- node/pnpm
 
 <br>
 
@@ -17,14 +17,11 @@ Software requirements
 # clone project
 $ git clone https://github.com/stranerd/greep-api
 
-# setup git hooks
-$ npx husky@8 install
-
 # create symbolic links for common types
 $ make link-commons
 
-# install dependencies for all ervices
-$ make install-all
+# install dependencies for all services
+$ pnpm i
 
 # copy env.example.json to env.json & fill in all env values in env.json or reach out to admin to get a valid set on environment values
 $ cp env.example.json env.json
@@ -46,23 +43,7 @@ However, MacOS is a different tale. MacOS is similar to linux, but they make the
 
 To bypass this, we can create a folder anywhere in our system and create a symlink to the folder on the root named 'c'
 <https://apple.stackexchange.com/questions/388236/unable-to-create-folder-in-root-of-macintosh-hd>
-
-```bash
-# create synthetic.conf file
-touch /etc/synthetic.conf
-
-# change permissions of synthetic to public
-chmod 0666 /etc/synthetic.conf
-
-# add content to synthetic.conf
-echo "c   Users/{YOUR_MAC_USER_NAME}/doc-data/c" >> /etc/synthetic.conf
-# the first path of the comman "c" is the name of the symlinked folder on the root
-# the second path is the name of the actual place the folder will be.. You can use any regular path for this
-# NB: the separator between the first and second path is a tab.. Make sure it is a tab and not spaces, or this wont work
-
-# reboot your system for the changes to take effect
-reboot
-```
+Run the `setup-mac.sh` script in the bin/ folder
 
 ## Commands to run project
 
@@ -89,5 +70,5 @@ $ make prod-start-detach
 
 ```bash
 # ensure all services have a lint script defined in it
-$ make lint-all
+$ pnpm lint
 ```

@@ -3,7 +3,7 @@ name: Publish to Digital Ocean
 on:
   push:
     branches:
-      production
+      - production
 
 jobs:
   publish-do:
@@ -12,6 +12,22 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
+      - uses: pnpm/action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 8.7.4
+          run_install: false
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+      - name: Setup pnpm cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Fetch secrets
         env:
           ENV_SECRETS: ${{ secrets.ENV_SECRETS }}
