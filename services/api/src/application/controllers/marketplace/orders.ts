@@ -11,6 +11,14 @@ export class OrdersController {
 			{ field: 'vendorId', value: req.authUser!.id },
 			{ field: 'driverId', value: req.authUser!.id },
 		]
+		if (req.authUser!.roles.isDriver)
+			query.auth!.push({
+				condition: QueryKeys.and,
+				value: [
+					{ field: 'status', value: OrderStatus.accepted },
+					{ field: 'driverId', value: null },
+				],
+			})
 		return await OrdersUseCases.get(query)
 	}
 
@@ -93,5 +101,14 @@ export class OrdersController {
 		})
 
 		return successful
+	}
+
+	static async assignDriver(req: Request) {
+		const updated = await OrdersUseCases.assignDriver({
+			id: req.params.id,
+			driverId: req.authUser!.id,
+		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
 	}
 }

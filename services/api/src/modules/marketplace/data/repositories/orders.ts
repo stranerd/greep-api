@@ -82,7 +82,7 @@ export class OrderRepository implements IOrderRepository {
 		const order = await Order.findOneAndUpdate(
 			{
 				_id: id,
-				agentId: null,
+				driverId: null,
 				status: OrderStatus.accepted,
 			},
 			{ $set: { driverId, status: OrderStatus.deliveryInProgress } },

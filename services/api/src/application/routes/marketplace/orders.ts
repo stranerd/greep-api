@@ -1,5 +1,5 @@
 import { OrdersController } from '@application/controllers/marketplace/orders'
-import { isAdmin, isAuthenticated } from '@application/middlewares'
+import { isAdmin, isAuthenticated, isDriver } from '@application/middlewares'
 import { groupRoutes, makeController } from 'equipped'
 
 export const ordersRoutes = groupRoutes('/orders', [
@@ -32,5 +32,10 @@ export const ordersRoutes = groupRoutes('/orders', [
 		path: '/:id/complete',
 		method: 'post',
 		controllers: [isAuthenticated, makeController(async (req) => OrdersController.complete(req))],
+	},
+	{
+		path: '/:id/assignDriver',
+		method: 'post',
+		controllers: [isAuthenticated, isDriver, makeController(async (req) => OrdersController.assignDriver(req))],
 	},
 ])

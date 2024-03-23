@@ -62,7 +62,7 @@ export class WithdrawalRepository implements IWithdrawalRepository {
 
 	async complete(id: string, userId: string, token: string) {
 		const withdrawal = await Withdrawal.findById(id)
-		if (!withdrawal || withdrawal.userId !== userId) throw new NotAuthorizedError()
+		if (!withdrawal || withdrawal.agentId !== userId) throw new NotAuthorizedError()
 		if (withdrawal.status !== WithdrawalStatus.inProgress) throw new NotAuthorizedError('Withdrawal is not in progress')
 		const cachedId = await appInstance.cache.get(`withdrawal-token-${token}`)
 		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
