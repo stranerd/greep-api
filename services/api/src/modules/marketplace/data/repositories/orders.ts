@@ -85,7 +85,7 @@ export class OrderRepository implements IOrderRepository {
 				driverId: null,
 				status: OrderStatus.accepted,
 			},
-			{ $set: { driverId, status: OrderStatus.deliveryInProgress } },
+			{ $set: { driverId, status: OrderStatus.deliveryDriverAssigned } },
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
@@ -94,7 +94,7 @@ export class OrderRepository implements IOrderRepository {
 	async generateToken(id: string, userId: string) {
 		const order = await Order.findById(id)
 		if (!order || order.userId !== userId) throw new NotAuthorizedError()
-		if (order.status !== OrderStatus.deliveryInProgress) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.status !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
 		const token = Random.string(12)
 		await appInstance.cache.set(`order-delivery-token-${token}`, id, 60 * 3)
 		return token
@@ -103,7 +103,7 @@ export class OrderRepository implements IOrderRepository {
 	async complete(id: string, userId: string, token: string) {
 		const order = await Order.findById(id)
 		if (!order || order.driverId !== userId) throw new NotAuthorizedError()
-		if (order.status !== OrderStatus.deliveryInProgress) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.status !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
 		const cachedId = await appInstance.cache.get(`order-delivery-token-${token}`)
 		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
 		const completed = await Order.findByIdAndUpdate(id, { $set: { status: OrderStatus.completed } }, { new: true })

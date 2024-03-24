@@ -87,7 +87,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 				default: null,
 			},
 			vendorLocation: {
-				type: [appInstance.dbs.mongo.Schema.Types.Mixed],
+				type: appInstance.dbs.mongo.Schema.Types.Mixed,
 				required: false,
 				default: null,
 			},

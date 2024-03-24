@@ -37,7 +37,7 @@ export enum OrderStatus {
 	paid = 'paid',
 	accepted = 'accepted',
 	rejected = 'rejected',
-	deliveryInProgress = 'deliveryInProgress',
+	deliveryDriverAssigned = 'deliveryDriverAssigned',
 	failed = 'failed',
 	cancelled = 'cancelled',
 	completed = 'completed',
