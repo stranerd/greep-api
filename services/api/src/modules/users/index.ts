@@ -15,4 +15,5 @@ export const ActivitiesUseCases = new ActivitiesUseCase(activityRepository)
 
 export { ActivityEntity } from './domain/entities/activities'
 export { generateDefaultUser } from './domain/entities/users'
-export { ActivityType, EmbeddedUser, UserMeta, UserRankings, UserType } from './domain/types'
+export { ActivityType, UserMeta, UserRankings, UserType } from './domain/types'
+export type { EmbeddedUser } from './domain/types'

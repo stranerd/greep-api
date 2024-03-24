@@ -1,4 +1,5 @@
 import { Currencies } from '@modules/payment'
+export type { EmbeddedUser } from '@modules/users'
 
 export type AddToCartInput = {
 	productId: string
@@ -36,7 +37,7 @@ export enum OrderStatus {
 	paid = 'paid',
 	accepted = 'accepted',
 	rejected = 'rejected',
-	deliveryInProgress = 'deliveryInProgress',
+	deliveryDriverAssigned = 'deliveryDriverAssigned',
 	failed = 'failed',
 	cancelled = 'cancelled',
 	completed = 'completed',

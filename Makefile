@@ -38,12 +38,3 @@ prod-stop:
 
 prod-watch-logs:
 	docker-compose -f docker-compose.yml logs
-
-install-all:
-	$(foreach folder, $(ALL_FOLDERS), yarn --cwd ./services/$(folder) &&) echo
-
-lint-all:
-	$(foreach folder, $(ALL_FOLDERS), yarn --cwd ./services/$(folder) lint &&) echo
-
-build-all:
-	$(foreach folder, $(ALL_FOLDERS), yarn --cwd ./services/$(folder) build &&) echo

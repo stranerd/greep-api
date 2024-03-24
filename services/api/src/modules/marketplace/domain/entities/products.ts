@@ -1,6 +1,7 @@
 import { Currencies } from '@modules/payment'
-import { EmbeddedUser, generateDefaultUser } from '@modules/users'
+import { generateDefaultUser } from '@modules/users'
 import { BaseEntity, MediaOutput } from 'equipped'
+import { EmbeddedUser } from '../types'
 
 type ProductEntityProps = {
 	id: string

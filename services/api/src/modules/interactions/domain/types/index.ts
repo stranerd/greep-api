@@ -1,4 +1,4 @@
-export { EmbeddedUser } from '@modules/users'
+export type { EmbeddedUser } from '@modules/users'
 
 export enum InteractionEntities {
 	comments = 'comments',

@@ -1,12 +1,10 @@
-# DO-NOT EDIT THIS FILE!!!
-
 # create synthetic.conf file
 touch /etc/synthetic.conf
 
 # change permissions of synthetic to public
 chmod 0666 /etc/synthetic.conf
 
-mkdir -p /Users/$(whoami)/doc-data/c
+mkdir -p "/Users/$(whoami)/doc-data/c"
 
 # add content to synthetic.conf
 echo "c	Users/$(whoami)/doc-data/c" >> /etc/synthetic.conf

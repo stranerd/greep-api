@@ -1,0 +1,12 @@
+{
+  "name": "greep-api",
+  "private": true,
+  "scripts": {
+    "lint": "pnpm -r lint",
+    "build": "pnpm -r build",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11"
+  }
+}

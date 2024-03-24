@@ -3,7 +3,7 @@ name: Publish to Digital Ocean
 on:
   push:
     branches:
-      develop
+      - develop
 
 jobs:
   publish-do:
