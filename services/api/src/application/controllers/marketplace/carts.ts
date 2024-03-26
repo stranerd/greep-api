@@ -70,4 +70,10 @@ export class CartsController {
 			cartId: cart.id,
 		})
 	}
+
+	async clear(req: Request) {
+		const updatedCart = await CartsUseCases.clear({ id: req.params.id, userId: req.authUser!.id })
+		if (updatedCart) return updatedCart
+		throw new NotAuthorizedError()
+	}
 }

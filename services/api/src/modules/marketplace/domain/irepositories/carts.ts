@@ -6,4 +6,5 @@ export interface ICartRepository {
 	add(input: AddToCartInput): Promise<CartEntity>
 	get(query: QueryParams): Promise<QueryResults<CartEntity>>
 	find(id: string): Promise<CartEntity | null>
+	clear(id: string, userId: string): Promise<CartEntity | null>
 }

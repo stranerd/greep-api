@@ -20,4 +20,8 @@ export class CartUseCase {
 	async find(id: string) {
 		return await this.repository.find(id)
 	}
+
+	async clear(data: { id: string; userId: string }) {
+		return await this.repository.clear(data.id, data.userId)
+	}
 }
