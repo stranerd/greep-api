@@ -9,24 +9,11 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: String,
 			default: () => appInstance.dbs.mongo.Id.toString(),
 		},
-		products: {
-			type: [appInstance.dbs.mongo.Schema.Types.Mixed as unknown] as OrderFromModel['products'],
-			required: false,
-			default: [],
-		},
 		userId: {
 			type: String,
 			required: true,
 		},
 		email: {
-			type: String,
-			required: true,
-		},
-		cartId: {
-			type: String,
-			required: true,
-		},
-		vendorId: {
 			type: String,
 			required: true,
 		},
@@ -44,6 +31,10 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			required: true,
 		},
 		location: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
+			required: true,
+		},
+		data: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
 			required: true,
 		},

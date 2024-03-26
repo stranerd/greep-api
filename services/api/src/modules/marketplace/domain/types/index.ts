@@ -1,4 +1,5 @@
 import { Currencies } from '@modules/payment'
+import { Location } from '@utils/types'
 export type { EmbeddedUser } from '@modules/users'
 
 export type AddToCartInput = {
@@ -41,4 +42,35 @@ export enum OrderStatus {
 	failed = 'failed',
 	cancelled = 'cancelled',
 	completed = 'completed',
+}
+
+export enum OrderType {
+	cart = 'cart',
+	dispatch = 'dispatch',
+}
+
+export type OrderData =
+	| {
+			type: OrderType.cart
+			cartId: string
+			vendorId: string
+			products: CartProductItem[]
+	  }
+	| {
+			type: OrderType.dispatch
+	  }
+
+export type OrderToModelBase = {
+	userId: string
+	email: string
+	pickupLocation: Location
+	location: Location
+	dropoffNote: string
+	time: DeliveryTime
+	discount: number
+	payment: OrderPayment
+}
+
+export type CheckoutInput = OrderToModelBase & {
+	cartId: string
 }

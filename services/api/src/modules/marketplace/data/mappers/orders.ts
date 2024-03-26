@@ -9,17 +9,15 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 			id: param._id,
 			userId: param.userId,
 			email: param.email,
-			products: param.products,
-			vendorId: param.vendorId,
 			driverId: param.driverId,
 			status: param.status,
-			cartId: param.cartId,
 			pickupLocation: param.pickupLocation,
 			location: param.location,
 			dropoffNote: param.dropoffNote,
 			time: param.time,
 			discount: param.discount,
 			payment: param.payment,
+			data: param.data,
 			price: param.price,
 			accepted: param.accepted,
 			createdAt: param.createdAt,
@@ -31,13 +29,13 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 		return {
 			userId: param.userId,
 			email: param.email,
-			cartId: param.cartId,
 			pickupLocation: param.pickupLocation,
 			location: param.location,
 			dropoffNote: param.dropoffNote,
 			time: param.time,
 			discount: param.discount,
 			payment: param.payment,
+			data: param.data,
 		}
 	}
 }

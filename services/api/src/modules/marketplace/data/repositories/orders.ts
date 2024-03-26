@@ -1,9 +1,9 @@
 import { appInstance } from '@utils/environment'
 import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { IOrderRepository } from '../../domain/irepositories/orders'
-import { AcceptOrderInput, OrderPayment, OrderStatus } from '../../domain/types'
+import { AcceptOrderInput, CheckoutInput, OrderPayment, OrderStatus, OrderType } from '../../domain/types'
 import { OrderMapper } from '../mappers/orders'
-import { OrderFromModel, OrderToModel } from '../models/orders'
+import { OrderFromModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
 import { Order } from '../mongooseModels/orders'
 import { Product } from '../mongooseModels/products'
@@ -17,11 +17,11 @@ export class OrderRepository implements IOrderRepository {
 		return OrderRepository.instance
 	}
 
-	async checkout(data: OrderToModel) {
+	async checkout(data: CheckoutInput) {
 		let res = null as OrderFromModel | null
 		await Cart.collection.conn.transaction(async (session) => {
 			const cart = await Cart.findById(data.cartId, {}, { session })
-			if (!cart) throw new Error('cart not found')
+			if (!cart || cart.userId !== data.userId) throw new Error('cart not found')
 			if (!cart.active) throw new Error('cart not active')
 
 			const products = await Product.find({ _id: { $in: cart.products.map((p) => p.id) } }, {}, { session })
@@ -36,9 +36,13 @@ export class OrderRepository implements IOrderRepository {
 
 			const order = await new Order({
 				...data,
+				data: {
+					type: OrderType.cart,
+					cartId: cart.id,
+					vendorId: cart.vendorId,
+					products: filteredProducts,
+				},
 				status: data.payment === OrderPayment.cash ? OrderStatus.paid : OrderStatus.pendingPayment,
-				vendorId: cart.vendorId,
-				products: filteredProducts,
 				price: {
 					amount: amountToPay,
 					currency,
@@ -66,7 +70,7 @@ export class OrderRepository implements IOrderRepository {
 
 	async accept({ id, userId: vendorId, accepted, message }: AcceptOrderInput) {
 		const order = await Order.findOneAndUpdate(
-			{ _id: id, vendorId, accepted: null },
+			{ _id: id, 'data.vendorId': vendorId, accepted: null },
 			{
 				$set: {
 					accepted: { is: accepted, at: Date.now(), message },

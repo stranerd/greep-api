@@ -1,7 +1,6 @@
 import { QueryParams } from 'equipped'
-import { OrderToModel } from '../../data/models/orders'
 import { IOrderRepository } from '../irepositories/orders'
-import { AcceptOrderInput } from '../types'
+import { AcceptOrderInput, CheckoutInput } from '../types'
 
 export class OrderUseCase {
 	private repository: IOrderRepository
@@ -10,7 +9,7 @@ export class OrderUseCase {
 		this.repository = repository
 	}
 
-	async checkout(data: OrderToModel) {
+	async checkout(data: CheckoutInput) {
 		return await this.repository.checkout(data)
 	}
 

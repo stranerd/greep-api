@@ -1,20 +1,18 @@
 import { Currencies } from '@modules/payment'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { CartProductItem, DeliveryTime, OrderPayment, OrderStatus } from '../types'
+import { DeliveryTime, OrderData, OrderPayment, OrderType, OrderStatus } from '../types'
 
 type OrderEntityProps = {
 	id: string
-	products: CartProductItem[]
 	userId: string
 	email: string
-	vendorId: string
 	driverId: string | null
 	status: OrderStatus
-	cartId: string
 	pickupLocation: Location
 	location: Location
 	dropoffNote: string
+	data: OrderData
 	time: DeliveryTime
 	discount: number
 	payment: OrderPayment
@@ -36,6 +34,11 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 
 	constructor(data: OrderEntityProps) {
 		super(data)
+	}
+
+	getVendorId() {
+		if (this.data.type === OrderType.cart) return this.data.vendorId
+		return null
 	}
 
 	get deliveryFee() {

@@ -8,7 +8,7 @@ export class OrdersController {
 		query.authType = QueryKeys.or
 		query.auth = [
 			{ field: 'userId', value: req.authUser!.id },
-			{ field: 'vendorId', value: req.authUser!.id },
+			{ field: 'data.vendorId', value: req.authUser!.id },
 			{ field: 'driverId', value: req.authUser!.id },
 		]
 		if (req.authUser!.roles.isDriver)
@@ -24,7 +24,7 @@ export class OrdersController {
 
 	static async find(req: Request) {
 		const order = await OrdersUseCases.find(req.params.id)
-		if (!order || ![order.userId, order.vendorId, order.driverId].includes(req.authUser!.id)) throw new NotFoundError()
+		if (!order || ![order.userId, order.getVendorId(), order.driverId].includes(req.authUser!.id)) throw new NotFoundError()
 		return order
 	}
 

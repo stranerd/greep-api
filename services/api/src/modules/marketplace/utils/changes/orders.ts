@@ -9,7 +9,8 @@ import { OrderPayment, OrderStatus } from '../../domain/types'
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created(
-			[after.userId, after.vendorId, ...(after.driverId ? [after.driverId] : [])]
+			[after.userId, after.getVendorId(), after.driverId]
+				.filter(Boolean)
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
 				.flat(),
 			after,
@@ -27,7 +28,8 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 	},
 	updated: async ({ after, changes }) => {
 		await appInstance.listener.updated(
-			[after.userId, after.vendorId, ...(after.driverId ? [after.driverId] : [])]
+			[after.userId, after.getVendorId(), after.driverId]
+				.filter(Boolean)
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
 				.flat(),
 			after,
@@ -61,7 +63,8 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
-			[before.userId, before.vendorId, ...(before.driverId ? [before.driverId] : [])]
+			[before.userId, before.getVendorId(), before.driverId]
+				.filter(Boolean)
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${before.id}/${d}`])
 				.flat(),
 			before,
