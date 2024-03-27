@@ -1,8 +1,10 @@
 import { QueryParams, QueryResults } from 'equipped'
+import { OrderToModel } from '../../data/models/orders'
 import { OrderEntity } from '../entities/orders'
 import { AcceptOrderInput, CheckoutInput } from '../types'
 
 export interface IOrderRepository {
+	create(data: OrderToModel): Promise<OrderEntity>
 	checkout(data: CheckoutInput): Promise<OrderEntity>
 	get(query: QueryParams): Promise<QueryResults<OrderEntity>>
 	find(id: string): Promise<OrderEntity | null>

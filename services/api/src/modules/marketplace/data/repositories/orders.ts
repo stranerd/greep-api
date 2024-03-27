@@ -3,7 +3,7 @@ import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { IOrderRepository } from '../../domain/irepositories/orders'
 import { AcceptOrderInput, CheckoutInput, OrderPayment, OrderStatus, OrderType } from '../../domain/types'
 import { OrderMapper } from '../mappers/orders'
-import { OrderFromModel } from '../models/orders'
+import { OrderFromModel, OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
 import { Order } from '../mongooseModels/orders'
 import { Product } from '../mongooseModels/products'
@@ -15,6 +15,11 @@ export class OrderRepository implements IOrderRepository {
 	static getInstance(): OrderRepository {
 		if (!OrderRepository.instance) OrderRepository.instance = new OrderRepository()
 		return OrderRepository.instance
+	}
+
+	async create(data: OrderToModel) {
+		const order = await new Order(data).save()
+		return this.mapper.mapFrom(order)!
 	}
 
 	async checkout(data: CheckoutInput) {

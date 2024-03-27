@@ -1,4 +1,5 @@
 import { QueryParams } from 'equipped'
+import { OrderToModel } from '../../data/models/orders'
 import { IOrderRepository } from '../irepositories/orders'
 import { AcceptOrderInput, CheckoutInput } from '../types'
 
@@ -7,6 +8,10 @@ export class OrderUseCase {
 
 	constructor(repository: IOrderRepository) {
 		this.repository = repository
+	}
+
+	async create(data: OrderToModel) {
+		return await this.repository.create(data)
 	}
 
 	async checkout(data: CheckoutInput) {
