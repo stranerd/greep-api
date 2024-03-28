@@ -100,4 +100,18 @@ export class WalletsController {
 
 		return await WalletsUseCases.updatePin({ userId: req.authUser!.id, oldPin, pin })
 	}
+
+	static async verifyPin(req: Request) {
+		const wallet = await WalletsUseCases.get(req.authUser!.id)
+		if (!wallet.pin) throw new ValidationError([{ field: 'pin', messages: ['pin is not set'] }])
+
+		const { pin } = validate(
+			{
+				pin: Schema.string().min(4).max(4),
+			},
+			req.body,
+		)
+
+		return wallet.pin === pin
+	}
 }

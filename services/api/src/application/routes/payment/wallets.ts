@@ -29,6 +29,11 @@ export const walletsRoutes = groupRoutes('/wallets', [
 		controllers: [isAuthenticated, makeController(async (req) => WalletsController.resetPin(req))],
 	},
 	{
+		path: '/pin/verify',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => WalletsController.verifyPin(req))],
+	},
+	{
 		path: '/pin',
 		method: 'post',
 		controllers: [isAuthenticated, makeController(async (req) => WalletsController.updatePin(req))],
