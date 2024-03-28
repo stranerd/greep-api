@@ -1,4 +1,12 @@
-import { CartsUseCases, OrderDispatchDeliveryType, OrderPayment, OrderStatus, OrderType, OrdersUseCases } from '@modules/marketplace'
+import {
+	CartsUseCases,
+	OrderDispatchDeliveryType,
+	OrderEntity,
+	OrderPayment,
+	OrderStatus,
+	OrderType,
+	OrdersUseCases,
+} from '@modules/marketplace'
 import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
 import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
 import { LocationSchema } from '@utils/types'
@@ -80,13 +88,43 @@ export class OrdersController {
 		const { user } = await this.verifyUser(cart.userId, data.discount)
 
 		const vendor = await UsersUseCases.find(cart.vendorId)
-		if (!vendor || user.isDeleted() || !vendor.account.vendorLocation) throw new BadRequestError('vendor not found')
+		if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
+		if (!vendor.account.vendorLocation) throw new BadRequestError('vendor failed to set their location')
 
 		return await OrdersUseCases.checkout({
 			...data,
 			from: vendor.account.vendorLocation,
 			userId: user.id,
 			email: user.bio.email,
+		})
+	}
+
+	static async checkoutFee(req: Request) {
+		const data = validate(
+			{
+				...this.schema(),
+				cartId: Schema.string().min(1),
+			},
+			req.body,
+		)
+
+		const cart = await CartsUseCases.find(data.cartId)
+		if (!cart || cart.userId !== req.authUser!.id) throw new NotAuthorizedError()
+
+		const vendor = await UsersUseCases.find(cart.vendorId)
+		if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
+		if (!vendor.account.vendorLocation) throw new BadRequestError('vendor failed to set their location')
+
+		return await OrderEntity.calculateFees({
+			...data,
+			from: vendor.account.vendorLocation,
+			userId: cart.userId,
+			data: {
+				type: OrderType.cart,
+				cartId: cart.id,
+				products: cart.products,
+				vendorId: cart.vendorId,
+			},
 		})
 	}
 
@@ -112,6 +150,32 @@ export class OrdersController {
 			...data,
 			userId: user.id,
 			email: user.bio.email,
+			data: {
+				...data.data,
+				type: OrderType.dispatch,
+			},
+		})
+	}
+
+	static async dispatchFee(req: Request) {
+		const data = validate(
+			{
+				...this.schema(),
+				from: LocationSchema(),
+				data: Schema.object({
+					deliveryType: Schema.in(Object.values(OrderDispatchDeliveryType)),
+					description: Schema.string(),
+					size: Schema.number().gte(0),
+					recipientName: Schema.string().min(1),
+					recipientPhone: Schema.any().addRule(Validation.isValidPhone()),
+				}),
+			},
+			req.body,
+		)
+
+		return await OrderEntity.calculateFees({
+			...data,
+			userId: req.authUser!.id,
 			data: {
 				...data.data,
 				type: OrderType.dispatch,

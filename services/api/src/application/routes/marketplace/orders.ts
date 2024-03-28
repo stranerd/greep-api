@@ -19,9 +19,19 @@ export const ordersRoutes = groupRoutes('/orders', [
 		controllers: [isAuthenticated, makeController(async (req) => OrdersController.checkout(req))],
 	},
 	{
+		path: '/checkout/fee',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => OrdersController.checkoutFee(req))],
+	},
+	{
 		path: '/dispatch',
 		method: 'post',
 		controllers: [isAuthenticated, makeController(async (req) => OrdersController.dispatch(req))],
+	},
+	{
+		path: '/dispatch/fee',
+		method: 'post',
+		controllers: [isAuthenticated, makeController(async (req) => OrdersController.dispatchFee(req))],
 	},
 	{
 		path: '/:id/pay',
