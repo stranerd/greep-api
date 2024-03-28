@@ -49,4 +49,8 @@ export class OrderUseCase {
 	async markPaid(data: { id: string; driverId: string | null }) {
 		return await this.repository.markPaid(data.id, data.driverId)
 	}
+
+	async markRefunded(data: { id: string }) {
+		return await this.repository.markRefunded(data.id)
+	}
 }

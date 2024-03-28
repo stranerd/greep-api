@@ -39,12 +39,31 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 		if (this.status[OrderStatus.completed]) return OrderStatus.completed
 		if (this.status[OrderStatus.cancelled]) return OrderStatus.cancelled
 		if (this.status[OrderStatus.rejected]) return OrderStatus.rejected
-		if (this.status[OrderStatus.deliveryDriverAssigned]) return OrderStatus.deliveryDriverAssigned
+		if (this.status[OrderStatus.driverAssigned]) return OrderStatus.driverAssigned
 		return null
 	}
 
 	get paid() {
 		return !!this.status[OrderStatus.paid]
+	}
+
+	get timeline() {
+		const statuses = [OrderStatus.created]
+		if (this.status[OrderStatus.rejected]) {
+			statuses.push(OrderStatus.rejected)
+			if (this.paid) statuses.push(OrderStatus.refunded)
+		} else if (this.status[OrderStatus.cancelled]) {
+			statuses.push(OrderStatus.cancelled)
+			if (this.paid) statuses.push(OrderStatus.refunded)
+		} else statuses.push(OrderStatus.accepted, OrderStatus.shipped, OrderStatus.completed)
+		return statuses
+			.map((status) => ({
+				status,
+				title: statusTitles[status],
+				at: this.status[status]?.at ?? null,
+				done: !!this.status[status],
+			}))
+			.sort((a, b) => (a.at ?? -1) - (b.at ?? -1))
 	}
 
 	static async calculateFees(data: {
@@ -79,4 +98,16 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 			currency,
 		}
 	}
+}
+
+const statusTitles: Record<OrderStatus, string> = {
+	[OrderStatus.created]: 'Order Placed',
+	[OrderStatus.accepted]: 'Order Accepted',
+	[OrderStatus.rejected]: 'Order Rejected',
+	[OrderStatus.driverAssigned]: 'Driver Assigned',
+	[OrderStatus.shipped]: 'Order Shipped',
+	[OrderStatus.cancelled]: 'Order Cancelled',
+	[OrderStatus.completed]: 'Order Completed',
+	[OrderStatus.paid]: 'Order Paid',
+	[OrderStatus.refunded]: 'Order Refunded',
 }

@@ -14,4 +14,5 @@ export interface IOrderRepository {
 	cancel: (id: string, userId: string) => Promise<OrderEntity | null>
 	complete: (id: string, userId: string, token: string) => Promise<OrderEntity | null>
 	markPaid: (id: string, driverId: string | null) => Promise<OrderEntity | null>
+	markRefunded: (id: string) => Promise<OrderEntity | null>
 }

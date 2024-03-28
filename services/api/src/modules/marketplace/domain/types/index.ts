@@ -35,13 +35,15 @@ export type AcceptOrderInput = {
 }
 
 export enum OrderStatus {
-	pendingPayment = 'pendingPayment',
+	created = 'created',
 	paid = 'paid',
 	accepted = 'accepted',
 	rejected = 'rejected',
-	deliveryDriverAssigned = 'deliveryDriverAssigned',
+	driverAssigned = 'driverAssigned',
+	shipped = 'shipped',
 	cancelled = 'cancelled',
 	completed = 'completed',
+	refunded = 'refunded',
 }
 
 export type OrderStatusType = Record<OrderStatus, { at: number; message?: string } | null>

@@ -97,7 +97,7 @@ export class OrderRepository implements IOrderRepository {
 				driverId: null,
 				[`status.${OrderStatus.accepted}`]: { $ne: null },
 			},
-			{ $set: { driverId, [`status.${OrderStatus.deliveryDriverAssigned}`]: { at: Date.now() } } },
+			{ $set: { driverId, [`status.${OrderStatus.driverAssigned}`]: { at: Date.now() } } },
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
@@ -106,7 +106,7 @@ export class OrderRepository implements IOrderRepository {
 	async generateToken(id: string, userId: string) {
 		const order = this.mapper.mapFrom(await Order.findById(id))
 		if (!order || order.userId !== userId) throw new NotAuthorizedError()
-		if (order.currentStatus !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.currentStatus !== OrderStatus.driverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
 		const token = Random.number(1e4, 1e5).toString()
 		await appInstance.cache.set(`order-delivery-token-${token}`, id, 60 * 3)
 		return token
@@ -115,7 +115,7 @@ export class OrderRepository implements IOrderRepository {
 	async complete(id: string, userId: string, token: string) {
 		const order = this.mapper.mapFrom(await Order.findById(id))
 		if (!order || order.driverId !== userId) throw new NotAuthorizedError()
-		if (order.currentStatus !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.currentStatus !== OrderStatus.driverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
 		if (!order.paid) throw new NotAuthorizedError('Order is not paid yet')
 		const cachedId = await appInstance.cache.get(`order-delivery-token-${token}`)
 		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
@@ -140,12 +140,25 @@ export class OrderRepository implements IOrderRepository {
 		return this.mapper.mapFrom(order)
 	}
 
+	async markRefunded(id: string) {
+		const order = await Order.findOneAndUpdate(
+			{
+				_id: id,
+				[`status.${OrderStatus.paid}`]: { $ne: null },
+			},
+			{ $set: { [`status.${OrderStatus.refunded}`]: { at: Date.now() } } },
+			{ new: true },
+		)
+		return this.mapper.mapFrom(order)
+	}
+
 	async cancel(id: string, userId: string) {
 		const order = await Order.findOneAndUpdate(
 			{
 				_id: id,
 				userId,
 				[`status.${OrderStatus.accepted}`]: null,
+				[`status.${OrderStatus.rejected}`]: null,
 			},
 			{ $set: { [`status.${OrderStatus.cancelled}`]: { at: Date.now() }, done: true } },
 			{ new: true },

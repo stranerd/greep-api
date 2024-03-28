@@ -47,6 +47,7 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 			amount: transaction.amount,
 			currency: transaction.currency,
 		})
+		await OrdersUseCases.markRefunded({ id: transaction.data.orderId })
 		await TransactionsUseCases.update({
 			id: transaction.id,
 			data: { status: TransactionStatus.settled },

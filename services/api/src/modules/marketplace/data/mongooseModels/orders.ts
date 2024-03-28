@@ -29,7 +29,13 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			default: false,
 		},
 		status: Object.fromEntries(
-			Object.values(OrderStatus).map((status) => [status, { type: appInstance.dbs.mongo.Schema.Types.Mixed, default: null }]),
+			Object.values(OrderStatus).map((status) => [
+				status,
+				{
+					type: appInstance.dbs.mongo.Schema.Types.Mixed,
+					default: () => (status === OrderStatus.created ? { at: Date.now() } : null),
+				},
+			]),
 		),
 		from: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['from'],
