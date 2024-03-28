@@ -61,7 +61,7 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: String,
 			required: true,
 		},
-		price: {
+		fee: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},

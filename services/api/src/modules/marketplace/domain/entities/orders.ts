@@ -1,7 +1,7 @@
-import { Currencies } from '@modules/payment'
+import { Currencies, FlutterwavePayment } from '@modules/payment'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { DeliveryTime, OrderData, OrderPayment, OrderStatus, OrderStatusType, OrderType } from '../types'
+import { DeliveryTime, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderType } from '../types'
 
 type OrderEntityProps = {
 	id: string
@@ -17,10 +17,7 @@ type OrderEntityProps = {
 	time: DeliveryTime
 	discount: number
 	payment: OrderPayment
-	price: {
-		amount: number
-		currency: Currencies
-	}
+	fee: OrderFee
 	createdAt: number
 	updatedAt: number
 }
@@ -37,15 +34,6 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 		return null
 	}
 
-	get deliveryFee() {
-		// TODO: calculate based on distance between pickup and dropoff location
-		return 10
-	}
-
-	get totalFee() {
-		return (this.deliveryFee + this.price.amount) * (1 - this.discount * 0.01)
-	}
-
 	get currentStatus() {
 		if (this.status[OrderStatus.completed]) return OrderStatus.completed
 		if (this.status[OrderStatus.cancelled]) return OrderStatus.cancelled
@@ -56,5 +44,36 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 
 	get paid() {
 		return !!this.status[OrderStatus.paid]
+	}
+
+	static async calculateFees(data: {
+		userId: string
+		data: OrderData
+		from: Location
+		to: Location
+		discount: number
+		time: DeliveryTime
+		payment: OrderPayment
+	}): Promise<OrderFee> {
+		const items = data.data.type === OrderType.cart ? data.data.products : []
+		const currency = items[0]?.currency || Currencies.TRY
+		const convertedItems = await Promise.all(
+			items.map((item) => FlutterwavePayment.convertAmount(item.amount * item.quantity, item.currency, currency)),
+		)
+		const subTotal = convertedItems.reduce((acc, item) => acc + item, 0)
+		const vatPercentage = 0.05
+		const vat = subTotal * vatPercentage
+		const fee = 10 // TODO: calculate based on from and to
+		const total = subTotal + vat + fee
+		const payable = total * (1 - data.discount * 0.01)
+		return {
+			vatPercentage,
+			vat,
+			fee,
+			subTotal,
+			total,
+			payable,
+			currency,
+		}
 	}
 }

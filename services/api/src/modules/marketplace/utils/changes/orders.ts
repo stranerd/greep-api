@@ -5,7 +5,7 @@ import { DbChangeCallbacks } from 'equipped'
 import { OrdersUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
-import { OrderPayment, OrderStatus, OrderType } from '../../domain/types'
+import { OrderStatus, OrderType } from '../../domain/types'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -47,14 +47,14 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 		const closed = !before.done && after.done
 		const rejected = closed && !!after.status[OrderStatus.completed]
 		if (rejected) {
-			if (after.payment === OrderPayment.wallet)
+			if (after.paid)
 				await TransactionsUseCases.create({
 					title: `Payment refund for order #${after.id}`,
 					status: TransactionStatus.fulfilled,
 					userId: after.userId,
 					email: after.email,
-					amount: after.price.amount,
-					currency: after.price.currency,
+					amount: after.fee.payable,
+					currency: after.fee.currency,
 					data: {
 						type: TransactionType.OrderPaymentRefund,
 						orderId: after.id,

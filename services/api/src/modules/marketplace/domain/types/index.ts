@@ -88,3 +88,13 @@ export type OrderToModelBase = {
 export type CheckoutInput = OrderToModelBase & {
 	cartId: string
 }
+
+export type OrderFee = {
+	vatPercentage: number
+	vat: number
+	fee: number
+	subTotal: number
+	total: number
+	currency: Currencies
+	payable: number
+}

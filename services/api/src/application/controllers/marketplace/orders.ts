@@ -171,8 +171,8 @@ export class OrdersController {
 		const transaction = await TransactionsUseCases.create({
 			userId: order.userId,
 			email: order.email,
-			amount: 0 - order.totalFee,
-			currency: order.price.currency,
+			amount: 0 - order.fee.payable,
+			currency: order.fee.currency,
 			status: TransactionStatus.initialized,
 			title: `Payment for order #${order.id}`,
 			data: {

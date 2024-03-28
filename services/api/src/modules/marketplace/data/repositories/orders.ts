@@ -1,5 +1,6 @@
 import { appInstance } from '@utils/environment'
 import { NotAuthorizedError, QueryParams, Random } from 'equipped'
+import { OrderEntity } from '../../domain/entities/orders'
 import { IOrderRepository } from '../../domain/irepositories/orders'
 import { AcceptOrderInput, CheckoutInput, OrderStatus, OrderType } from '../../domain/types'
 import { OrderMapper } from '../mappers/orders'
@@ -18,13 +19,16 @@ export class OrderRepository implements IOrderRepository {
 	}
 
 	async create(data: OrderToModel) {
-		const order = await new Order(data).save()
+		const order = await new Order({
+			...data,
+			fee: await OrderEntity.calculateFees(data),
+		}).save()
 		return this.mapper.mapFrom(order)!
 	}
 
 	async checkout(data: CheckoutInput) {
 		let res = null as OrderFromModel | null
-		await Cart.collection.conn.transaction(async (session) => {
+		await Order.collection.conn.transaction(async (session) => {
 			const cart = await Cart.findById(data.cartId, {}, { session })
 			if (!cart || cart.userId !== data.userId) throw new Error('cart not found')
 			if (!cart.active) throw new Error('cart not active')
@@ -35,22 +39,16 @@ export class OrderRepository implements IOrderRepository {
 			const filteredProducts = cart.products.filter((p) => products.find((pr) => pr.id === p.id)?.inStock)
 			if (!filteredProducts.length) throw new Error('no products available! Reset your cart and continue shopping')
 
-			const totalAmount = filteredProducts.reduce((acc, p) => acc + p.amount * p.quantity, 0)
-			const amountToPay = ((100 - data.discount) / 100) * totalAmount
-			const currency = products[0].price.currency
-
+			const orderData: OrderToModel['data'] = {
+				type: OrderType.cart,
+				cartId: cart.id,
+				vendorId: cart.vendorId,
+				products: filteredProducts,
+			}
 			const order = await new Order({
 				...data,
-				data: {
-					type: OrderType.cart,
-					cartId: cart.id,
-					vendorId: cart.vendorId,
-					products: filteredProducts,
-				},
-				price: {
-					amount: amountToPay,
-					currency,
-				},
+				data: orderData,
+				fee: await OrderEntity.calculateFees({ ...data, data: orderData }),
 			}).save({ session })
 			await Cart.findByIdAndUpdate(cart.id, { $set: { active: false } }, { session })
 			return (res = order)
