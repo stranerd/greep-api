@@ -30,17 +30,21 @@ export class UsersController {
 	static async updateType(req: Request) {
 		const { data } = validate(
 			{
-				data: Schema.or([
-					Schema.object({
+				data: Schema.discriminate((v) => v.type, {
+					[UserType.driver]: Schema.object({
 						type: Schema.is(UserType.driver as const),
 						license: Schema.file().image(),
 					}),
-					Schema.object({
+					[UserType.customer]: Schema.object({
 						type: Schema.is(UserType.customer as const),
-						passport: Schema.file().image(),
-						studentId: Schema.file().image(),
+						passport: Schema.file()
+							.image()
+							.requiredIf(() => !req.files.studentId),
+						studentId: Schema.file()
+							.image()
+							.requiredIf(() => !req.files.passport),
 					}),
-				]),
+				}),
 			},
 			{
 				data: {
@@ -57,8 +61,8 @@ export class UsersController {
 			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, license } })
 			if (updated) return updated
 		} else if (data.type === UserType.customer) {
-			const passport = await StorageUseCases.upload('users/students/passport', data.passport)
-			const studentId = await StorageUseCases.upload('users/students/studentId', data.studentId)
+			const passport = data.passport ? await StorageUseCases.upload('users/customers/passport', data.passport) : null
+			const studentId = data.studentId ? await StorageUseCases.upload('users/customers/studentId', data.studentId) : null
 			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, passport, studentId } })
 			if (updated) return updated
 		}

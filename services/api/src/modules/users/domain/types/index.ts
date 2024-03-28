@@ -77,6 +77,6 @@ export type UserTypeData =
 	  }
 	| {
 			type: UserType.customer
-			passport: MediaOutput
-			studentId: MediaOutput
+			passport: MediaOutput | null
+			studentId: MediaOutput | null
 	  }
