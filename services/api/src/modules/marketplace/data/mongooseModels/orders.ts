@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/environment'
+import { OrderStatus } from '../../domain/types'
 import { OrderDbChangeCallbacks } from '../../utils/changes/orders'
 import { OrderMapper } from '../mappers/orders'
 import { OrderFromModel } from '../models/orders'
@@ -22,10 +23,14 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			required: false,
 			default: null,
 		},
-		status: {
-			type: String,
-			required: true,
+		done: {
+			type: Boolean,
+			required: false,
+			default: false,
 		},
+		status: Object.fromEntries(
+			Object.values(OrderStatus).map((status) => [status, { type: appInstance.dbs.mongo.Schema.Types.Mixed, default: null }]),
+		),
 		pickupLocation: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
 			required: true,
@@ -59,11 +64,6 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 		price: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
-		},
-		accepted: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['accepted'],
-			required: false,
-			default: null,
 		},
 		createdAt: {
 			type: Number,

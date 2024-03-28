@@ -39,10 +39,11 @@ export enum OrderStatus {
 	accepted = 'accepted',
 	rejected = 'rejected',
 	deliveryDriverAssigned = 'deliveryDriverAssigned',
-	failed = 'failed',
 	cancelled = 'cancelled',
 	completed = 'completed',
 }
+
+export type OrderStatusType = Record<OrderStatus, { at: number; message?: string } | null>
 
 export enum OrderType {
 	cart = 'cart',

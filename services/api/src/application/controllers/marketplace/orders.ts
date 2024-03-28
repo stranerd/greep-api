@@ -1,6 +1,6 @@
-import { OrderStatus, OrdersUseCases } from '@modules/marketplace'
+import { OrderPayment, OrderStatus, OrdersUseCases } from '@modules/marketplace'
 import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
-import { NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { Conditions, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class OrdersController {
 	static async get(req: Request) {
@@ -15,7 +15,7 @@ export class OrdersController {
 			query.auth!.push({
 				condition: QueryKeys.and,
 				value: [
-					{ field: 'status', value: OrderStatus.accepted },
+					{ field: `status.${OrderStatus.accepted}`, condition: Conditions.ne, value: null },
 					{ field: 'driverId', value: null },
 				],
 			})
@@ -74,7 +74,8 @@ export class OrdersController {
 	static async pay(req: Request) {
 		const order = await OrdersUseCases.find(req.params.id)
 		if (!order || order.userId !== req.authUser!.id) throw new NotAuthorizedError()
-		if (order.status !== OrderStatus.pendingPayment) throw new NotAuthorizedError('order cannot be paid for')
+		if (order.paid) throw new NotAuthorizedError('order is already paid for')
+		if (order.payment !== OrderPayment.wallet) throw new NotAuthorizedError('order payment method is not supported')
 
 		const transaction = await TransactionsUseCases.create({
 			userId: order.userId,
@@ -105,6 +106,15 @@ export class OrdersController {
 
 	static async assignDriver(req: Request) {
 		const updated = await OrdersUseCases.assignDriver({
+			id: req.params.id,
+			driverId: req.authUser!.id,
+		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
+
+	static async markPaid(req: Request) {
+		const updated = await OrdersUseCases.markPaid({
 			id: req.params.id,
 			driverId: req.authUser!.id,
 		})

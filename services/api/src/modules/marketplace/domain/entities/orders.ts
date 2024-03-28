@@ -1,14 +1,15 @@
 import { Currencies } from '@modules/payment'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { DeliveryTime, OrderData, OrderPayment, OrderType, OrderStatus } from '../types'
+import { DeliveryTime, OrderData, OrderPayment, OrderStatus, OrderStatusType, OrderType } from '../types'
 
 type OrderEntityProps = {
 	id: string
 	userId: string
 	email: string
 	driverId: string | null
-	status: OrderStatus
+	status: OrderStatusType
+	done: boolean
 	pickupLocation: Location
 	location: Location
 	dropoffNote: string
@@ -20,11 +21,6 @@ type OrderEntityProps = {
 		amount: number
 		currency: Currencies
 	}
-	accepted: {
-		at: number
-		message: number
-		is: boolean
-	} | null
 	createdAt: number
 	updatedAt: number
 }
@@ -48,5 +44,17 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 
 	get totalFee() {
 		return this.deliveryFee + this.price.amount
+	}
+
+	get currentStatus() {
+		if (this.status[OrderStatus.completed]) return OrderStatus.completed
+		if (this.status[OrderStatus.cancelled]) return OrderStatus.cancelled
+		if (this.status[OrderStatus.rejected]) return OrderStatus.rejected
+		if (this.status[OrderStatus.deliveryDriverAssigned]) return OrderStatus.deliveryDriverAssigned
+		return null
+	}
+
+	get paid() {
+		return !!this.status[OrderStatus.paid]
 	}
 }

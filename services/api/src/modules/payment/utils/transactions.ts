@@ -35,7 +35,7 @@ export const settleTransaction = async (transaction: TransactionEntity) => {
 		})
 	}
 	if (transaction.data.type === TransactionType.OrderPayment) {
-		await OrdersUseCases.markPaid(transaction.data.orderId)
+		await OrdersUseCases.markPaid({ id: transaction.data.orderId, driverId: null })
 		await TransactionsUseCases.update({
 			id: transaction.id,
 			data: { status: TransactionStatus.settled },

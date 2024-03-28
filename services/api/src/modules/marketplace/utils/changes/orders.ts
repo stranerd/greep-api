@@ -26,7 +26,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				},
 			})
 	},
-	updated: async ({ after, changes }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[after.userId, after.getVendorId(), after.driverId]
 				.filter(Boolean)
@@ -35,7 +35,8 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 			after,
 		)
 
-		const rejected = changes.status && (after.status === OrderStatus.rejected || after.status === OrderStatus.cancelled)
+		const closed = !before.done && after.done
+		const rejected = closed && !!after.status[OrderStatus.completed]
 		if (rejected) {
 			if (after.payment === OrderPayment.wallet)
 				await TransactionsUseCases.create({

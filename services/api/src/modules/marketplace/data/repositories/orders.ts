@@ -1,7 +1,7 @@
 import { appInstance } from '@utils/environment'
 import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { IOrderRepository } from '../../domain/irepositories/orders'
-import { AcceptOrderInput, CheckoutInput, OrderPayment, OrderStatus, OrderType } from '../../domain/types'
+import { AcceptOrderInput, CheckoutInput, OrderStatus, OrderType } from '../../domain/types'
 import { OrderMapper } from '../mappers/orders'
 import { OrderFromModel, OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
@@ -47,7 +47,6 @@ export class OrderRepository implements IOrderRepository {
 					vendorId: cart.vendorId,
 					products: filteredProducts,
 				},
-				status: data.payment === OrderPayment.cash ? OrderStatus.paid : OrderStatus.pendingPayment,
 				price: {
 					amount: amountToPay,
 					currency,
@@ -78,8 +77,8 @@ export class OrderRepository implements IOrderRepository {
 			{ _id: id, 'data.vendorId': vendorId, accepted: null },
 			{
 				$set: {
-					accepted: { is: accepted, at: Date.now(), message },
-					status: accepted ? OrderStatus.accepted : OrderStatus.rejected,
+					[`status.${accepted ? OrderStatus.accepted : OrderStatus.rejected}`]: { at: Date.now(), message },
+					...(accepted ? {} : { done: true }),
 				},
 			},
 			{ new: true },
@@ -92,40 +91,46 @@ export class OrderRepository implements IOrderRepository {
 			{
 				_id: id,
 				driverId: null,
-				status: OrderStatus.accepted,
+				[`status.${OrderStatus.accepted}`]: { $ne: null },
 			},
-			{ $set: { driverId, status: OrderStatus.deliveryDriverAssigned } },
+			{ $set: { driverId, [`status.${OrderStatus.deliveryDriverAssigned}`]: { at: Date.now() } } },
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
 	}
 
 	async generateToken(id: string, userId: string) {
-		const order = await Order.findById(id)
+		const order = this.mapper.mapFrom(await Order.findById(id))
 		if (!order || order.userId !== userId) throw new NotAuthorizedError()
-		if (order.status !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
-		const token = Random.string(12)
+		if (order.currentStatus !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
+		const token = Random.number(1e4, 1e5).toString()
 		await appInstance.cache.set(`order-delivery-token-${token}`, id, 60 * 3)
 		return token
 	}
 
 	async complete(id: string, userId: string, token: string) {
-		const order = await Order.findById(id)
+		const order = this.mapper.mapFrom(await Order.findById(id))
 		if (!order || order.driverId !== userId) throw new NotAuthorizedError()
-		if (order.status !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.currentStatus !== OrderStatus.deliveryDriverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (!order.paid) throw new NotAuthorizedError('Order is not paid yet')
 		const cachedId = await appInstance.cache.get(`order-delivery-token-${token}`)
 		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
-		const completed = await Order.findByIdAndUpdate(id, { $set: { status: OrderStatus.completed } }, { new: true })
+		const completed = await Order.findByIdAndUpdate(
+			id,
+			{ $set: { [`status.${OrderStatus.completed}`]: { at: Date.now() }, done: true } },
+			{ new: true },
+		)
 		return this.mapper.mapFrom(completed)
 	}
 
-	async markPaid(id: string) {
+	async markPaid(id: string, driverId: string | null) {
 		const order = await Order.findOneAndUpdate(
 			{
 				_id: id,
-				status: OrderStatus.pendingPayment,
+				...(driverId ? { driverId } : {}),
+				[`status.${OrderStatus.paid}`]: null,
 			},
-			{ $set: { status: OrderStatus.paid } },
+			{ $set: { [`status.${OrderStatus.paid}`]: { at: Date.now() } } },
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
