@@ -1,4 +1,5 @@
 import { Currencies, FlutterwavePayment } from '@modules/payment'
+import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { DeliveryTime, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderType } from '../types'
@@ -56,14 +57,16 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 		payment: OrderPayment
 	}): Promise<OrderFee> {
 		const items = data.data.type === OrderType.cart ? data.data.products : []
-		const currency = items[0]?.currency || Currencies.TRY
+		const currency = Currencies.TRY
 		const convertedItems = await Promise.all(
 			items.map((item) => FlutterwavePayment.convertAmount(item.amount * item.quantity, item.currency, currency)),
 		)
 		const subTotal = convertedItems.reduce((acc, item) => acc + item, 0)
 		const vatPercentage = 0.05
 		const vat = subTotal * vatPercentage
-		const fee = 10 // TODO: calculate based on from and to
+		const distance = calculateDistanceBetween(data.from.coords, data.to.coords)
+		const feePerMeters = 15 / 1000
+		const fee = distance * feePerMeters
 		const total = subTotal + vat + fee
 		const payable = total * (1 - data.discount * 0.01)
 		return {
