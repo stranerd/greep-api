@@ -7,7 +7,6 @@ export const isAuthenticatedButIgnoreVerified = makeMiddleware(async (request) =
 export const isAuthenticated = makeMiddleware(async (request) => {
 	await requireAuthUser(request)
 	if (!request.authUser?.isVerified) throw new NotAuthenticatedError('verify your account to proceed')
-	if (!request.authUser?.roles?.isActive) throw new NotAuthenticatedError('your account is not approved yet')
 })
 
 export const hasRefreshToken = makeMiddleware(async (request) => {
@@ -24,10 +23,4 @@ export const isDriver = makeMiddleware(async (request) => {
 	const isDriver = request.authUser?.roles?.[AuthRole.isDriver]
 	if (!request.authUser) throw new NotAuthenticatedError()
 	if (!isDriver) throw new NotAuthorizedError()
-})
-
-export const isCustomer = makeMiddleware(async (request) => {
-	const isCustomer = request.authUser?.roles?.[AuthRole.isCustomer]
-	if (!request.authUser) throw new NotAuthenticatedError()
-	if (!isCustomer) throw new NotAuthorizedError()
 })

@@ -34,9 +34,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 				await AuthUsersUseCases.updateRole({
 					userId: after.id,
 					roles: {
-						[AuthRole.isActive]: accepted,
 						[AuthRole.isDriver]: after.isDriver(),
-						[AuthRole.isCustomer]: after.isCustomer(),
 					},
 				})
 			await sendNotification([after.id], {

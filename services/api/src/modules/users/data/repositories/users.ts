@@ -1,9 +1,9 @@
 import { appInstance } from '@utils/environment'
+import { Location } from '@utils/types'
 import { IUserRepository } from '../../domain/i-repositories/users'
 import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
-import { Location } from '@utils/types'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository

@@ -1,7 +1,7 @@
+import { Location } from '@utils/types'
 import { QueryParams, QueryResults } from 'equipped'
 import { UserEntity } from '../entities/users'
 import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
-import { Location } from '@utils/types'
 
 export interface IUserRepository {
 	get(query: QueryParams): Promise<QueryResults<UserEntity>>
