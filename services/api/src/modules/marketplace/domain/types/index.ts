@@ -1,3 +1,4 @@
+import { Phone } from '@modules/auth'
 import { Currencies } from '@modules/payment'
 import { Location } from '@utils/types'
 export type { EmbeddedUser } from '@modules/users'
@@ -50,6 +51,13 @@ export enum OrderType {
 	dispatch = 'dispatch',
 }
 
+export enum OrderDispatchDeliveryType {
+	standard = 'standard',
+	perishable = 'perishable',
+	fragile = 'fragile',
+	others = 'others',
+}
+
 export type OrderData =
 	| {
 			type: OrderType.cart
@@ -59,6 +67,11 @@ export type OrderData =
 	  }
 	| {
 			type: OrderType.dispatch
+			deliveryType: OrderDispatchDeliveryType
+			description: string
+			size: number
+			recipientName: string
+			recipientPhone: Phone
 	  }
 
 export type OrderToModelBase = {

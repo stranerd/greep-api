@@ -1,8 +1,19 @@
-import { CartsUseCases, OrderPayment, OrderStatus, OrderType, OrdersUseCases } from '@modules/marketplace'
+import { CartsUseCases, OrderDispatchDeliveryType, OrderPayment, OrderStatus, OrderType, OrdersUseCases } from '@modules/marketplace'
 import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
 import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
 import { LocationSchema } from '@utils/types'
-import { BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import {
+	BadRequestError,
+	Conditions,
+	NotAuthorizedError,
+	NotFoundError,
+	QueryKeys,
+	QueryParams,
+	Request,
+	Schema,
+	Validation,
+	validate,
+} from 'equipped'
 
 export class OrdersController {
 	private static schema = () => ({
@@ -84,6 +95,13 @@ export class OrdersController {
 			{
 				...this.schema(),
 				from: LocationSchema(),
+				data: Schema.object({
+					deliveryType: Schema.in(Object.values(OrderDispatchDeliveryType)),
+					description: Schema.string(),
+					size: Schema.number().gte(0),
+					recipientName: Schema.string().min(1),
+					recipientPhone: Schema.any().addRule(Validation.isValidPhone()),
+				}),
 			},
 			req.body,
 		)
@@ -95,6 +113,7 @@ export class OrdersController {
 			userId: user.id,
 			email: user.bio.email,
 			data: {
+				...data.data,
 				type: OrderType.dispatch,
 			},
 		})

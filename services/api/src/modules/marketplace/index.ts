@@ -14,4 +14,4 @@ export const ProductsUseCases = new ProductUseCase(productRepository)
 const orderRepository = OrderRepository.getInstance()
 export const OrdersUseCases = new OrderUseCase(orderRepository)
 
-export { OrderPayment, OrderStatus, OrderType } from './domain/types'
+export { OrderDispatchDeliveryType, OrderPayment, OrderStatus, OrderType } from './domain/types'
