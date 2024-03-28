@@ -34,6 +34,10 @@ export class OrderUseCase {
 		return await this.repository.assignDriver(data.id, data.driverId)
 	}
 
+	async cancel(data: { id: string; userId: string }) {
+		return await this.repository.cancel(data.id, data.userId)
+	}
+
 	async generateToken(data: { id: string; userId: string }) {
 		return await this.repository.generateToken(data.id, data.userId)
 	}

@@ -121,4 +121,13 @@ export class OrdersController {
 		if (updated) return updated
 		throw new NotAuthorizedError()
 	}
+
+	static async cancel(req: Request) {
+		const updated = await OrdersUseCases.cancel({
+			id: req.params.id,
+			userId: req.authUser!.id,
+		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
+	}
 }

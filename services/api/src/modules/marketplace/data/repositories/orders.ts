@@ -135,4 +135,17 @@ export class OrderRepository implements IOrderRepository {
 		)
 		return this.mapper.mapFrom(order)
 	}
+
+	async cancel(id: string, userId: string) {
+		const order = await Order.findOneAndUpdate(
+			{
+				_id: id,
+				userId,
+				[`status.${OrderStatus.accepted}`]: null,
+			},
+			{ $set: { [`status.${OrderStatus.cancelled}`]: { at: Date.now() }, done: true } },
+			{ new: true },
+		)
+		return this.mapper.mapFrom(order)
+	}
 }
