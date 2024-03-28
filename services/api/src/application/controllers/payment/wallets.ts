@@ -1,5 +1,6 @@
 import { Currencies, WalletsUseCases } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
+import { LocationSchema } from '@utils/types'
 import { BadRequestError, Request, Schema, ValidationError, validate } from 'equipped'
 
 export class WalletsController {
@@ -56,11 +57,7 @@ export class WalletsController {
 					.max(4)
 					.eq(wallet.pin, (val, comp) => val === comp, 'invalid pin'),
 				amount: Schema.number().gte(100),
-				location: Schema.object({
-					coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
-					location: Schema.string().min(1),
-					description: Schema.string().min(1),
-				}),
+				location: LocationSchema(),
 			},
 			req.body,
 		)

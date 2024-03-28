@@ -74,7 +74,13 @@ export class OrderRepository implements IOrderRepository {
 
 	async accept({ id, userId: vendorId, accepted, message }: AcceptOrderInput) {
 		const order = await Order.findOneAndUpdate(
-			{ _id: id, 'data.vendorId': vendorId, accepted: null },
+			{
+				_id: id,
+				'data.vendorId': vendorId,
+				[`status.${OrderStatus.accepted}`]: null,
+				[`status.${OrderStatus.rejected}`]: null,
+				$or: [{ 'data.type': OrderType.cart, 'data.vendorId': vendorId }, { 'data.type': OrderType.dispatch }],
+			},
 			{
 				$set: {
 					[`status.${accepted ? OrderStatus.accepted : OrderStatus.rejected}`]: { at: Date.now(), message },

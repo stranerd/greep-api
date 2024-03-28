@@ -31,16 +31,16 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 		status: Object.fromEntries(
 			Object.values(OrderStatus).map((status) => [status, { type: appInstance.dbs.mongo.Schema.Types.Mixed, default: null }]),
 		),
-		pickupLocation: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
+		from: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['from'],
 			required: true,
 		},
-		location: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
+		to: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['to'],
 			required: true,
 		},
 		data: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['location'],
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['data'],
 			required: true,
 		},
 		dropoffNote: {

@@ -2,9 +2,10 @@ import { TransactionStatus, TransactionType, TransactionsUseCases } from '@modul
 import { ActivitiesUseCases, ActivityType } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
+import { OrdersUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
-import { OrderPayment, OrderStatus } from '../../domain/types'
+import { OrderPayment, OrderStatus, OrderType } from '../../domain/types'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -15,6 +16,14 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				.flat(),
 			after,
 		)
+
+		if (after.data.type === OrderType.dispatch)
+			await OrdersUseCases.accept({
+				id: after.id,
+				userId: after.userId,
+				message: 'Order accepted',
+				accepted: true,
+			})
 
 		if (after.discount > 0)
 			await ActivitiesUseCases.create({

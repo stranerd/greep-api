@@ -1,8 +1,34 @@
-import { OrderPayment, OrderStatus, OrdersUseCases } from '@modules/marketplace'
+import { CartsUseCases, OrderPayment, OrderStatus, OrderType, OrdersUseCases } from '@modules/marketplace'
 import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
-import { Conditions, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
+import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
+import { LocationSchema } from '@utils/types'
+import { BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class OrdersController {
+	private static schema = () => ({
+		to: LocationSchema(),
+		dropoffNote: Schema.string(),
+		time: Schema.object({
+			date: Schema.time().min(Date.now()).asStamp(),
+			time: Schema.string().custom((value) => {
+				const [hours, minutes] = value.split(':').map((v) => parseInt(v))
+				return [hours >= 0 && hours <= 23, minutes >= 0 && minutes <= 59].every(Boolean)
+			}),
+		}),
+		discount: Schema.number().gte(0).lte(100),
+		payment: Schema.in(Object.values(OrderPayment)),
+	})
+
+	private static async verifyUser(userId: string, discount: number) {
+		const user = await UsersUseCases.find(userId)
+		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+
+		const score = ActivityEntity.getScore({ type: ActivityType.orderDiscount, discount, orderId: '' })
+		if (user.account.rankings.overall.value + score < 0) throw new BadRequestError('not enough points for this discount')
+
+		return { user }
+	}
+
 	static async get(req: Request) {
 		const query = req.query as QueryParams
 		query.authType = QueryKeys.or
@@ -26,6 +52,52 @@ export class OrdersController {
 		const order = await OrdersUseCases.find(req.params.id)
 		if (!order || ![order.userId, order.getVendorId(), order.driverId].includes(req.authUser!.id)) throw new NotFoundError()
 		return order
+	}
+
+	static async checkout(req: Request) {
+		const data = validate(
+			{
+				...this.schema(),
+				cartId: Schema.string().min(1),
+			},
+			req.body,
+		)
+
+		const cart = await CartsUseCases.find(data.cartId)
+		if (!cart || cart.userId !== req.authUser!.id) throw new NotAuthorizedError()
+
+		const { user } = await this.verifyUser(cart.userId, data.discount)
+
+		const vendor = await UsersUseCases.find(cart.vendorId)
+		if (!vendor || user.isDeleted() || !vendor.account.vendorLocation) throw new BadRequestError('vendor not found')
+
+		return await OrdersUseCases.checkout({
+			...data,
+			from: vendor.account.vendorLocation,
+			userId: user.id,
+			email: user.bio.email,
+		})
+	}
+
+	static async dispatch(req: Request) {
+		const data = validate(
+			{
+				...this.schema(),
+				from: LocationSchema(),
+			},
+			req.body,
+		)
+
+		const { user } = await this.verifyUser(req.authUser!.id, data.discount)
+
+		return await OrdersUseCases.create({
+			...data,
+			userId: user.id,
+			email: user.bio.email,
+			data: {
+				type: OrderType.dispatch,
+			},
+		})
 	}
 
 	static async accept(req: Request) {

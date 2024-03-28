@@ -1,5 +1,6 @@
 import { PaymentType, TransactionType, TripStatus, TripsUseCases } from '@modules/trips'
 import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
+import { LocationSchema } from '@utils/types'
 import {
 	BadRequestError,
 	NotAuthorizedError,
@@ -47,16 +48,8 @@ export class TripsController {
 		const data = validate(
 			{
 				requestedDriverId: Schema.string().min(1).nullable(),
-				from: Schema.object({
-					coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
-					location: Schema.string().min(1),
-					description: Schema.string().min(1),
-				}),
-				to: Schema.object({
-					coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
-					location: Schema.string().min(1),
-					description: Schema.string().min(1),
-				}),
+				from: LocationSchema(),
+				to: LocationSchema(),
 				discount: Schema.number().gte(0).lte(100),
 			},
 			req.body,

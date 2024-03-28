@@ -1,5 +1,6 @@
 import { StorageUseCases } from '@modules/storage'
 import { UserType, UsersUseCases } from '@modules/users'
+import { LocationSchema } from '@utils/types'
 import { NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class UsersController {
@@ -100,16 +101,7 @@ export class UsersController {
 	}
 
 	static async updateVendorLocation(req: Request) {
-		const { location } = validate(
-			{
-				location: Schema.object({
-					coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
-					location: Schema.string().min(1),
-					description: Schema.string().min(1),
-				}),
-			},
-			req.body,
-		)
+		const { location } = validate({ location: LocationSchema() }, req.body)
 
 		const user = await UsersUseCases.updateVendorLocation({ userId: req.authUser!.id, location })
 		if (user) return user
@@ -117,18 +109,7 @@ export class UsersController {
 	}
 
 	static async updateSavedLocations(req: Request) {
-		const { locations: savedLocations } = validate(
-			{
-				locations: Schema.array(
-					Schema.object({
-						coords: Schema.tuple([Schema.number(), Schema.number()]).nullable().default(null),
-						location: Schema.string().min(1),
-						description: Schema.string().min(1),
-					}),
-				),
-			},
-			req.body,
-		)
+		const { locations: savedLocations } = validate({ locations: Schema.array(LocationSchema()) }, req.body)
 
 		const user = await UsersUseCases.updateSavedLocations({ userId: req.authUser!.id, savedLocations })
 		if (user) return user

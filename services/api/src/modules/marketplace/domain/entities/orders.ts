@@ -10,8 +10,8 @@ type OrderEntityProps = {
 	driverId: string | null
 	status: OrderStatusType
 	done: boolean
-	pickupLocation: Location
-	location: Location
+	from: Location
+	to: Location
 	dropoffNote: string
 	data: OrderData
 	time: DeliveryTime
@@ -43,7 +43,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 	}
 
 	get totalFee() {
-		return this.deliveryFee + this.price.amount
+		return (this.deliveryFee + this.price.amount) * (1 - this.discount * 0.01)
 	}
 
 	get currentStatus() {

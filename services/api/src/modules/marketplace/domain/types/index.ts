@@ -64,8 +64,8 @@ export type OrderData =
 export type OrderToModelBase = {
 	userId: string
 	email: string
-	pickupLocation: Location
-	location: Location
+	from: Location
+	to: Location
 	dropoffNote: string
 	time: DeliveryTime
 	discount: number
