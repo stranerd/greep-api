@@ -34,22 +34,22 @@ export class TransactionsController {
 				amount: Schema.number().gt(isBalance ? Number.NEGATIVE_INFINITY : 0),
 				description: Schema.string(),
 				recordedAt: Schema.time().max(Date.now()).asStamp(),
-				data: Schema.or([
-					Schema.object({
+				data: Schema.discriminate((v) => v.type, {
+					[TransactionType.expense]: Schema.object({
 						type: Schema.is(TransactionType.expense as const),
 						name: Schema.string().min(1),
 					}),
-					Schema.object({
+					[TransactionType.balance]: Schema.object({
 						type: Schema.is(TransactionType.balance as const),
 						parentId: Schema.string().min(1),
 					}),
-					Schema.object({
+					[TransactionType.trip]: Schema.object({
 						type: Schema.is(TransactionType.trip as const),
 						customerId: Schema.string().min(1),
 						paidAmount: Schema.number(),
 						paymentType: Schema.any<PaymentType>().in(Object.values(PaymentType)).default(PaymentType.cash),
 					}),
-				]),
+				}),
 			},
 			req.body,
 		)
