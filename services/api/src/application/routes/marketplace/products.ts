@@ -9,9 +9,14 @@ export const productsRoutes = groupRoutes('/products', [
 		controllers: [makeController(async (req) => ProductsController.get(req))],
 	},
 	{
-		path: '/search/tags',
+		path: '/recommendation/products',
 		method: 'get',
-		controllers: [makeController(async (req) => ProductsController.searchDiscovery(req))],
+		controllers: [makeController(async (req) => ProductsController.recommendProducts(req))],
+	},
+	{
+		path: '/recommendation/tags',
+		method: 'get',
+		controllers: [makeController(async (req) => ProductsController.recommendTags(req))],
 	},
 	{
 		path: '/',

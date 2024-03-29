@@ -1,6 +1,7 @@
 import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { IProductRepository } from '../../domain/irepositories/products'
+import { ProductMeta } from '../../domain/types'
 import { ProductMapper } from '../mappers/products'
 import { ProductToModel } from '../models/products'
 import { Product } from '../mongooseModels/products'
@@ -46,5 +47,14 @@ export class ProductRepository implements IProductRepository {
 	async updateUserBio(user: ProductToModel['user']) {
 		const products = await Product.updateMany({ 'user.id': user.id }, { $set: { user } })
 		return !!products.acknowledged
+	}
+
+	async updateMeta(ids: string[], property: ProductMeta, value: 1 | -1) {
+		await Product.updateMany(
+			{ _id: { $in: ids } },
+			{
+				$inc: { [`meta.${property}`]: value, [`meta.${ProductMeta.total}`]: value },
+			},
+		)
 	}
 }

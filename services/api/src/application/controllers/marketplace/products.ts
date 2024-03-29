@@ -1,5 +1,5 @@
-import { TagTypes, TagsUseCases } from '@modules/interactions'
-import { ProductsUseCases } from '@modules/marketplace'
+import { TagMeta, TagTypes, TagsUseCases } from '@modules/interactions'
+import { ProductMeta, ProductsUseCases } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
 import { StorageUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
@@ -92,12 +92,19 @@ export class ProductsController {
 		})
 	}
 
-	static async searchDiscovery(req: Request) {
+	static async recommendTags(req: Request) {
 		const query: QueryParams = req.query
 		query.auth = [{ field: 'type', value: TagTypes.products }]
 		query.sort ??= []
-		query.sort.push({ field: 'meta.orders', desc: true })
+		query.sort.unshift({ field: `meta.${TagMeta.orders}`, desc: true })
 		query.limit = 10
 		return await TagsUseCases.get(query)
+	}
+
+	static async recommendProducts(req: Request) {
+		const query: QueryParams = req.query
+		query.sort ??= []
+		query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+		return await ProductsUseCases.get(query)
 	}
 }

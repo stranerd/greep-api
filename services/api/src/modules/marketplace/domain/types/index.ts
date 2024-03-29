@@ -100,3 +100,11 @@ export type OrderFee = {
 	currency: Currencies
 	payable: number
 }
+
+export enum ProductMeta {
+	orders = 'orders',
+
+	total = 'total',
+}
+
+export type ProductMetaType = Record<ProductMeta, number>

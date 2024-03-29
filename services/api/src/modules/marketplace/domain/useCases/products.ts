@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
 import { ProductToModel } from '../../data/models/products'
 import { IProductRepository } from '../irepositories/products'
+import { ProductMeta } from '../types'
 
 export class ProductUseCase {
 	private repository: IProductRepository
@@ -31,5 +32,9 @@ export class ProductUseCase {
 
 	async updateUserBio(user: ProductToModel['user']) {
 		return await this.repository.updateUserBio(user)
+	}
+
+	async updateMeta(data: { ids: string[]; property: ProductMeta; value: 1 | -1 }) {
+		return await this.repository.updateMeta(data.ids, data.property, data.value)
 	}
 }

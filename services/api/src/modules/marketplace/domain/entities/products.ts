@@ -1,7 +1,7 @@
 import { Currencies } from '@modules/payment'
 import { generateDefaultUser } from '@modules/users'
 import { BaseEntity, MediaOutput } from 'equipped'
-import { EmbeddedUser } from '../types'
+import { EmbeddedUser, ProductMetaType } from '../types'
 
 type ProductEntityProps = {
 	id: string
@@ -15,6 +15,7 @@ type ProductEntityProps = {
 	description: string
 	tagIds: string[]
 	inStock: boolean
+	meta: ProductMetaType
 	createdAt: number
 	updatedAt: number
 }

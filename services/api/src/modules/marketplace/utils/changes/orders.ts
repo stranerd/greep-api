@@ -5,7 +5,7 @@ import { Conditions, DbChangeCallbacks } from 'equipped'
 import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
-import { OrderStatus, OrderType } from '../../domain/types'
+import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
 import { TagMeta, TagsUseCases } from '@modules/interactions'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
@@ -73,10 +73,12 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				})
 		}
 		if (successful && after.data.type === OrderType.cart) {
+			const productIds = after.data.products.map((p) => p.id)
 			const { results: products } = await ProductsUseCases.get({
-				where: [{ field: 'id', condition: Conditions.in, value: after.data.products.map((p) => p.id) }],
+				where: [{ field: 'id', condition: Conditions.in, value: productIds }],
 			})
 			const allTags = [...new Set(products.map((p) => p.tagIds).flat())]
+			await ProductsUseCases.updateMeta({ ids: productIds, property: ProductMeta.orders, value: 1 })
 			await TagsUseCases.updateMeta({ ids: allTags, property: TagMeta.orders, value: 1 })
 		}
 	},
