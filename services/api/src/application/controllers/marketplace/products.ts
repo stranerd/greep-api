@@ -1,4 +1,4 @@
-import { TagsUseCases } from '@modules/interactions'
+import { TagTypes, TagsUseCases } from '@modules/interactions'
 import { ProductsUseCases } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
 import { StorageUseCases } from '@modules/storage'
@@ -90,5 +90,14 @@ export class ProductsController {
 			user: user.getEmbedded(),
 			banner,
 		})
+	}
+
+	static async searchDiscovery(req: Request) {
+		const query: QueryParams = req.query
+		query.auth = [{ field: 'type', value: TagTypes.products }]
+		query.sort ??= []
+		query.sort.push({ field: 'meta.orders', desc: true })
+		query.limit = 10
+		return await TagsUseCases.get(query)
 	}
 }

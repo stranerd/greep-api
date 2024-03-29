@@ -1,11 +1,12 @@
 import { TransactionStatus, TransactionType, TransactionsUseCases } from '@modules/payment'
 import { ActivitiesUseCases, ActivityType } from '@modules/users'
 import { appInstance } from '@utils/environment'
-import { DbChangeCallbacks } from 'equipped'
-import { OrdersUseCases } from '../..'
+import { Conditions, DbChangeCallbacks } from 'equipped'
+import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType } from '../../domain/types'
+import { TagMeta, TagsUseCases } from '@modules/interactions'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -45,8 +46,9 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 		)
 
 		const closed = !before.done && after.done
-		const rejected = closed && !!after.status[OrderStatus.completed]
-		if (rejected) {
+		const failed = closed && !after.status[OrderStatus.completed]
+		const successful = closed && !!after.status[OrderStatus.completed]
+		if (failed) {
 			if (after.paid)
 				await TransactionsUseCases.create({
 					title: `Payment refund for order #${after.id}`,
@@ -69,6 +71,13 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 						discount: after.discount,
 					},
 				})
+		}
+		if (successful && after.data.type === OrderType.cart) {
+			const { results: products } = await ProductsUseCases.get({
+				where: [{ field: 'id', condition: Conditions.in, value: after.data.products.map((p) => p.id) }],
+			})
+			const allTags = [...new Set(products.map((p) => p.tagIds).flat())]
+			await TagsUseCases.updateMeta({ ids: allTags, property: TagMeta.orders, value: 1 })
 		}
 	},
 	deleted: async ({ before }) => {

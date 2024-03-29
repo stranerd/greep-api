@@ -9,6 +9,11 @@ export const productsRoutes = groupRoutes('/products', [
 		controllers: [makeController(async (req) => ProductsController.get(req))],
 	},
 	{
+		path: '/search/tags',
+		method: 'get',
+		controllers: [makeController(async (req) => ProductsController.searchDiscovery(req))],
+	},
+	{
 		path: '/',
 		method: 'post',
 		controllers: [isAuthenticated, isAdmin, makeController(async (req) => ProductsController.create(req))],

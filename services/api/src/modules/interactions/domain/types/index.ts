@@ -21,6 +21,7 @@ export type CommentMetaType = Record<CommentMeta, number>
 
 export enum TagMeta {
 	products = 'products',
+	orders = 'orders',
 
 	total = 'total',
 }
