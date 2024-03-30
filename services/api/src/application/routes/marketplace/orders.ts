@@ -64,6 +64,11 @@ export const ordersRoutes = groupRoutes('/orders', [
 		controllers: [isAuthenticated, isDriver, makeController(async (req) => OrdersController.markPaid(req))],
 	},
 	{
+		path: '/:id/markShipped',
+		method: 'post',
+		controllers: [isAuthenticated, isDriver, makeController(async (req) => OrdersController.markShipped(req))],
+	},
+	{
 		path: '/:id/cancel',
 		method: 'post',
 		controllers: [isAuthenticated, makeController(async (req) => OrdersController.cancel(req))],

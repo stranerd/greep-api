@@ -55,7 +55,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 		} else if (this.status[OrderStatus.cancelled]) {
 			statuses.push(OrderStatus.cancelled)
 			if (this.paid) statuses.push(OrderStatus.refunded)
-		} else statuses.push(OrderStatus.accepted /* , OrderStatus.shipped */, OrderStatus.completed)
+		} else statuses.push(OrderStatus.accepted, OrderStatus.shipped, OrderStatus.completed)
 		return statuses
 			.map((status) => ({
 				status,

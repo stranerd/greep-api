@@ -13,6 +13,7 @@ export interface IOrderRepository {
 	generateToken: (id: string, userId: string) => Promise<string>
 	cancel: (id: string, userId: string) => Promise<OrderEntity | null>
 	complete: (id: string, userId: string, token: string) => Promise<OrderEntity | null>
+	markShipped: (id: string, userId: string) => Promise<OrderEntity | null>
 	markPaid: (id: string, driverId: string | null) => Promise<OrderEntity | null>
 	markRefunded: (id: string) => Promise<OrderEntity | null>
 }

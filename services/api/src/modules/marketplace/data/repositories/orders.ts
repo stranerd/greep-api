@@ -95,6 +95,7 @@ export class OrderRepository implements IOrderRepository {
 				_id: id,
 				driverId: null,
 				[`status.${OrderStatus.accepted}`]: { $ne: null },
+				[`status.${OrderStatus.driverAssigned}`]: null,
 			},
 			{ $set: { driverId, [`status.${OrderStatus.driverAssigned}`]: { at: Date.now() } } },
 			{ new: true },
@@ -144,8 +145,26 @@ export class OrderRepository implements IOrderRepository {
 			{
 				_id: id,
 				[`status.${OrderStatus.paid}`]: { $ne: null },
+				[`status.${OrderStatus.refunded}`]: null,
 			},
 			{ $set: { [`status.${OrderStatus.refunded}`]: { at: Date.now() } } },
+			{ new: true },
+		)
+		return this.mapper.mapFrom(order)
+	}
+
+	async markShipped(id: string, userId: string) {
+		const order = await Order.findOneAndUpdate(
+			{
+				_id: id,
+				[`status.${OrderStatus.driverAssigned}`]: { $ne: null },
+				[`status.${OrderStatus.shipped}`]: null,
+				$or: [
+					{ 'data.type': OrderType.cart, 'data.vendorId': userId },
+					{ 'data.type': OrderType.dispatch, userId },
+				],
+			},
+			{ $set: { [`status.${OrderStatus.shipped}`]: { at: Date.now() } } },
 			{ new: true },
 		)
 		return this.mapper.mapFrom(order)
@@ -156,6 +175,7 @@ export class OrderRepository implements IOrderRepository {
 			{
 				_id: id,
 				userId,
+				[`status.${OrderStatus.cancelled}`]: { $ne: null },
 				[`status.${OrderStatus.accepted}`]: null,
 				[`status.${OrderStatus.rejected}`]: null,
 			},
