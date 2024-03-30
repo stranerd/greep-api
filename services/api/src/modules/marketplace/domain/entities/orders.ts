@@ -55,7 +55,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 		} else if (this.status[OrderStatus.cancelled]) {
 			statuses.push(OrderStatus.cancelled)
 			if (this.paid) statuses.push(OrderStatus.refunded)
-		} else statuses.push(OrderStatus.accepted, OrderStatus.shipped, OrderStatus.completed)
+		} else statuses.push(OrderStatus.accepted /* , OrderStatus.shipped */, OrderStatus.completed)
 		return statuses
 			.map((status) => ({
 				status,
@@ -63,7 +63,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 				at: this.status[status]?.at ?? null,
 				done: !!this.status[status],
 			}))
-			.sort((a, b) => (a.at ?? -1) - (b.at ?? -1))
+			.sort((a, b) => (a.at ?? Number.MAX_SAFE_INTEGER) - (b.at ?? Number.MAX_SAFE_INTEGER))
 	}
 
 	static async calculateFees(data: {

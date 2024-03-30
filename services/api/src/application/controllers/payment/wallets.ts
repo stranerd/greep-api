@@ -92,7 +92,7 @@ export class WalletsController {
 	static async updatePin(req: Request) {
 		const { oldPin, pin } = validate(
 			{
-				oldPin: Schema.string().min(4).max(4).nullable().default(null),
+				oldPin: Schema.string().nullable().default(null),
 				pin: Schema.string().min(4).max(4),
 			},
 			req.body,
@@ -107,7 +107,7 @@ export class WalletsController {
 
 		const { pin } = validate(
 			{
-				pin: Schema.string().min(4).max(4),
+				pin: Schema.string(),
 			},
 			req.body,
 		)

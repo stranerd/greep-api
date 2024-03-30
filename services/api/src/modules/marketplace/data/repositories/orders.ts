@@ -74,7 +74,6 @@ export class OrderRepository implements IOrderRepository {
 		const order = await Order.findOneAndUpdate(
 			{
 				_id: id,
-				'data.vendorId': vendorId,
 				[`status.${OrderStatus.accepted}`]: null,
 				[`status.${OrderStatus.rejected}`]: null,
 				$or: [{ 'data.type': OrderType.cart, 'data.vendorId': vendorId }, { 'data.type': OrderType.dispatch }],
@@ -107,7 +106,7 @@ export class OrderRepository implements IOrderRepository {
 		const order = this.mapper.mapFrom(await Order.findById(id))
 		if (!order || order.userId !== userId) throw new NotAuthorizedError()
 		if (order.currentStatus !== OrderStatus.driverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
-		const token = Random.number(1e4, 1e5).toString()
+		const token = Random.number(1e3, 1e4).toString()
 		await appInstance.cache.set(`order-delivery-token-${token}`, id, 60 * 3)
 		return token
 	}
