@@ -28,6 +28,10 @@ export class UsersController {
 	}
 
 	static async updateType(req: Request) {
+		const license = req.files.license?.at(0)
+		const passport = req.files.passport?.at(0)
+		const studentId = req.files.studentId?.at(0)
+
 		const { data } = validate(
 			{
 				data: Schema.discriminate((v) => v.type, {
@@ -39,19 +43,19 @@ export class UsersController {
 						type: Schema.is(UserType.customer as const),
 						passport: Schema.file()
 							.image()
-							.requiredIf(() => !req.files.studentId),
+							.requiredIf(() => !studentId),
 						studentId: Schema.file()
 							.image()
-							.requiredIf(() => !req.files.passport),
+							.requiredIf(() => !passport),
 					}),
 				}),
 			},
 			{
 				data: {
 					...req.body,
-					license: req.files.license?.at(0) ?? null,
-					passport: req.files.passport?.at(0) ?? null,
-					studentId: req.files.studentId?.at(0) ?? null,
+					license,
+					passport,
+					studentId,
 				},
 			},
 		)
