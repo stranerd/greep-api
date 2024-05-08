@@ -45,7 +45,8 @@ export class TransactionsController {
 					}),
 					[TransactionType.trip]: Schema.object({
 						type: Schema.is(TransactionType.trip as const),
-						customerId: Schema.string().min(1),
+						customerId: Schema.string().min(1).nullable(),
+						customerName: Schema.string().min(1),
 						paidAmount: Schema.number(),
 						paymentType: Schema.any<PaymentType>().in(Object.values(PaymentType)).default(PaymentType.cash),
 					}),
@@ -67,9 +68,10 @@ export class TransactionsController {
 			if (Math.abs(parent.data.debt) < Math.abs(data.amount)) throw new BadRequestError('amount is greater than the debt to settle')
 		}
 
-		if (data.data.type === TransactionType.trip) {
+		if (data.data.type === TransactionType.trip && data.data.customerId) {
 			const customer = await UsersUseCases.find(data.data.customerId)
 			if (!customer || customer.isDeleted()) throw new BadRequestError('customer not found')
+			data.data.customerName = customer.bio.name.full
 		}
 
 		return await TransactionsUseCases.create({

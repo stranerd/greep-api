@@ -20,7 +20,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 				amount: after.amount,
 			})
 
-		if (after.data.type === TransactionType.trip) {
+		if (after.data.type === TransactionType.trip && after.data.customerId) {
 			await UsersUseCases.updateTrip({
 				driverId: after.driverId,
 				userId: after.data.customerId,
@@ -40,7 +40,12 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 			after,
 		)
 
-		if (after.data.type === TransactionType.trip && before.data.type === TransactionType.trip && after.data.debt !== before.data.debt)
+		if (
+			after.data.type === TransactionType.trip &&
+			after.data.customerId &&
+			before.data.type === TransactionType.trip &&
+			after.data.debt !== before.data.debt
+		)
 			await UsersUseCases.updateDebt({
 				driverId: after.driverId,
 				userId: after.data.customerId,
@@ -53,7 +58,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 			before,
 		)
 
-		if (before.data.type === TransactionType.trip) {
+		if (before.data.type === TransactionType.trip && before.data.customerId) {
 			await UsersUseCases.updateTrip({
 				driverId: before.driverId,
 				userId: before.data.customerId,

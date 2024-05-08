@@ -128,6 +128,7 @@ export class TripsController {
 
 		const trip = await TripsUseCases.find(req.params.id)
 		if (!trip || trip.driverId !== req.authUser!.id) throw new NotAuthorizedError()
+		const customer = await UsersUseCases.find(trip.customerId)
 
 		const transaction = await TripsUseCases.detail({
 			id: trip.id,
@@ -139,6 +140,7 @@ export class TripsController {
 					...data.data,
 					type: TransactionType.trip,
 					customerId: trip.customerId,
+					customerName: customer?.bio.name.full ?? trip.customerId,
 					tripId: trip.id,
 					debt: data.amount - data.data.paidAmount,
 				},
