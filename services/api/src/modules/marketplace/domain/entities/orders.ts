@@ -87,7 +87,8 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 		const feePerMeters = 15 / 1000
 		const fee = distance * feePerMeters
 		const total = subTotal + vat + fee
-		const payable = total * (1 - data.discount * 0.01)
+		const discountedOff = data.discount * 10
+		const payable = Math.max(total - discountedOff, 0)
 		return {
 			vatPercentage,
 			vat,

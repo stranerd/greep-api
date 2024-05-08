@@ -34,7 +34,7 @@ export class OrdersController {
 				return [hours >= 0 && hours <= 23, minutes >= 0 && minutes <= 59].every(Boolean)
 			}),
 		}),
-		discount: Schema.number().gte(0).lte(100),
+		discount: Schema.number().gte(0),
 		payment: Schema.in(Object.values(OrderPayment)),
 	})
 
