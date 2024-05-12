@@ -30,9 +30,11 @@ export class OrderEntity extends BaseEntity<OrderEntityProps> {
 		super(data)
 	}
 
-	getVendorId() {
-		if (this.data.type === OrderType.cart) return this.data.vendorId
-		return null
+	getMembers() {
+		const members = [this.userId]
+		if (this.driverId) members.push(this.driverId)
+		if (this.data.type === OrderType.cart) members.push(this.data.vendorId)
+		return members
 	}
 
 	get currentStatus() {

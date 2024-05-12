@@ -1,5 +1,5 @@
 import { TransactionStatus, TransactionType, TransactionsUseCases } from '@modules/payment'
-import { ActivitiesUseCases, ActivityType } from '@modules/users'
+import { ActivitiesUseCases, ActivityType, mergeWithUsers } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { Conditions, DbChangeCallbacks } from 'equipped'
 import { OrdersUseCases, ProductsUseCases } from '../..'
@@ -11,11 +11,11 @@ import { TagMeta, TagsUseCases } from '@modules/interactions'
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
 		await appInstance.listener.created(
-			[after.userId, after.getVendorId(), after.driverId]
-				.filter(Boolean)
+			after
+				.getMembers()
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
 				.flat(),
-			after,
+			(await mergeWithUsers([after], (e) => e.getMembers()))[0],
 		)
 
 		if (after.data.type === OrderType.dispatch)
@@ -38,11 +38,11 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
-			[after.userId, after.getVendorId(), after.driverId]
-				.filter(Boolean)
+			after
+				.getMembers()
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
 				.flat(),
-			after,
+			(await mergeWithUsers([after], (e) => e.getMembers()))[0],
 		)
 
 		const closed = !before.done && after.done
@@ -84,11 +84,11 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(
-			[before.userId, before.getVendorId(), before.driverId]
-				.filter(Boolean)
+			before
+				.getMembers()
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${before.id}/${d}`])
 				.flat(),
-			before,
+			(await mergeWithUsers([before], (e) => e.getMembers()))[0],
 		)
 	},
 }

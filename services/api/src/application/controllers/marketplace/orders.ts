@@ -8,7 +8,7 @@ import {
 	OrdersUseCases,
 } from '@modules/marketplace'
 import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
-import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
+import { ActivityEntity, ActivityType, UsersUseCases, mergeWithUsers } from '@modules/users'
 import { LocationSchema } from '@utils/types'
 import {
 	BadRequestError,
@@ -64,13 +64,15 @@ export class OrdersController {
 					{ field: 'driverId', value: null },
 				],
 			})
-		return await OrdersUseCases.get(query)
+		const result = await OrdersUseCases.get(query)
+		result.results = await mergeWithUsers(result.results, (e) => e.getMembers())
+		return result
 	}
 
 	static async find(req: Request) {
 		const order = await OrdersUseCases.find(req.params.id)
-		if (!order || ![order.userId, order.getVendorId(), order.driverId].includes(req.authUser!.id)) throw new NotFoundError()
-		return order
+		if (!order || !order.getMembers().includes(req.authUser!.id)) throw new NotFoundError()
+		return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
 	}
 
 	static async checkout(req: Request) {
@@ -91,12 +93,13 @@ export class OrdersController {
 		if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
 		if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
 
-		return await OrdersUseCases.checkout({
+		const order = await OrdersUseCases.checkout({
 			...data,
 			from: vendor.vendor.location,
 			userId: user.id,
 			email: user.bio.email,
 		})
+		return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
 	}
 
 	static async checkoutFee(req: Request) {
@@ -146,7 +149,7 @@ export class OrdersController {
 
 		const { user } = await this.verifyUser(req.authUser!.id, data.discount)
 
-		return await OrdersUseCases.create({
+		const order = await OrdersUseCases.create({
 			...data,
 			userId: user.id,
 			email: user.bio.email,
@@ -155,6 +158,7 @@ export class OrdersController {
 				type: OrderType.dispatch,
 			},
 		})
+		return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
 	}
 
 	static async dispatchFee(req: Request) {
@@ -198,7 +202,7 @@ export class OrdersController {
 			userId: req.authUser!.id,
 		})
 
-		if (accepted) return accepted
+		if (accepted) return (await mergeWithUsers([accepted], (e) => e.getMembers()))[0]
 		throw new NotAuthorizedError()
 	}
 
@@ -222,7 +226,7 @@ export class OrdersController {
 			userId: req.authUser!.id,
 			token,
 		})
-		if (updated) return updated
+		if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
 		throw new NotAuthorizedError()
 	}
 
@@ -264,7 +268,7 @@ export class OrdersController {
 			id: req.params.id,
 			driverId: req.authUser!.id,
 		})
-		if (updated) return updated
+		if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
 		throw new NotAuthorizedError()
 	}
 
@@ -273,7 +277,7 @@ export class OrdersController {
 			id: req.params.id,
 			driverId: req.authUser!.id,
 		})
-		if (updated) return updated
+		if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
 		throw new NotAuthorizedError()
 	}
 
@@ -282,7 +286,7 @@ export class OrdersController {
 			id: req.params.id,
 			userId: req.authUser!.id,
 		})
-		if (updated) return updated
+		if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
 		throw new NotAuthorizedError()
 	}
 
@@ -291,7 +295,7 @@ export class OrdersController {
 			id: req.params.id,
 			userId: req.authUser!.id,
 		})
-		if (updated) return updated
+		if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
 		throw new NotAuthorizedError()
 	}
 }

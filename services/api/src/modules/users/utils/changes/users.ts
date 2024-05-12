@@ -20,7 +20,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			['', `/${after.id}`].map((c) => `users/users${c}`),
 			after,
 		)
-		const updatedBioOrRoles = !!changes.bio || !!changes.roles
+		const updatedBioOrRoles = !!changes.bio || !!changes.roles || !!changes.type || !!changes.vendor
 		if (updatedBioOrRoles)
 			await Promise.all(
 				[ProductsUseCases, CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases].map(
