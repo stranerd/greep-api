@@ -1,6 +1,6 @@
 import { OrdersUseCases } from '@modules/marketplace'
 import { ChatMetasUseCases, ChatSupportType, ChatType } from '@modules/messaging'
-import { mergeChatMetasWithUserBios } from '@modules/messaging/utils'
+import { mergeWithUsers } from '@modules/users'
 import { BadRequestError, Conditions, NotAuthorizedError, NotFoundError, QueryParams, Request, Schema, validate } from 'equipped'
 
 export class SupportController {
@@ -27,7 +27,7 @@ export class SupportController {
 			members: [userId],
 			data: { sub: data, type: ChatType.support },
 		})
-		return (await mergeChatMetasWithUserBios([chatMeta]))[0]
+		return (await mergeWithUsers([chatMeta], (e) => e.members))[0]
 	}
 
 	static async get(req: Request) {
@@ -37,19 +37,19 @@ export class SupportController {
 			{ field: 'members.1', condition: Conditions.exists, value: false },
 		]
 		const res = await ChatMetasUseCases.get(query)
-		res.results = await mergeChatMetasWithUserBios(res.results)
+		res.results = await mergeWithUsers(res.results, (e) => e.members)
 		return res
 	}
 
 	static async find(req: Request) {
 		const chatMeta = await ChatMetasUseCases.find(req.params.id)
 		if (!chatMeta || chatMeta.data.type !== ChatType.support || chatMeta.members.length !== 1) throw new NotFoundError()
-		return (await mergeChatMetasWithUserBios([chatMeta]))[0]
+		return (await mergeWithUsers([chatMeta], (e) => e.members))[0]
 	}
 
 	static async assign(req: Request) {
 		const chatMeta = await ChatMetasUseCases.assignSupport({ id: req.params.id, userId: req.authUser!.id })
 		if (!chatMeta) throw new NotAuthorizedError()
-		return (await mergeChatMetasWithUserBios([chatMeta]))[0]
+		return (await mergeWithUsers([chatMeta], (e) => e.members))[0]
 	}
 }

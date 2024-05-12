@@ -26,10 +26,15 @@ export class UserEntity extends BaseEntity<UserConstructorArgs> {
 		return this.type?.type === UserType.customer
 	}
 
+	get publicName() {
+		return this.vendor?.name ?? this.bio.name.full
+	}
+
 	getEmbedded(): EmbeddedUser {
 		return {
 			id: this.id,
 			bio: { username: this.bio.username, name: this.bio.name, photo: this.bio.photo },
+			publicName: this.publicName,
 			roles: this.roles,
 		}
 	}
@@ -63,9 +68,11 @@ export const generateDefaultUser = (user: Partial<EmbeddedUser>): EmbeddedUser =
 	const id = user?.id ?? ''
 	const bio = generateDefaultBio(user?.bio ?? {})
 	const roles = generateDefaultRoles(user?.roles ?? {})
+	const publicName = user.publicName ?? bio.name.full
 	return {
 		id,
 		bio: { name: bio.name, photo: bio.photo, username: bio.username },
 		roles,
+		publicName,
 	}
 }

@@ -1,8 +1,8 @@
+import { mergeWithUsers } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
 import { ChatMetaFromModel } from '../../data/models/chatMeta'
 import { ChatMetaEntity } from '../../domain/entities/chatMeta'
-import { mergeChatMetasWithUserBios } from '..'
 
 export const ChatMetaDbChangeCallbacks: DbChangeCallbacks<ChatMetaFromModel, ChatMetaEntity> = {
 	created: async ({ after }) => {
@@ -10,7 +10,7 @@ export const ChatMetaDbChangeCallbacks: DbChangeCallbacks<ChatMetaFromModel, Cha
 			after.members.map(async (userId) => {
 				await appInstance.listener.created(
 					[`messaging/chatMetas/${userId}`, `messaging/chatMetas/${after.id}/${userId}`],
-					(await mergeChatMetasWithUserBios([after]))[0],
+					(await mergeWithUsers([after], (e) => e.members))[0],
 				)
 			}),
 		)
@@ -20,7 +20,7 @@ export const ChatMetaDbChangeCallbacks: DbChangeCallbacks<ChatMetaFromModel, Cha
 			after.members.map(async (userId) => {
 				await appInstance.listener.updated(
 					[`messaging/chatMetas/${userId}`, `messaging/chatMetas/${after.id}/${userId}`],
-					(await mergeChatMetasWithUserBios([after]))[0],
+					(await mergeWithUsers([after], (e) => e.members))[0],
 				)
 			}),
 		)
@@ -30,7 +30,7 @@ export const ChatMetaDbChangeCallbacks: DbChangeCallbacks<ChatMetaFromModel, Cha
 			before.members.map(async (userId) => {
 				await appInstance.listener.deleted(
 					[`messaging/chatMetas/${userId}`, `messaging/chatMetas/${before.id}/${userId}`],
-					(await mergeChatMetasWithUserBios([before]))[0],
+					(await mergeWithUsers([before], (e) => e.members))[0],
 				)
 			}),
 		)

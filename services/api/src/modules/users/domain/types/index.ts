@@ -33,6 +33,7 @@ export type EmbeddedUser = {
 	id: string
 	bio: Omit<UserBio, 'email' | 'phone'>
 	roles: UserRoles
+	publicName: string
 }
 
 export type UserAccount = {

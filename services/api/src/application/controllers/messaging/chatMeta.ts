@@ -1,5 +1,5 @@
 import { ChatMetasUseCases } from '@modules/messaging'
-import { mergeChatMetasWithUserBios } from '@modules/messaging/utils'
+import { mergeWithUsers } from '@modules/users'
 import { NotAuthorizedError, NotFoundError, QueryParams, Request } from 'equipped'
 
 export class ChatMetaController {
@@ -7,14 +7,14 @@ export class ChatMetaController {
 		const query = req.query as QueryParams
 		query.auth = [{ field: 'members', value: req.authUser!.id }]
 		const res = await ChatMetasUseCases.get(query)
-		res.results = await mergeChatMetasWithUserBios(res.results)
+		res.results = await mergeWithUsers(res.results, (e) => e.members)
 		return res
 	}
 
 	static async find(req: Request) {
 		const chatMeta = await ChatMetasUseCases.find(req.params.id)
 		if (!chatMeta || !chatMeta.members.includes(req.authUser!.id)) throw new NotFoundError()
-		return (await mergeChatMetasWithUserBios([chatMeta]))[0]
+		return (await mergeWithUsers([chatMeta], (e) => e.members))[0]
 	}
 
 	static async delete(req: Request) {
