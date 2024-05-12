@@ -51,6 +51,8 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 				await publishers.DELETEFILE.publish(before.type.passport)
 			if ('studentId' in changes.type && 'studentId' in before.type && before.type.studentId)
 				await publishers.DELETEFILE.publish(before.type.studentId)
+			if ('residentPermit' in changes.type && 'residentPermit' in before.type && before.type.residentPermit)
+				await publishers.DELETEFILE.publish(before.type.residentPermit)
 		}
 	},
 	deleted: async ({ before }) => {
@@ -62,5 +64,6 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 		if ('license' in before.type) await publishers.DELETEFILE.publish(before.type.license)
 		if ('passport' in before.type && before.type.passport) await publishers.DELETEFILE.publish(before.type.passport)
 		if ('studentId' in before.type && before.type.studentId) await publishers.DELETEFILE.publish(before.type.studentId)
+		if ('residentPermit' in before.type && before.type.residentPermit) await publishers.DELETEFILE.publish(before.type.residentPermit)
 	},
 }

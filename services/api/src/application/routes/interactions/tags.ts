@@ -21,7 +21,7 @@ export const tagsRoutes = groupRoutes('/tags', [
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAdmin, makeController(async (req) => TagController.create(req))],
+		controllers: [makeController(async (req) => TagController.create(req))],
 	},
 	{
 		path: '/:id',

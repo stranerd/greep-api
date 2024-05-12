@@ -1,5 +1,5 @@
 import { BaseEntity, Validation } from 'equipped'
-import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData } from '../types'
+import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData, UserVendorData } from '../types'
 
 export class UserEntity extends BaseEntity<UserConstructorArgs> {
 	ignoreInJSON = ['bio.email', 'bio.phone']
@@ -43,6 +43,7 @@ type UserConstructorArgs = {
 	status: UserStatus
 	account: UserAccount
 	type: UserTypeData
+	vendor: UserVendorData | null
 }
 
 const generateDefaultBio = (bio: Partial<UserBio>): UserBio => {

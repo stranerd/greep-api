@@ -1,7 +1,6 @@
 import { appInstance } from '@utils/environment'
-import { Location } from '@utils/types'
 import { IUserRepository } from '../../domain/i-repositories/users'
-import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
+import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData, UserVendorData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
 
@@ -150,8 +149,8 @@ export class UserRepository implements IUserRepository {
 		return !!user
 	}
 
-	async updateVendorLocation({ userId, location }: { userId: string; location: Location }) {
-		const user = await User.findByIdAndUpdate(userId, { $set: { ['account.vendorLocation']: location } }, { new: true })
+	async updateVendor({ userId, data }: { userId: string; data: UserVendorData }) {
+		const user = await User.findByIdAndUpdate(userId, { $set: { vendor: data } }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
 

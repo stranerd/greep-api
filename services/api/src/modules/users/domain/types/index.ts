@@ -51,7 +51,6 @@ export type UserAccount = {
 	>
 	location: [number, number] | null
 	savedLocations: Location[]
-	vendorLocation: Location | null
 	settings: {
 		notifications: boolean
 		driverAvailable: boolean
@@ -79,4 +78,12 @@ export type UserTypeData =
 			type: UserType.customer
 			passport: MediaOutput | null
 			studentId: MediaOutput | null
+			residentPermit: MediaOutput | null
 	  }
+
+export type UserVendorData = {
+	name: string
+	email: string | null
+	website: string | null
+	location: Location
+}

@@ -1,7 +1,6 @@
-import { Location } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
-import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
+import { UserAccount, UserBio, UserRoles, UserTypeData, UserVendorData } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -79,8 +78,8 @@ export class UsersUseCase {
 		return await this.repository.updateLocation(data)
 	}
 
-	async updateVendorLocation(data: { userId: string; location: Location }) {
-		return await this.repository.updateVendorLocation(data)
+	async updateVendor(data: { userId: string; data: UserVendorData }) {
+		return await this.repository.updateVendor(data)
 	}
 
 	async updateSettings(params: { userId: string; settings: Partial<UserAccount['settings']> }) {

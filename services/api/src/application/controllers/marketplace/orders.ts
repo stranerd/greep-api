@@ -89,11 +89,11 @@ export class OrdersController {
 
 		const vendor = await UsersUseCases.find(cart.vendorId)
 		if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
-		if (!vendor.account.vendorLocation) throw new BadRequestError('vendor failed to set their location')
+		if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
 
 		return await OrdersUseCases.checkout({
 			...data,
-			from: vendor.account.vendorLocation,
+			from: vendor.vendor.location,
 			userId: user.id,
 			email: user.bio.email,
 		})
@@ -113,11 +113,11 @@ export class OrdersController {
 
 		const vendor = await UsersUseCases.find(cart.vendorId)
 		if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
-		if (!vendor.account.vendorLocation) throw new BadRequestError('vendor failed to set their location')
+		if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
 
 		return await OrderEntity.calculateFees({
 			...data,
-			from: vendor.account.vendorLocation,
+			from: vendor.vendor.location,
 			userId: cart.userId,
 			data: {
 				type: OrderType.cart,

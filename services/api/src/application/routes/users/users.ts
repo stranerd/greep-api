@@ -44,9 +44,9 @@ export const usersRoutes = groupRoutes('/users', [
 		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateDriverAvailability(req))],
 	},
 	{
-		path: '/vendorLocation',
+		path: '/vendor',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateVendorLocation(req))],
+		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateVendor(req))],
 	},
 	{
 		path: '/savedLocations',

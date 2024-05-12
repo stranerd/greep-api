@@ -1,7 +1,6 @@
-import { Location } from '@utils/types'
 import { QueryParams, QueryResults } from 'equipped'
 import { UserEntity } from '../entities/users'
-import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
+import { UserAccount, UserBio, UserRoles, UserTypeData, UserVendorData } from '../types'
 
 export interface IUserRepository {
 	get(query: QueryParams): Promise<QueryResults<UserEntity>>
@@ -36,7 +35,7 @@ export interface IUserRepository {
 
 	updateLocation(data: { userId: string; location: [number, number] }): Promise<boolean>
 
-	updateVendorLocation(data: { userId: string; location: Location }): Promise<UserEntity | null>
+	updateVendor(data: { userId: string; data: UserVendorData }): Promise<UserEntity | null>
 
 	updateSettings(userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
 

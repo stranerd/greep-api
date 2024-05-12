@@ -31,6 +31,7 @@ export class UsersController {
 		const license = req.files.license?.at(0)
 		const passport = req.files.passport?.at(0)
 		const studentId = req.files.studentId?.at(0)
+		const residentPermit = req.files.studentId?.at(0)
 
 		const { data } = validate(
 			{
@@ -43,10 +44,13 @@ export class UsersController {
 						type: Schema.is(UserType.customer as const),
 						passport: Schema.file()
 							.image()
-							.requiredIf(() => !studentId),
+							.requiredIf(() => !studentId && !residentPermit),
 						studentId: Schema.file()
 							.image()
-							.requiredIf(() => !passport),
+							.requiredIf(() => !passport && !residentPermit),
+						residentPermit: Schema.file()
+							.image()
+							.requiredIf(() => !passport && !studentId),
 					}),
 				}),
 			},
@@ -56,6 +60,7 @@ export class UsersController {
 					license,
 					passport,
 					studentId,
+					residentPermit,
 				},
 			},
 		)
@@ -67,7 +72,13 @@ export class UsersController {
 		} else if (data.type === UserType.customer) {
 			const passport = data.passport ? await StorageUseCases.upload('users/customers/passport', data.passport) : null
 			const studentId = data.studentId ? await StorageUseCases.upload('users/customers/studentId', data.studentId) : null
-			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, passport, studentId } })
+			const residentPermit = data.residentPermit
+				? await StorageUseCases.upload('users/customers/residentPermit', data.residentPermit)
+				: null
+			const updated = await UsersUseCases.updateType({
+				userId: req.authUser!.id,
+				data: { ...data, passport, studentId, residentPermit },
+			})
 			if (updated) return updated
 		}
 
@@ -108,12 +119,20 @@ export class UsersController {
 		return !!user
 	}
 
-	static async updateVendorLocation(req: Request) {
-		const { location } = validate({ location: LocationSchema() }, req.body)
+	static async updateVendor(req: Request) {
+		const data = validate(
+			{
+				name: Schema.string().min(1),
+				email: Schema.string().email().nullable(),
+				website: Schema.string().url().nullable(),
+				location: LocationSchema(),
+			},
+			req.body,
+		)
 
-		const user = await UsersUseCases.updateVendorLocation({ userId: req.authUser!.id, location })
+		const user = await UsersUseCases.updateVendor({ userId: req.authUser!.id, data })
 		if (user) return user
-		throw new NotAuthorizedError('cannot update user vendor location')
+		throw new NotAuthorizedError('cannot update user vendor details')
 	}
 
 	static async updateSavedLocations(req: Request) {
