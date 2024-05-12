@@ -9,4 +9,5 @@ export interface IChatMetaRepository {
 	get: (query: QueryParams) => Promise<QueryResults<ChatMetaEntity>>
 	updateLastChat: (chat: ChatFromModel) => Promise<void>
 	delete: (id: string, userId: string) => Promise<boolean>
+	assignSupport: (id: string, userId: string) => Promise<ChatMetaEntity | null>
 }

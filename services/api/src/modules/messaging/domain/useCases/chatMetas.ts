@@ -10,7 +10,7 @@ export class ChatMetasUseCase {
 		this.repository = repository
 	}
 
-	async create (data: ChatMetaToModel) {
+	async create(data: ChatMetaToModel) {
 		return await this.repository.create(data)
 	}
 
@@ -28,5 +28,9 @@ export class ChatMetasUseCase {
 
 	async delete(data: { id: string; userId: string }) {
 		return await this.repository.delete(data.id, data.userId)
+	}
+
+	async assignSupport(data: { id: string; userId: string }) {
+		return await this.repository.assignSupport(data.id, data.userId)
 	}
 }

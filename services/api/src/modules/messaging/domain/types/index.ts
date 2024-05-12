@@ -7,21 +7,25 @@ export enum ChatType {
 	support = 'support',
 }
 
-export type ChatData = {
-	type: ChatType.personal
-	members: string[]
-} | {
-	type: ChatType.support
-	members: string[]
-}
+export type ChatData =
+	| {
+			type: ChatType.personal
+			members: string[]
+	  }
+	| {
+			type: ChatType.support
+			members: string[]
+	  }
 
 export enum ChatSupportType {
 	orders = 'orders',
 }
 
-export type ChatMetaData = {
-	type: ChatType.personal
-} | {
-	type: ChatType.support
-	sub: { type: ChatSupportType.orders, orderId: string }
-}
+export type ChatMetaData =
+	| {
+			type: ChatType.personal
+	  }
+	| {
+			type: ChatType.support
+			sub: { type: ChatSupportType.orders; orderId: string }
+	  }

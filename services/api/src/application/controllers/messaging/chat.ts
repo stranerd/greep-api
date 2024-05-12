@@ -39,22 +39,28 @@ export class ChatController {
 
 		const media = mediaFile ? await StorageUseCases.upload('messaging/chats', mediaFile) : null
 		const from = req.authUser!.id
+		let members: string[] = []
 
 		if (type === ChatType.personal) {
 			const user = await UsersUseCases.find(to)
 			if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+			members = [from, to]
 		}
 
 		if (type === ChatType.support) {
 			const chatMeta = await ChatMetasUseCases.find(to)
 			if (!chatMeta || chatMeta.data.type !== ChatType.support || !chatMeta.members.includes(from))
 				throw new BadRequestError('support chat not found')
+			members = chatMeta.members
 		}
 
 		return await ChatsUseCases.add({
-			body, media, from, to,
+			body,
+			media,
+			from,
+			to,
 			links: Validation.extractUrls(body),
-			data: type === ChatType.personal ? { type, members: [from, to] } : { type, members: [from] },
+			data: { type, members },
 		})
 	}
 

@@ -11,8 +11,8 @@ const getChatMetaCondition = (from: string, to: string) => ({
 	members: from,
 	$or: [
 		{ 'data.type': ChatType.personal, members: to },
-		{ 'data.type': ChatType.support, '_id': to }
-	]
+		{ 'data.type': ChatType.support, _id: to },
+	],
 })
 
 export class ChatRepository implements IChatRepository {
