@@ -1,5 +1,6 @@
 import { EmbeddedUser } from '@modules/users'
 import { BaseEntity } from 'equipped'
+import { ChatMetaData } from '../types'
 import { ChatEntity } from './chat'
 
 export class ChatMetaEntity extends BaseEntity<ChatMetaConstructorArgs> {
@@ -18,6 +19,7 @@ export class ChatMetaEntity extends BaseEntity<ChatMetaConstructorArgs> {
 type ChatMetaConstructorArgs = {
 	id: string
 	members: string[]
+	data: ChatMetaData
 	last: ChatEntity | null
 	createdAt: number
 	updatedAt: number

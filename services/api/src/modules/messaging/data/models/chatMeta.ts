@@ -1,3 +1,4 @@
+import { ChatMetaData } from '../../domain/types'
 import { ChatFromModel } from './chat'
 
 export interface ChatMetaFromModel extends ChatMetaToModel {
@@ -10,4 +11,5 @@ export interface ChatMetaFromModel extends ChatMetaToModel {
 
 export interface ChatMetaToModel {
 	members: string[]
+	data: ChatMetaData
 }

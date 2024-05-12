@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/environment'
+import { ChatType } from '../../domain/types'
 import { ChatMetaDbChangeCallbacks } from '../../utils/changes/chatMetas'
 import { ChatMetaMapper } from '../mappers/chatMeta'
 import { ChatMetaFromModel } from '../models/chatMeta'
@@ -13,6 +14,11 @@ const Schema = new appInstance.dbs.mongo.Schema<ChatMetaFromModel>(
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as ChatMetaFromModel['readAt'],
 			required: false,
 			default: {},
+		},
+		data: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
+			default: () => ({ type: ChatType.personal }),
 		},
 		last: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as ChatMetaFromModel['last'],

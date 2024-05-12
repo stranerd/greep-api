@@ -6,11 +6,12 @@ import { ChatMapper } from './chat'
 export class ChatMetaMapper extends BaseMapper<ChatMetaFromModel, ChatMetaToModel, ChatMetaEntity> {
 	mapFrom(model: ChatMetaFromModel | null) {
 		if (!model) return null
-		const { _id, last, members, createdAt, updatedAt, readAt } = model
+		const { _id, data, last, members, createdAt, updatedAt, readAt } = model
 		const lastData = new ChatMapper().mapFrom(last)
 		return new ChatMetaEntity({
 			id: _id.toString(),
 			last: lastData!,
+			data,
 			members,
 			createdAt,
 			updatedAt,
@@ -21,6 +22,7 @@ export class ChatMetaMapper extends BaseMapper<ChatMetaFromModel, ChatMetaToMode
 	mapTo(entity: ChatMetaEntity) {
 		return {
 			members: entity.members,
+			data: entity.data,
 		}
 	}
 }

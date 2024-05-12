@@ -3,6 +3,7 @@ import { QueryParams } from 'equipped'
 import { IChatMetaRepository } from '../../domain/irepositories/chatMeta'
 import { ChatMetaMapper } from '../mappers/chatMeta'
 import { ChatFromModel } from '../models/chat'
+import { ChatMetaToModel } from '../models/chatMeta'
 import { ChatMeta } from '../mongooseModels/chatMeta'
 
 export class ChatMetaRepository implements IChatMetaRepository {
@@ -16,6 +17,15 @@ export class ChatMetaRepository implements IChatMetaRepository {
 	static getInstance() {
 		if (!ChatMetaRepository.instance) ChatMetaRepository.instance = new ChatMetaRepository()
 		return ChatMetaRepository.instance
+	}
+
+	async create (data: ChatMetaToModel) {
+		const { data: dataType, members, ...rest } = data
+		const chat = await ChatMeta.findOneAndUpdate({
+			data: dataType,
+			members: { $all: members.map((val) => ({ $elemMatch: { $eq: val } })) },
+		}, { $setOnInsert: data, $set: rest }, { upsert: true, new: true })
+		return this.mapper.mapFrom(chat)!
 	}
 
 	async find(id: string) {

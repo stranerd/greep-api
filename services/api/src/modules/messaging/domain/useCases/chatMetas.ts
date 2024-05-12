@@ -1,5 +1,6 @@
 import { QueryParams } from 'equipped'
 import { ChatFromModel } from '../../data/models/chat'
+import { ChatMetaToModel } from '../../data/models/chatMeta'
 import { IChatMetaRepository } from '../irepositories/chatMeta'
 
 export class ChatMetasUseCase {
@@ -7,6 +8,10 @@ export class ChatMetasUseCase {
 
 	constructor(repository: IChatMetaRepository) {
 		this.repository = repository
+	}
+
+	async create (data: ChatMetaToModel) {
+		return await this.repository.create(data)
 	}
 
 	async find(id: string) {

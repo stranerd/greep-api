@@ -8,3 +8,5 @@ const chatMetaRepository = ChatMetaRepository.getInstance()
 
 export const ChatsUseCases = new ChatsUseCase(chatRepository)
 export const ChatMetasUseCases = new ChatMetasUseCase(chatMetaRepository)
+
+export { ChatSupportType, ChatType } from './domain/types'

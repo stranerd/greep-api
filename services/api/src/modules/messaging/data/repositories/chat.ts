@@ -1,14 +1,18 @@
-import { ChatType } from '@modules/messaging/domain/types'
 import { appInstance } from '@utils/environment'
 import { QueryParams } from 'equipped'
 import { IChatRepository } from '../../domain/irepositories/chat'
+import { ChatType } from '../../domain/types'
 import { ChatMapper } from '../mappers/chat'
 import { ChatFromModel, ChatToModel } from '../models/chat'
 import { Chat } from '../mongooseModels/chat'
 import { ChatMeta } from '../mongooseModels/chatMeta'
 
 const getChatMetaCondition = (from: string, to: string) => ({
-	members: { $all: [from, to].map((val) => ({ $elemMatch: { $eq: val } })) },
+	members: from,
+	$or: [
+		{ 'data.type': ChatType.personal, members: to },
+		{ 'data.type': ChatType.support, '_id': to }
+	]
 })
 
 export class ChatRepository implements IChatRepository {
@@ -32,7 +36,6 @@ export class ChatRepository implements IChatRepository {
 				...data,
 				createdAt,
 				updatedAt: createdAt,
-				data: { type: ChatType.personal, members: [data.from, data.to] },
 				readAt: { [data.from]: createdAt },
 			}).save({ session })
 			await ChatMeta.findOneAndUpdate(
@@ -40,7 +43,7 @@ export class ChatRepository implements IChatRepository {
 				{
 					$set: { last: chat },
 					$max: { [`readAt.${data.from}`]: createdAt },
-					$setOnInsert: { members: [data.from, data.to] },
+					$setOnInsert: { 'data.type': data.data.type, members: data.data.members },
 				},
 				{ session, upsert: true },
 			)
