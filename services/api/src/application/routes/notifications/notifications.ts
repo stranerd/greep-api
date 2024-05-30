@@ -1,26 +1,26 @@
 import { NotificationsController } from '@application/controllers/notifications/notifications'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const notificationsRoutes = groupRoutes('/notifications', [
+export const notificationsRoutes = groupRoutes({ path: '/notifications', tags: ['Notifications'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => NotificationsController.get(req))],
+		handler: NotificationsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => NotificationsController.find(req))],
+		handler: NotificationsController.find,
 	},
 	{
 		path: '/seen',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => NotificationsController.markAllSeen(req))],
+		handler: NotificationsController.markAllSeen,
 	},
 	{
 		path: '/:id/seen',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => NotificationsController.markSeen(req))],
+		handler: NotificationsController.markSeen,
 	},
 ])

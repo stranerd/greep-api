@@ -1,56 +1,64 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { UsersController } from '../../controllers/users/users'
 
-export const usersRoutes = groupRoutes('/users', [
+export const usersRoutes = groupRoutes({ path: '/users', tags: ['Users'] }, [
 	{
 		path: '/type',
 		method: 'post',
-		controllers: [isAuthenticatedButIgnoreVerified, makeController(async (req) => UsersController.updateType(req))],
+		handler: UsersController.updateType,
+		middlewares: [isAuthenticatedButIgnoreVerified],
 	},
 	{
 		path: '/application',
 		method: 'post',
-		controllers: [isAdmin, makeController(async (req) => UsersController.updateApplication(req))],
+		handler: UsersController.updateApplication,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/location',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateLocation(req))],
+		handler: UsersController.updateLocation,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/admin',
 		method: 'get',
-		controllers: [isAdmin, makeController(async (req) => UsersController.getUsersAdmin(req))],
+		handler: UsersController.getUsersAdmin,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/admin/:id',
 		method: 'get',
-		controllers: [isAdmin, makeController(async (req) => UsersController.findUserAdmin(req))],
+		handler: UsersController.findUserAdmin,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => UsersController.getUsers(req))],
+		handler: UsersController.getUsers,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => UsersController.findUser(req))],
+		handler: UsersController.findUser,
 	},
 	{
 		path: '/driverAvailability',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateDriverAvailability(req))],
+		handler: UsersController.updateDriverAvailability,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/vendor',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateVendor(req))],
+		handler: UsersController.updateVendor,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/savedLocations',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => UsersController.updateSavedLocations(req))],
+		handler: UsersController.updateSavedLocations,
+		middlewares: [isAuthenticated],
 	},
 ])

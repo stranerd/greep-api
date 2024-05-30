@@ -1,21 +1,22 @@
 import { ReviewsController } from '@application/controllers/interactions/reviews'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const reviewsRoutes = groupRoutes('/reviews', [
+export const reviewsRoutes = groupRoutes({ path: '/reviews', tags: ['Reviews'] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => ReviewsController.get(req))],
+		handler: ReviewsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => ReviewsController.find(req))],
+		handler: ReviewsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => ReviewsController.add(req))],
+		handler: ReviewsController.add,
+		middlewares: [isAuthenticated],
 	},
 ])

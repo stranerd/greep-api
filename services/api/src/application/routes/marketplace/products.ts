@@ -1,41 +1,44 @@
 import { ProductsController } from '@application/controllers/marketplace/products'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const productsRoutes = groupRoutes('/products', [
+export const productsRoutes = groupRoutes({ path: '/products', tags: ['Products'] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => ProductsController.get(req))],
+		handler: ProductsController.get,
 	},
 	{
 		path: '/recommendation/products',
 		method: 'get',
-		controllers: [makeController(async (req) => ProductsController.recommendProducts(req))],
+		handler: ProductsController.recommendProducts,
 	},
 	{
 		path: '/recommendation/tags',
 		method: 'get',
-		controllers: [makeController(async (req) => ProductsController.recommendTags(req))],
+		handler: ProductsController.recommendTags,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => ProductsController.create(req))],
+		handler: ProductsController.create,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => ProductsController.find(req))],
+		handler: ProductsController.find,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => ProductsController.update(req))],
+		handler: ProductsController.update,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => ProductsController.delete(req))],
+		handler: ProductsController.delete,
+		middlewares: [isAuthenticated],
 	},
 ])

@@ -3,4 +3,8 @@ import { cartsRoutes } from './carts'
 import { ordersRoutes } from './orders'
 import { productsRoutes } from './products'
 
-export const marketplaceRoutes = groupRoutes('/marketplace', [...cartsRoutes, ...ordersRoutes, ...productsRoutes])
+export const marketplaceRoutes = groupRoutes({ path: '/marketplace', tags: ['Marketplace'] }, [
+	...cartsRoutes,
+	...ordersRoutes,
+	...productsRoutes,
+])

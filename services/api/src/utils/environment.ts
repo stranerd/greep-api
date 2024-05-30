@@ -39,5 +39,6 @@ Instance.initialize({
 	kafkaURIs: getEnvOrFail('KAFKA_URIS').split(','),
 	debeziumUrl: getEnvOrFail('DEBEZIUM_URL'),
 	eventColumnName: 'Greep',
+	server: 'fastify',
 })
 export const appInstance = Instance.get()

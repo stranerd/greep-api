@@ -63,7 +63,7 @@ const start = async () => {
 	}
 
 	const app = appInstance.server
-	app.routes = routes
+	app.addRoutes(routes)
 	await app.start(port)
 	await startJobs()
 }

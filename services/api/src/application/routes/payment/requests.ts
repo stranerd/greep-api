@@ -1,36 +1,36 @@
 import { RequestsController } from '@application/controllers/payment/requests'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const requestsRoutes = groupRoutes('/requests', [
+export const requestsRoutes = groupRoutes({ path: '/requests', tags: ['Requests'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => RequestsController.get(req))],
+		handler: RequestsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => RequestsController.find(req))],
+		handler: RequestsController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => RequestsController.create(req))],
+		handler: RequestsController.create,
 	},
 	{
 		path: '/:id/reject',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => RequestsController.reject(req))],
+		handler: RequestsController.reject,
 	},
 	{
 		path: '/:id/accept',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => RequestsController.accept(req))],
+		handler: RequestsController.accept,
 	},
 	{
 		path: '/:id/acknowledge',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => RequestsController.acknowledge(req))],
+		handler: RequestsController.acknowledge,
 	},
 ])

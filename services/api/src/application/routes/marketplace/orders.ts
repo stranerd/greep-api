@@ -1,76 +1,80 @@
 import { OrdersController } from '@application/controllers/marketplace/orders'
 import { isAdmin, isAuthenticated, isDriver } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const ordersRoutes = groupRoutes('/orders', [
+export const ordersRoutes = groupRoutes({ path: '/orders', tags: ['Orders'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.get(req))],
+		handler: OrdersController.get,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.find(req))],
+		handler: OrdersController.find,
 	},
 	{
 		path: '/checkout',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.checkout(req))],
+		handler: OrdersController.checkout,
 	},
 	{
 		path: '/checkout/fee',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.checkoutFee(req))],
+		handler: OrdersController.checkout,
 	},
 	{
 		path: '/dispatch',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.dispatch(req))],
+		handler: OrdersController.dispatch,
 	},
 	{
 		path: '/dispatch/fee',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.dispatchFee(req))],
+		handler: OrdersController.dispatchFee,
 	},
 	{
 		path: '/:id/pay',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.pay(req))],
+		handler: OrdersController.pay,
 	},
 	{
 		path: '/:id/accept',
 		method: 'post',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => OrdersController.accept(req))],
+		handler: OrdersController.accept,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/:id/token',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.generateToken(req))],
+		handler: OrdersController.generateToken,
 	},
 	{
 		path: '/:id/complete',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.complete(req))],
+		handler: OrdersController.complete,
 	},
 	{
 		path: '/:id/assignDriver',
 		method: 'post',
-		controllers: [isAuthenticated, isDriver, makeController(async (req) => OrdersController.assignDriver(req))],
+		handler: OrdersController.assignDriver,
+		middlewares: [isDriver],
 	},
 	{
 		path: '/:id/markPaid',
 		method: 'post',
-		controllers: [isAuthenticated, isDriver, makeController(async (req) => OrdersController.markPaid(req))],
+		handler: OrdersController.markPaid,
+		middlewares: [isDriver],
 	},
 	{
 		path: '/:id/markShipped',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.markShipped(req))],
+		handler: OrdersController.markShipped,
 	},
 	{
 		path: '/:id/cancel',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => OrdersController.cancel(req))],
+		handler: OrdersController.cancel,
 	},
 ])

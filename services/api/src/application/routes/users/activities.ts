@@ -1,16 +1,16 @@
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { ActivitiesController } from '../../controllers/users/activities'
 
-export const activitiesRoutes = groupRoutes('/activities', [
+export const activitiesRoutes = groupRoutes({ path: '/activities', tags: ['Activities'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ActivitiesController.get(req))],
+		handler: ActivitiesController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ActivitiesController.find(req))],
+		handler: ActivitiesController.find,
 	},
 ])

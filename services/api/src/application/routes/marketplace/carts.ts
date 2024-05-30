@@ -1,26 +1,30 @@
 import { CartsController } from '@application/controllers/marketplace/carts'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const cartsRoutes = groupRoutes('/carts', [
+export const cartsRoutes = groupRoutes({ path: '/carts', tags: ['Carts'] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => CartsController.get(req))],
+		handler: CartsController.get,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => CartsController.find(req))],
+		handler: CartsController.find,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CartsController.add(req))],
+		handler: CartsController.add,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/clear',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CartsController.clear(req))],
+		handler: CartsController.clear,
+		middlewares: [isAuthenticated],
 	},
 ])

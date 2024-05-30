@@ -1,42 +1,40 @@
-import { makeController, Route } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { UserController } from '../../controllers/auth/user'
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '../../middlewares'
 
-const getUserDetails: Route = {
-	path: '/auth/user',
-	method: 'get',
-	controllers: [isAuthenticatedButIgnoreVerified, makeController(async (req) => UserController.findUser(req))],
-}
-
-const updateUser: Route = {
-	path: '/auth/user',
-	method: 'put',
-	controllers: [isAuthenticated, makeController(async (req) => UserController.updateUser(req))],
-}
-
-const updateUserRole: Route = {
-	path: '/auth/user/roles',
-	method: 'post',
-	controllers: [isAuthenticated, isAdmin, makeController(async (req) => UserController.updateUserRole(req))],
-}
-
-const signout: Route = {
-	path: '/auth/user/signout',
-	method: 'post',
-	controllers: [makeController(async (req) => UserController.signout(req))],
-}
-
-const superAdmin: Route = {
-	path: '/auth/user/superAdmin',
-	method: 'get',
-	controllers: [makeController(async (req) => UserController.superAdmin(req))],
-}
-
-const deleteAccount: Route = {
-	path: '/auth/user',
-	method: 'delete',
-	controllers: [isAuthenticated, makeController(async (req) => UserController.delete(req))],
-}
-
-const routes: Route[] = [getUserDetails, updateUserRole, updateUser, signout, superAdmin, deleteAccount]
-export default routes
+export default groupRoutes({ path: '/user', tags: ['User'] }, [
+	{
+		path: '/',
+		method: 'get',
+		handler: UserController.findUser,
+		middlewares: [isAuthenticatedButIgnoreVerified],
+	},
+	{
+		path: '/roles',
+		method: 'post',
+		handler: UserController.updateUserRole,
+		middlewares: [isAuthenticated, isAdmin],
+	},
+	{
+		path: '/auth/user',
+		method: 'put',
+		handler: UserController.updateUser,
+		middlewares: [isAuthenticated],
+	},
+	{
+		path: '/signout',
+		method: 'post',
+		handler: UserController.signout,
+	},
+	{
+		path: '/superAdmin',
+		method: 'get',
+		handler: UserController.superAdmin,
+	},
+	{
+		path: '/',
+		method: 'delete',
+		handler: UserController.delete,
+		middlewares: [isAuthenticated],
+	},
+])

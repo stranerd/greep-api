@@ -1,16 +1,16 @@
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { MyController } from '../../controllers/users/my'
 
-export const myRoutes = groupRoutes('/my', [
+export const myRoutes = groupRoutes({ path: '/my', tags: ['My'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/quickSend',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyController.quickSend(req))],
+		handler: MyController.quickSend,
 	},
 	{
 		path: '/drivers',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => MyController.drivers(req))],
+		handler: MyController.drivers,
 	},
 ])

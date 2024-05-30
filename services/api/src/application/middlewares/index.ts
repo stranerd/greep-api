@@ -1,16 +1,16 @@
 import { AuthRole, makeMiddleware, NotAuthenticatedError, NotAuthorizedError, requireAuthUser, requireRefreshUser } from 'equipped'
 
 export const isAuthenticatedButIgnoreVerified = makeMiddleware(async (request) => {
-	await requireAuthUser(request)
+	await requireAuthUser.cb(request)
 })
 
 export const isAuthenticated = makeMiddleware(async (request) => {
-	await requireAuthUser(request)
+	await requireAuthUser.cb(request)
 	if (!request.authUser?.isVerified) throw new NotAuthenticatedError('verify your account to proceed')
 })
 
 export const hasRefreshToken = makeMiddleware(async (request) => {
-	await requireRefreshUser(request)
+	await requireRefreshUser.cb(request)
 })
 
 export const isAdmin = makeMiddleware(async (request) => {

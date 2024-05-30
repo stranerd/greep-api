@@ -1,26 +1,27 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { SupportController } from '../../controllers/messaging/support'
 
-export const supportRoutes = groupRoutes('/support', [
+export const supportRoutes = groupRoutes({ path: '/support', tags: ['Support'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => SupportController.get(req))],
+		handler: SupportController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => SupportController.find(req))],
+		handler: SupportController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => SupportController.create(req))],
+		handler: SupportController.create,
 	},
 	{
 		path: '/:id/assign',
 		method: 'post',
-		controllers: [isAuthenticated, isAdmin, makeController(async (req) => SupportController.assign(req))],
+		handler: SupportController.assign,
+		middlewares: [isAdmin],
 	},
 ])

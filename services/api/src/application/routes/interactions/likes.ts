@@ -1,21 +1,22 @@
 import { LikesController } from '@application/controllers/interactions/likes'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const likesRoutes = groupRoutes('/likes', [
+export const likesRoutes = groupRoutes({ path: '/likes', tags: ['Likes'] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => LikesController.get(req))],
+		handler: LikesController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => LikesController.find(req))],
+		handler: LikesController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => LikesController.create(req))],
+		handler: LikesController.create,
+		middlewares: [isAuthenticated],
 	},
 ])

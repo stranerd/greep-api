@@ -1,36 +1,40 @@
 import { MediasController as MediaController } from '@application/controllers/interactions/media'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const mediaRoutes = groupRoutes('/media', [
+export const mediaRoutes = groupRoutes({ path: '/media', tags: ['Media'] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => MediaController.get(req))],
+		handler: MediaController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => MediaController.find(req))],
+		handler: MediaController.find,
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => MediaController.create(req))],
+		handler: MediaController.create,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => MediaController.update(req))],
+		handler: MediaController.update,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => MediaController.delete(req))],
+		handler: MediaController.delete,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/reorder',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => MediaController.reorder(req))],
+		handler: MediaController.reorder,
+		middlewares: [isAuthenticated],
 	},
 ])

@@ -1,41 +1,41 @@
 import { WalletsController } from '@application/controllers/payment/wallets'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const walletsRoutes = groupRoutes('/wallets', [
+export const walletsRoutes = groupRoutes({ path: '/wallets', tags: ['Wallets'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.get(req))],
+		handler: WalletsController.get,
 	},
 	{
 		path: '/transfer',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.transfer(req))],
+		handler: WalletsController.transfer,
 	},
 	{
 		path: '/withdraw',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.withdraw(req))],
+		handler: WalletsController.withdraw,
 	},
 	{
 		path: '/pin/reset/mail',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.sendPinResetMail(req))],
+		handler: WalletsController.sendPinResetMail,
 	},
 	{
 		path: '/pin/reset',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.resetPin(req))],
+		handler: WalletsController.resetPin,
 	},
 	{
 		path: '/pin/verify',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.verifyPin(req))],
+		handler: WalletsController.verifyPin,
 	},
 	{
 		path: '/pin',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WalletsController.updatePin(req))],
+		handler: WalletsController.updatePin,
 	},
 ])

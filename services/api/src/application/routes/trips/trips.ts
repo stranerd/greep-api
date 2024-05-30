@@ -1,67 +1,79 @@
 import { isAdmin, isAuthenticated, isDriver } from '@application/middlewares'
 import { TripStatus } from '@modules/trips'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { TripsController } from '../../controllers/trips/trips'
 
-export const tripsRoutes = groupRoutes('/trips', [
+export const tripsRoutes = groupRoutes({ path: '/trips', tags: ['Trips'] }, [
 	{
 		path: '/admin',
 		method: 'get',
-		controllers: [isAdmin, makeController(async (req) => TripsController.getTripsAdmin(req))],
+		handler: TripsController.getTripsAdmin,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/admin/:id',
 		method: 'get',
-		controllers: [isAdmin, makeController(async (req) => TripsController.findTripAdmin(req))],
+		handler: TripsController.findTripAdmin,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.getTrips(req))],
+		handler: TripsController.getTrips,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.findTrip(req))],
+		handler: TripsController.findTrip,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.createTrip(req))],
+		handler: TripsController.createTrip,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/driverArrive',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.updateTrip(req, TripStatus.driverArrived))],
+		handler: async (req) => TripsController.updateTrip(req, TripStatus.driverArrived),
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/start',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.updateTrip(req, TripStatus.started))],
+		handler: async (req) => TripsController.updateTrip(req, TripStatus.started),
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/end',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.updateTrip(req, TripStatus.ended))],
+		handler: async (req) => TripsController.updateTrip(req, TripStatus.ended),
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/cancel',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.cancelTrip(req))],
+		handler: TripsController.cancelTrip,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/detail',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.detailTrip(req))],
+		handler: TripsController.detailTrip,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/accept/requested',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TripsController.acceptRequestedTrip(req))],
+		handler: TripsController.acceptRequestedTrip,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/accept/nonrequested',
 		method: 'post',
-		controllers: [isAuthenticated, isDriver, makeController(async (req) => TripsController.acceptNonRequestedTrip(req))],
+		handler: TripsController.acceptNonRequestedTrip,
+		middlewares: [isAuthenticated, isDriver],
 	},
 ])

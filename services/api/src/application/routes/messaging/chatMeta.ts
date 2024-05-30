@@ -1,21 +1,21 @@
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { ChatMetaController } from '../../controllers/messaging/chatMeta'
 
-export const chatMetaRoutes = groupRoutes('/chatMetas', [
+export const chatMetaRoutes = groupRoutes({ path: '/chatMetas', tags: ['Chat metas'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ChatMetaController.get(req))],
+		handler: ChatMetaController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => ChatMetaController.find(req))],
+		handler: ChatMetaController.find,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => ChatMetaController.delete(req))],
+		handler: ChatMetaController.delete,
 	},
 ])

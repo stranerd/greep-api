@@ -1,36 +1,40 @@
 import { TransactionsController } from '@application/controllers/payment/transactions'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const transactionsRoutes = groupRoutes('/transactions', [
+export const transactionsRoutes = groupRoutes({ path: '/transactions', tags: ['Transactions'] }, [
 	{
 		path: '/flutterwave/secrets',
 		method: 'get',
-		controllers: [makeController(async (req) => TransactionsController.getSecrets(req))],
+		handler: TransactionsController.getSecrets,
 	},
 	{
 		path: '/rates',
 		method: 'get',
-		controllers: [makeController(async (req) => TransactionsController.getRates(req))],
+		handler: TransactionsController.getRates,
 	},
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.get(req))],
+		handler: TransactionsController.get,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.find(req))],
+		handler: TransactionsController.find,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/fund',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.fund(req))],
+		handler: TransactionsController.fund,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id/fulfill',
 		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.fulfill(req))],
+		handler: TransactionsController.fulfill,
+		middlewares: [isAuthenticated],
 	},
 ])

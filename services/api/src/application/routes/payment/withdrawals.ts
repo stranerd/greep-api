@@ -1,31 +1,32 @@
 import { WithdrawalsController } from '@application/controllers/payment/withdrawals'
 import { isAuthenticated, isDriver } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const withdrawalsRoutes = groupRoutes('/withdrawals', [
+export const withdrawalsRoutes = groupRoutes({ path: '/withdrawals', tags: ['Withdrawals'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => WithdrawalsController.get(req))],
+		handler: WithdrawalsController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => WithdrawalsController.find(req))],
+		handler: WithdrawalsController.find,
 	},
 	{
 		path: '/:id/assignAgent',
 		method: 'post',
-		controllers: [isAuthenticated, isDriver, makeController(async (req) => WithdrawalsController.assignAgent(req))],
+		handler: WithdrawalsController.assignAgent,
+		middlewares: [isDriver],
 	},
 	{
 		path: '/:id/token',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => WithdrawalsController.generateToken(req))],
+		handler: WithdrawalsController.generateToken,
 	},
 	{
 		path: '/:id/complete',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => WithdrawalsController.complete(req))],
+		handler: WithdrawalsController.complete,
 	},
 ])

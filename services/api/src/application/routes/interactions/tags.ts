@@ -1,31 +1,33 @@
 import { TagController } from '@application/controllers/interactions/tags'
 import { isAdmin } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 
-export const tagsRoutes = groupRoutes('/tags', [
+export const tagsRoutes = groupRoutes({ path: '/tags', tags: ['Tags'] }, [
 	{
 		path: '/',
 		method: 'get',
-		controllers: [makeController(async (req) => TagController.get(req))],
+		handler: TagController.get,
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [makeController(async (req) => TagController.find(req))],
+		handler: TagController.find,
 	},
 	{
 		path: '/:id',
 		method: 'put',
-		controllers: [isAdmin, makeController(async (req) => TagController.update(req))],
+		handler: TagController.update,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [makeController(async (req) => TagController.create(req))],
+		handler: TagController.create,
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAdmin, makeController(async (req) => TagController.delete(req))],
+		handler: TagController.delete,
+		middlewares: [isAdmin],
 	},
 ])

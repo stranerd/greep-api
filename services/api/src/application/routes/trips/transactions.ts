@@ -1,36 +1,42 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { groupRoutes } from 'equipped'
 import { TransactionsController } from '../../controllers/trips/transactions'
 
-export const transactionsRoutes = groupRoutes('/transactions', [
+export const transactionsRoutes = groupRoutes({ path: '/transactions', tags: ['Transactions'] }, [
 	{
 		path: '/admin',
 		method: 'get',
-		controllers: [isAdmin, makeController(async (req) => TransactionsController.getTransactionsAdmin(req))],
+		handler: TransactionsController.getTransactionsAdmin,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/admin/:id',
 		method: 'get',
-		controllers: [isAdmin, makeController(async (req) => TransactionsController.findTransactionAdmin(req))],
+		handler: TransactionsController.findTransactionAdmin,
+		middlewares: [isAdmin],
 	},
 	{
 		path: '/',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.getTransactions(req))],
+		handler: TransactionsController.getTransactions,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'get',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.findTransaction(req))],
+		handler: TransactionsController.findTransaction,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/',
 		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.createTransaction(req))],
+		handler: TransactionsController.createTransaction,
+		middlewares: [isAuthenticated],
 	},
 	{
 		path: '/:id',
 		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => TransactionsController.deleteTransaction(req))],
+		handler: TransactionsController.deleteTransaction,
+		middlewares: [isAuthenticated],
 	},
 ])

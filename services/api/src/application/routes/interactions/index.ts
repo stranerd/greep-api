@@ -7,7 +7,7 @@ import { reviewsRoutes } from './reviews'
 import { tagsRoutes } from './tags'
 import { viewsRoutes } from './views'
 
-export const interactionRoutes = groupRoutes('/interactions', [
+export const interactionRoutes = groupRoutes({ path: '/interactions', tags: ['Interactions'] }, [
 	...commentsRoutes,
 	...likesRoutes,
 	...mediaRoutes,
