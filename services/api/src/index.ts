@@ -6,6 +6,8 @@ import { startJobs } from '@utils/jobs'
 import { AuthRole, OnJoinFn } from 'equipped'
 import { initializeApp } from 'firebase-admin/app'
 
+import schemas from '@application/schemas/schema.json'
+
 const start = async () => {
 	if (!isDev) initializeApp()
 	await appInstance.startConnections()
@@ -63,6 +65,7 @@ const start = async () => {
 	}
 
 	const app = appInstance.server
+	app.addSchema(schemas)
 	app.addRoutes(routes)
 	await app.start(port)
 	await startJobs()
