@@ -11,7 +11,7 @@ setup:
 	mkdir -p /c/data/docker/greep/kafka/data
 	chmod 777 /c/data/docker/greep/kafka/data
 	node bin/copy-envs.js $(APPS)
-	node bin/generate-schemas.js
+	pnpm --filter ./services/api schema:generate
 
 dev-start: setup
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build --remove-orphans

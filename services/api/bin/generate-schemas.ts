@@ -1,15 +1,13 @@
-const { generateJSONSchema } = require('equipped')
-const fs = require('fs')
-const path = require('path')
+import { generateJSONSchema } from 'equipped'
+import fs from 'fs'
+import * as path from 'path'
 
 console.log('Starting schema generation')
 
-const entry = path.resolve(__dirname, '../services/api/src/application/schemas/')
+const entry = path.resolve(__dirname, '../src/application/schemas/')
 const outputFile = path.join(entry, `schema.json`)
 
-const paths = [
-	path.resolve(entry, '/'),
-];
+const paths = [path.resolve(entry, '/')]
 
 const jsonSchema = generateJSONSchema([/DefRoute$/], paths)
 
