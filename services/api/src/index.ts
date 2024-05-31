@@ -1,4 +1,4 @@
-import { routes } from '@application/routes'
+import { router } from '@application/routes'
 import { UsersUseCases } from '@modules/users'
 import { appInstance, isDev, port } from '@utils/environment'
 import { subscribers } from '@utils/events'
@@ -6,7 +6,7 @@ import { startJobs } from '@utils/jobs'
 import { AuthRole, OnJoinFn } from 'equipped'
 import { initializeApp } from 'firebase-admin/app'
 
-import schemas from '@application/schemas/schema.json'
+import schemas from '@application/schema.json'
 
 const start = async () => {
 	if (!isDev) initializeApp()
@@ -66,7 +66,7 @@ const start = async () => {
 
 	const app = appInstance.server
 	app.addSchema(schemas)
-	app.addRoutes(routes)
+	app.addRouter(router)
 	await app.start(port)
 	await startJobs()
 }

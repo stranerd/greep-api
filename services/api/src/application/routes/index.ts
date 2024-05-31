@@ -1,4 +1,5 @@
-import { authRoutes } from './auth'
+import { Router } from 'equipped'
+import auth from './auth'
 import { interactionRoutes } from './interactions'
 import { marketplaceRoutes } from './marketplace'
 import { messagingRoutes } from './messaging'
@@ -7,8 +8,9 @@ import { paymentRoutes } from './payment'
 import { tripRoutes } from './trips'
 import { userRoutes } from './users'
 
-export const routes = [
-	...authRoutes,
+export const router = new Router()
+router.nest(auth)
+router.add(
 	...interactionRoutes,
 	...marketplaceRoutes,
 	...messagingRoutes,
@@ -16,4 +18,4 @@ export const routes = [
 	...paymentRoutes,
 	...tripRoutes,
 	...userRoutes,
-]
+)

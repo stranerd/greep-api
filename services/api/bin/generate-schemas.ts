@@ -2,16 +2,29 @@ import { generateJSONSchema } from 'equipped'
 import fs from 'fs'
 import * as path from 'path'
 
-console.log('Starting schema generation')
+try {
+	console.log('Starting schema generation')
 
-const entry = path.resolve(__dirname, '../src/application/schemas/')
-const outputFile = path.join(entry, `schema.json`)
+	const entry = path.resolve(__dirname, '../src/application')
+	const outputFile = path.join(entry, `schema.json`)
+	const routesEntry = path.join(entry, 'routes')
 
-const paths = [path.resolve(entry, '/')]
+	const routesFiles = fs
+		.readdirSync(routesEntry, { recursive: true })
+		.filter((file) => file.toString().endsWith('.ts'))
+		.map((file) => path.join(routesEntry, file.toString()))
 
-const jsonSchema = generateJSONSchema([/DefRoute$/], paths)
+	const jsonSchema = generateJSONSchema([/RouteDef$/], routesFiles, {
+		tsConfigPath: path.resolve(__dirname, '../tsconfig.json'),
+		options: {
+			ignoreErrors: true,
+		},
+	})
 
-fs.mkdirSync(path.dirname(outputFile), { recursive: true })
-fs.writeFileSync(outputFile, JSON.stringify(jsonSchema, null, 4))
+	fs.mkdirSync(path.dirname(outputFile), { recursive: true })
+	fs.writeFileSync(outputFile, JSON.stringify(jsonSchema, null, 4))
 
-console.log('Generated schema successfully')
+	console.log('Generated schema successfully')
+} catch (error) {
+	console.error('Failed to generate schema: ', error)
+}

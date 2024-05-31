@@ -1,0 +1,3939 @@
+{
+    "emails-signin": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "email",
+                "password"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "last"
+                                ]
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "code",
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "allNames": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    },
+                                    "full": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "full",
+                                    "last"
+                                ]
+                            },
+                            "__hash": {
+                                "type": "string"
+                            },
+                            "__type": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "object",
+                                "properties": {
+                                    "isAdmin": {},
+                                    "isSuperAdmin": {},
+                                    "isDriver": {}
+                                },
+                                "required": [
+                                    "isAdmin",
+                                    "isDriver",
+                                    "isSuperAdmin"
+                                ]
+                            },
+                            "photo": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "timestamp": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "size": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "duration",
+                                            "link",
+                                            "name",
+                                            "path",
+                                            "size",
+                                            "timestamp",
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "isVerified": {
+                                "type": "boolean"
+                            },
+                            "authTypes": {
+                                "type": "array",
+                                "items": {
+                                    "enum": [
+                                        "apple",
+                                        "email",
+                                        "facebook",
+                                        "github",
+                                        "google",
+                                        "twitter"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "lastSignedInAt": {
+                                "type": "number"
+                            },
+                            "signedUpAt": {
+                                "type": "number"
+                            },
+                            "referrer": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "__hash",
+                            "__type",
+                            "allNames",
+                            "authTypes",
+                            "email",
+                            "id",
+                            "isVerified",
+                            "lastSignedInAt",
+                            "name",
+                            "password",
+                            "phone",
+                            "photo",
+                            "referrer",
+                            "roles",
+                            "signedUpAt",
+                            "username"
+                        ]
+                    }
+                },
+                "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "user"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "emails-signin",
+        "summary": "SigninRouteDef"
+    },
+    "emails-signup": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "referrer": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "email",
+                "password"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "last"
+                                ]
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "code",
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "allNames": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    },
+                                    "full": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "full",
+                                    "last"
+                                ]
+                            },
+                            "__hash": {
+                                "type": "string"
+                            },
+                            "__type": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "object",
+                                "properties": {
+                                    "isAdmin": {},
+                                    "isSuperAdmin": {},
+                                    "isDriver": {}
+                                },
+                                "required": [
+                                    "isAdmin",
+                                    "isDriver",
+                                    "isSuperAdmin"
+                                ]
+                            },
+                            "photo": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "timestamp": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "size": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "duration",
+                                            "link",
+                                            "name",
+                                            "path",
+                                            "size",
+                                            "timestamp",
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "isVerified": {
+                                "type": "boolean"
+                            },
+                            "authTypes": {
+                                "type": "array",
+                                "items": {
+                                    "enum": [
+                                        "apple",
+                                        "email",
+                                        "facebook",
+                                        "github",
+                                        "google",
+                                        "twitter"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "lastSignedInAt": {
+                                "type": "number"
+                            },
+                            "signedUpAt": {
+                                "type": "number"
+                            },
+                            "referrer": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "__hash",
+                            "__type",
+                            "allNames",
+                            "authTypes",
+                            "email",
+                            "id",
+                            "isVerified",
+                            "lastSignedInAt",
+                            "name",
+                            "password",
+                            "phone",
+                            "photo",
+                            "referrer",
+                            "roles",
+                            "signedUpAt",
+                            "username"
+                        ]
+                    }
+                },
+                "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "user"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "emails-signup",
+        "summary": "SignupRouteDef"
+    },
+    "emails-send-verify-mail": {
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "emails-send-verify-mail",
+        "summary": "SendVerifyMailRouteDef"
+    },
+    "emails-verify-email": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "token"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "last"
+                                ]
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "code",
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "allNames": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    },
+                                    "full": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "full",
+                                    "last"
+                                ]
+                            },
+                            "__hash": {
+                                "type": "string"
+                            },
+                            "__type": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "object",
+                                "properties": {
+                                    "isAdmin": {},
+                                    "isSuperAdmin": {},
+                                    "isDriver": {}
+                                },
+                                "required": [
+                                    "isAdmin",
+                                    "isDriver",
+                                    "isSuperAdmin"
+                                ]
+                            },
+                            "photo": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "timestamp": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "size": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "duration",
+                                            "link",
+                                            "name",
+                                            "path",
+                                            "size",
+                                            "timestamp",
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "isVerified": {
+                                "type": "boolean"
+                            },
+                            "authTypes": {
+                                "type": "array",
+                                "items": {
+                                    "enum": [
+                                        "apple",
+                                        "email",
+                                        "facebook",
+                                        "github",
+                                        "google",
+                                        "twitter"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "lastSignedInAt": {
+                                "type": "number"
+                            },
+                            "signedUpAt": {
+                                "type": "number"
+                            },
+                            "referrer": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "__hash",
+                            "__type",
+                            "allNames",
+                            "authTypes",
+                            "email",
+                            "id",
+                            "isVerified",
+                            "lastSignedInAt",
+                            "name",
+                            "password",
+                            "phone",
+                            "photo",
+                            "referrer",
+                            "roles",
+                            "signedUpAt",
+                            "username"
+                        ]
+                    }
+                },
+                "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "user"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "emails-verify-email",
+        "summary": "VerifyEmailRouteDef"
+    },
+    "identities-google": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "idToken": {
+                    "type": "string"
+                },
+                "referrer": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "idToken"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "last"
+                                ]
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "code",
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "allNames": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    },
+                                    "full": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "full",
+                                    "last"
+                                ]
+                            },
+                            "__hash": {
+                                "type": "string"
+                            },
+                            "__type": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "object",
+                                "properties": {
+                                    "isAdmin": {},
+                                    "isSuperAdmin": {},
+                                    "isDriver": {}
+                                },
+                                "required": [
+                                    "isAdmin",
+                                    "isDriver",
+                                    "isSuperAdmin"
+                                ]
+                            },
+                            "photo": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "timestamp": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "size": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "duration",
+                                            "link",
+                                            "name",
+                                            "path",
+                                            "size",
+                                            "timestamp",
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "isVerified": {
+                                "type": "boolean"
+                            },
+                            "authTypes": {
+                                "type": "array",
+                                "items": {
+                                    "enum": [
+                                        "apple",
+                                        "email",
+                                        "facebook",
+                                        "github",
+                                        "google",
+                                        "twitter"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "lastSignedInAt": {
+                                "type": "number"
+                            },
+                            "signedUpAt": {
+                                "type": "number"
+                            },
+                            "referrer": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "__hash",
+                            "__type",
+                            "allNames",
+                            "authTypes",
+                            "email",
+                            "id",
+                            "isVerified",
+                            "lastSignedInAt",
+                            "name",
+                            "password",
+                            "phone",
+                            "photo",
+                            "referrer",
+                            "roles",
+                            "signedUpAt",
+                            "username"
+                        ]
+                    }
+                },
+                "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "user"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "identities-google",
+        "summary": "GoogleRouteDef"
+    },
+    "identities-apple": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "idToken": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "lastName": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "email": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "referrer": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "email",
+                "firstName",
+                "idToken",
+                "lastName"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "last"
+                                ]
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "code",
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "allNames": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    },
+                                    "full": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "full",
+                                    "last"
+                                ]
+                            },
+                            "__hash": {
+                                "type": "string"
+                            },
+                            "__type": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "object",
+                                "properties": {
+                                    "isAdmin": {},
+                                    "isSuperAdmin": {},
+                                    "isDriver": {}
+                                },
+                                "required": [
+                                    "isAdmin",
+                                    "isDriver",
+                                    "isSuperAdmin"
+                                ]
+                            },
+                            "photo": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "timestamp": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "size": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "duration",
+                                            "link",
+                                            "name",
+                                            "path",
+                                            "size",
+                                            "timestamp",
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "isVerified": {
+                                "type": "boolean"
+                            },
+                            "authTypes": {
+                                "type": "array",
+                                "items": {
+                                    "enum": [
+                                        "apple",
+                                        "email",
+                                        "facebook",
+                                        "github",
+                                        "google",
+                                        "twitter"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "lastSignedInAt": {
+                                "type": "number"
+                            },
+                            "signedUpAt": {
+                                "type": "number"
+                            },
+                            "referrer": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "__hash",
+                            "__type",
+                            "allNames",
+                            "authTypes",
+                            "email",
+                            "id",
+                            "isVerified",
+                            "lastSignedInAt",
+                            "name",
+                            "password",
+                            "phone",
+                            "photo",
+                            "referrer",
+                            "roles",
+                            "signedUpAt",
+                            "username"
+                        ]
+                    }
+                },
+                "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "user"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "identities-apple",
+        "summary": "AppleRouteDef"
+    },
+    "passwords-send-reset-mail": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "email"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "passwords-send-reset-mail",
+        "summary": "SendPasswordResetMailRouteDef"
+    },
+    "passwords-reset": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "password",
+                "token"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "last"
+                                ]
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "code",
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "allNames": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    },
+                                    "full": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "full",
+                                    "last"
+                                ]
+                            },
+                            "__hash": {
+                                "type": "string"
+                            },
+                            "__type": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "object",
+                                "properties": {
+                                    "isAdmin": {},
+                                    "isSuperAdmin": {},
+                                    "isDriver": {}
+                                },
+                                "required": [
+                                    "isAdmin",
+                                    "isDriver",
+                                    "isSuperAdmin"
+                                ]
+                            },
+                            "photo": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "timestamp": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "size": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "duration",
+                                            "link",
+                                            "name",
+                                            "path",
+                                            "size",
+                                            "timestamp",
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "isVerified": {
+                                "type": "boolean"
+                            },
+                            "authTypes": {
+                                "type": "array",
+                                "items": {
+                                    "enum": [
+                                        "apple",
+                                        "email",
+                                        "facebook",
+                                        "github",
+                                        "google",
+                                        "twitter"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "lastSignedInAt": {
+                                "type": "number"
+                            },
+                            "signedUpAt": {
+                                "type": "number"
+                            },
+                            "referrer": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "__hash",
+                            "__type",
+                            "allNames",
+                            "authTypes",
+                            "email",
+                            "id",
+                            "isVerified",
+                            "lastSignedInAt",
+                            "name",
+                            "password",
+                            "phone",
+                            "photo",
+                            "referrer",
+                            "roles",
+                            "signedUpAt",
+                            "username"
+                        ]
+                    }
+                },
+                "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "user"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "passwords-reset",
+        "summary": "ResetPasswordRouteDef"
+    },
+    "passwords-update": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "oldPassword": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "oldPassword",
+                "password"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "passwords-update",
+        "summary": "UpdatePasswordRouteDef"
+    },
+    "token-exchange": {
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "last"
+                                ]
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "code",
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "allNames": {
+                                "type": "object",
+                                "properties": {
+                                    "first": {
+                                        "type": "string"
+                                    },
+                                    "last": {
+                                        "type": "string"
+                                    },
+                                    "full": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "first",
+                                    "full",
+                                    "last"
+                                ]
+                            },
+                            "__hash": {
+                                "type": "string"
+                            },
+                            "__type": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "type": "object",
+                                "properties": {
+                                    "isAdmin": {},
+                                    "isSuperAdmin": {},
+                                    "isDriver": {}
+                                },
+                                "required": [
+                                    "isAdmin",
+                                    "isDriver",
+                                    "isSuperAdmin"
+                                ]
+                            },
+                            "photo": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "timestamp": {
+                                                "type": "number"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "size": {
+                                                "type": "number"
+                                            },
+                                            "duration": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "duration",
+                                            "link",
+                                            "name",
+                                            "path",
+                                            "size",
+                                            "timestamp",
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "isVerified": {
+                                "type": "boolean"
+                            },
+                            "authTypes": {
+                                "type": "array",
+                                "items": {
+                                    "enum": [
+                                        "apple",
+                                        "email",
+                                        "facebook",
+                                        "github",
+                                        "google",
+                                        "twitter"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "lastSignedInAt": {
+                                "type": "number"
+                            },
+                            "signedUpAt": {
+                                "type": "number"
+                            },
+                            "referrer": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "__hash",
+                            "__type",
+                            "allNames",
+                            "authTypes",
+                            "email",
+                            "id",
+                            "isVerified",
+                            "lastSignedInAt",
+                            "name",
+                            "password",
+                            "phone",
+                            "photo",
+                            "referrer",
+                            "roles",
+                            "signedUpAt",
+                            "username"
+                        ]
+                    }
+                },
+                "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "user"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "token-exchange",
+        "summary": "ExchangeTokenRouteDef"
+    },
+    "user-get": {
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "object",
+                        "properties": {
+                            "first": {
+                                "type": "string"
+                            },
+                            "last": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "first",
+                            "last"
+                        ]
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "number": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "code",
+                                    "number"
+                                ]
+                            }
+                        ]
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "allNames": {
+                        "type": "object",
+                        "properties": {
+                            "first": {
+                                "type": "string"
+                            },
+                            "last": {
+                                "type": "string"
+                            },
+                            "full": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "first",
+                            "full",
+                            "last"
+                        ]
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "object",
+                        "properties": {
+                            "isAdmin": {},
+                            "isSuperAdmin": {},
+                            "isDriver": {}
+                        },
+                        "required": [
+                            "isAdmin",
+                            "isDriver",
+                            "isSuperAdmin"
+                        ]
+                    },
+                    "photo": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "timestamp": {
+                                        "type": "number"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "link": {
+                                        "type": "string"
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "size": {
+                                        "type": "number"
+                                    },
+                                    "duration": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "duration",
+                                    "link",
+                                    "name",
+                                    "path",
+                                    "size",
+                                    "timestamp",
+                                    "type"
+                                ]
+                            }
+                        ]
+                    },
+                    "isVerified": {
+                        "type": "boolean"
+                    },
+                    "authTypes": {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "apple",
+                                "email",
+                                "facebook",
+                                "github",
+                                "google",
+                                "twitter"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "lastSignedInAt": {
+                        "type": "number"
+                    },
+                    "signedUpAt": {
+                        "type": "number"
+                    },
+                    "referrer": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "allNames",
+                    "authTypes",
+                    "email",
+                    "id",
+                    "isVerified",
+                    "lastSignedInAt",
+                    "name",
+                    "password",
+                    "phone",
+                    "photo",
+                    "referrer",
+                    "roles",
+                    "signedUpAt",
+                    "username"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "user-get",
+        "summary": "GetAuthUserRouteDef"
+    },
+    "user-update": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "phone": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "code": {
+                                    "type": "string"
+                                },
+                                "number": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "code",
+                                "number"
+                            ]
+                        }
+                    ]
+                },
+                "photo": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "firstName",
+                "lastName",
+                "phone",
+                "username",
+                "photo"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "object",
+                        "properties": {
+                            "first": {
+                                "type": "string"
+                            },
+                            "last": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "first",
+                            "last"
+                        ]
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "number": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "code",
+                                    "number"
+                                ]
+                            }
+                        ]
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "allNames": {
+                        "type": "object",
+                        "properties": {
+                            "first": {
+                                "type": "string"
+                            },
+                            "last": {
+                                "type": "string"
+                            },
+                            "full": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "first",
+                            "full",
+                            "last"
+                        ]
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "object",
+                        "properties": {
+                            "isAdmin": {},
+                            "isSuperAdmin": {},
+                            "isDriver": {}
+                        },
+                        "required": [
+                            "isAdmin",
+                            "isDriver",
+                            "isSuperAdmin"
+                        ]
+                    },
+                    "photo": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "timestamp": {
+                                        "type": "number"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "link": {
+                                        "type": "string"
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "size": {
+                                        "type": "number"
+                                    },
+                                    "duration": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "duration",
+                                    "link",
+                                    "name",
+                                    "path",
+                                    "size",
+                                    "timestamp",
+                                    "type"
+                                ]
+                            }
+                        ]
+                    },
+                    "isVerified": {
+                        "type": "boolean"
+                    },
+                    "authTypes": {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "apple",
+                                "email",
+                                "facebook",
+                                "github",
+                                "google",
+                                "twitter"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "lastSignedInAt": {
+                        "type": "number"
+                    },
+                    "signedUpAt": {
+                        "type": "number"
+                    },
+                    "referrer": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "allNames",
+                    "authTypes",
+                    "email",
+                    "id",
+                    "isVerified",
+                    "lastSignedInAt",
+                    "name",
+                    "password",
+                    "phone",
+                    "photo",
+                    "referrer",
+                    "roles",
+                    "signedUpAt",
+                    "username"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "user-update",
+        "summary": "UpdateAuthUserRouteDef"
+    },
+    "user-delete": {
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "user-delete",
+        "summary": "DeleteUserRouteDef"
+    },
+    "user-update-roles": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "role": {
+                    "type": "object",
+                    "properties": {
+                        "isAdmin": {
+                            "type": "boolean"
+                        },
+                        "isSuperAdmin": {
+                            "type": "boolean"
+                        },
+                        "isDriver": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "userId": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "role",
+                "userId",
+                "value"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "user-update-roles",
+        "summary": "UpdateUserRolesRouteDef"
+    },
+    "user-signout": {
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "user-signout",
+        "summary": "SignoutRouteDef"
+    },
+    "user-super-admin": {
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "user-super-admin",
+        "summary": "SetSuperAdminRouteDef"
+    }
+}

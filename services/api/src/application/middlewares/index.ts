@@ -11,7 +11,6 @@ export const isAuthenticated = makeMiddleware(
 		requireAuthUser.onSetup?.(route)
 		route.descriptions ??= []
 		route.descriptions.push('Requires auth user to be verified')
-		console.log(route)
 	},
 )
 

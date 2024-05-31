@@ -15,7 +15,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"axios": "^1.7.2",
-		"equipped": "5.0.0-beta.8",
+		"equipped": "5.0.0-beta.10",
 		"firebase-admin": "^12.1.1",
 		"flutterwave-node-v3": "^1.1.10",
 		"nodemailer": "^6.9.13"

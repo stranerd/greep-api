@@ -29,7 +29,6 @@ export const flutterwaveConfig = {
 }
 
 Instance.initialize({
-	isDev,
 	appId,
 	accessTokenKey: getEnvOrFail('ACCESS_TOKEN_KEY'),
 	refreshTokenKey: getEnvOrFail('REFRESH_TOKEN_KEY'),
