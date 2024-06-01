@@ -1,10 +1,9 @@
 import { Router } from 'equipped'
 import carts from './carts'
-import { ordersRoutes } from './orders'
+import orders from './orders'
 import products from './products'
 
 const router = new Router({ path: '/marketplace', groups: ['Marketplace'] })
-router.nest(carts, products)
-router.add(...ordersRoutes)
+router.nest(carts, orders, products)
 
 export default router

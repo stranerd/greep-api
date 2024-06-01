@@ -14,7 +14,8 @@ export const ReferralsUseCases = new ReferralsUseCase(referralRepository)
 export const ActivitiesUseCases = new ActivitiesUseCase(activityRepository)
 
 export { ActivityEntity } from './domain/entities/activities'
-export { generateDefaultUser } from './domain/entities/users'
+export { ReferralEntity } from './domain/entities/referrals'
+export { generateDefaultUser, UserEntity } from './domain/entities/users'
 export { ActivityType, UserMeta, UserRankings, UserType } from './domain/types'
 export type { EmbeddedUser } from './domain/types'
 export { mergeWithUsers } from './utils'
