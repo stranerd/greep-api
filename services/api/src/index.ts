@@ -22,10 +22,6 @@ const start = async () => {
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
 	appInstance.listener
-		.register('users/customers', isMine)
-		.register('users/transactions', isMine)
-		.register('users/trips', isMine)
-
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)
 		.register('interactions/media', isOpen)
@@ -48,6 +44,9 @@ const start = async () => {
 		.register('payment/wallets', isMine)
 		.register('payment/requests', isMine)
 		.register('payment/withdrawals', isMine)
+
+		.register('trips/transactions', isMine)
+		.register('trips/trips', isMine)
 
 		.register('users/activities', isMine)
 		.register('users/referrals', isMine)

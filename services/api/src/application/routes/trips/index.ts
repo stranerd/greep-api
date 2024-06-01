@@ -1,5 +1,5 @@
 import { groupRoutes } from 'equipped'
-import { transactionsRoutes } from './transactions'
+import transactions from './transactions'
 import { tripsRoutes } from './trips'
 
-export const tripRoutes = groupRoutes({ path: '/trips', groups: ['Trips'] }, [...transactionsRoutes, ...tripsRoutes])
+export const tripRoutes = groupRoutes({ path: '/trips', groups: ['Trips'] }, [...transactions.routes, ...tripsRoutes])
