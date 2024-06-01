@@ -215,7 +215,8 @@
                     "accessToken",
                     "refreshToken",
                     "user"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -231,7 +232,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -247,7 +249,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -263,7 +266,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -279,7 +283,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -295,7 +300,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -311,7 +317,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -327,7 +334,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "emails-signin",
@@ -559,7 +567,8 @@
                     "accessToken",
                     "refreshToken",
                     "user"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -575,7 +584,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -591,7 +601,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -607,7 +618,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -623,7 +635,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -639,7 +652,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -655,7 +669,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -671,7 +686,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "emails-signup",
@@ -680,7 +696,8 @@
     "emails-send-verify-mail": {
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -696,7 +713,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -712,7 +730,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -728,7 +747,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -744,7 +764,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -760,7 +781,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -776,7 +798,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -792,7 +815,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "emails-send-verify-mail",
@@ -1010,7 +1034,8 @@
                     "accessToken",
                     "refreshToken",
                     "user"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -1026,7 +1051,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -1042,7 +1068,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -1058,7 +1085,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -1074,7 +1102,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -1090,7 +1119,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -1106,7 +1136,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -1122,7 +1153,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "emails-verify-email",
@@ -1350,7 +1382,8 @@
                     "accessToken",
                     "refreshToken",
                     "user"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -1366,7 +1399,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -1382,7 +1416,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -1398,7 +1433,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -1414,7 +1450,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -1430,7 +1467,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -1446,7 +1484,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -1462,7 +1501,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "identities-google",
@@ -1723,7 +1763,8 @@
                     "accessToken",
                     "refreshToken",
                     "user"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -1739,7 +1780,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -1755,7 +1797,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -1771,7 +1814,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -1787,7 +1831,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -1803,7 +1848,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -1819,7 +1865,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -1835,7 +1882,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "identities-apple",
@@ -1855,7 +1903,8 @@
         },
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -1871,7 +1920,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -1887,7 +1937,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -1903,7 +1954,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -1919,7 +1971,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -1935,7 +1988,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -1951,7 +2005,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -1967,7 +2022,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "passwords-send-reset-mail",
@@ -2189,7 +2245,8 @@
                     "accessToken",
                     "refreshToken",
                     "user"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -2205,7 +2262,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -2221,7 +2279,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -2237,7 +2296,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -2253,7 +2313,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -2269,7 +2330,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -2285,7 +2347,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -2301,7 +2364,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "passwords-reset",
@@ -2325,7 +2389,8 @@
         },
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -2341,7 +2406,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -2357,7 +2423,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -2373,7 +2440,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -2389,7 +2457,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -2405,7 +2474,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -2421,7 +2491,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -2437,7 +2508,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "passwords-update",
@@ -2644,7 +2716,8 @@
                     "accessToken",
                     "refreshToken",
                     "user"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -2660,7 +2733,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -2676,7 +2750,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -2692,7 +2767,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -2708,7 +2784,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -2724,7 +2801,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -2740,7 +2818,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -2756,7 +2835,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "token-exchange",
@@ -2947,7 +3027,8 @@
                     "roles",
                     "signedUpAt",
                     "username"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -2963,7 +3044,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -2979,7 +3061,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -2995,7 +3078,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -3011,7 +3095,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -3027,7 +3112,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -3043,7 +3129,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -3059,7 +3146,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "user-get",
@@ -3304,7 +3392,8 @@
                     "roles",
                     "signedUpAt",
                     "username"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -3320,7 +3409,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -3336,7 +3426,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -3352,7 +3443,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -3368,7 +3460,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -3384,7 +3477,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -3400,7 +3494,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -3416,7 +3511,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "user-update",
@@ -3425,7 +3521,8 @@
     "user-delete": {
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -3441,7 +3538,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -3457,7 +3555,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -3473,7 +3572,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -3489,7 +3589,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -3505,7 +3606,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -3521,7 +3623,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -3537,7 +3640,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "user-delete",
@@ -3576,7 +3680,8 @@
         },
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -3592,7 +3697,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -3608,7 +3714,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -3624,7 +3731,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -3640,7 +3748,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -3656,7 +3765,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -3672,7 +3782,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -3688,7 +3799,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "user-update-roles",
@@ -3697,7 +3809,8 @@
     "user-signout": {
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -3713,7 +3826,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -3729,7 +3843,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -3745,7 +3860,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -3761,7 +3877,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -3777,7 +3894,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -3793,7 +3911,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -3809,7 +3928,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "user-signout",
@@ -3818,7 +3938,8 @@
     "user-super-admin": {
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -3834,7 +3955,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -3850,7 +3972,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -3866,7 +3989,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -3882,7 +4006,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -3898,7 +4023,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -3914,7 +4040,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -3930,7 +4057,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "user-super-admin",
@@ -4390,7 +4518,8 @@
                     "docs",
                     "pages",
                     "results"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -4406,7 +4535,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -4422,7 +4552,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -4438,7 +4569,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -4454,7 +4586,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -4470,7 +4603,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -4486,7 +4620,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -4502,7 +4637,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-transactions-get",
@@ -4796,7 +4932,8 @@
                     "id",
                     "recordedAt",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -4812,7 +4949,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -4828,7 +4966,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -4844,7 +4983,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -4860,7 +5000,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -4876,7 +5017,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -4892,7 +5034,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -4908,7 +5051,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-transactions-create",
@@ -5083,7 +5227,8 @@
                     "id",
                     "recordedAt",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -5099,7 +5244,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -5115,7 +5261,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -5131,7 +5278,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -5147,7 +5295,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -5163,7 +5312,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -5179,7 +5329,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -5195,7 +5346,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-transactions-find",
@@ -5215,7 +5367,8 @@
         },
         "response": {
             "200": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -5231,7 +5384,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -5247,7 +5401,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -5263,7 +5418,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -5279,7 +5435,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -5295,7 +5452,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -5311,7 +5469,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -5327,7 +5486,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-transactions-delete",
@@ -5773,7 +5933,8 @@
                     "docs",
                     "pages",
                     "results"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -5789,7 +5950,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -5805,7 +5967,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -5821,7 +5984,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -5837,7 +6001,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -5853,7 +6018,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -5869,7 +6035,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -5885,7 +6052,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-get",
@@ -6046,7 +6214,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -6062,7 +6231,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -6078,7 +6248,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -6094,7 +6265,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -6110,7 +6282,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -6126,7 +6299,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -6142,7 +6316,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -6158,7 +6333,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-find",
@@ -6390,7 +6566,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -6406,7 +6583,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -6422,7 +6600,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -6438,7 +6617,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -6454,7 +6634,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -6470,7 +6651,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -6486,7 +6668,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -6502,7 +6685,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-create",
@@ -6663,7 +6847,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -6679,7 +6864,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -6695,7 +6881,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -6711,7 +6898,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -6727,7 +6915,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -6743,7 +6932,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -6759,7 +6949,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -6775,7 +6966,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-driver-arrive",
@@ -6936,7 +7128,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -6952,7 +7145,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -6968,7 +7162,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -6984,7 +7179,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -7000,7 +7196,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -7016,7 +7213,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -7032,7 +7230,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -7048,7 +7247,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-start",
@@ -7209,7 +7409,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -7225,7 +7426,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -7241,7 +7443,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -7257,7 +7460,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -7273,7 +7477,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -7289,7 +7494,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -7305,7 +7511,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -7321,7 +7528,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-end",
@@ -7482,7 +7690,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -7498,7 +7707,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -7514,7 +7724,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -7530,7 +7741,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -7546,7 +7758,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -7562,7 +7775,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -7578,7 +7792,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -7594,7 +7809,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-cancel",
@@ -7808,7 +8024,8 @@
                     "id",
                     "recordedAt",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -7824,7 +8041,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -7840,7 +8058,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -7856,7 +8075,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -7872,7 +8092,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -7888,7 +8109,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -7904,7 +8126,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -7920,7 +8143,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-detail",
@@ -8092,7 +8316,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -8108,7 +8333,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -8124,7 +8350,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -8140,7 +8367,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -8156,7 +8384,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -8172,7 +8401,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -8188,7 +8418,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -8204,7 +8435,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-accept-requested",
@@ -8365,7 +8597,8 @@
                     "status",
                     "to",
                     "updatedAt"
-                ]
+                ],
+                "description": "Ok Response"
             },
             "400": {
                 "type": "array",
@@ -8381,7 +8614,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "BadRequest Response"
             },
             "401": {
                 "type": "array",
@@ -8397,7 +8631,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthenticated Response"
             },
             "403": {
                 "type": "array",
@@ -8413,7 +8648,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotAuthorized Response"
             },
             "404": {
                 "type": "array",
@@ -8429,7 +8665,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "NotFound Response"
             },
             "422": {
                 "type": "array",
@@ -8445,7 +8682,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "ValidationError Response"
             },
             "429": {
                 "type": "array",
@@ -8461,7 +8699,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "TooManyRequests Response"
             },
             "461": {
                 "type": "array",
@@ -8477,7 +8716,8 @@
                         "field",
                         "message"
                     ]
-                }
+                },
+                "description": "AccessTokenExpired Response"
             }
         },
         "operationId": "trips-trips-accept-non-requested",
