@@ -14,5 +14,7 @@ export const ProductsUseCases = new ProductUseCase(productRepository)
 const orderRepository = OrderRepository.getInstance()
 export const OrdersUseCases = new OrderUseCase(orderRepository)
 
+export { CartEntity } from './domain/entities/carts'
 export { OrderEntity } from './domain/entities/orders'
+export { ProductEntity } from './domain/entities/products'
 export { OrderDispatchDeliveryType, OrderPayment, OrderStatus, OrderType, ProductMeta } from './domain/types'

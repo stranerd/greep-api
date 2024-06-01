@@ -65,13 +65,7 @@ export class ProductsController {
 	}
 
 	static async create(req: Request) {
-		const data = validate(
-			{
-				...this.schema(true),
-				courseId: Schema.string().min(1).nullable().default(null),
-			},
-			{ ...req.body, banner: req.files.banner?.at(0) ?? null },
-		)
+		const data = validate(this.schema(true), { ...req.body, banner: req.files.banner?.at(0) ?? null })
 
 		const { results: tags } = await TagsUseCases.get({
 			where: [{ field: 'id', condition: Conditions.in, value: data.tagIds }],

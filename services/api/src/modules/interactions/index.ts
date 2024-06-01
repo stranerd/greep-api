@@ -31,3 +31,11 @@ export const TagsUseCases = new TagsUseCase(tagRepository)
 
 export { CommentMeta, InteractionEntities, TagMeta, TagTypes } from './domain/types'
 export { verifyInteractionAndGetUserId } from './utils'
+
+export { CommentEntity } from './domain/entities/comments'
+export { LikeEntity } from './domain/entities/likes'
+export { MediaEntity } from './domain/entities/media'
+export { ReportEntity } from './domain/entities/reports'
+export { ReviewEntity } from './domain/entities/reviews'
+export { TagEntity } from './domain/entities/tags'
+export { ViewEntity } from './domain/entities/views'
