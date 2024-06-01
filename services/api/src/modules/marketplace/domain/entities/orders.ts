@@ -23,8 +23,8 @@ type OrderEntityProps = {
 	updatedAt: number
 }
 
-export class OrderEntity extends BaseEntity<OrderEntityProps> {
-	ignoreInJSON = ['email']
+export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
+	__ignoreInJSON = ['email' as const]
 
 	constructor(data: OrderEntityProps) {
 		super(data)
