@@ -38,20 +38,22 @@ router.get<ProductsGetRouteDef>({ path: '/', key: 'marketplace-products-get' })(
 	return await ProductsUseCases.get(query)
 })
 
-router.get<ProductsFindRouteDef>({ path: '/', key: 'marketplace-products-find' })(async (req) => {
+router.get<ProductsFindRouteDef>({ path: '/:id', key: 'marketplace-products-find' })(async (req) => {
 	const product = await ProductsUseCases.find(req.params.id)
 	if (!product) throw new NotFoundError()
 	return product
 })
 
-router.get<ProductsRecommendedProductsRouteDef>({ path: '/', key: 'marketplace-products-recommended-products' })(async (req) => {
-	const query: QueryParams = req.query
-	query.sort ??= []
-	query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
-	return await ProductsUseCases.get(query)
-})
+router.get<ProductsRecommendedProductsRouteDef>({ path: '/recommendation/products', key: 'marketplace-products-recommended-products' })(
+	async (req) => {
+		const query: QueryParams = req.query
+		query.sort ??= []
+		query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+		return await ProductsUseCases.get(query)
+	},
+)
 
-router.get<ProductsRecommendedTagsRouteDef>({ path: '/', key: 'marketplace-products-recommended-tags' })(async (req) => {
+router.get<ProductsRecommendedTagsRouteDef>({ path: '/recommendation/tags', key: 'marketplace-products-recommended-tags' })(async (req) => {
 	const query = req.query
 	query.auth = [{ field: 'type', value: TagTypes.products }]
 	query.sort ??= []
