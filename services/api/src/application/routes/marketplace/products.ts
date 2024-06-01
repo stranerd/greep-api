@@ -2,7 +2,7 @@ import { ProductsController } from '@application/controllers/marketplace/product
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const productsRoutes = groupRoutes({ path: '/products', tags: ['Products'] }, [
+export const productsRoutes = groupRoutes({ path: '/products', groups: ['Products'] }, [
 	{
 		path: '/',
 		method: 'get',

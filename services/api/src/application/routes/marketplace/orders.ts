@@ -2,7 +2,7 @@ import { OrdersController } from '@application/controllers/marketplace/orders'
 import { isAdmin, isAuthenticated, isDriver } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const ordersRoutes = groupRoutes({ path: '/orders', tags: ['Orders'], middlewares: [isAuthenticated] }, [
+export const ordersRoutes = groupRoutes({ path: '/orders', groups: ['Orders'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',

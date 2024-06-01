@@ -2,7 +2,7 @@ import { isAuthenticatedButIgnoreVerified } from '@application/middlewares'
 import { AuthResponse, AuthUseCases, AuthUsersUseCases, generateAuthOutput, verifyReferrer } from '@modules/auth'
 import { ApiDef, AuthTypes, Random, Router, Schema, Validation, ValidationError, validate } from 'equipped'
 
-const router = new Router({ path: '/emails', tags: ['Emails'] })
+const router = new Router({ path: '/emails', groups: ['Emails'] })
 
 router.post<SigninRouteDef>({ path: '/signin', key: 'emails-signin' })(async (req) => {
 	const userCredential = {

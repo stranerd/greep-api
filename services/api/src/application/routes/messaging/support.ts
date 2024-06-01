@@ -2,7 +2,7 @@ import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 import { SupportController } from '../../controllers/messaging/support'
 
-export const supportRoutes = groupRoutes({ path: '/support', tags: ['Support'], middlewares: [isAuthenticated] }, [
+export const supportRoutes = groupRoutes({ path: '/support', groups: ['Support'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',

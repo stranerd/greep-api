@@ -1,7 +1,8 @@
 import { AuthResponse, AuthUseCases, generateAuthOutput, verifyReferrer } from '@modules/auth'
 import { ApiDef, Router, Schema, validate } from 'equipped'
 
-const router = new Router({ path: '/identities', tags: ['Identities'] })
+const router = new Router({ path: '/identities', groups: ['Identities'] })
+
 router.post<GoogleRouteDef>({ path: '/google', key: 'identities-google' })(async (req) => {
 	const validatedData = validate(
 		{

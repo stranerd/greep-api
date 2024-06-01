@@ -2,7 +2,7 @@ import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 import { TransactionsController } from '../../controllers/trips/transactions'
 
-export const transactionsRoutes = groupRoutes({ path: '/transactions', tags: ['Transactions'] }, [
+export const transactionsRoutes = groupRoutes({ path: '/transactions', groups: ['Transactions'] }, [
 	{
 		path: '/admin',
 		method: 'get',

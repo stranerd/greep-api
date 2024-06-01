@@ -3,7 +3,7 @@ import { TripStatus } from '@modules/trips'
 import { groupRoutes } from 'equipped'
 import { TripsController } from '../../controllers/trips/trips'
 
-export const tripsRoutes = groupRoutes({ path: '/trips', tags: ['Trips'] }, [
+export const tripsRoutes = groupRoutes({ path: '/trips', groups: ['Trips'] }, [
 	{
 		path: '/admin',
 		method: 'get',

@@ -2,7 +2,7 @@ import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@app
 import { groupRoutes } from 'equipped'
 import { UsersController } from '../../controllers/users/users'
 
-export const usersRoutes = groupRoutes({ path: '/users', tags: ['Users'] }, [
+export const usersRoutes = groupRoutes({ path: '/users', groups: ['Users'] }, [
 	{
 		path: '/type',
 		method: 'post',

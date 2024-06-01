@@ -2,7 +2,7 @@ import { RequestsController } from '@application/controllers/payment/requests'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const requestsRoutes = groupRoutes({ path: '/requests', tags: ['Requests'], middlewares: [isAuthenticated] }, [
+export const requestsRoutes = groupRoutes({ path: '/requests', groups: ['Requests'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',

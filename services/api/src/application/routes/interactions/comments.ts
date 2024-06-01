@@ -2,7 +2,7 @@ import { CommentsController } from '@application/controllers/interactions/commen
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const commentsRoutes = groupRoutes({ path: '/comments', tags: ['Comments'] }, [
+export const commentsRoutes = groupRoutes({ path: '/comments', groups: ['Comments'] }, [
 	{
 		path: '/',
 		method: 'get',

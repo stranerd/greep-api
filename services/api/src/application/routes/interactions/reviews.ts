@@ -2,7 +2,7 @@ import { ReviewsController } from '@application/controllers/interactions/reviews
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const reviewsRoutes = groupRoutes({ path: '/reviews', tags: ['Reviews'] }, [
+export const reviewsRoutes = groupRoutes({ path: '/reviews', groups: ['Reviews'] }, [
 	{
 		path: '/',
 		method: 'get',

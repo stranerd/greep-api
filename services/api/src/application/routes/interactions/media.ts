@@ -2,7 +2,7 @@ import { MediasController as MediaController } from '@application/controllers/in
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const mediaRoutes = groupRoutes({ path: '/media', tags: ['Media'] }, [
+export const mediaRoutes = groupRoutes({ path: '/media', groups: ['Media'] }, [
 	{
 		path: '/',
 		method: 'get',

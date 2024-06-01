@@ -2,7 +2,7 @@ import { WalletsController } from '@application/controllers/payment/wallets'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const walletsRoutes = groupRoutes({ path: '/wallets', tags: ['Wallets'], middlewares: [isAuthenticated] }, [
+export const walletsRoutes = groupRoutes({ path: '/wallets', groups: ['Wallets'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',

@@ -1,4 +1,6 @@
 import { AuthUserEntity, AuthUsersUseCases, Phone, signOutUser } from '@modules/auth'
+import { StorageUseCases } from '@modules/storage'
+import { superAdminEmail } from '@utils/environment'
 import {
 	ApiDef,
 	AuthRole,
@@ -12,10 +14,8 @@ import {
 	verifyAccessToken,
 } from 'equipped'
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '../../middlewares'
-import { StorageUseCases } from '@modules/storage'
-import { superAdminEmail } from '@utils/environment'
 
-const router = new Router({ path: '/user', tags: ['User'] })
+const router = new Router({ path: '/user', groups: ['User'] })
 
 router.get<GetAuthUserRouteDef>({ path: '/', key: 'user-get', middlewares: [isAuthenticatedButIgnoreVerified] })(async (req) => {
 	const userId = req.authUser!.id

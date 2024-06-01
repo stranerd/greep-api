@@ -1,7 +1,7 @@
 import { AuthResponse, getNewTokens } from '@modules/auth'
 import { ApiDef, Router, requireRefreshUser } from 'equipped'
 
-const router = new Router({ path: '/token', tags: ['Token'] })
+const router = new Router({ path: '/token', groups: ['Token'] })
 
 router.post<ExchangeTokenRouteDef>({
 	path: '/',

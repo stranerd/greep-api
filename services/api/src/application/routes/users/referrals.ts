@@ -2,7 +2,7 @@ import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 import { ReferralsController } from '../../controllers/users/referrals'
 
-export const referralsRoutes = groupRoutes({ path: '/referrals', tags: ['Referrals'], middlewares: [isAuthenticated] }, [
+export const referralsRoutes = groupRoutes({ path: '/referrals', groups: ['Referrals'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',

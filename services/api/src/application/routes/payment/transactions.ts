@@ -2,7 +2,7 @@ import { TransactionsController } from '@application/controllers/payment/transac
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const transactionsRoutes = groupRoutes({ path: '/transactions', tags: ['Transactions'] }, [
+export const transactionsRoutes = groupRoutes({ path: '/transactions', groups: ['Transactions'] }, [
 	{
 		path: '/flutterwave/secrets',
 		method: 'get',

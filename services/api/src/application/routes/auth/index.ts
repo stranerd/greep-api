@@ -5,7 +5,7 @@ import passwords from './passwords'
 import token from './token'
 import user from './user'
 
-const router = new Router({ path: '/auth', tags: ['Auth'] })
+const router = new Router({ path: '/auth', groups: ['Auth'] })
 router.nest(emails, identities, passwords, token, user)
 
 export default router

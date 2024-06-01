@@ -2,7 +2,7 @@ import { isAuthenticated } from '@application/middlewares'
 import { AuthResponse, AuthUseCases, AuthUsersUseCases, generateAuthOutput } from '@modules/auth'
 import { ApiDef, BadRequestError, Hash, Router, Schema, ValidationError, validate } from 'equipped'
 
-const router = new Router({ path: '/passwords', tags: ['Passwords'] })
+const router = new Router({ path: '/passwords', groups: ['Passwords'] })
 
 router.post<SendPasswordResetMailRouteDef>({ path: '/reset/mail', key: 'passwords-send-reset-mail' })(async (req) => {
 	const { email } = validate(

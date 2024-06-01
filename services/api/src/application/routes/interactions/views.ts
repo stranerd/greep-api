@@ -2,7 +2,7 @@ import { ViewsController } from '@application/controllers/interactions/views'
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const viewsRoutes = groupRoutes({ path: '/views', tags: ['Views'] }, [
+export const viewsRoutes = groupRoutes({ path: '/views', groups: ['Views'] }, [
 	{
 		path: '/',
 		method: 'get',

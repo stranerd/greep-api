@@ -3,7 +3,7 @@ import { TokensUseCases } from '@modules/notifications'
 import { UsersUseCases } from '@modules/users'
 import { groupRoutes, Schema, validate } from 'equipped'
 
-export const tokenRoutes = groupRoutes({ path: '/tokens', tags: ['Tokens'], middlewares: [isAuthenticated] }, [
+export const tokenRoutes = groupRoutes({ path: '/tokens', groups: ['Tokens'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/enable',
 		method: 'post',

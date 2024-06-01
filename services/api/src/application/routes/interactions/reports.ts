@@ -2,7 +2,7 @@ import { ReportController } from '@application/controllers/interactions/reports'
 import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const reportsRoutes = groupRoutes({ path: '/reports', tags: ['Reports'] }, [
+export const reportsRoutes = groupRoutes({ path: '/reports', groups: ['Reports'] }, [
 	{
 		path: '/',
 		method: 'get',

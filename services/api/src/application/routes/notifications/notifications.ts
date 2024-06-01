@@ -2,7 +2,7 @@ import { NotificationsController } from '@application/controllers/notifications/
 import { isAuthenticated } from '@application/middlewares'
 import { groupRoutes } from 'equipped'
 
-export const notificationsRoutes = groupRoutes({ path: '/notifications', tags: ['Notifications'], middlewares: [isAuthenticated] }, [
+export const notificationsRoutes = groupRoutes({ path: '/notifications', groups: ['Notifications'], middlewares: [isAuthenticated] }, [
 	{
 		path: '/',
 		method: 'get',
