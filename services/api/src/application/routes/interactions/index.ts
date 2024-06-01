@@ -1,4 +1,4 @@
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 import { commentsRoutes } from './comments'
 import { likesRoutes } from './likes'
 import { mediaRoutes } from './media'
@@ -7,12 +7,7 @@ import { reviewsRoutes } from './reviews'
 import { tagsRoutes } from './tags'
 import { viewsRoutes } from './views'
 
-export const interactionRoutes = groupRoutes({ path: '/interactions', groups: ['Interactions'] }, [
-	...commentsRoutes,
-	...likesRoutes,
-	...mediaRoutes,
-	...reportsRoutes,
-	...reviewsRoutes,
-	...tagsRoutes,
-	...viewsRoutes,
-])
+const router = new Router({ path: '/interactions', groups: ['Interactions'] })
+router.add(...commentsRoutes, ...likesRoutes, ...mediaRoutes, ...reportsRoutes, ...reviewsRoutes, ...tagsRoutes, ...viewsRoutes)
+
+export default router

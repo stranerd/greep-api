@@ -3935,5 +3935,4552 @@
         },
         "operationId": "user-super-admin",
         "summary": "SetSuperAdminRouteDef"
+    },
+    "trips-transactions-get": {
+        "querystring": {
+            "type": "object",
+            "properties": {
+                "where": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "field": {
+                                        "type": "string"
+                                    },
+                                    "value": {},
+                                    "condition": {
+                                        "enum": [
+                                            "eq",
+                                            "exists",
+                                            "gt",
+                                            "gte",
+                                            "in",
+                                            "lt",
+                                            "lte",
+                                            "ne",
+                                            "nin"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "field",
+                                    "value"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "condition": {
+                                        "enum": [
+                                            "and",
+                                            "or"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "field": {
+                                                    "type": "string"
+                                                },
+                                                "value": {},
+                                                "condition": {
+                                                    "enum": [
+                                                        "eq",
+                                                        "exists",
+                                                        "gt",
+                                                        "gte",
+                                                        "in",
+                                                        "lt",
+                                                        "lte",
+                                                        "ne",
+                                                        "nin"
+                                                    ],
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "field",
+                                                "value"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "condition",
+                                    "value"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "auth": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "field": {
+                                        "type": "string"
+                                    },
+                                    "value": {},
+                                    "condition": {
+                                        "enum": [
+                                            "eq",
+                                            "exists",
+                                            "gt",
+                                            "gte",
+                                            "in",
+                                            "lt",
+                                            "lte",
+                                            "ne",
+                                            "nin"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "field",
+                                    "value"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "condition": {
+                                        "enum": [
+                                            "and",
+                                            "or"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "field": {
+                                                    "type": "string"
+                                                },
+                                                "value": {},
+                                                "condition": {
+                                                    "enum": [
+                                                        "eq",
+                                                        "exists",
+                                                        "gt",
+                                                        "gte",
+                                                        "in",
+                                                        "lt",
+                                                        "lte",
+                                                        "ne",
+                                                        "nin"
+                                                    ],
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "field",
+                                                "value"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "condition",
+                                    "value"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "whereType": {
+                    "enum": [
+                        "and",
+                        "or"
+                    ],
+                    "type": "string"
+                },
+                "authType": {
+                    "enum": [
+                        "and",
+                        "or"
+                    ],
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string"
+                            },
+                            "desc": {
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "field"
+                        ]
+                    }
+                },
+                "limit": {
+                    "type": "number"
+                },
+                "all": {
+                    "type": "boolean"
+                },
+                "page": {
+                    "type": "number"
+                },
+                "search": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "string"
+                        },
+                        "fields": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": [
+                        "fields",
+                        "value"
+                    ]
+                }
+            }
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "pages": {
+                        "type": "object",
+                        "properties": {
+                            "last": {
+                                "type": "number"
+                            },
+                            "start": {
+                                "type": "number"
+                            },
+                            "previous": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "number"
+                                    }
+                                ]
+                            },
+                            "next": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "number"
+                                    }
+                                ]
+                            },
+                            "current": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "current",
+                            "last",
+                            "next",
+                            "previous",
+                            "start"
+                        ]
+                    },
+                    "docs": {
+                        "type": "object",
+                        "properties": {
+                            "count": {
+                                "type": "number"
+                            },
+                            "limit": {
+                                "type": "number"
+                            },
+                            "total": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "count",
+                            "limit",
+                            "total"
+                        ]
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                },
+                                "id": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "expense"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "name",
+                                                "type"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "trip"
+                                                    ]
+                                                },
+                                                "tripId": {
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "null"
+                                                        },
+                                                        {
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                                                },
+                                                "customerId": {
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "null"
+                                                        },
+                                                        {
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                                                },
+                                                "customerName": {
+                                                    "type": "string"
+                                                },
+                                                "paymentType": {
+                                                    "enum": [
+                                                        "card",
+                                                        "cash"
+                                                    ],
+                                                    "type": "string"
+                                                },
+                                                "paidAmount": {
+                                                    "type": "number"
+                                                },
+                                                "debt": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "customerId",
+                                                "customerName",
+                                                "debt",
+                                                "paidAmount",
+                                                "paymentType",
+                                                "tripId",
+                                                "type"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "balance"
+                                                    ]
+                                                },
+                                                "parentId": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "parentId",
+                                                "type"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "withdrawal"
+                                                    ]
+                                                },
+                                                "withdrawalId": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "type",
+                                                "withdrawalId"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "__hash": {
+                                    "type": "string"
+                                },
+                                "__type": {
+                                    "type": "string"
+                                },
+                                "createdAt": {
+                                    "type": "number"
+                                },
+                                "updatedAt": {
+                                    "type": "number"
+                                },
+                                "recordedAt": {
+                                    "type": "number"
+                                },
+                                "driverId": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "__hash",
+                                "__type",
+                                "amount",
+                                "createdAt",
+                                "data",
+                                "description",
+                                "driverId",
+                                "id",
+                                "recordedAt",
+                                "updatedAt"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "docs",
+                    "pages",
+                    "results"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-transactions-get",
+        "summary": "TripsTransactionsGetRouteDef"
+    },
+    "trips-transactions-create": {
+        "body": {
+            "allOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "amount": {
+                            "type": "number"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "recordedAt": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "amount",
+                        "description",
+                        "recordedAt"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "data": {
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "expense"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "type"
+                                    ]
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "trip"
+                                            ]
+                                        },
+                                        "customerId": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "null"
+                                                },
+                                                {
+                                                    "type": "string"
+                                                }
+                                            ]
+                                        },
+                                        "customerName": {
+                                            "type": "string"
+                                        },
+                                        "paymentType": {
+                                            "enum": [
+                                                "card",
+                                                "cash"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        "paidAmount": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "customerId",
+                                        "customerName",
+                                        "paidAmount",
+                                        "paymentType",
+                                        "type"
+                                    ]
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "balance"
+                                            ]
+                                        },
+                                        "parentId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "parentId",
+                                        "type"
+                                    ]
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "withdrawal"
+                                            ]
+                                        },
+                                        "withdrawalId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "type",
+                                        "withdrawalId"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "data"
+                    ]
+                }
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "expense"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "trip"
+                                        ]
+                                    },
+                                    "tripId": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    },
+                                    "customerId": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    },
+                                    "customerName": {
+                                        "type": "string"
+                                    },
+                                    "paymentType": {
+                                        "enum": [
+                                            "card",
+                                            "cash"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "paidAmount": {
+                                        "type": "number"
+                                    },
+                                    "debt": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "customerId",
+                                    "customerName",
+                                    "debt",
+                                    "paidAmount",
+                                    "paymentType",
+                                    "tripId",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "balance"
+                                        ]
+                                    },
+                                    "parentId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "parentId",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "withdrawal"
+                                        ]
+                                    },
+                                    "withdrawalId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "withdrawalId"
+                                ]
+                            }
+                        ]
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "recordedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "amount",
+                    "createdAt",
+                    "data",
+                    "description",
+                    "driverId",
+                    "id",
+                    "recordedAt",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-transactions-create",
+        "summary": "TripsTransactionsCreateRouteDef"
+    },
+    "trips-transactions-find": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "expense"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "trip"
+                                        ]
+                                    },
+                                    "tripId": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    },
+                                    "customerId": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    },
+                                    "customerName": {
+                                        "type": "string"
+                                    },
+                                    "paymentType": {
+                                        "enum": [
+                                            "card",
+                                            "cash"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "paidAmount": {
+                                        "type": "number"
+                                    },
+                                    "debt": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "customerId",
+                                    "customerName",
+                                    "debt",
+                                    "paidAmount",
+                                    "paymentType",
+                                    "tripId",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "balance"
+                                        ]
+                                    },
+                                    "parentId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "parentId",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "withdrawal"
+                                        ]
+                                    },
+                                    "withdrawalId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "withdrawalId"
+                                ]
+                            }
+                        ]
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "recordedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "amount",
+                    "createdAt",
+                    "data",
+                    "description",
+                    "driverId",
+                    "id",
+                    "recordedAt",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-transactions-find",
+        "summary": "TripsTransactionsFindRouteDef"
+    },
+    "trips-transactions-delete": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "boolean"
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-transactions-delete",
+        "summary": "TripsTransactionsDeleteRouteDef"
+    },
+    "trips-trips-get": {
+        "querystring": {
+            "type": "object",
+            "properties": {
+                "where": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "field": {
+                                        "type": "string"
+                                    },
+                                    "value": {},
+                                    "condition": {
+                                        "enum": [
+                                            "eq",
+                                            "exists",
+                                            "gt",
+                                            "gte",
+                                            "in",
+                                            "lt",
+                                            "lte",
+                                            "ne",
+                                            "nin"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "field",
+                                    "value"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "condition": {
+                                        "enum": [
+                                            "and",
+                                            "or"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "field": {
+                                                    "type": "string"
+                                                },
+                                                "value": {},
+                                                "condition": {
+                                                    "enum": [
+                                                        "eq",
+                                                        "exists",
+                                                        "gt",
+                                                        "gte",
+                                                        "in",
+                                                        "lt",
+                                                        "lte",
+                                                        "ne",
+                                                        "nin"
+                                                    ],
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "field",
+                                                "value"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "condition",
+                                    "value"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "auth": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "field": {
+                                        "type": "string"
+                                    },
+                                    "value": {},
+                                    "condition": {
+                                        "enum": [
+                                            "eq",
+                                            "exists",
+                                            "gt",
+                                            "gte",
+                                            "in",
+                                            "lt",
+                                            "lte",
+                                            "ne",
+                                            "nin"
+                                        ],
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "field",
+                                    "value"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "condition": {
+                                        "enum": [
+                                            "and",
+                                            "or"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "field": {
+                                                    "type": "string"
+                                                },
+                                                "value": {},
+                                                "condition": {
+                                                    "enum": [
+                                                        "eq",
+                                                        "exists",
+                                                        "gt",
+                                                        "gte",
+                                                        "in",
+                                                        "lt",
+                                                        "lte",
+                                                        "ne",
+                                                        "nin"
+                                                    ],
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "field",
+                                                "value"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "condition",
+                                    "value"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "whereType": {
+                    "enum": [
+                        "and",
+                        "or"
+                    ],
+                    "type": "string"
+                },
+                "authType": {
+                    "enum": [
+                        "and",
+                        "or"
+                    ],
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string"
+                            },
+                            "desc": {
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "field"
+                        ]
+                    }
+                },
+                "limit": {
+                    "type": "number"
+                },
+                "all": {
+                    "type": "boolean"
+                },
+                "page": {
+                    "type": "number"
+                },
+                "search": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "string"
+                        },
+                        "fields": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": [
+                        "fields",
+                        "value"
+                    ]
+                }
+            }
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "pages": {
+                        "type": "object",
+                        "properties": {
+                            "last": {
+                                "type": "number"
+                            },
+                            "start": {
+                                "type": "number"
+                            },
+                            "previous": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "number"
+                                    }
+                                ]
+                            },
+                            "next": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "number"
+                                    }
+                                ]
+                            },
+                            "current": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "current",
+                            "last",
+                            "next",
+                            "previous",
+                            "start"
+                        ]
+                    },
+                    "docs": {
+                        "type": "object",
+                        "properties": {
+                            "count": {
+                                "type": "number"
+                            },
+                            "limit": {
+                                "type": "number"
+                            },
+                            "total": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "count",
+                            "limit",
+                            "total"
+                        ]
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "from": {
+                                    "type": "object",
+                                    "properties": {
+                                        "location": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "coords": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "coords",
+                                        "description",
+                                        "location"
+                                    ]
+                                },
+                                "id": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "created": {},
+                                        "requestedDriverAccepted": {},
+                                        "requestedDriverRejected": {},
+                                        "driverAssigned": {},
+                                        "driverArrived": {},
+                                        "started": {},
+                                        "ended": {},
+                                        "detailed": {},
+                                        "cancelled": {}
+                                    },
+                                    "required": [
+                                        "cancelled",
+                                        "created",
+                                        "detailed",
+                                        "driverArrived",
+                                        "driverAssigned",
+                                        "ended",
+                                        "requestedDriverAccepted",
+                                        "requestedDriverRejected",
+                                        "started"
+                                    ]
+                                },
+                                "status": {
+                                    "enum": [
+                                        "cancelled",
+                                        "created",
+                                        "detailed",
+                                        "driverArrived",
+                                        "driverAssigned",
+                                        "ended",
+                                        "requestedDriverAccepted",
+                                        "requestedDriverRejected",
+                                        "started"
+                                    ],
+                                    "type": "string"
+                                },
+                                "__hash": {
+                                    "type": "string"
+                                },
+                                "__type": {
+                                    "type": "string"
+                                },
+                                "createdAt": {
+                                    "type": "number"
+                                },
+                                "updatedAt": {
+                                    "type": "number"
+                                },
+                                "driverId": {
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "customerId": {
+                                    "type": "string"
+                                },
+                                "requestedDriverId": {
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "to": {
+                                    "type": "object",
+                                    "properties": {
+                                        "location": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "coords": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "coords",
+                                        "description",
+                                        "location"
+                                    ]
+                                },
+                                "discount": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "__hash",
+                                "__type",
+                                "createdAt",
+                                "customerId",
+                                "data",
+                                "discount",
+                                "driverId",
+                                "from",
+                                "id",
+                                "requestedDriverId",
+                                "status",
+                                "to",
+                                "updatedAt"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "docs",
+                    "pages",
+                    "results"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-get",
+        "summary": "TripsGetRouteDef"
+    },
+    "trips-trips-find": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-find",
+        "summary": "TripsFindRouteDef"
+    },
+    "trips-trips-create": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "requestedDriverId": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "from": {
+                    "type": "object",
+                    "properties": {
+                        "coords": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ],
+                            "minItems": 2,
+                            "maxItems": 2
+                        },
+                        "location": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "coords",
+                        "description",
+                        "location"
+                    ]
+                },
+                "to": {
+                    "type": "object",
+                    "properties": {
+                        "coords": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ],
+                            "minItems": 2,
+                            "maxItems": 2
+                        },
+                        "location": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "coords",
+                        "description",
+                        "location"
+                    ]
+                },
+                "discount": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "discount",
+                "from",
+                "requestedDriverId",
+                "to"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-create",
+        "summary": "TripsCreateRouteDef"
+    },
+    "trips-trips-driver-arrive": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-driver-arrive",
+        "summary": "TripsDriverArriveRouteDef"
+    },
+    "trips-trips-start": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-start",
+        "summary": "TripsStartRouteDef"
+    },
+    "trips-trips-end": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-end",
+        "summary": "TripsEndRouteDef"
+    },
+    "trips-trips-cancel": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-cancel",
+        "summary": "TripsCancelRouteDef"
+    },
+    "trips-trips-detail": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "recordedAt": {
+                    "type": "number"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "paidAmount": {
+                            "type": "number"
+                        },
+                        "paymentType": {
+                            "enum": [
+                                "card",
+                                "cash"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "paidAmount",
+                        "paymentType"
+                    ]
+                }
+            },
+            "required": [
+                "amount",
+                "data",
+                "description",
+                "recordedAt"
+            ]
+        },
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "expense"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "trip"
+                                        ]
+                                    },
+                                    "tripId": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    },
+                                    "customerId": {
+                                        "anyOf": [
+                                            {
+                                                "type": "null"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    },
+                                    "customerName": {
+                                        "type": "string"
+                                    },
+                                    "paymentType": {
+                                        "enum": [
+                                            "card",
+                                            "cash"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "paidAmount": {
+                                        "type": "number"
+                                    },
+                                    "debt": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "customerId",
+                                    "customerName",
+                                    "debt",
+                                    "paidAmount",
+                                    "paymentType",
+                                    "tripId",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "balance"
+                                        ]
+                                    },
+                                    "parentId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "parentId",
+                                    "type"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "withdrawal"
+                                        ]
+                                    },
+                                    "withdrawalId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "withdrawalId"
+                                ]
+                            }
+                        ]
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "recordedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "amount",
+                    "createdAt",
+                    "data",
+                    "description",
+                    "driverId",
+                    "id",
+                    "recordedAt",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-detail",
+        "summary": "TripsDetailRouteDef"
+    },
+    "trips-trips-accept-requested": {
+        "body": {
+            "type": "object",
+            "properties": {
+                "accepted": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "accepted"
+            ]
+        },
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-accept-requested",
+        "summary": "TripsAcceptRequestedRouteDef"
+    },
+    "trips-trips-accept-non-requested": {
+        "params": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "response": {
+            "200": {
+                "type": "object",
+                "properties": {
+                    "from": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "created": {},
+                            "requestedDriverAccepted": {},
+                            "requestedDriverRejected": {},
+                            "driverAssigned": {},
+                            "driverArrived": {},
+                            "started": {},
+                            "ended": {},
+                            "detailed": {},
+                            "cancelled": {}
+                        },
+                        "required": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "cancelled",
+                            "created",
+                            "detailed",
+                            "driverArrived",
+                            "driverAssigned",
+                            "ended",
+                            "requestedDriverAccepted",
+                            "requestedDriverRejected",
+                            "started"
+                        ],
+                        "type": "string"
+                    },
+                    "__hash": {
+                        "type": "string"
+                    },
+                    "__type": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "number"
+                    },
+                    "updatedAt": {
+                        "type": "number"
+                    },
+                    "driverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "requestedDriverId": {
+                        "anyOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "to": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "coords": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "required": [
+                            "coords",
+                            "description",
+                            "location"
+                        ]
+                    },
+                    "discount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "__hash",
+                    "__type",
+                    "createdAt",
+                    "customerId",
+                    "data",
+                    "discount",
+                    "driverId",
+                    "from",
+                    "id",
+                    "requestedDriverId",
+                    "status",
+                    "to",
+                    "updatedAt"
+                ]
+            },
+            "400": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "401": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "403": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "404": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "422": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "429": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            },
+            "461": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "field": {}
+                    },
+                    "required": [
+                        "field",
+                        "message"
+                    ]
+                }
+            }
+        },
+        "operationId": "trips-trips-accept-non-requested",
+        "summary": "TripsAcceptNonRequestedRouteDef"
     }
 }

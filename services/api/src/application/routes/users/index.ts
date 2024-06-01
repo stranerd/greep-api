@@ -1,12 +1,10 @@
-import { groupRoutes } from 'equipped'
+import { Router } from 'equipped'
 import { activitiesRoutes } from './activities'
 import { myRoutes } from './my'
 import { referralsRoutes } from './referrals'
 import { usersRoutes } from './users'
 
-export const userRoutes = groupRoutes({ path: '/users', groups: ['Users'] }, [
-	...activitiesRoutes,
-	...myRoutes,
-	...referralsRoutes,
-	...usersRoutes,
-])
+const router = new Router({ path: '/users', groups: ['Users'] })
+router.add(...activitiesRoutes, ...myRoutes, ...referralsRoutes, ...usersRoutes)
+
+export default router
