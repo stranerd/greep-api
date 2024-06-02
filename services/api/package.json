@@ -15,7 +15,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"axios": "^1.7.2",
-		"equipped": "5.0.0-beta.14",
+		"equipped": "5.0.0-beta.15",
 		"firebase-admin": "^12.1.1",
 		"nodemailer": "^6.9.13"
 	},
