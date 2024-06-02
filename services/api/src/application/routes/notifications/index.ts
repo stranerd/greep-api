@@ -1,5 +1,8 @@
-import { groupRoutes } from 'equipped'
-import { notificationsRoutes } from './notifications'
-import { tokenRoutes } from './tokens'
+import { Router } from 'equipped'
+import notifications from './notifications'
+import tokens from './tokens'
 
-export const notificationRoutes = groupRoutes('/notifications', [...notificationsRoutes, ...tokenRoutes])
+const router = new Router({ path: '/notifications', groups: ['Notifications'] })
+router.nest(notifications, tokens)
+
+export default router

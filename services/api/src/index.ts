@@ -1,10 +1,12 @@
-import { routes } from '@application/routes'
+import { router } from '@application/routes'
 import { UsersUseCases } from '@modules/users'
 import { appInstance, isDev, port } from '@utils/environment'
 import { subscribers } from '@utils/events'
 import { startJobs } from '@utils/jobs'
 import { AuthRole, OnJoinFn } from 'equipped'
 import { initializeApp } from 'firebase-admin/app'
+
+import schemas from '@application/schema.json'
 
 const start = async () => {
 	if (!isDev) initializeApp()
@@ -20,10 +22,6 @@ const start = async () => {
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
 	appInstance.listener
-		.register('users/customers', isMine)
-		.register('users/transactions', isMine)
-		.register('users/trips', isMine)
-
 		.register('interactions/comments', isOpen)
 		.register('interactions/likes', isOpen)
 		.register('interactions/media', isOpen)
@@ -47,6 +45,9 @@ const start = async () => {
 		.register('payment/requests', isMine)
 		.register('payment/withdrawals', isMine)
 
+		.register('trips/transactions', isMine)
+		.register('trips/trips', isMine)
+
 		.register('users/activities', isMine)
 		.register('users/referrals', isMine)
 		.register('users/users', isOpen)
@@ -63,7 +64,8 @@ const start = async () => {
 	}
 
 	const app = appInstance.server
-	app.routes = routes
+	app.addSchema(schemas)
+	app.addRouter(router)
 	await app.start(port)
 	await startJobs()
 }

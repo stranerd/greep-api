@@ -1,31 +1,111 @@
-import { CommentsController } from '@application/controllers/interactions/comments'
 import { isAuthenticated } from '@application/middlewares'
-import { groupRoutes, makeController } from 'equipped'
+import { CommentEntity, CommentsUseCases, InteractionEntities, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { UsersUseCases } from '@modules/users'
+import { ApiDef, BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
-export const commentsRoutes = groupRoutes('/comments', [
-	{
-		path: '/',
-		method: 'get',
-		controllers: [makeController(async (req) => CommentsController.get(req))],
+const schema = () => ({
+	body: Schema.string().min(1),
+})
+
+const router = new Router({ path: '/comments', groups: ['Comments'] })
+
+router.get<InteractionsCommentsGetRouteDef>({ path: '/', key: 'interactions-comments-get' })(async (req) => {
+	const query = req.query
+	return await CommentsUseCases.get(query)
+})
+
+router.get<InteractionsCommentsFindRouteDef>({ path: '/:id', key: 'interactions-comments-find' })(async (req) => {
+	const comment = await CommentsUseCases.find(req.params.id)
+	if (!comment) throw new NotFoundError()
+	return comment
+})
+
+router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-comments-create', middlewares: [isAuthenticated] })(
+	async (req) => {
+		const { body, entity } = validate(
+			{
+				...schema(),
+				entity: Schema.object({
+					id: Schema.string().min(1),
+					type: Schema.in(Object.values(InteractionEntities)),
+				}),
+			},
+			req.body,
+		)
+
+		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'comments')
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+
+		return await CommentsUseCases.create({
+			body,
+			entity: { ...entity, userId },
+			user: user.getEmbedded(),
+		})
 	},
-	{
-		path: '/:id',
-		method: 'get',
-		controllers: [makeController(async (req) => CommentsController.find(req))],
+)
+
+router.put<InteractionsCommentsUpdateRouteDef>({ path: '/:id', key: 'interactions-comments-update', middlewares: [isAuthenticated] })(
+	async (req) => {
+		const { body } = validate(schema(), req.body)
+
+		const updated = await CommentsUseCases.update({
+			id: req.params.id,
+			userId: req.authUser!.id,
+			data: { body },
+		})
+		if (updated) return updated
+		throw new NotAuthorizedError()
 	},
-	{
-		path: '/',
-		method: 'post',
-		controllers: [isAuthenticated, makeController(async (req) => CommentsController.create(req))],
+)
+
+router.delete<InteractionsCommentsDeleteRouteDef>({ path: '/:id', key: 'interactions-comments-delete', middlewares: [isAuthenticated] })(
+	async (req) => {
+		const isDeleted = await CommentsUseCases.delete({
+			id: req.params.id,
+			userId: req.authUser!.id,
+		})
+		if (isDeleted) return isDeleted
+		throw new NotAuthorizedError()
 	},
-	{
-		path: '/:id',
-		method: 'put',
-		controllers: [isAuthenticated, makeController(async (req) => CommentsController.update(req))],
-	},
-	{
-		path: '/:id',
-		method: 'delete',
-		controllers: [isAuthenticated, makeController(async (req) => CommentsController.delete(req))],
-	},
-])
+)
+
+export default router
+
+type CommentBody = { body: string }
+
+type InteractionsCommentsGetRouteDef = ApiDef<{
+	key: 'interactions-comments-get'
+	method: 'get'
+	query: QueryParams
+	response: QueryResults<CommentEntity>
+}>
+
+type InteractionsCommentsFindRouteDef = ApiDef<{
+	key: 'interactions-comments-find'
+	method: 'get'
+	params: { id: string }
+	response: CommentEntity
+}>
+
+type InteractionsCommentsCreateRouteDef = ApiDef<{
+	key: 'interactions-comments-create'
+	method: 'post'
+	body: CommentBody & { entity: { id: string; type: InteractionEntities } }
+	response: CommentEntity
+}>
+
+type InteractionsCommentsUpdateRouteDef = ApiDef<{
+	key: 'interactions-comments-update'
+	method: 'put'
+	params: { id: string }
+	body: CommentBody
+	response: CommentEntity
+}>
+
+type InteractionsCommentsDeleteRouteDef = ApiDef<{
+	key: 'interactions-comments-delete'
+	method: 'delete'
+	params: { id: string }
+	response: boolean
+}>

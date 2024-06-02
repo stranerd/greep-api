@@ -1,7 +1,11 @@
-import emailRoutes from './emails'
-import identityRoutes from './identities'
-import passwordRoutes from './passwords'
-import tokenRoutes from './token'
-import userRoutes from './user'
+import { Router } from 'equipped'
+import emails from './emails'
+import identities from './identities'
+import passwords from './passwords'
+import token from './token'
+import user from './user'
 
-export const authRoutes = [...emailRoutes, ...passwordRoutes, ...userRoutes, ...tokenRoutes, ...identityRoutes]
+const router = new Router({ path: '/auth', groups: ['Auth'] })
+router.nest(emails, identities, passwords, token, user)
+
+export default router

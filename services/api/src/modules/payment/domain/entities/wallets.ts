@@ -1,8 +1,8 @@
 import { BaseEntity } from 'equipped'
 import { Currencies } from '../types'
 
-export class WalletEntity extends BaseEntity<WalletConstructorArgs> {
-	ignoreInJSON = ['pin']
+export class WalletEntity extends BaseEntity<WalletConstructorArgs, 'pin'> {
+	__ignoreInJSON = ['pin' as const]
 
 	constructor(data: WalletConstructorArgs) {
 		super(data)

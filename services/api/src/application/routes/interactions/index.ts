@@ -1,18 +1,13 @@
-import { groupRoutes } from 'equipped'
-import { commentsRoutes } from './comments'
-import { likesRoutes } from './likes'
-import { mediaRoutes } from './media'
-import { reportsRoutes } from './reports'
-import { reviewsRoutes } from './reviews'
-import { tagsRoutes } from './tags'
-import { viewsRoutes } from './views'
+import { Router } from 'equipped'
+import comments from './comments'
+import likes from './likes'
+import media from './media'
+import reports from './reports'
+import reviews from './reviews'
+import tags from './tags'
+import views from './views'
 
-export const interactionRoutes = groupRoutes('/interactions', [
-	...commentsRoutes,
-	...likesRoutes,
-	...mediaRoutes,
-	...reportsRoutes,
-	...reviewsRoutes,
-	...tagsRoutes,
-	...viewsRoutes,
-])
+const router = new Router({ path: '/interactions', groups: ['Interactions'] })
+router.nest(comments, likes, media, reports, reviews, tags, views)
+
+export default router

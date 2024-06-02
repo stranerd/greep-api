@@ -1,6 +1,9 @@
-import { groupRoutes } from 'equipped'
-import { chatRoutes } from './chat'
-import { chatMetaRoutes } from './chatMeta'
-import { supportRoutes } from './support'
+import { Router } from 'equipped'
+import chatMetas from './chatMetas'
+import chats from './chats'
+import support from './support'
 
-export const messagingRoutes = groupRoutes('/messaging', [...chatMetaRoutes, ...chatRoutes, ...supportRoutes])
+const router = new Router({ path: '/messaging', groups: ['Messaging'] })
+router.nest(chatMetas, chats, support)
+
+export default router

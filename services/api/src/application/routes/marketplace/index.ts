@@ -1,6 +1,9 @@
-import { groupRoutes } from 'equipped'
-import { cartsRoutes } from './carts'
-import { ordersRoutes } from './orders'
-import { productsRoutes } from './products'
+import { Router } from 'equipped'
+import carts from './carts'
+import orders from './orders'
+import products from './products'
 
-export const marketplaceRoutes = groupRoutes('/marketplace', [...cartsRoutes, ...ordersRoutes, ...productsRoutes])
+const router = new Router({ path: '/marketplace', groups: ['Marketplace'] })
+router.nest(carts, orders, products)
+
+export default router

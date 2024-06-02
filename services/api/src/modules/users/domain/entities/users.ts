@@ -1,8 +1,8 @@
 import { BaseEntity, Validation } from 'equipped'
 import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData, UserVendorData } from '../types'
 
-export class UserEntity extends BaseEntity<UserConstructorArgs> {
-	ignoreInJSON = ['bio.email', 'bio.phone']
+export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'bio.phone'> {
+	__ignoreInJSON = ['bio.email' as const, 'bio.phone' as const]
 
 	constructor(data: UserConstructorArgs) {
 		super(data)

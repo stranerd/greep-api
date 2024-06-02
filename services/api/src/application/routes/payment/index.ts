@@ -1,7 +1,10 @@
-import { groupRoutes } from 'equipped'
-import { requestsRoutes } from './requests'
-import { transactionsRoutes } from './transactions'
-import { walletsRoutes } from './wallets'
-import { withdrawalsRoutes } from './withdrawals'
+import { Router } from 'equipped'
+import requests from './requests'
+import transactions from './transactions'
+import wallets from './wallets'
+import withdrawals from './withdrawals'
 
-export const paymentRoutes = groupRoutes('/payment', [...transactionsRoutes, ...requestsRoutes, ...walletsRoutes, ...withdrawalsRoutes])
+const router = new Router({ path: '/payment', groups: ['Payment'] })
+router.nest(requests, transactions, wallets, withdrawals)
+
+export default router

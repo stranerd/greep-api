@@ -22,3 +22,8 @@ export { Rates } from './utils/exchange'
 export { FlutterwavePayment } from './utils/flutterwave'
 export { fulfillTransaction, processTransactions } from './utils/transactions'
 export { processWithdrawals } from './utils/withdrawals'
+
+export { RequestEntity } from './domain/entities/requests'
+export { TransactionEntity } from './domain/entities/transactions'
+export { WalletEntity } from './domain/entities/wallets'
+export { WithdrawalEntity } from './domain/entities/withdrawals'

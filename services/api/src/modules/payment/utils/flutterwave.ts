@@ -1,9 +1,11 @@
 import { flutterwaveConfig } from '@utils/environment'
-import axios from 'axios'
-import FlutterwaveNode from 'flutterwave-node-v3'
+import a from 'axios'
 import { Currencies } from '../domain/types'
 
-const flw = () => new FlutterwaveNode(flutterwaveConfig.publicKey, flutterwaveConfig.secretKey)
+const axios = a.create({
+	baseURL: 'https://api.flutterwave.com/v3',
+	headers: { Authorization: flutterwaveConfig.secretKey },
+})
 
 type FwTransaction = {
 	id: number
@@ -12,7 +14,7 @@ type FwTransaction = {
 	currency: string
 	status: 'successful' | 'failed'
 	created_at: string
-	card: {
+	card?: {
 		first_6digits: string
 		last_4digits: string
 		country: string
@@ -34,12 +36,7 @@ type TransferRate = {
 
 export class FlutterwavePayment {
 	private static async verifyById(transactionId: string) {
-		const res = await axios
-			.get(`/v3/transactions/verify_by_reference?tx_ref=${transactionId}`, {
-				baseURL: 'https://api.flutterwave.com',
-				headers: { Authorization: flutterwaveConfig.secretKey },
-			})
-			.catch(() => null)
+		const res = await axios.get(`/transactions/verify_by_reference?tx_ref=${transactionId}`).catch(() => null)
 		if (!res) return null
 		if (res.data.status !== 'success') return null
 		return res.data.data as FwTransaction | null
@@ -55,26 +52,24 @@ export class FlutterwavePayment {
 	static async convertAmount(amount: number, from: Currencies, to: Currencies) {
 		if (from === to) return amount
 		// WARN: flutterwave expects 1000 USD to NGN to have destination as USD and source as NGN, weird right
-		const res = await flw()
-			.CustomRequest.custom(`v3/transfers/rates?amount=${amount}&destination_currency=${from}&source_currency=${to}`, {
-				method: 'GET',
-			})
+		const res = await axios
+			.get(`/transfers/rates?amount=${amount}&destination_currency=${from}&source_currency=${to}`)
 			.catch(() => null)
 		// TODO: figure whether to throw, and consequences of throwing in background process
-		const data = res?.body?.data as TransferRate | undefined
+		const data = res?.data?.data as TransferRate | undefined
 		return data?.source.amount ?? amount
 	}
 
 	static async chargeCard(data: { token: string; currency: Currencies; amount: number; email: string; id: string }) {
-		const res = await flw()
-			.Tokenized.charge({
+		const res = await axios
+			.post('/tokenized-charges', {
 				token: data.token,
 				currency: data.currency,
-				amount: data.amount,
+				amount: Math.abs(data.amount),
 				email: data.email,
 				tx_ref: data.id,
 			})
 			.catch(() => null)
-		return (res?.data as FwTransaction | null)?.status === 'successful'
+		return (res?.data?.data as FwTransaction | null)?.status === 'successful'
 	}
 }
