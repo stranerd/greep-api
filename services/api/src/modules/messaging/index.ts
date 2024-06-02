@@ -10,3 +10,5 @@ export const ChatsUseCases = new ChatsUseCase(chatRepository)
 export const ChatMetasUseCases = new ChatMetasUseCase(chatMetaRepository)
 
 export { ChatSupportType, ChatType } from './domain/types'
+export { ChatEntity } from './domain/entities/chat'
+export { ChatMetaEntity } from './domain/entities/chatMeta'
