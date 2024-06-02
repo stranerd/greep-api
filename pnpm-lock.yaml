@@ -18,8 +18,8 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2
       equipped:
-        specifier: 5.0.0-beta.13
-        version: 5.0.0-beta.13
+        specifier: 5.0.0-beta.14
+        version: 5.0.0-beta.14
       firebase-admin:
         specifier: ^12.1.1
         version: 12.1.1
@@ -2127,8 +2127,8 @@ packages:
     dev: false
     optional: true
 
-  /equipped@5.0.0-beta.13:
-    resolution: {integrity: sha512-/fecUMute1U8/yrMPQWT5NheiFTYybO1C3ci90/o5fVtXyfBrp820aaZhdk7i0acY6B7AUvwvJhsTnZa6fC8yw==}
+  /equipped@5.0.0-beta.14:
+    resolution: {integrity: sha512-53kjTqliyRjZ+iU3scmwT0M4Rui6t9j513ahMAEDt+9TCINcgsQxkY2zdetzHTBpc4gbiGgXIGH904NpK5zpdQ==}
     dependencies:
       '@fastify/cookie': 9.3.1
       '@fastify/cors': 9.0.1
