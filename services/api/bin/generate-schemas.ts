@@ -22,7 +22,7 @@ try {
 	})
 
 	fs.mkdirSync(path.dirname(outputFile), { recursive: true })
-	fs.writeFileSync(outputFile, JSON.stringify(jsonSchema, null, 4))
+	fs.writeFileSync(outputFile, JSON.stringify(jsonSchema))
 
 	console.log('Generated schema successfully')
 } catch (error) {
