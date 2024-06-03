@@ -5,50 +5,16 @@ import { ApiDef, AuthTypes, Random, Router, Schema, Validation, ValidationError,
 const router = new Router({ path: '/emails', groups: ['Emails'] })
 
 router.post<SigninRouteDef>({ path: '/signin', key: 'emails-signin' })(async (req) => {
-	const userCredential = {
-		...req.body,
-		email: req.body.email ?? '',
-	}
-
-	const users = await AuthUsersUseCases.findUsersByEmailorUsername(userCredential.email)
-	const emailUser = users.find((u) => u.email === userCredential.email)
-
-	const { email, password, referrer } = validate(
+	const validateData = validate(
 		{
-			email: Schema.string()
-				.email()
-				.addRule((value) => {
-					const email = value as string
-					if (!emailUser) return Validation.isValid(email)
-					if (emailUser.authTypes.includes(AuthTypes.email))
-						return Validation.isInvalid(['this email already exists with a password attached'], email)
-					if (emailUser.authTypes.includes(AuthTypes.google))
-						return Validation.isInvalid(['this email is associated with a google account. Try signing in with google'], email)
-					if (emailUser.authTypes.includes(AuthTypes.apple))
-						return Validation.isInvalid(['this email is associated with an apple account. Try signing in with apple'], email)
-					return Validation.isInvalid(['email already in use'], email)
-				}),
-			password: Schema.string().min(8).max(16),
-			referrer: Schema.string().min(1).nullable().default(null),
+			email: Schema.string(),
+			password: Schema.string(),
 		},
-		userCredential,
+		req.body,
 	)
 
-	const validateData = {
-		name: { first: '', last: '' },
-		username: Random.string(9),
-		email,
-		password,
-		photo: null,
-		referrer: await verifyReferrer(referrer),
-		phone: null,
-	}
-
-	const updatedUser = emailUser
-		? await AuthUsersUseCases.updateDetails({ userId: emailUser.id, data: validateData })
-		: await AuthUseCases.registerUser(validateData)
-
-	return await generateAuthOutput(updatedUser)
+	const data = await AuthUseCases.authenticateUser(validateData)
+	return await generateAuthOutput(data)
 })
 
 router.post<SignupRouteDef>({ path: '/signup', key: 'emails-signup' })(async (req) => {
