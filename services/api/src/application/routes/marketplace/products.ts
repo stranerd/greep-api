@@ -84,7 +84,7 @@ router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-crea
 	})
 })
 
-router.put<ProductsUpdateeRouteDef>({ path: '/:id', key: 'marketplace-products-update', middlewares: [isAuthenticated] })(async (req) => {
+router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-update', middlewares: [isAuthenticated] })(async (req) => {
 	const uploadedBanner = req.files.banner?.at(0) ?? null
 	const changedBanner = !!uploadedBanner
 
@@ -96,7 +96,7 @@ router.put<ProductsUpdateeRouteDef>({ path: '/:id', key: 'marketplace-products-u
 
 	const banner = uploadedBanner ? await StorageUseCases.upload('marketplace/banners', uploadedBanner) : undefined
 
-	const updatedBanner = await ProductsUseCases.update({
+	const updatedProduct = await ProductsUseCases.update({
 		id: req.params.id,
 		userId: req.authUser!.id,
 		data: {
@@ -107,7 +107,7 @@ router.put<ProductsUpdateeRouteDef>({ path: '/:id', key: 'marketplace-products-u
 			...(changedBanner ? { photo: banner } : {}),
 		},
 	})
-	if (updatedBanner) return updatedBanner
+	if (updatedProduct) return updatedProduct
 	throw new NotAuthorizedError()
 })
 
@@ -161,7 +161,7 @@ type ProductsCreateRouteDef = ApiDef<{
 	response: ProductEntity
 }>
 
-type ProductsUpdateeRouteDef = ApiDef<{
+type ProductsUpdateRouteDef = ApiDef<{
 	key: 'marketplace-products-update'
 	method: 'put'
 	params: { id: string }
