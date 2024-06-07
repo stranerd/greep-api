@@ -1,4 +1,4 @@
-import { CartProductItem } from '../../domain/types'
+import { CartProductItem, OrderToModelBase } from '../../domain/types'
 
 export interface CartLinkFromModel extends CartLinkToModel {
 	_id: string
@@ -7,7 +7,7 @@ export interface CartLinkFromModel extends CartLinkToModel {
 	updatedAt: number
 }
 
-export interface CartLinkToModel {
+export interface CartLinkToModel extends Pick<OrderToModelBase, 'to' | 'time' | 'payment'> {
 	userId: string
 	vendorId: string
 	products: CartProductItem[]

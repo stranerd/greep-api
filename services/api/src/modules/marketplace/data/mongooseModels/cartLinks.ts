@@ -2,8 +2,9 @@ import { appInstance } from '@utils/environment'
 import { CartLinkDbChangeCallbacks } from '../../utils/changes/cartLinks'
 import { CartFromModel } from '../models/carts'
 import { CartLinkMapper } from '../mappers/cartLinks'
+import { CartLinkFromModel } from '../models/cartLinks'
 
-const Schema = new appInstance.dbs.mongo.Schema<CartFromModel>(
+const Schema = new appInstance.dbs.mongo.Schema<CartLinkFromModel>(
 	{
 		_id: {
 			type: String,
@@ -26,6 +27,18 @@ const Schema = new appInstance.dbs.mongo.Schema<CartFromModel>(
 			type: Boolean,
 			required: false,
 			default: true,
+		},
+		to: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as CartLinkFromModel['to'],
+			required: true,
+		},
+		time: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as CartLinkFromModel['time'],
+			required: true,
+		},
+		payment: {
+			type: String,
+			required: true,
 		},
 		createdAt: {
 			type: Number,

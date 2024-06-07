@@ -1,6 +1,7 @@
 import { isAuthenticated, isDriver } from '@application/middlewares'
 import { Phone } from '@modules/auth'
 import {
+	CartLinksUseCases,
 	CartsUseCases,
 	OrderDispatchDeliveryType,
 	OrderEntity,
@@ -83,11 +84,11 @@ router.get<OrdersFindRouteDef>({ path: '/:id', key: 'marketplace-orders-find' })
 	return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
 })
 
-router.post<OrdersCheckoutRouteDef>({ path: '/checkout', key: 'marketplace-orders-checkout' })(async (req) => {
+router.post<OrdersCheckoutCartRouteDef>({ path: '/checkout', key: 'marketplace-orders-checkout-cart' })(async (req) => {
 	const data = validate({ ...schema(), cartId: Schema.string().min(1) }, req.body)
 
 	const cart = await CartsUseCases.find(data.cartId)
-	if (!cart || cart.userId !== req.authUser!.id) throw new NotAuthorizedError()
+	if (!cart || cart.userId !== req.authUser!.id || !cart.active) throw new NotAuthorizedError()
 
 	const { user } = await verifyUser(cart.userId, data.discount)
 
@@ -104,11 +105,11 @@ router.post<OrdersCheckoutRouteDef>({ path: '/checkout', key: 'marketplace-order
 	return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
 })
 
-router.post<OrdersCheckoutFeeRouteDef>({ path: '/checkout/fee', key: 'marketplace-orders-checkout-fee' })(async (req) => {
+router.post<OrdersCheckoutCartFeeRouteDef>({ path: '/checkout/fee', key: 'marketplace-orders-checkout-cart-fee' })(async (req) => {
 	const data = validate({ ...schema(), cartId: Schema.string().min(1) }, req.body)
 
 	const cart = await CartsUseCases.find(data.cartId)
-	if (!cart || cart.userId !== req.authUser!.id) throw new NotAuthorizedError()
+	if (!cart || cart.userId !== req.authUser!.id || !cart.active) throw new NotAuthorizedError()
 
 	const vendor = await UsersUseCases.find(cart.vendorId)
 	if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
@@ -126,6 +127,60 @@ router.post<OrdersCheckoutFeeRouteDef>({ path: '/checkout/fee', key: 'marketplac
 		},
 	})
 })
+
+router.post<OrdersCheckoutCartLinkRouteDef>({ path: '/checkout/links', key: 'marketplace-orders-checkout-cart-link' })(async (req) => {
+	const data = validate({ cartLinkId: Schema.string().min(1) }, req.body)
+
+	const cartLink = await CartLinksUseCases.find(data.cartLinkId)
+	if (!cartLink || !cartLink.active) throw new NotAuthorizedError()
+
+	const { user } = await verifyUser(req.authUser!.id, 0)
+
+	const vendor = await UsersUseCases.find(cartLink.vendorId)
+	if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
+	if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
+
+	const order = await OrdersUseCases.checkout({
+		cartLinkId: cartLink.id,
+		to: cartLink.to,
+		payment: cartLink.payment,
+		discount: 0,
+		dropoffNote: '',
+		time: cartLink.time,
+		from: vendor.vendor.location,
+		userId: user.id,
+		email: user.bio.email,
+	})
+	return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
+})
+
+router.post<OrdersCheckoutCartLinkFeeRouteDef>({ path: '/checkout/links/fee', key: 'marketplace-orders-checkout-cart-link-fee' })(
+	async (req) => {
+		const data = validate({ cartLinkId: Schema.string().min(1) }, req.body)
+
+		const cartLink = await CartLinksUseCases.find(data.cartLinkId)
+		if (!cartLink || !cartLink.active) throw new NotAuthorizedError()
+
+		const vendor = await UsersUseCases.find(cartLink.vendorId)
+		if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
+		if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
+
+		return await OrderEntity.calculateFees({
+			from: vendor.vendor.location,
+			to: cartLink.to,
+			discount: 0,
+			payment: cartLink.payment,
+			time: cartLink.time,
+			userId: req.authUser!.id,
+			data: {
+				type: OrderType.cartLink,
+				cartLinkId: cartLink.id,
+				products: cartLink.products,
+				vendorId: cartLink.vendorId,
+			},
+		})
+	},
+)
 
 router.post<OrdersDispatchRouteDef>({ path: '/dispatch', key: 'marketplace-orders-dispatch' })(async (req) => {
 	const data = validate(
@@ -332,17 +387,31 @@ type OrdersFindRouteDef = ApiDef<{
 	response: Order
 }>
 
-type OrdersCheckoutRouteDef = ApiDef<{
-	key: 'marketplace-orders-checkout'
+type OrdersCheckoutCartRouteDef = ApiDef<{
+	key: 'marketplace-orders-checkout-cart'
 	method: 'post'
 	body: CheckoutOrder
 	response: Order
 }>
 
-type OrdersCheckoutFeeRouteDef = ApiDef<{
-	key: 'marketplace-orders-checkout-fee'
+type OrdersCheckoutCartFeeRouteDef = ApiDef<{
+	key: 'marketplace-orders-checkout-cart-fee'
 	method: 'post'
 	body: CheckoutOrder
+	response: OrderFee
+}>
+
+type OrdersCheckoutCartLinkRouteDef = ApiDef<{
+	key: 'marketplace-orders-checkout-cart-link'
+	method: 'post'
+	body: { cartLinkId: string }
+	response: Order
+}>
+
+type OrdersCheckoutCartLinkFeeRouteDef = ApiDef<{
+	key: 'marketplace-orders-checkout-cart-link-fee'
+	method: 'post'
+	body: { cartLinkId: string }
 	response: OrderFee
 }>
 

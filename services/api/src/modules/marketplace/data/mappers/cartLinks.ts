@@ -11,6 +11,9 @@ export class CartLinkMapper extends BaseMapper<CartLinkFromModel, CartLinkToMode
 			userId: param.userId,
 			vendorId: param.vendorId,
 			active: param.active,
+			to: param.to,
+			time: param.time,
+			payment: param.payment,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})
@@ -21,6 +24,9 @@ export class CartLinkMapper extends BaseMapper<CartLinkFromModel, CartLinkToMode
 			userId: param.userId,
 			vendorId: param.vendorId,
 			products: param.products,
+			to: param.to,
+			time: param.time,
+			payment: param.payment,
 		}
 	}
 }

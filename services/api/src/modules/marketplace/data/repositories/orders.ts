@@ -45,6 +45,7 @@ export class OrderRepository implements IOrderRepository {
 		} else if ('cartLinkId' in data) {
 			const cartLink = await CartLink.findById(data.cartLinkId, {}, { session })
 			if (!cartLink) throw new Error('cart link not found')
+			if (!cartLink.active) throw new Error('cart link not active')
 
 			const products = await Product.find({ _id: { $in: cartLink.products.map((p) => p.id) } }, {}, { session })
 			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
@@ -70,6 +71,7 @@ export class OrderRepository implements IOrderRepository {
 				fee: await OrderEntity.calculateFees({ ...data, data: orderData }),
 			}).save({ session })
 			if ('cartId' in data) await Cart.findByIdAndUpdate(data.cartId, { $set: { active: false } }, { session })
+			if ('cartLinkId' in data) await CartLink.findByIdAndUpdate(data.cartLinkId, { $set: { active: false } }, { session })
 			return (res = order)
 		})
 		return this.mapper.mapFrom(res)!
