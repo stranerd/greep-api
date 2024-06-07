@@ -4,6 +4,7 @@ import {
 	CartsUseCases,
 	OrderDispatchDeliveryType,
 	OrderEntity,
+	OrderFee,
 	OrderPayment,
 	OrderStatus,
 	OrderType,
@@ -297,7 +298,6 @@ router.post<OrdersCancelRouteDef>({ path: '/:id/cancel', key: 'marketplace-order
 export default router
 
 type Order = OrderEntity & { users: EmbeddedUser[] }
-type OrderFees = Awaited<ReturnType<typeof OrderEntity.calculateFees>>
 
 type CreateOrderBase = {
 	to: Location
@@ -343,7 +343,7 @@ type OrdersCheckoutFeeRouteDef = ApiDef<{
 	key: 'marketplace-orders-checkout-fee'
 	method: 'post'
 	body: CheckoutOrder
-	response: OrderFees
+	response: OrderFee
 }>
 
 type OrdersDispatchRouteDef = ApiDef<{
@@ -357,7 +357,7 @@ type OrdersDispatchFeeRouteDef = ApiDef<{
 	key: 'marketplace-orders-dispatch-fee'
 	method: 'post'
 	body: DispatchOrder
-	response: OrderFees
+	response: OrderFee
 }>
 
 type OrdersAcceptRouteDef = ApiDef<{

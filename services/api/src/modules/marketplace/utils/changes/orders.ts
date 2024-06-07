@@ -72,7 +72,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 					},
 				})
 		}
-		if (successful && after.data.type === OrderType.cart) {
+		if (successful && 'products' in after.data) {
 			const productIds = after.data.products.map((p) => p.id)
 			const { results: products } = await ProductsUseCases.get({
 				where: [{ field: 'id', condition: Conditions.in, value: productIds }],

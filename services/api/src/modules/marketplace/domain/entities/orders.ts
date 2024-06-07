@@ -2,7 +2,7 @@ import { Currencies, FlutterwavePayment } from '@modules/payment'
 import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { DeliveryTime, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderType } from '../types'
+import { DeliveryTime, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType } from '../types'
 
 type OrderEntityProps = {
 	id: string
@@ -33,7 +33,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 	getMembers() {
 		const members = [this.userId]
 		if (this.driverId) members.push(this.driverId)
-		if (this.data.type === OrderType.cart) members.push(this.data.vendorId)
+		if ('vendorId' in this.data) members.push(this.data.vendorId)
 		return members
 	}
 
@@ -77,7 +77,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		time: DeliveryTime
 		payment: OrderPayment
 	}): Promise<OrderFee> {
-		const items = data.data.type === OrderType.cart ? data.data.products : []
+		const items = 'products' in data.data ? data.data.products : []
 		const currency = Currencies.TRY
 		const convertedItems = await Promise.all(
 			items.map((item) => FlutterwavePayment.convertAmount(item.amount * item.quantity, item.currency, currency)),

@@ -80,6 +80,7 @@ router.put<CartLinksUpdateRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-
 		id: req.params.id,
 		userId: req.authUser!.id,
 		data: {
+			vendorId,
 			products: data.products
 				.map((p) =>
 					productsMap.has(p.id)

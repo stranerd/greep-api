@@ -8,6 +8,7 @@ import { OrderFromModel, OrderToModel } from '../models/orders'
 import { Cart } from '../mongooseModels/carts'
 import { Order } from '../mongooseModels/orders'
 import { Product } from '../mongooseModels/products'
+import { CartLink } from '../mongooseModels/cartLinks'
 
 export class OrderRepository implements IOrderRepository {
 	private static instance: OrderRepository
@@ -26,9 +27,8 @@ export class OrderRepository implements IOrderRepository {
 		return this.mapper.mapFrom(order)!
 	}
 
-	async checkout(data: CheckoutInput) {
-		let res = null as OrderFromModel | null
-		await Order.collection.conn.transaction(async (session) => {
+	private async getOrderData(data: CheckoutInput, session): Promise<OrderToModel['data']> {
+		if ('cartId' in data) {
 			const cart = await Cart.findById(data.cartId, {}, { session })
 			if (!cart || cart.userId !== data.userId) throw new Error('cart not found')
 			if (!cart.active) throw new Error('cart not active')
@@ -36,21 +36,40 @@ export class OrderRepository implements IOrderRepository {
 			const products = await Product.find({ _id: { $in: cart.products.map((p) => p.id) } }, {}, { session })
 			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
 
-			const filteredProducts = cart.products.filter((p) => products.find((pr) => pr.id === p.id)?.inStock)
-			if (!filteredProducts.length) throw new Error('no products available! Reset your cart and continue shopping')
-
-			const orderData: OrderToModel['data'] = {
+			return {
 				type: OrderType.cart,
 				cartId: cart.id,
 				vendorId: cart.vendorId,
-				products: filteredProducts,
+				products: cart.products,
 			}
+		} else if ('cartLinkId' in data) {
+			const cartLink = await CartLink.findById(data.cartLinkId, {}, { session })
+			if (!cartLink) throw new Error('cart link not found')
+
+			const products = await Product.find({ _id: { $in: cartLink.products.map((p) => p.id) } }, {}, { session })
+			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
+
+			return {
+				type: OrderType.cartLink,
+				cartLinkId: cartLink.id,
+				vendorId: cartLink.vendorId,
+				products: cartLink.products,
+			}
+		}
+
+		throw new Error('invalid data')
+	}
+
+	async checkout(data: CheckoutInput) {
+		let res = null as OrderFromModel | null
+		await Order.collection.conn.transaction(async (session) => {
+			const orderData = await this.getOrderData(data, session)
 			const order = await new Order({
 				...data,
 				data: orderData,
 				fee: await OrderEntity.calculateFees({ ...data, data: orderData }),
 			}).save({ session })
-			await Cart.findByIdAndUpdate(cart.id, { $set: { active: false } }, { session })
+			if ('cartId' in data) await Cart.findByIdAndUpdate(data.cartId, { $set: { active: false } }, { session })
 			return (res = order)
 		})
 		return this.mapper.mapFrom(res)!
@@ -76,7 +95,7 @@ export class OrderRepository implements IOrderRepository {
 				_id: id,
 				[`status.${OrderStatus.accepted}`]: null,
 				[`status.${OrderStatus.rejected}`]: null,
-				$or: [{ 'data.type': OrderType.cart, 'data.vendorId': vendorId }, { 'data.type': OrderType.dispatch }],
+				$or: [{ 'data.vendorId': vendorId }, { 'data.type': OrderType.dispatch }],
 			},
 			{
 				$set: {
@@ -159,10 +178,7 @@ export class OrderRepository implements IOrderRepository {
 				_id: id,
 				[`status.${OrderStatus.driverAssigned}`]: { $ne: null },
 				[`status.${OrderStatus.shipped}`]: null,
-				$or: [
-					{ 'data.type': OrderType.cart, 'data.vendorId': userId },
-					{ 'data.type': OrderType.dispatch, userId },
-				],
+				$or: [{ 'data.vendorId': userId }, { 'data.type': OrderType.dispatch, userId }],
 			},
 			{ $set: { [`status.${OrderStatus.shipped}`]: { at: Date.now() } } },
 			{ new: true },

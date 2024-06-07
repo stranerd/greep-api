@@ -50,6 +50,7 @@ export type OrderStatusType = Record<OrderStatus, { at: number; message?: string
 
 export enum OrderType {
 	cart = 'cart',
+	cartLink = 'cartLink',
 	dispatch = 'dispatch',
 }
 
@@ -64,6 +65,12 @@ export type OrderData =
 	| {
 			type: OrderType.cart
 			cartId: string
+			vendorId: string
+			products: CartProductItem[]
+	  }
+	| {
+			type: OrderType.cartLink
+			cartLinkId: string
 			vendorId: string
 			products: CartProductItem[]
 	  }
@@ -87,9 +94,7 @@ export type OrderToModelBase = {
 	payment: OrderPayment
 }
 
-export type CheckoutInput = OrderToModelBase & {
-	cartId: string
-}
+export type CheckoutInput = OrderToModelBase & ({ cartId: string } | { cartLinkId: string })
 
 export type OrderFee = {
 	vatPercentage: number
