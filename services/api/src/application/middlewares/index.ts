@@ -30,10 +30,22 @@ export const isDriver = makeMiddleware(
 	async (request) => {
 		const isDriver = request.authUser?.roles?.[AuthRole.isDriver]
 		if (!request.authUser) throw new NotAuthenticatedError()
-		if (!isDriver) throw new NotAuthorizedError()
+		if (!isDriver) throw new NotAuthorizedError('not a driver')
 	},
 	(route) => {
 		route.descriptions ??= []
 		route.descriptions.push('Requires auth user to be a driver with an active account')
+	},
+)
+
+export const isVendor = makeMiddleware(
+	async (request) => {
+		const isVendor = request.authUser?.roles?.[AuthRole.isVendor]
+		if (!request.authUser) throw new NotAuthenticatedError()
+		if (!isVendor) throw new NotAuthorizedError('not a vendor')
+	},
+	(route) => {
+		route.descriptions ??= []
+		route.descriptions.push('Requires auth user to be a vendor')
 	},
 )

@@ -1,4 +1,4 @@
-import { isAuthenticated } from '@application/middlewares'
+import { isAuthenticated, isVendor } from '@application/middlewares'
 import { TagEntity, TagMeta, TagTypes, TagsUseCases } from '@modules/interactions'
 import { ProductEntity, ProductMeta, ProductsUseCases } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
@@ -62,27 +62,29 @@ router.get<ProductsRecommendedTagsRouteDef>({ path: '/recommendation/tags', key:
 	return await TagsUseCases.get(query)
 })
 
-router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-create', middlewares: [isAuthenticated] })(async (req) => {
-	const data = validate(schema(true), { ...req.body, banner: req.files.banner?.at(0) ?? null })
+router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-create', middlewares: [isAuthenticated, isVendor] })(
+	async (req) => {
+		const data = validate(schema(true), { ...req.body, banner: req.files.banner?.at(0) ?? null })
 
-	const { results: tags } = await TagsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: data.tagIds }],
-	})
+		const { results: tags } = await TagsUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: data.tagIds }],
+		})
 
-	const user = await UsersUseCases.find(req.authUser!.id)
-	if (!user || user.isDeleted()) throw new BadRequestError('user not found')
-	if (!user.vendor?.location)
-		throw new BadRequestError('you must set your vendor location before you can list products on the marketplace')
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+		if (!user.vendor?.location)
+			throw new BadRequestError('you must set your vendor location before you can list products on the marketplace')
 
-	const banner = await StorageUseCases.upload('marketplace/banners', data.banner!)
+		const banner = await StorageUseCases.upload('marketplace/banners', data.banner!)
 
-	return await ProductsUseCases.create({
-		...data,
-		tagIds: tags.map((t) => t.id),
-		user: user.getEmbedded(),
-		banner,
-	})
-})
+		return await ProductsUseCases.create({
+			...data,
+			tagIds: tags.map((t) => t.id),
+			user: user.getEmbedded(),
+			banner,
+		})
+	},
+)
 
 router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-update', middlewares: [isAuthenticated] })(async (req) => {
 	const uploadedBanner = req.files.banner?.at(0) ?? null
