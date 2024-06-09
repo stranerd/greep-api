@@ -76,6 +76,10 @@ export enum UserVendorType {
 	items = 'items',
 }
 
+export type BusinessTime = {
+	schedule: (Time | null)[]
+} | null
+
 export type UserTypeData =
 	| {
 			type: UserType.driver
@@ -88,7 +92,7 @@ export type UserTypeData =
 			email: string | null
 			website: string | null
 			location: Location
-			schedule: (Time | null)[]
+			time: BusinessTime
 	  }
 	| {
 			type: UserType.customer
