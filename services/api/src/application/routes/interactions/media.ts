@@ -34,16 +34,16 @@ router.post<InteractionsMediaCreateRouteDef>({ path: '/', key: 'interactions-med
 			{ ...req.body, file: req.files.file?.at(0) ?? null },
 		)
 
-		const userId = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'media')
+		const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'media')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
-		if (userId !== user.id) throw new NotAuthorizedError()
+		if (entity.userId !== user.id) throw new NotAuthorizedError()
 
 		const file = await StorageUseCases.upload('interactions/media', data.file!)
 
 		return await MediaUseCases.create({
 			file,
-			entity: { ...data.entity, userId },
+			entity,
 			user: user.getEmbedded(),
 		})
 	},
@@ -83,7 +83,7 @@ router.delete<InteractionsMediaDeleteRouteDef>({ path: '/:id', key: 'interaction
 
 router.post<InteractionsMediaReorderRouteDef>({ path: '/reorder', key: 'interactions-media-reorder', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { entity, ids } = validate(
+		const data = validate(
 			{
 				entity: Schema.object({
 					id: Schema.string().min(1),
@@ -94,10 +94,10 @@ router.post<InteractionsMediaReorderRouteDef>({ path: '/reorder', key: 'interact
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'media')
-		if (userId !== req.authUser!.id) throw new NotAuthorizedError()
+		const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'media')
+		if (entity.userId !== req.authUser!.id) throw new NotAuthorizedError()
 
-		return await MediaUseCases.reorder({ entity: { ...entity, userId }, ids })
+		return await MediaUseCases.reorder({ entity, ids: data.ids })
 	},
 )
 

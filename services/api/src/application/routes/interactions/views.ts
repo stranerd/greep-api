@@ -18,7 +18,7 @@ router.get<InteractionsViewsFindRouteDef>({ path: '/:id', key: 'interactions-vie
 
 router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-views-create', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { entity } = validate(
+		const data = validate(
 			{
 				entity: Schema.object({
 					id: Schema.string().min(1),
@@ -28,12 +28,12 @@ router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-vie
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'views')
+		const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'views')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ViewsUseCases.create({
-			entity: { ...entity, userId },
+			entity,
 			user: user.getEmbedded(),
 		})
 	},

@@ -18,7 +18,7 @@ router.get<InteractionsReviewsFindRouteDef>({ path: '/:id', key: 'interactions-r
 
 router.post<InteractionsReviewsCreateRouteDef>({ path: '/', key: 'interactions-reviews-create', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { rating, message, entity } = validate(
+		const data = validate(
 			{
 				rating: Schema.number().round(0).gte(0).lte(5),
 				message: Schema.string(),
@@ -30,14 +30,13 @@ router.post<InteractionsReviewsCreateRouteDef>({ path: '/', key: 'interactions-r
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'reviews')
+		const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'reviews')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ReviewsUseCases.add({
-			rating,
-			message,
-			entity: { ...entity, userId },
+			...data,
+			entity,
 			user: user.getEmbedded(),
 		})
 	},

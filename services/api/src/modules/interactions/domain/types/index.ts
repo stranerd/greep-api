@@ -3,14 +3,33 @@ export type { EmbeddedUser } from '@modules/users'
 export enum InteractionEntities {
 	comments = 'comments',
 	products = 'products',
+	orders = 'orders',
 }
 
-export type Interaction = {
-	type: InteractionEntities
+type BaseInteractionEntity = {
 	id: string
+	userId: string
 }
 
-export type InteractionEntity = Interaction & { userId: string }
+export type InteractionEntity = BaseInteractionEntity &
+	(
+		| {
+				type: InteractionEntities.comments
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.products
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.orders
+				relations: {
+					products: string[]
+				}
+		  }
+	)
+
+export type Interaction = Omit<InteractionEntity, 'userId' | 'relations'>
 
 export enum CommentMeta {
 	comments = 'comments',

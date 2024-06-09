@@ -22,7 +22,7 @@ router.get<InteractionsCommentsFindRouteDef>({ path: '/:id', key: 'interactions-
 
 router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-comments-create', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { body, entity } = validate(
+		const data = validate(
 			{
 				...schema(),
 				entity: Schema.object({
@@ -33,13 +33,13 @@ router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'comments')
+		const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'comments')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await CommentsUseCases.create({
-			body,
-			entity: { ...entity, userId },
+			...data,
+			entity,
 			user: user.getEmbedded(),
 		})
 	},
@@ -47,12 +47,12 @@ router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-
 
 router.put<InteractionsCommentsUpdateRouteDef>({ path: '/:id', key: 'interactions-comments-update', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { body } = validate(schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const updated = await CommentsUseCases.update({
 			id: req.params.id,
 			userId: req.authUser!.id,
-			data: { body },
+			data,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()

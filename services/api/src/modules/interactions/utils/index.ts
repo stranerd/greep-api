@@ -1,11 +1,11 @@
-import { ProductsUseCases } from '@modules/marketplace'
+import { OrdersUseCases, ProductsUseCases } from '@modules/marketplace'
 import { BadRequestError } from 'equipped'
 import { CommentsUseCases } from '..'
-import { InteractionEntities } from '../domain/types'
+import { InteractionEntities, InteractionEntity } from '../domain/types'
 
 type Interactions = 'comments' | 'likes' | 'dislikes' | 'reports' | 'reviews' | 'views' | 'media'
 
-const finders = {
+const finders: Record<InteractionEntities, (id: string) => Promise<string | undefined>> = {
 	[InteractionEntities.comments]: async (id: string) => {
 		const comment = await CommentsUseCases.find(id)
 		if (!comment || comment.entity.type === InteractionEntities.comments) return undefined
@@ -15,14 +15,20 @@ const finders = {
 		const product = await ProductsUseCases.find(id)
 		return product?.user.id
 	},
+	[InteractionEntities.orders]: async (id) => {
+		const order = await OrdersUseCases.find(id)
+		return order?.userId
+	},
 }
 
-export const verifyInteractionAndGetUserId = async (type: InteractionEntities, id: string, interaction: Interactions) => {
+export const verifyInteractions = async (type: InteractionEntities, id: string, interaction: Interactions): Promise<InteractionEntity> => {
 	const types = (() => {
 		if (interaction === 'comments') return [InteractionEntities.comments]
+		if (interaction === 'likes') return []
+		if (interaction === 'dislikes') return []
 		if (interaction === 'views') return []
 		if (interaction === 'reports') return []
-		if (interaction === 'reviews') return []
+		if (interaction === 'reviews') return [InteractionEntities.orders]
 		if (interaction === 'media') return [InteractionEntities.products]
 		return []
 	})().reduce(
@@ -37,5 +43,10 @@ export const verifyInteractionAndGetUserId = async (type: InteractionEntities, i
 	if (!finder) throw new BadRequestError(`${interaction} not supported for ${type}`)
 	const res = await finder(id)
 	if (!res) throw new BadRequestError(`no ${type} with id ${id} found`)
-	return res
+	return {
+		type,
+		id,
+		userId: res,
+		relations: {},
+	} as any
 }
