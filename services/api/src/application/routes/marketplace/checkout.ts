@@ -10,16 +10,13 @@ import {
 	OrdersUseCases,
 } from '@modules/marketplace'
 import { ActivityEntity, ActivityType, EmbeddedUser, UserType, UsersUseCases, mergeWithUsers } from '@modules/users'
-import { Location, LocationSchema, Time, TimeSchema } from '@utils/types'
+import { Location, LocationSchema } from '@utils/types'
 import { ApiDef, BadRequestError, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
 
 const schema = () => ({
 	to: LocationSchema(),
 	dropoffNote: Schema.string(),
-	time: Schema.object({
-		date: Schema.time().min(Date.now()).asStamp(),
-		time: TimeSchema(),
-	}),
+	time: Schema.time().min(Date.now()).asStamp(),
 	discount: Schema.number().gte(0),
 	payment: Schema.in(Object.values(OrderPayment)),
 })
@@ -179,7 +176,7 @@ type Order = OrderEntity & { users: EmbeddedUser[] }
 type CreateOrderBase = {
 	to: Location
 	dropoffNote: string
-	time: { date: number; time: Time }
+	time: number
 	discount: number
 	payment: OrderPayment
 }

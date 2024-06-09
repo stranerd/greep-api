@@ -2,7 +2,7 @@ import { Currencies, FlutterwavePayment } from '@modules/payment'
 import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { DeliveryTime, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType } from '../types'
+import { OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType } from '../types'
 
 type OrderEntityProps = {
 	id: string
@@ -15,7 +15,7 @@ type OrderEntityProps = {
 	to: Location
 	dropoffNote: string
 	data: OrderData
-	time: DeliveryTime
+	time: number
 	discount: number
 	payment: OrderPayment
 	fee: OrderFee
@@ -74,7 +74,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		from: Location
 		to: Location
 		discount: number
-		time: DeliveryTime
+		time: number
 		payment: OrderPayment
 	}): Promise<OrderFee> {
 		const items = 'products' in data.data ? data.data.products : []

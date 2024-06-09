@@ -55,8 +55,9 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			default: '',
 		},
 		time: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as OrderFromModel['time'],
+			type: Number,
 			required: true,
+			default: 0,
 		},
 		discount: {
 			type: Number,
