@@ -1,6 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { CartLinkEntity, CartLinksUseCases, OrderPayment, ProductsUseCases } from '@modules/marketplace'
-import { LocationSchema } from '@utils/types'
+import { CartLinkEntity, CartLinksUseCases, ProductsUseCases } from '@modules/marketplace'
 import {
 	ApiDef,
 	BadRequestError,
@@ -21,15 +20,6 @@ const schema = () => ({
 			quantity: Schema.number().round().gte(1),
 		}),
 	).min(1),
-	to: LocationSchema(),
-	time: Schema.object({
-		date: Schema.time().min(Date.now()).asStamp(),
-		time: Schema.string().custom((value) => {
-			const [hours, minutes] = value.split(':').map((v) => parseInt(v))
-			return [hours >= 0 && hours <= 23, minutes >= 0 && minutes <= 59].every(Boolean)
-		}),
-	}),
-	payment: Schema.in(Object.values(OrderPayment)),
 })
 
 const router = new Router({ path: '/cartLinks', groups: ['Cart Links'] })
@@ -58,7 +48,6 @@ router.post<CartLinksCreateRouteDef>({ path: '/', key: 'marketplace-cartlinks-cr
 	if (!vendorId || products.find((p) => p.user.id !== vendorId)) throw new BadRequestError('all products must be from the same vendor')
 
 	return await CartLinksUseCases.create({
-		...data,
 		products: data.products
 			.map((p) =>
 				productsMap.has(p.id)

@@ -84,7 +84,7 @@ router.post<OrdersCheckoutCartFeeRouteDef>({ path: '/checkout/fee', key: 'market
 })
 
 router.post<OrdersCheckoutCartLinkRouteDef>({ path: '/checkout/links', key: 'marketplace-orders-checkout-cart-link' })(async (req) => {
-	const data = validate({ cartLinkId: Schema.string().min(1) }, req.body)
+	const data = validate({ ...schema(), cartLinkId: Schema.string().min(1) }, req.body)
 
 	const cartLink = await CartLinksUseCases.find(data.cartLinkId)
 	if (!cartLink || !cartLink.active) throw new NotAuthorizedError()
@@ -96,12 +96,7 @@ router.post<OrdersCheckoutCartLinkRouteDef>({ path: '/checkout/links', key: 'mar
 	if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
 
 	const order = await OrdersUseCases.checkout({
-		cartLinkId: cartLink.id,
-		to: cartLink.to,
-		payment: cartLink.payment,
-		discount: 0,
-		dropoffNote: '',
-		time: cartLink.time,
+		...data,
 		from: vendor.vendor.location,
 		userId: user.id,
 		email: user.bio.email,
@@ -111,7 +106,7 @@ router.post<OrdersCheckoutCartLinkRouteDef>({ path: '/checkout/links', key: 'mar
 
 router.post<OrdersCheckoutCartLinkFeeRouteDef>({ path: '/checkout/links/fee', key: 'marketplace-orders-checkout-cart-link-fee' })(
 	async (req) => {
-		const data = validate({ cartLinkId: Schema.string().min(1) }, req.body)
+		const data = validate({ ...schema(), cartLinkId: Schema.string().min(1) }, req.body)
 
 		const cartLink = await CartLinksUseCases.find(data.cartLinkId)
 		if (!cartLink || !cartLink.active) throw new NotAuthorizedError()
@@ -121,11 +116,8 @@ router.post<OrdersCheckoutCartLinkFeeRouteDef>({ path: '/checkout/links/fee', ke
 		if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
 
 		return await OrderEntity.calculateFees({
+			...data,
 			from: vendor.vendor.location,
-			to: cartLink.to,
-			discount: 0,
-			payment: cartLink.payment,
-			time: cartLink.time,
 			userId: req.authUser!.id,
 			data: {
 				type: OrderType.cartLink,
@@ -204,7 +196,8 @@ type CreateOrderBase = {
 	discount: number
 	payment: OrderPayment
 }
-type CheckoutOrder = CreateOrderBase & { cardId: string }
+type CheckoutCartOrder = CreateOrderBase & { cardId: string }
+type CheckoutCartLinkOrder = CreateOrderBase & { cardLinkId: string }
 type DispatchOrder = CreateOrderBase & {
 	from: Location
 	data: {
@@ -219,28 +212,28 @@ type DispatchOrder = CreateOrderBase & {
 type OrdersCheckoutCartRouteDef = ApiDef<{
 	key: 'marketplace-orders-checkout-cart'
 	method: 'post'
-	body: CheckoutOrder
+	body: CheckoutCartOrder
 	response: Order
 }>
 
 type OrdersCheckoutCartFeeRouteDef = ApiDef<{
 	key: 'marketplace-orders-checkout-cart-fee'
 	method: 'post'
-	body: CheckoutOrder
+	body: CheckoutCartOrder
 	response: OrderFee
 }>
 
 type OrdersCheckoutCartLinkRouteDef = ApiDef<{
 	key: 'marketplace-orders-checkout-cart-link'
 	method: 'post'
-	body: { cartLinkId: string }
+	body: CheckoutCartLinkOrder
 	response: Order
 }>
 
 type OrdersCheckoutCartLinkFeeRouteDef = ApiDef<{
 	key: 'marketplace-orders-checkout-cart-link-fee'
 	method: 'post'
-	body: { cartLinkId: string }
+	body: CheckoutCartLinkOrder
 	response: OrderFee
 }>
 

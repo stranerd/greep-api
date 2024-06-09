@@ -1,6 +1,5 @@
-import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { CartProductItem, DeliveryTime, OrderPayment } from '../types'
+import { CartProductItem } from '../types'
 
 type CartLinkEntityProps = {
 	id: string
@@ -8,9 +7,6 @@ type CartLinkEntityProps = {
 	products: CartProductItem[]
 	userId: string
 	vendorId: string
-	to: Location
-	time: DeliveryTime
-	payment: OrderPayment
 	createdAt: number
 	updatedAt: number
 }
