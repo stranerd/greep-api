@@ -2,7 +2,7 @@
   "name": "greep-api",
   "private": true,
   "scripts": {
-    "lint": "pnpm -r lint",
+    "lint": "pnpm -r lint && echo Done",
     "build": "pnpm -r build",
     "prepare": "husky",
     "lint:staged": "lint-staged"
@@ -11,9 +11,7 @@
     "*": "pnpm -w run lint"
   },
   "devDependencies": {
-    "husky": "^9.0.11"
-  },
-  "dependencies": {
+    "husky": "^9.0.11",
     "lint-staged": "^15.2.5"
   }
 }

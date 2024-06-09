@@ -9,7 +9,7 @@ import {
 	OrderType,
 	OrdersUseCases,
 } from '@modules/marketplace'
-import { ActivityEntity, ActivityType, EmbeddedUser, UsersUseCases, mergeWithUsers } from '@modules/users'
+import { ActivityEntity, ActivityType, EmbeddedUser, UserType, UsersUseCases, mergeWithUsers } from '@modules/users'
 import { Location, LocationSchema } from '@utils/types'
 import { ApiDef, BadRequestError, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
 
@@ -26,6 +26,12 @@ const schema = () => ({
 	discount: Schema.number().gte(0),
 	payment: Schema.in(Object.values(OrderPayment)),
 })
+
+const getVendorLocation = async (vendorId: string) => {
+	const vendor = await UsersUseCases.find(vendorId)
+	if (!vendor || vendor.type.type !== UserType.vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
+	return vendor.type.location
+}
 
 const verifyUser = async (userId: string, discount: number) => {
 	const user = await UsersUseCases.find(userId)
@@ -47,13 +53,9 @@ router.post<OrdersCheckoutCartRouteDef>({ path: '/checkout', key: 'marketplace-o
 
 	const { user } = await verifyUser(cart.userId, data.discount)
 
-	const vendor = await UsersUseCases.find(cart.vendorId)
-	if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
-	if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
-
 	const order = await OrdersUseCases.checkout({
 		...data,
-		from: vendor.vendor.location,
+		from: await getVendorLocation(cart.vendorId),
 		userId: user.id,
 		email: user.bio.email,
 	})
@@ -66,13 +68,9 @@ router.post<OrdersCheckoutCartFeeRouteDef>({ path: '/checkout/fee', key: 'market
 	const cart = await CartsUseCases.find(data.cartId)
 	if (!cart || cart.userId !== req.authUser!.id || !cart.active) throw new NotAuthorizedError()
 
-	const vendor = await UsersUseCases.find(cart.vendorId)
-	if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
-	if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
-
 	return await OrderEntity.calculateFees({
 		...data,
-		from: vendor.vendor.location,
+		from: await getVendorLocation(cart.vendorId),
 		userId: cart.userId,
 		data: {
 			type: OrderType.cart,
@@ -91,13 +89,9 @@ router.post<OrdersCheckoutCartLinkRouteDef>({ path: '/checkout/links', key: 'mar
 
 	const { user } = await verifyUser(req.authUser!.id, 0)
 
-	const vendor = await UsersUseCases.find(cartLink.vendorId)
-	if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
-	if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
-
 	const order = await OrdersUseCases.checkout({
 		...data,
-		from: vendor.vendor.location,
+		from: await getVendorLocation(cartLink.vendorId),
 		userId: user.id,
 		email: user.bio.email,
 	})
@@ -111,13 +105,9 @@ router.post<OrdersCheckoutCartLinkFeeRouteDef>({ path: '/checkout/links/fee', ke
 		const cartLink = await CartLinksUseCases.find(data.cartLinkId)
 		if (!cartLink || !cartLink.active) throw new NotAuthorizedError()
 
-		const vendor = await UsersUseCases.find(cartLink.vendorId)
-		if (!vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
-		if (!vendor.vendor?.location) throw new BadRequestError('vendor failed to set their location')
-
 		return await OrderEntity.calculateFees({
 			...data,
-			from: vendor.vendor.location,
+			from: await getVendorLocation(cartLink.vendorId),
 			userId: req.authUser!.id,
 			data: {
 				type: OrderType.cartLink,

@@ -17,7 +17,7 @@ const schema = () => ({
 	products: Schema.array(
 		Schema.object({
 			id: Schema.string().min(1),
-			quantity: Schema.number().round().gte(1),
+			quantity: Schema.number().int().gte(1),
 		}),
 	).min(1),
 })

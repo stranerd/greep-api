@@ -109,11 +109,6 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 			required: false,
 			default: null,
 		},
-		vendor: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed,
-			required: false,
-			default: null,
-		},
 	},
 	{ minimize: false },
 )

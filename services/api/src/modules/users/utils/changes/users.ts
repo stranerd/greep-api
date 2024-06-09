@@ -20,7 +20,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 			['', `/${after.id}`].map((c) => `users/users${c}`),
 			after,
 		)
-		const updatedBioOrRoles = !!changes.bio || !!changes.roles || !!changes.type || !!changes.vendor
+		const updatedBioOrRoles = !!changes.bio || !!changes.roles || !!changes.type
 		if (updatedBioOrRoles)
 			await Promise.all(
 				[ProductsUseCases, CommentsUseCases, LikesUseCases, ReportsUseCases, ReviewsUseCases, ViewsUseCases].map(
@@ -35,6 +35,9 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 					userId: after.id,
 					roles: {
 						[AuthRole.isDriver]: after.isDriver(),
+						[AuthRole.isVendor]: after.isVendor(),
+						[AuthRole.isVendorFoods]: after.isVendorFoods(),
+						[AuthRole.isVendorItems]: after.isVendorItems(),
 					},
 				})
 			await sendNotification([after.id], {

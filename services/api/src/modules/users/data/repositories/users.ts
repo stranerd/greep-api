@@ -1,6 +1,6 @@
 import { appInstance } from '@utils/environment'
 import { IUserRepository } from '../../domain/i-repositories/users'
-import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData, UserVendorData } from '../../domain/types'
+import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
 
@@ -147,11 +147,6 @@ export class UserRepository implements IUserRepository {
 	async updateLocation({ userId, location }: { userId: string; location: [number, number] }) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { ['account.location']: location } }, { new: true })
 		return !!user
-	}
-
-	async updateVendor({ userId, data }: { userId: string; data: UserVendorData }) {
-		const user = await User.findByIdAndUpdate(userId, { $set: { vendor: data } }, { new: true })
-		return this.mapper.mapFrom(user)
 	}
 
 	async updateSettings(userId: string, settings: Partial<UserAccount['settings']>) {

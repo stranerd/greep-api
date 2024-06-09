@@ -1,6 +1,6 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
 import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
-import { UserEntity, UserType, UsersUseCases } from '@modules/users'
+import { UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
 import { Location, LocationSchema } from '@utils/types'
 import { StorageUseCases } from '@modules/storage'
 
@@ -24,6 +24,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 		const passport = req.files.passport?.at(0)
 		const studentId = req.files.studentId?.at(0)
 		const residentPermit = req.files.residentPermit?.at(0)
+		const roles = req.authUser!.roles
 
 		const { data } = validate(
 			{
@@ -31,6 +32,18 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 					[UserType.driver]: Schema.object({
 						type: Schema.is(UserType.driver as const),
 						license: Schema.file().image(),
+					}),
+					[UserType.vendor]: Schema.object({
+						type: Schema.is(UserType.vendor as const),
+						vendorType: roles.isVendorFoods
+							? Schema.is(UserVendorType.foods, (val, comp) => val === comp, 'you cannot change your vendor type')
+							: roles.isVendorItems
+								? Schema.is(UserVendorType.items, (val, comp) => val === comp, 'you cannot change your vendor type')
+								: Schema.in(Object.values(UserVendorType)),
+						name: Schema.string().min(1),
+						email: Schema.string().email().nullable(),
+						website: Schema.string().url().nullable(),
+						location: LocationSchema(),
 					}),
 					[UserType.customer]: Schema.object({
 						type: Schema.is(UserType.customer as const),
@@ -60,6 +73,9 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 		if (data.type === UserType.driver) {
 			const license = await StorageUseCases.upload('users/drivers/licenses', data.license)
 			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, license } })
+			if (updated) return updated
+		} else if (data.type === UserType.vendor) {
+			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data } })
 			if (updated) return updated
 		} else if (data.type === UserType.customer) {
 			const passport = data.passport ? await StorageUseCases.upload('users/customers/passport', data.passport) : null
@@ -115,24 +131,6 @@ router.post<UsersUpdateDriverAvailabilityRouteDef>({
 	return !!user
 })
 
-router.post<UsersUpdateVendorRouteDef>({ path: '/vendor', key: 'users-users-update-vendor', middlewares: [isAuthenticated] })(
-	async (req) => {
-		const data = validate(
-			{
-				name: Schema.string().min(1),
-				email: Schema.string().email().nullable(),
-				website: Schema.string().url().nullable(),
-				location: LocationSchema(),
-			},
-			req.body,
-		)
-
-		const user = await UsersUseCases.updateVendor({ userId: req.authUser!.id, data })
-		if (user) return user
-		throw new NotAuthorizedError('cannot update user vendor details')
-	},
-)
-
 router.post<UsersUpdateSavedLocationsRouteDef>({
 	path: '/savedLocations',
 	key: 'users-users-update-saved-locations',
@@ -164,7 +162,16 @@ type UsersFindRouteDef = ApiDef<{
 type UsersUpdateTypeRouteDef = ApiDef<{
 	key: 'users-users-update-type'
 	method: 'post'
-	body: { type: UserType }
+	body:
+		| { type: UserType.driver | UserType.customer }
+		| {
+				type: UserType.vendor
+				vendorType: UserVendorType
+				name: string
+				email?: string
+				website?: string
+				location: Location
+		  }
 	files: { license?: false; passport?: false; studentId?: false; residentPermit?: false }
 	response: UserEntity
 }>
@@ -188,13 +195,6 @@ type UsersUpdateDriverAvailabilityRouteDef = ApiDef<{
 	method: 'post'
 	body: { available: boolean }
 	response: boolean
-}>
-
-type UsersUpdateVendorRouteDef = ApiDef<{
-	key: 'users-users-update-vendor'
-	method: 'post'
-	body: { name: string; email: string | null; website: string | null; location: Location }
-	response: UserEntity
 }>
 
 type UsersUpdateSavedLocationsRouteDef = ApiDef<{

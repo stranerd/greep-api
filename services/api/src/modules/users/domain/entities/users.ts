@@ -1,5 +1,5 @@
 import { BaseEntity, Validation } from 'equipped'
-import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData, UserVendorData } from '../types'
+import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData, UserVendorType } from '../types'
 
 export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'bio.phone'> {
 	__ignoreInJSON = ['bio.email' as const, 'bio.phone' as const]
@@ -22,12 +22,25 @@ export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'b
 		return this.type?.type === UserType.driver
 	}
 
+	isVendor() {
+		return this.type?.type === UserType.vendor
+	}
+
+	isVendorFoods() {
+		return this.type?.type === UserType.vendor && this.type.vendorType === UserVendorType.foods
+	}
+
+	isVendorItems() {
+		return this.type?.type === UserType.vendor && this.type.vendorType === UserVendorType.items
+	}
+
 	isCustomer() {
 		return this.type?.type === UserType.customer
 	}
 
 	get publicName() {
-		return this.vendor?.name ?? this.bio.name.full
+		if (this.type?.type === UserType.vendor) return this.type.name
+		return this.bio.name.full
 	}
 
 	getEmbedded(): EmbeddedUser {
@@ -48,7 +61,6 @@ type UserConstructorArgs = {
 	status: UserStatus
 	account: UserAccount
 	type: UserTypeData
-	vendor: UserVendorData | null
 }
 
 const generateDefaultBio = (bio: Partial<UserBio>): UserBio => {

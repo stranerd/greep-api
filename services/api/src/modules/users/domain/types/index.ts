@@ -68,6 +68,12 @@ export enum UserRankings {
 export enum UserType {
 	driver = 'driver',
 	customer = 'customer',
+	vendor = 'vendor',
+}
+
+export enum UserVendorType {
+	foods = 'foods',
+	items = 'items',
 }
 
 export type UserTypeData =
@@ -76,15 +82,16 @@ export type UserTypeData =
 			license: MediaOutput
 	  }
 	| {
+			type: UserType.vendor
+			vendorType: UserVendorType
+			name: string
+			email: string | null
+			website: string | null
+			location: Location
+	  }
+	| {
 			type: UserType.customer
 			passport: MediaOutput | null
 			studentId: MediaOutput | null
 			residentPermit: MediaOutput | null
 	  }
-
-export type UserVendorData = {
-	name: string
-	email: string | null
-	website: string | null
-	location: Location
-}
