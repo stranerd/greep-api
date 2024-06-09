@@ -1,7 +1,7 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
 import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 import { UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
-import { Location, LocationSchema } from '@utils/types'
+import { Location, LocationSchema, TimeSchema } from '@utils/types'
 import { StorageUseCases } from '@modules/storage'
 
 const router = new Router({ path: '/users', groups: ['Users'] })
@@ -44,6 +44,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 						email: Schema.string().email().nullable(),
 						website: Schema.string().url().nullable(),
 						location: LocationSchema(),
+						schedule: Schema.array(TimeSchema().nullable()).has(7),
 					}),
 					[UserType.customer]: Schema.object({
 						type: Schema.is(UserType.customer as const),

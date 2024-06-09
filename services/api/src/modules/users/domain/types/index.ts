@@ -1,5 +1,5 @@
 import { Phone } from '@modules/auth'
-import { Location } from '@utils/types'
+import { Location, Time } from '@utils/types'
 import { AuthRoles, MediaOutput } from 'equipped'
 import { UserMeta } from './activities'
 
@@ -88,6 +88,7 @@ export type UserTypeData =
 			email: string | null
 			website: string | null
 			location: Location
+			schedule: (Time | null)[]
 	  }
 	| {
 			type: UserType.customer

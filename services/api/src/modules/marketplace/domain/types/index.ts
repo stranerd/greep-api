@@ -1,6 +1,6 @@
 import { Phone } from '@modules/auth'
 import { Currencies } from '@modules/payment'
-import { Location } from '@utils/types'
+import { Location, Time } from '@utils/types'
 export type { EmbeddedUser } from '@modules/users'
 
 export type AddToCartInput = {
@@ -19,7 +19,7 @@ export type CartProductItem = {
 
 export type DeliveryTime = {
 	date: number
-	time: string
+	time: Time
 }
 
 export enum OrderPayment {
