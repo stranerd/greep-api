@@ -33,28 +33,30 @@ export class OrderRepository implements IOrderRepository {
 			if (!cart || cart.userId !== data.userId) throw new Error('cart not found')
 			if (!cart.active) throw new Error('cart not active')
 
-			const products = await Product.find({ _id: { $in: cart.products.map((p) => p.id) } }, {}, { session })
+			const allProductIds = cart.packs.flatMap((p) => p.map((p) => p.id))
+			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
 			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
 
 			return {
 				type: OrderType.cart,
 				cartId: cart.id,
 				vendorId: cart.vendorId,
-				products: cart.products,
+				packs: cart.packs,
 			}
 		} else if ('cartLinkId' in data) {
 			const cartLink = await CartLink.findById(data.cartLinkId, {}, { session })
 			if (!cartLink) throw new Error('cart link not found')
 			if (!cartLink.active) throw new Error('cart link not active')
 
-			const products = await Product.find({ _id: { $in: cartLink.products.map((p) => p.id) } }, {}, { session })
+			const allProductIds = cartLink.packs.flatMap((p) => p.map((p) => p.id))
+			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
 			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
 
 			return {
 				type: OrderType.cartLink,
 				cartLinkId: cartLink.id,
 				vendorId: cartLink.vendorId,
-				products: cartLink.products,
+				packs: cartLink.packs,
 			}
 		}
 

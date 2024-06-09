@@ -7,6 +7,7 @@ export type AddToCartInput = {
 	productId: string
 	quantity: number
 	userId: string
+	pack: number
 	add: boolean
 }
 
@@ -61,13 +62,13 @@ export type OrderData =
 			type: OrderType.cart
 			cartId: string
 			vendorId: string
-			products: CartProductItem[]
+			packs: CartProductItem[][]
 	  }
 	| {
 			type: OrderType.cartLink
 			cartLinkId: string
 			vendorId: string
-			products: CartProductItem[]
+			packs: CartProductItem[][]
 	  }
 	| {
 			type: OrderType.dispatch

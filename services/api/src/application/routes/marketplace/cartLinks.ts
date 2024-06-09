@@ -14,13 +14,42 @@ import {
 } from 'equipped'
 
 const schema = () => ({
-	products: Schema.array(
-		Schema.object({
-			id: Schema.string().min(1),
-			quantity: Schema.number().int().gte(1),
-		}),
+	packs: Schema.array(
+		Schema.array(
+			Schema.object({
+				id: Schema.string().min(1),
+				quantity: Schema.number().int().gte(1),
+			}),
+		).min(1),
 	).min(1),
 })
+
+const verifyPacks = async (packs: { id: string; quantity: number }[][]) => {
+	const { results: products } = await ProductsUseCases.get({
+		where: [{ field: 'id', condition: Conditions.in, value: packs.flatMap((p) => p.map((p) => p.id)) }],
+		all: true,
+	})
+	const productsMap = new Map(products.map((p) => [p.id, p]))
+
+	const vendorId = products.at(0)?.user.id
+	if (!vendorId || products.find((p) => p.user.id !== vendorId)) throw new BadRequestError('all products must be from the same vendor')
+
+	const verified = packs.map((pack) =>
+		pack
+			.map((p) =>
+				productsMap.has(p.id)
+					? {
+							...productsMap.get(p.id)!.price,
+							id: p.id,
+							quantity: p.quantity,
+						}
+					: null!,
+			)
+			.filter(Boolean),
+	)
+
+	return { vendorId, packs: verified }
+}
 
 const router = new Router({ path: '/cartLinks', groups: ['Cart Links'] })
 
@@ -37,62 +66,17 @@ router.get<CartLinksFindRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-fi
 
 router.post<CartLinksCreateRouteDef>({ path: '/', key: 'marketplace-cartlinks-create', middlewares: [isAuthenticated] })(async (req) => {
 	const data = validate(schema(), req.body)
-
-	const { results: products } = await ProductsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: data.products.map((p) => p.id) }],
-		all: true,
-	})
-	const productsMap = new Map(products.map((p) => [p.id, p]))
-
-	const vendorId = products.at(0)?.user.id
-	if (!vendorId || products.find((p) => p.user.id !== vendorId)) throw new BadRequestError('all products must be from the same vendor')
-
-	return await CartLinksUseCases.create({
-		products: data.products
-			.map((p) =>
-				productsMap.has(p.id)
-					? {
-							...productsMap.get(p.id)!.price,
-							id: p.id,
-							quantity: p.quantity,
-						}
-					: null!,
-			)
-			.filter(Boolean),
-		userId: req.authUser!.id,
-		vendorId,
-	})
+	const verified = await verifyPacks(data.packs)
+	return await CartLinksUseCases.create({ ...verified, userId: req.authUser!.id })
 })
 
 router.put<CartLinksUpdateRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-update', middlewares: [isAuthenticated] })(async (req) => {
 	const data = validate(schema(), req.body)
-
-	const { results: products } = await ProductsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: data.products.map((p) => p.id) }],
-		all: true,
-	})
-	const productsMap = new Map(products.map((p) => [p.id, p]))
-
-	const vendorId = products.at(0)?.user.id
-	if (!vendorId || products.find((p) => p.user.id !== vendorId)) throw new BadRequestError('all products must be from the same vendor')
-
+	const verified = await verifyPacks(data.packs)
 	const updatedCartLink = await CartLinksUseCases.update({
 		id: req.params.id,
 		userId: req.authUser!.id,
-		data: {
-			vendorId,
-			products: data.products
-				.map((p) =>
-					productsMap.has(p.id)
-						? {
-								...productsMap.get(p.id)!.price,
-								id: p.id,
-								quantity: p.quantity,
-							}
-						: null!,
-				)
-				.filter(Boolean),
-		},
+		data: verified,
 	})
 	if (updatedCartLink) return updatedCartLink
 	throw new NotAuthorizedError()
@@ -101,7 +85,7 @@ router.put<CartLinksUpdateRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-
 export default router
 
 type CartLinkBody = {
-	products: { id: string; quantity: number }[]
+	packs: { id: string; quantity: number }[][]
 }
 
 type CartLinksGetRouteDef = ApiDef<{

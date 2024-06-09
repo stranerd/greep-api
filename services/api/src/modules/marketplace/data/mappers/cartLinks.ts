@@ -7,7 +7,7 @@ export class CartLinkMapper extends BaseMapper<CartLinkFromModel, CartLinkToMode
 		if (!param) return null
 		return new CartLinkEntity({
 			id: param._id,
-			products: param.products,
+			packs: param.packs,
 			userId: param.userId,
 			vendorId: param.vendorId,
 			active: param.active,
@@ -20,7 +20,7 @@ export class CartLinkMapper extends BaseMapper<CartLinkFromModel, CartLinkToMode
 		return {
 			userId: param.userId,
 			vendorId: param.vendorId,
-			products: param.products,
+			packs: param.packs,
 		}
 	}
 }

@@ -10,5 +10,5 @@ export interface CartToModel {
 	userId: string
 	vendorId: string
 	active: boolean
-	products: CartProductItem[]
+	packs: CartProductItem[][]
 }

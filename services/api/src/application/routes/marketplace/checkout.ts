@@ -73,7 +73,7 @@ router.post<OrdersCheckoutCartFeeRouteDef>({ path: '/checkout/fee', key: 'market
 		data: {
 			type: OrderType.cart,
 			cartId: cart.id,
-			products: cart.products,
+			packs: cart.packs,
 			vendorId: cart.vendorId,
 		},
 	})
@@ -110,7 +110,7 @@ router.post<OrdersCheckoutCartLinkFeeRouteDef>({ path: '/checkout/links/fee', ke
 			data: {
 				type: OrderType.cartLink,
 				cartLinkId: cartLink.id,
-				products: cartLink.products,
+				packs: cartLink.packs,
 				vendorId: cartLink.vendorId,
 			},
 		})

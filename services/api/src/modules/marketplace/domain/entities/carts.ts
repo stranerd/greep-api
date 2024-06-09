@@ -4,7 +4,7 @@ import { CartProductItem } from '../types'
 type CartEntityProps = {
 	id: string
 	active: boolean
-	products: CartProductItem[]
+	packs: CartProductItem[][]
 	userId: string
 	vendorId: string
 	createdAt: number

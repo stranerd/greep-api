@@ -9,8 +9,8 @@ const Schema = new appInstance.dbs.mongo.Schema<CartLinkFromModel>(
 			type: String,
 			default: () => appInstance.dbs.mongo.Id.toString(),
 		},
-		products: {
-			type: [appInstance.dbs.mongo.Schema.Types.Mixed as unknown] as CartLinkFromModel['products'],
+		packs: {
+			type: [appInstance.dbs.mongo.Schema.Types.Mixed as unknown] as CartLinkFromModel['packs'],
 			required: false,
 			default: [],
 		},

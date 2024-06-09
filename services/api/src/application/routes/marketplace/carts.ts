@@ -22,6 +22,7 @@ router.post<CartsAddRouteDef>({ path: '/', key: 'marketplace-carts-add' })(async
 		{
 			productId: Schema.string().min(1),
 			quantity: Schema.number(),
+			pack: Schema.number().int().gte(0),
 			add: Schema.boolean(),
 		},
 		req.body,
@@ -55,7 +56,7 @@ type CartsFindRouteDef = ApiDef<{
 type CartsAddRouteDef = ApiDef<{
 	key: 'marketplace-carts-add'
 	method: 'post'
-	body: { productId: string; quantity: number; add: boolean }
+	body: { productId: string; quantity: number; pack: number; add: boolean }
 	response: CartEntity
 }>
 

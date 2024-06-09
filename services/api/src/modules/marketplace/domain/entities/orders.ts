@@ -2,7 +2,7 @@ import { Currencies, FlutterwavePayment } from '@modules/payment'
 import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
+import { CartProductItem, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
 
 type OrderEntityProps = OrderToModelBase & {
 	id: string
@@ -42,7 +42,16 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 	}
 
 	getProducts() {
-		return 'products' in this.data ? this.data.products : []
+		const packs = 'packs' in this.data ? this.data.packs.flat() : []
+		const accumulated = packs.reduce(
+			(acc, item) => {
+				if (!acc[item.id]) acc[item.id] = { id: item.id, amount: item.quantity, currency: item.currency, quantity: 0 }
+				acc[item.id].quantity += item.quantity
+				return acc
+			},
+			{} as Record<string, CartProductItem>,
+		)
+		return Object.values(accumulated)
 	}
 
 	get timeline() {
@@ -73,7 +82,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		time: number
 		payment: OrderPayment
 	}): Promise<OrderFee> {
-		const items = 'products' in data.data ? data.data.products : []
+		const items = 'packs' in data.data ? data.data.packs.flat() : []
 		const currency = Currencies.TRY
 		const convertedItems = await Promise.all(
 			items.map((item) => FlutterwavePayment.convertAmount(item.amount * item.quantity, item.currency, currency)),

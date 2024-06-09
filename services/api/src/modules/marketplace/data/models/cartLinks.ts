@@ -10,5 +10,5 @@ export interface CartLinkFromModel extends CartLinkToModel {
 export interface CartLinkToModel {
 	userId: string
 	vendorId: string
-	products: CartProductItem[]
+	packs: CartProductItem[][]
 }

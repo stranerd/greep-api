@@ -23,24 +23,25 @@ export class CartRepository implements ICartRepository {
 			if (!product) throw new Error('product not found')
 			const cart = await Cart.findOneAndUpdate(
 				{ userId: data.userId, active: true, vendorId: product.user.id },
-				{ $setOnInsert: { userId: data.userId, active: true, vendorId: product.user.id, products: [] } },
+				{ $setOnInsert: { userId: data.userId, active: true, vendorId: product.user.id, packs: [] } },
 				{ upsert: true, new: true, ...(session ? { session } : {}) },
 			)
 
-			const products = [...cart.products]
-			const productIndex = cart.products.findIndex((p) => p.id === data.productId)
+			const length = data.pack >= cart.packs.length ? data.pack + 1 : cart.packs.length
+			const packs = Array.from({ ...structuredClone(cart.packs), length }, (val) => val ?? [])
+			const productIndex = packs[data.pack].findIndex((p) => p.id === data.productId)
 			if (data.add) {
 				if (!product.inStock) throw new Error('product not available')
 				if (productIndex !== -1) {
-					products[productIndex].quantity += data.quantity
-					products[productIndex].amount = product.price.amount
-				} else products.push({ ...product.price, id: data.productId, quantity: data.quantity })
+					packs[data.pack][productIndex].quantity += data.quantity
+					packs[data.pack][productIndex].amount = product.price.amount
+				} else packs[data.pack].push({ ...product.price, id: data.productId, quantity: data.quantity })
 			} else {
-				if (productIndex !== -1) products[productIndex].quantity -= data.quantity
+				if (productIndex !== -1) packs[data.pack][productIndex].quantity -= data.quantity
 			}
-			const filteredProducts = products.filter((p) => p.quantity > 0)
+			const filteredPacks = packs.map((pack) => pack.filter((pack) => pack.quantity > 0)).filter((pack) => pack.length > 0)
 
-			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: { products: filteredProducts } }, { new: true, session })
+			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: { packs: filteredPacks } }, { new: true, session })
 			return (res = updatedCart)
 		})
 		return this.mapper.mapFrom(res)!
