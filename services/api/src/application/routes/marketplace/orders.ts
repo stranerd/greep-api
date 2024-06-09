@@ -88,7 +88,7 @@ router.post<OrdersCompleteRouteDef>({ path: '/:id/complete', key: 'marketplace-o
 router.post<OrdersPayRouteDef>({ path: '/:id/pay', key: 'marketplace-orders-pay' })(async (req) => {
 	const order = await OrdersUseCases.find(req.params.id)
 	if (!order || order.userId !== req.authUser!.id) throw new NotAuthorizedError()
-	if (order.paid) throw new NotAuthorizedError('order is already paid for')
+	if (order.getPaid()) throw new NotAuthorizedError('order is already paid for')
 	if (order.payment !== OrderPayment.wallet) throw new NotAuthorizedError('order payment method is not supported')
 
 	const transaction = await TransactionsUseCases.create({

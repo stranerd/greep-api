@@ -49,7 +49,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 		const failed = closed && !after.status[OrderStatus.completed]
 		const successful = closed && !!after.status[OrderStatus.completed]
 		if (failed) {
-			if (after.paid)
+			if (after.getPaid())
 				await TransactionsUseCases.create({
 					title: `Payment refund for order #${after.id}`,
 					status: TransactionStatus.fulfilled,

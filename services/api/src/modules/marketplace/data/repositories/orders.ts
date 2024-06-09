@@ -127,7 +127,7 @@ export class OrderRepository implements IOrderRepository {
 	async generateToken(id: string, userId: string) {
 		const order = this.mapper.mapFrom(await Order.findById(id))
 		if (!order || order.userId !== userId) throw new NotAuthorizedError()
-		if (order.currentStatus !== OrderStatus.driverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (order.getCurrentStatus() !== OrderStatus.driverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
 		const token = Random.number(1e3, 1e4).toString()
 		await appInstance.cache.set(`order-delivery-token-${token}`, id, 60 * 3)
 		return token
@@ -136,8 +136,8 @@ export class OrderRepository implements IOrderRepository {
 	async complete(id: string, userId: string, token: string) {
 		const order = this.mapper.mapFrom(await Order.findById(id))
 		if (!order || order.driverId !== userId) throw new NotAuthorizedError()
-		if (order.currentStatus !== OrderStatus.driverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
-		if (!order.paid) throw new NotAuthorizedError('Order is not paid yet')
+		if (order.getCurrentStatus() !== OrderStatus.driverAssigned) throw new NotAuthorizedError('Order delivery is not in progress')
+		if (!order.getPaid()) throw new NotAuthorizedError('Order is not paid yet')
 		const cachedId = await appInstance.cache.get(`order-delivery-token-${token}`)
 		if (cachedId !== id) throw new NotAuthorizedError('invalid token')
 		const completed = await Order.findByIdAndUpdate(

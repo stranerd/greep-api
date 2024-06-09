@@ -2,22 +2,14 @@ import { Currencies, FlutterwavePayment } from '@modules/payment'
 import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType } from '../types'
+import { OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
 
-type OrderEntityProps = {
+type OrderEntityProps = OrderToModelBase & {
 	id: string
-	userId: string
-	email: string
 	driverId: string | null
 	status: OrderStatusType
 	done: boolean
-	from: Location
-	to: Location
-	dropoffNote: string
 	data: OrderData
-	time: number
-	discount: number
-	payment: OrderPayment
 	fee: OrderFee
 	createdAt: number
 	updatedAt: number
@@ -37,7 +29,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		return members
 	}
 
-	get currentStatus() {
+	getCurrentStatus() {
 		if (this.status[OrderStatus.completed]) return OrderStatus.completed
 		if (this.status[OrderStatus.cancelled]) return OrderStatus.cancelled
 		if (this.status[OrderStatus.rejected]) return OrderStatus.rejected
@@ -45,7 +37,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		return null
 	}
 
-	get paid() {
+	getPaid() {
 		return !!this.status[OrderStatus.paid]
 	}
 
@@ -53,10 +45,10 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		const statuses = [OrderStatus.created]
 		if (this.status[OrderStatus.rejected]) {
 			statuses.push(OrderStatus.rejected)
-			if (this.paid) statuses.push(OrderStatus.refunded)
+			if (this.getPaid()) statuses.push(OrderStatus.refunded)
 		} else if (this.status[OrderStatus.cancelled]) {
 			statuses.push(OrderStatus.cancelled)
-			if (this.paid) statuses.push(OrderStatus.refunded)
+			if (this.getPaid()) statuses.push(OrderStatus.refunded)
 		} else statuses.push(OrderStatus.accepted, OrderStatus.shipped, OrderStatus.completed)
 		return statuses
 			.map((status) => ({
