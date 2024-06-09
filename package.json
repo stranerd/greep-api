@@ -4,9 +4,16 @@
   "scripts": {
     "lint": "pnpm -r lint",
     "build": "pnpm -r build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*": "pnpm -w run lint"
   },
   "devDependencies": {
     "husky": "^9.0.11"
+  },
+  "dependencies": {
+    "lint-staged": "^15.2.5"
   }
 }
