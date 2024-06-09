@@ -9,14 +9,17 @@ import {
 	OrderType,
 	OrdersUseCases,
 } from '@modules/marketplace'
-import { ActivityEntity, ActivityType, EmbeddedUser, UserType, UsersUseCases, mergeWithUsers } from '@modules/users'
+import { ActivityEntity, ActivityType, EmbeddedUser, UserType, UsersUseCases, isVendorOpen, mergeWithUsers } from '@modules/users'
 import { Location, LocationSchema } from '@utils/types'
 import { ApiDef, BadRequestError, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
 
 const schema = () => ({
 	to: LocationSchema(),
 	dropoffNote: Schema.string(),
-	time: Schema.time().min(Date.now()).asStamp(),
+	time: Schema.undefined()
+		.requiredIf(() => false)
+		.transform(() => Date.now()),
+	// time: Schema.time().min(Date.now()).asStamp(),
 	discount: Schema.number().gte(0),
 	payment: Schema.in(Object.values(OrderPayment)),
 })
@@ -24,6 +27,7 @@ const schema = () => ({
 const getVendorLocation = async (vendorId: string) => {
 	const vendor = await UsersUseCases.find(vendorId)
 	if (!vendor || vendor.type.type !== UserType.vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
+	if (!isVendorOpen(vendor.type.time)) throw new BadRequestError('vendor is closed at the moment')
 	return vendor.type.location
 }
 

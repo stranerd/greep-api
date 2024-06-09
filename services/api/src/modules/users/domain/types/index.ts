@@ -77,7 +77,8 @@ export enum UserVendorType {
 }
 
 export type BusinessTime = {
-	schedule: (Time | null)[]
+	timezone: string
+	schedule: ({ from: Time; to: Time } | null)[]
 } | null
 
 export type UserTypeData =

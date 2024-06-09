@@ -18,6 +18,11 @@ router.get<UsersFindRouteDef>({ path: '/:id', key: 'users-users-find' })(async (
 	return user
 })
 
+declare namespace Intl {
+	type Key = 'calendar' | 'collation' | 'currency' | 'numberingSystem' | 'timeZone' | 'unit'
+	function supportedValuesOf(input: Key): string[]
+}
+
 router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-type', middlewares: [isAuthenticatedButIgnoreVerified] })(
 	async (req) => {
 		const license = req.files.license?.at(0)
@@ -45,7 +50,8 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 						website: Schema.string().url().nullable(),
 						location: LocationSchema(),
 						time: Schema.object({
-							schedule: Schema.array(TimeSchema().nullable()).has(7),
+							timezone: Schema.string().in(Intl.supportedValuesOf('timeZone')),
+							schedule: Schema.array(Schema.object({ from: TimeSchema(), to: TimeSchema() }).nullable()).has(7),
 						}).nullable(),
 					}),
 					[UserType.customer]: Schema.object({
