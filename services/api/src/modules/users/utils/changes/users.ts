@@ -50,6 +50,8 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 
 		if (changes.type && !Validation.isBoolean()(changes.type)) {
 			if ('license' in changes.type && 'license' in before.type) await publishers.DELETEFILE.publish(before.type.license)
+			if ('banner' in changes.type && 'banner' in before.type && before.type.banner)
+				await publishers.DELETEFILE.publish(before.type.banner)
 			if ('passport' in changes.type && 'passport' in before.type && before.type.passport)
 				await publishers.DELETEFILE.publish(before.type.passport)
 			if ('studentId' in changes.type && 'studentId' in before.type && before.type.studentId)
@@ -65,6 +67,7 @@ export const UserDbChangeCallbacks: DbChangeCallbacks<UserFromModel, UserEntity>
 		)
 
 		if ('license' in before.type) await publishers.DELETEFILE.publish(before.type.license)
+		if ('banner' in before.type && before.type.banner) await publishers.DELETEFILE.publish(before.type.banner)
 		if ('passport' in before.type && before.type.passport) await publishers.DELETEFILE.publish(before.type.passport)
 		if ('studentId' in before.type && before.type.studentId) await publishers.DELETEFILE.publish(before.type.studentId)
 		if ('residentPermit' in before.type && before.type.residentPermit) await publishers.DELETEFILE.publish(before.type.residentPermit)

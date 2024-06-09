@@ -90,6 +90,7 @@ export type UserTypeData =
 			type: UserType.vendor
 			vendorType: UserVendorType
 			name: string
+			banner: MediaOutput | null
 			email: string | null
 			website: string | null
 			location: Location
