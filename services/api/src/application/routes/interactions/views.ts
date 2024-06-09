@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, ViewEntity, ViewsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { InteractionEntities, ViewEntity, ViewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -28,7 +28,7 @@ router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-vie
 			req.body,
 		)
 
-		const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'views')
+		const entity = await verifyInteraction(data.entity.type, data.entity.id, 'views')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 

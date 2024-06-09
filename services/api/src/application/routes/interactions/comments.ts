@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { CommentEntity, CommentsUseCases, InteractionEntities, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { CommentEntity, CommentsUseCases, InteractionEntities, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -33,7 +33,7 @@ router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-
 			req.body,
 		)
 
-		const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'comments')
+		const entity = await verifyInteraction(data.entity.type, data.entity.id, 'comments')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 

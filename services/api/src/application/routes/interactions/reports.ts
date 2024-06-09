@@ -1,5 +1,5 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, ReportEntity, ReportsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { InteractionEntities, ReportEntity, ReportsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -32,7 +32,7 @@ router.post<InteractionsReportsCreateRouteDef>({ path: '/', key: 'interactions-r
 		req.body,
 	)
 
-	const entity = await verifyInteractionAndGetUserId(data.entity.type, data.entity.id, 'reports')
+	const entity = await verifyInteraction(data.entity.type, data.entity.id, 'reports')
 	const user = await UsersUseCases.find(req.authUser!.id)
 	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 

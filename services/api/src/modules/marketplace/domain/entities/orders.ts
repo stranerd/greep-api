@@ -41,6 +41,10 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		return !!this.status[OrderStatus.paid]
 	}
 
+	getProducts() {
+		return 'products' in this.data ? this.data.products : []
+	}
+
 	get timeline() {
 		const statuses = [OrderStatus.created]
 		if (this.status[OrderStatus.rejected]) {
