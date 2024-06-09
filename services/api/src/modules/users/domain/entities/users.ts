@@ -5,6 +5,12 @@ export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'b
 	__ignoreInJSON = ['bio.email' as const, 'bio.phone' as const]
 
 	constructor(data: UserConstructorArgs) {
+		if (Array.isArray(data.account.location))
+			data.account.location = {
+				coords: data.account.location as any,
+				location: '',
+				description: '',
+			}
 		super(data)
 		this.bio = generateDefaultBio(data.bio ?? {})
 		this.roles = generateDefaultRoles(data.roles)

@@ -82,7 +82,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 				default: {},
 			},
 			location: {
-				type: [Number],
+				type: appInstance.dbs.mongo.Schema.Types.Mixed,
 				required: false,
 				default: null,
 			},

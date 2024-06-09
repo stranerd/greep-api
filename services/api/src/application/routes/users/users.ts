@@ -113,7 +113,7 @@ router.post<UsersUpdateApplicationRouteDef>({ path: '/application', key: 'users-
 
 router.post<UsersUpdateLocationRouteDef>({ path: '/location', key: 'users-users-update-location', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { location } = validate({ location: Schema.tuple([Schema.number(), Schema.number()]) }, req.body)
+		const { location } = validate({ location: LocationSchema() }, req.body)
 
 		const updated = await UsersUseCases.updateLocation({ userId: req.authUser!.id, location })
 		if (updated) return updated
@@ -186,7 +186,7 @@ type UsersUpdateApplicationRouteDef = ApiDef<{
 type UsersUpdateLocationRouteDef = ApiDef<{
 	key: 'users-users-update-location'
 	method: 'post'
-	body: { location: [number, number] }
+	body: { location: Location }
 	response: boolean
 }>
 

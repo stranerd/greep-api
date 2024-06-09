@@ -1,6 +1,7 @@
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
 import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
+import { Location } from '@utils/types'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -74,7 +75,7 @@ export class UsersUseCase {
 		return await this.repository.updateDebt(data)
 	}
 
-	async updateLocation(data: { userId: string; location: [number, number] }) {
+	async updateLocation(data: { userId: string; location: Location }) {
 		return await this.repository.updateLocation(data)
 	}
 

@@ -1,7 +1,7 @@
 import { Schema } from 'equipped'
 
 export type Location = {
-	coords: [number, number] // | null
+	coords: [number, number]
 	location: string
 	description: string
 }

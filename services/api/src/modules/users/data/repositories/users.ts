@@ -3,6 +3,7 @@ import { IUserRepository } from '../../domain/i-repositories/users'
 import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
+import { Location } from '@utils/types'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
@@ -144,7 +145,7 @@ export class UserRepository implements IUserRepository {
 		return !!user
 	}
 
-	async updateLocation({ userId, location }: { userId: string; location: [number, number] }) {
+	async updateLocation({ userId, location }: { userId: string; location: Location }) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { ['account.location']: location } }, { new: true })
 		return !!user
 	}

@@ -1,6 +1,7 @@
 import { QueryParams, QueryResults } from 'equipped'
 import { UserEntity } from '../entities/users'
 import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
+import { Location } from '@utils/types'
 
 export interface IUserRepository {
 	get(query: QueryParams): Promise<QueryResults<UserEntity>>
@@ -33,7 +34,7 @@ export interface IUserRepository {
 
 	updateDebt(data: { driverId: string; userId: string; count: number }): Promise<boolean>
 
-	updateLocation(data: { userId: string; location: [number, number] }): Promise<boolean>
+	updateLocation(data: { userId: string; location: Location }): Promise<boolean>
 
 	updateSettings(userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
 

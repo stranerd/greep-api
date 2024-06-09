@@ -50,7 +50,7 @@ export type UserAccount = {
 			debt: number
 		}
 	>
-	location: [number, number] | null
+	location: Location | null
 	savedLocations: Location[]
 	settings: {
 		notifications: boolean
