@@ -1,5 +1,16 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
-import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import {
+	ApiDef,
+	BadRequestError,
+	MediaOutput,
+	NotAuthorizedError,
+	NotFoundError,
+	QueryParams,
+	QueryResults,
+	Router,
+	Schema,
+	validate,
+} from 'equipped'
 import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
 import { Location, LocationSchema, TimeSchema } from '@utils/types'
 import { StorageUseCases } from '@modules/storage'
@@ -25,26 +36,20 @@ declare namespace Intl {
 
 router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-type', middlewares: [isAuthenticatedButIgnoreVerified] })(
 	async (req) => {
-		const license = req.files.license?.at(0)
-		const passport = req.files.passport?.at(0)
-		const studentId = req.files.studentId?.at(0)
-		const residentPermit = req.files.residentPermit?.at(0)
-		const roles = req.authUser!.roles
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user) throw new NotFoundError('user not found')
+		const type = user.type
 
 		const { data } = validate(
 			{
 				data: Schema.discriminate((v) => v.type, {
 					[UserType.driver]: Schema.object({
 						type: Schema.is(UserType.driver as const),
-						license: Schema.file().image(),
+						license: Schema.file().image().nullish(),
 					}),
 					[UserType.vendor]: Schema.object({
 						type: Schema.is(UserType.vendor as const),
-						vendorType: roles.isVendorFoods
-							? Schema.is(UserVendorType.foods, (val, comp) => val === comp, 'you cannot change your vendor type')
-							: roles.isVendorItems
-								? Schema.is(UserVendorType.items, (val, comp) => val === comp, 'you cannot change your vendor type')
-								: Schema.in(Object.values(UserVendorType)),
+						vendorType: Schema.in('vendorType' in type ? [type.vendorType] : Object.values(UserVendorType)),
 						name: Schema.string().min(1),
 						email: Schema.string().email().nullable(),
 						website: Schema.string().url().nullable(),
@@ -56,42 +61,51 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 					}),
 					[UserType.customer]: Schema.object({
 						type: Schema.is(UserType.customer as const),
-						passport: Schema.file()
-							.image()
-							.requiredIf(() => !studentId && !residentPermit),
-						studentId: Schema.file()
-							.image()
-							.requiredIf(() => !passport && !residentPermit),
-						residentPermit: Schema.file()
-							.image()
-							.requiredIf(() => !passport && !studentId),
+						passport: Schema.file().image().nullish(),
+						studentId: Schema.file().image().nullish(),
+						residentPermit: Schema.file().image().nullish(),
 					}),
 				}),
 			},
 			{
 				data: {
 					...req.body,
-					license,
-					passport,
-					studentId,
-					residentPermit,
+					license: req.files.license?.at(0),
+					passport: req.files.passport?.at(0),
+					studentId: req.files.studentId?.at(0),
+					residentPermit: req.files.residentPermit?.at(0),
 				},
 			},
 		)
 
+		if (type && data.type !== type.type) throw new BadRequestError('cannot change user type')
+
+		const getFileValue = async (key: string, uploadPath: string) => {
+			if (data[key] && Buffer.isBuffer(data[key].data)) return StorageUseCases.upload(uploadPath, data[key])
+			if (data[key] === null) return null
+			if (type[key]) return type[key] as MediaOutput
+			return null
+		}
+
 		if (data.type === UserType.driver) {
-			const license = await StorageUseCases.upload('users/drivers/licenses', data.license)
+			const license = await getFileValue('license', 'users/drivers/licenses')
+			if (!license) throw new BadRequestError('license file is required')
+
 			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, license } })
 			if (updated) return updated
 		} else if (data.type === UserType.vendor) {
-			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data } })
+			const updated = await UsersUseCases.updateType({
+				userId: req.authUser!.id,
+				data: { ...data },
+			})
 			if (updated) return updated
 		} else if (data.type === UserType.customer) {
-			const passport = data.passport ? await StorageUseCases.upload('users/customers/passport', data.passport) : null
-			const studentId = data.studentId ? await StorageUseCases.upload('users/customers/studentId', data.studentId) : null
-			const residentPermit = data.residentPermit
-				? await StorageUseCases.upload('users/customers/residentPermit', data.residentPermit)
-				: null
+			const passport = await getFileValue('passport', 'users/customers/passport')
+			const studentId = await getFileValue('studentId', 'users/customers/studentId')
+			const residentPermit = await getFileValue('residentPermit', 'users/customers/residentPermit')
+			if (!passport && !studentId && !residentPermit)
+				throw new BadRequestError('at least one of the passport, studentId, residentPermit is required')
+
 			const updated = await UsersUseCases.updateType({
 				userId: req.authUser!.id,
 				data: { ...data, passport, studentId, residentPermit },
@@ -99,7 +113,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 			if (updated) return updated
 		}
 
-		throw new NotAuthorizedError('cannot update user type')
+		throw new BadRequestError('cannot update user type')
 	},
 )
 
