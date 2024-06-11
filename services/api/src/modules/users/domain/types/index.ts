@@ -94,7 +94,6 @@ export type UserTypeData =
 			email: string | null
 			website: string | null
 			location: Location
-			time: BusinessTime
 	  }
 	| {
 			type: UserType.customer
@@ -102,3 +101,7 @@ export type UserTypeData =
 			studentId: MediaOutput | null
 			residentPermit: MediaOutput | null
 	  }
+
+export type UserVendorData = {
+	schedule: BusinessTime
+}

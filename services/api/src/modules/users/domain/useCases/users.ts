@@ -1,7 +1,7 @@
+import { Location } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
-import { UserAccount, UserBio, UserRoles, UserTypeData } from '../types'
-import { Location } from '@utils/types'
+import { UserAccount, UserBio, UserRoles, UserTypeData, UserVendorData } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository
@@ -85,5 +85,9 @@ export class UsersUseCase {
 
 	async updateSavedLocations(params: { userId: string; savedLocations: UserAccount['savedLocations'] }) {
 		return await this.repository.updateSavedLocations(params.userId, params.savedLocations)
+	}
+
+	async updateVendor<Key extends keyof UserVendorData>(params: { userId: string; type: Key; data: UserVendorData[Key] }) {
+		return await this.repository.updateVendor(params.userId, params.type, params.data)
 	}
 }

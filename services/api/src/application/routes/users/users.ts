@@ -1,4 +1,7 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
+import { StorageUseCases } from '@modules/storage'
+import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
+import { Location, LocationSchema, TimeSchema } from '@utils/types'
 import {
 	ApiDef,
 	BadRequestError,
@@ -11,9 +14,6 @@ import {
 	Schema,
 	validate,
 } from 'equipped'
-import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
-import { Location, LocationSchema, TimeSchema } from '@utils/types'
-import { StorageUseCases } from '@modules/storage'
 
 const router = new Router({ path: '/users', groups: ['Users'] })
 
@@ -55,10 +55,6 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 						email: Schema.string().email().nullable(),
 						website: Schema.string().url().nullable(),
 						location: LocationSchema(),
-						time: Schema.object({
-							timezone: Schema.string().in(Intl.supportedValuesOf('timeZone')),
-							schedule: Schema.array(Schema.object({ from: TimeSchema(), to: TimeSchema() }).nullable()).has(7),
-						}).nullable(),
 					}),
 					[UserType.customer]: Schema.object({
 						type: Schema.is(UserType.customer as const),
@@ -170,6 +166,26 @@ router.post<UsersUpdateSavedLocationsRouteDef>({
 	throw new NotAuthorizedError('cannot update user saved locations')
 })
 
+router.post<UsersUpdateVendorScheduleRouteDef>({
+	path: '/vendors/schedule',
+	key: 'users-users-update-vendor-schedule',
+	middlewares: [isAuthenticated],
+})(async (req) => {
+	const { schedule } = validate(
+		{
+			schedule: Schema.object({
+				timezone: Schema.string().in(Intl.supportedValuesOf('timeZone')),
+				schedule: Schema.array(Schema.object({ from: TimeSchema(), to: TimeSchema() }).nullable()).has(7),
+			}).nullable(),
+		},
+		req.body,
+	)
+
+	const user = await UsersUseCases.updateVendor({ userId: req.authUser!.id, type: 'schedule', data: schedule })
+	if (user) return user
+	throw new NotAuthorizedError('cannot update user saved locations')
+})
+
 export default router
 
 type UsersGetRouteDef = ApiDef<{
@@ -198,7 +214,6 @@ type UsersUpdateTypeRouteDef = ApiDef<{
 				email: string | null
 				website: string | null
 				location: Location
-				time: BusinessTime
 		  }
 	files: { license?: false; banner?: false; passport?: false; studentId?: false; residentPermit?: false }
 	response: UserEntity
@@ -229,5 +244,12 @@ type UsersUpdateSavedLocationsRouteDef = ApiDef<{
 	key: 'users-users-update-saved-locations'
 	method: 'post'
 	body: { locations: Location[] }
+	response: UserEntity
+}>
+
+type UsersUpdateVendorScheduleRouteDef = ApiDef<{
+	key: 'users-users-update-vendor-schedule'
+	method: 'post'
+	body: { schedule: BusinessTime }
 	response: UserEntity
 }>

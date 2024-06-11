@@ -14,6 +14,7 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 					status: param.status,
 					account: param.account,
 					type: param.type,
+					vendor: param.vendor,
 				})
 	}
 
@@ -25,6 +26,7 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			status: param.status,
 			account: param.account,
 			type: param.type,
+			vendor: param.vendor,
 		}
 	}
 }

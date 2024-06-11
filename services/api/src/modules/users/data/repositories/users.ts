@@ -1,9 +1,9 @@
 import { appInstance } from '@utils/environment'
+import { Location } from '@utils/types'
 import { IUserRepository } from '../../domain/i-repositories/users'
-import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData } from '../../domain/types'
+import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData, UserVendorData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
 import { User } from '../mongooseModels/users'
-import { Location } from '@utils/types'
 
 export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
@@ -158,6 +158,11 @@ export class UserRepository implements IUserRepository {
 
 	async updateSavedLocations(userId: string, savedLocations: UserAccount['savedLocations']) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { 'account.savedLocations': savedLocations } }, { new: true })
+		return this.mapper.mapFrom(user)
+	}
+
+	async updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]) {
+		const user = await User.findByIdAndUpdate(userId, { $set: { [`vendor.${type}`]: data } }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
 }
