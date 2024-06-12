@@ -24,7 +24,7 @@ router.get<GetAuthUserRouteDef>({ path: '/', key: 'user-get', middlewares: [isAu
 	return user
 })
 
-router.post<UpdateAuthUserRouteDef>({ path: '/', key: 'user-update', middlewares: [isAuthenticated] })(async (req) => {
+router.put<UpdateAuthUserRouteDef>({ path: '/', key: 'user-update', middlewares: [isAuthenticated] })(async (req) => {
 	const userId = req.authUser!.id
 	const uploadedPhoto = req.files.photo?.[0] ?? null
 	const changedPhoto = !!uploadedPhoto || req.body.photo === null
@@ -115,7 +115,7 @@ type GetAuthUserRouteDef = ApiDef<{
 
 type UpdateAuthUserRouteDef = ApiDef<{
 	key: 'user-update'
-	method: 'post'
+	method: 'put'
 	body: { firstName: string; lastName: string; username: string; phone: Phone | null; photo?: null }
 	files: { photo: false }
 	response: AuthUserEntity
