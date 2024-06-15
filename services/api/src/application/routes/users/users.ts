@@ -2,7 +2,7 @@ import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified, isVendor } 
 import { TagTypes, TagsUseCases } from '@modules/interactions'
 import { StorageUseCases } from '@modules/storage'
 import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
-import { Location, LocationSchema, TimeSchema } from '@utils/types'
+import { Location, LocationSchema, TimeSchema, timezones } from '@utils/types'
 import {
 	ApiDef,
 	BadRequestError,
@@ -30,11 +30,6 @@ router.get<UsersFindRouteDef>({ path: '/:id', key: 'users-users-find' })(async (
 	if (!user || user.isDeleted()) throw new NotFoundError()
 	return user
 })
-
-declare namespace Intl {
-	type Key = 'calendar' | 'collation' | 'currency' | 'numberingSystem' | 'timeZone' | 'unit'
-	function supportedValuesOf(input: Key): string[]
-}
 
 router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-type', middlewares: [isAuthenticatedButIgnoreVerified] })(
 	async (req) => {
@@ -168,6 +163,11 @@ router.post<UsersUpdateSavedLocationsRouteDef>({
 	throw new NotAuthorizedError('cannot update user saved locations')
 })
 
+router.get<UsersGetSupportedTimezonesRouteDef>({
+	path: '/vendors/timezones',
+	key: 'users-users-timezones',
+})(() => timezones)
+
 router.post<UsersUpdateVendorScheduleRouteDef>({
 	path: '/vendors/schedule',
 	key: 'users-users-update-vendor-schedule',
@@ -176,7 +176,7 @@ router.post<UsersUpdateVendorScheduleRouteDef>({
 	const { schedule } = validate(
 		{
 			schedule: Schema.object({
-				timezone: Schema.string().in(Intl.supportedValuesOf('timeZone')),
+				timezone: Schema.string().in(timezones.map((tz) => tz.id)),
 				schedule: Schema.array(Schema.object({ from: TimeSchema(), to: TimeSchema() }).nullable()).has(7),
 			}).nullable(),
 		},
@@ -267,6 +267,12 @@ type UsersUpdateSavedLocationsRouteDef = ApiDef<{
 	method: 'post'
 	body: { locations: Location[] }
 	response: UserEntity
+}>
+
+type UsersGetSupportedTimezonesRouteDef = ApiDef<{
+	key: 'users-users-timezones'
+	method: 'get'
+	response: typeof timezones
 }>
 
 type UsersUpdateVendorScheduleRouteDef = ApiDef<{
