@@ -30,6 +30,11 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: false,
 		},
+		isAddOn: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 		description: {
 			type: String,
 			required: false,

@@ -41,6 +41,7 @@ const schema = (bannerRequired: boolean, authUser: AuthUser) => ({
 					: false,
 		'invalid data type',
 	),
+	isAddOn: Schema.boolean(),
 	inStock: Schema.boolean(),
 	tagIds: Schema.array(Schema.string().min(1)),
 	banner: Schema.file()
@@ -195,16 +196,19 @@ type ProductsRecommendedTagsFoodsRouteDef = ApiDef<{
 	response: QueryResults<TagEntity>
 }>
 
+type ProductBody = {
+	title: string
+	description: string
+	price: { amount: number; currency: Currencies }
+	isAddOn: boolean
+	inStock: boolean
+	tagIds: string[]
+}
+
 type ProductsCreateRouteDef = ApiDef<{
 	key: 'marketplace-products-create'
 	method: 'post'
-	body: {
-		title: string
-		description: string
-		price: { amount: number; currency: Currencies }
-		inStock: boolean
-		tagIds: string[]
-	}
+	body: ProductBody
 	files: { banner: false }
 	response: ProductEntity
 }>
@@ -213,13 +217,7 @@ type ProductsUpdateRouteDef = ApiDef<{
 	key: 'marketplace-products-update'
 	method: 'put'
 	params: { id: string }
-	body: {
-		title: string
-		description: string
-		price: { amount: number; currency: Currencies }
-		inStock: boolean
-		tagIds: string[]
-	}
+	body: ProductBody
 	files: { banner?: false }
 	response: ProductEntity
 }>

@@ -21,6 +21,7 @@ export class CartRepository implements ICartRepository {
 		await Cart.collection.conn.transaction(async (session) => {
 			const product = await Product.findById(data.productId)
 			if (!product) throw new Error('product not found')
+			if (product.isAddOn) throw new Error('product is an add-on')
 			const cart = await Cart.findOneAndUpdate(
 				{ userId: data.userId, active: true, vendorId: product.user.id },
 				{ $setOnInsert: { userId: data.userId, active: true, vendorId: product.user.id, packs: [] } },

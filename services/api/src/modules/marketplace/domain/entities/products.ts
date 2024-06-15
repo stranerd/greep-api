@@ -17,6 +17,7 @@ type ProductEntityProps = {
 	description: string
 	tagIds: string[]
 	inStock: boolean
+	isAddOn: boolean
 	meta: ProductMetaType
 	createdAt: number
 	updatedAt: number
