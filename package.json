@@ -1,17 +1,23 @@
 {
-  "name": "greep-api",
-  "private": true,
-  "scripts": {
-    "lint": "pnpm -r lint && echo Done",
-    "build": "pnpm -r build",
-    "prepare": "husky",
-    "lint:staged": "lint-staged"
-  },
-  "lint-staged": {
-    "*": "pnpm -w run lint"
-  },
-  "devDependencies": {
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.5"
-  }
+	"name": "greep-api",
+	"private": true,
+	"scripts": {
+		"lint": "eslint --fix",
+		"build": "pnpm -r build",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@stylistic/eslint-plugin": "^1.7.0",
+		"@types/node": "^20.12.5",
+		"@typescript-eslint/eslint-plugin": "^7.5.0",
+		"@typescript-eslint/parser": "^7.5.0",
+		"equipped": "5.0.0-alpha.1",
+		"eslint": "^9.0.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.1.3",
+		"eslint-plugin-promise": "^6.1.1",
+		"globals": "^15.0.0",
+		"husky": "^9.0.11",
+		"prettier": "^3.2.5"
+	}
 }
