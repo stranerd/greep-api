@@ -38,7 +38,7 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 		tagIds: {
 			type: [String],
 			required: false,
-			default: [],
+			default: () => [],
 		},
 		data: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,

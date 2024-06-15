@@ -104,4 +104,5 @@ export type UserTypeData =
 
 export type UserVendorData = {
 	schedule: BusinessTime
+	menu: string[]
 }

@@ -13,7 +13,7 @@ const Schema = new appInstance.dbs.mongo.Schema<ChatMetaFromModel>(
 		readAt: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as ChatMetaFromModel['readAt'],
 			required: false,
-			default: {},
+			default: () => ({}),
 		},
 		data: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,

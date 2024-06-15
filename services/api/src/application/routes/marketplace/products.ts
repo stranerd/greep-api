@@ -6,6 +6,7 @@ import { StorageUseCases } from '@modules/storage'
 import { UserVendorType, UsersUseCases } from '@modules/users'
 import {
 	ApiDef,
+	AuthUser,
 	BadRequestError,
 	Conditions,
 	NotAuthorizedError,
@@ -17,13 +18,29 @@ import {
 	validate,
 } from 'equipped'
 
-const schema = (bannerRequired: boolean) => ({
+const schema = (bannerRequired: boolean, authUser: AuthUser) => ({
 	title: Schema.string().min(1),
 	description: Schema.string().min(1),
 	price: Schema.object({
 		amount: Schema.number().gt(0),
 		currency: Schema.in(Object.values(Currencies)),
 	}),
+	data: Schema.discriminate((v) => v.type, {
+		[UserVendorType.foods]: Schema.object({
+			type: Schema.is(UserVendorType.foods as const),
+		}),
+		[UserVendorType.items]: Schema.object({
+			type: Schema.is(UserVendorType.items as const),
+		}),
+	}).custom(
+		(v) =>
+			authUser.roles.isVendorFoods
+				? v.type === UserVendorType.foods
+				: authUser.roles.isVendorItems
+					? v.type === UserVendorType.items
+					: false,
+		'invalid data type',
+	),
 	inStock: Schema.boolean(),
 	tagIds: Schema.array(Schema.string().min(1)),
 	banner: Schema.file()
@@ -79,13 +96,14 @@ router.get<ProductsRecommendedTagsFoodsRouteDef>({
 
 router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-create', middlewares: [isAuthenticated, isVendor] })(
 	async (req) => {
-		const data = validate(schema(true), { ...req.body, banner: req.files.banner?.at(0) ?? null })
+		const data = validate(schema(true, req.authUser!), { ...req.body, banner: req.files.banner?.at(0) ?? null })
 
 		const { results: tags } = await TagsUseCases.get({
 			where: [
 				{ field: 'id', condition: Conditions.in, value: data.tagIds },
 				{ field: 'type', value: req.authUser!.roles.isVendorFoods ? TagTypes.productsFoods : TagTypes.productsItems },
 			],
+			all: true,
 		})
 
 		const user = await UsersUseCases.find(req.authUser!.id)
@@ -98,9 +116,6 @@ router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-crea
 			tagIds: tags.map((t) => t.id),
 			user: user.getEmbedded(),
 			banner,
-			data: {
-				type: user.isVendorFoods() ? UserVendorType.foods : UserVendorType.items,
-			},
 		})
 	},
 )
@@ -109,13 +124,14 @@ router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-up
 	const uploadedBanner = req.files.banner?.at(0) ?? null
 	const changedBanner = !!uploadedBanner
 
-	const { title, description, price, tagIds } = validate(schema(false), { ...req.body, banner: uploadedBanner })
+	const { title, description, price, tagIds, data } = validate(schema(false, req.authUser!), { ...req.body, banner: uploadedBanner })
 
 	const { results: tags } = await TagsUseCases.get({
 		where: [
 			{ field: 'id', condition: Conditions.in, value: tagIds },
 			{ field: 'type', value: req.authUser!.roles.isVendorFoods ? TagTypes.productsFoods : TagTypes.productsItems },
 		],
+		all: true,
 	})
 
 	const banner = uploadedBanner ? await StorageUseCases.upload('marketplace/banners', uploadedBanner) : undefined
@@ -127,6 +143,7 @@ router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-up
 			title,
 			description,
 			price,
+			data,
 			tagIds: tags.map((t) => t.id),
 			...(changedBanner ? { banner } : {}),
 		},
