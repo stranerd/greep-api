@@ -61,5 +61,5 @@ type InteractionsLikesCreateRouteDef = ApiDef<{
 	key: 'interactions-likes-create'
 	method: 'post'
 	body: { value: boolean; entity: { id: string; type: InteractionEntities } }
-	response: LikeEntity
+	response: LikeEntity | null
 }>

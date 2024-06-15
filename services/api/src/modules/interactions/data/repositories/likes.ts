@@ -33,10 +33,10 @@ export class LikeRepository implements ILikeRepository {
 		if (!like) like = new Like(data)
 		else if (like.value === data.value) {
 			await like.deleteOne()
-			return this.mapper.mapFrom(like)!
-		} else if (like.value !== data.value) like.value = data.value
+			return null
+		} else like.value = data.value
 		await like.save()
-		return this.mapper.mapFrom(like)!
+		return this.mapper.mapFrom(like)
 	}
 
 	async find(id: string) {
