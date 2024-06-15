@@ -42,6 +42,7 @@ export class OrderRepository implements IOrderRepository {
 				type: OrderType.cart,
 				cartId: cart.id,
 				vendorId: cart.vendorId,
+				vendorType: cart.vendorType,
 				packs: cart.packs,
 			}
 		} else if ('cartLinkId' in data) {
@@ -57,6 +58,7 @@ export class OrderRepository implements IOrderRepository {
 				type: OrderType.cartLink,
 				cartLinkId: cartLink.id,
 				vendorId: cartLink.vendorId,
+				vendorType: cartLink.vendorType,
 				packs: cartLink.packs,
 			}
 		}

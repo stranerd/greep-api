@@ -1,3 +1,4 @@
+import { UserVendorType } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { CartProductItem } from '../types'
 
@@ -7,6 +8,7 @@ type CartEntityProps = {
 	packs: CartProductItem[][]
 	userId: string
 	vendorId: string
+	vendorType: UserVendorType
 	createdAt: number
 	updatedAt: number
 }

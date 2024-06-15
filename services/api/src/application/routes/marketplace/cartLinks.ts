@@ -39,7 +39,9 @@ const verifyPacks = async (packs: CartLinkBody['packs']) => {
 	const productsMap = new Map(products.map((p) => [p.id, p]))
 
 	const vendorId = products.at(0)?.user.id
-	if (!vendorId || products.find((p) => p.user.id !== vendorId)) throw new BadRequestError('all products must be from the same vendor')
+	const vendorType = products.at(0)?.data.type
+	if (!vendorId || !vendorType || products.find((p) => p.user.id !== vendorId || p.data.type !== vendorType))
+		throw new BadRequestError('all products must be from the same vendor')
 
 	const verified = packs.map((pack) =>
 		pack
@@ -60,7 +62,7 @@ const verifyPacks = async (packs: CartLinkBody['packs']) => {
 			.filter(Boolean),
 	)
 
-	return { vendorId, packs: verified }
+	return { vendorId, vendorType, packs: verified }
 }
 
 const router = new Router({ path: '/cartLinks', groups: ['Cart Links'] })

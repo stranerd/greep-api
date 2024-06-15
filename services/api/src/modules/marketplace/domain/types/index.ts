@@ -68,12 +68,14 @@ export type OrderData =
 			type: OrderType.cart
 			cartId: string
 			vendorId: string
+			vendorType: UserVendorType
 			packs: CartProductItem[][]
 	  }
 	| {
 			type: OrderType.cartLink
 			cartLinkId: string
 			vendorId: string
+			vendorType: UserVendorType
 			packs: CartProductItem[][]
 	  }
 	| {

@@ -22,6 +22,10 @@ const Schema = new appInstance.dbs.mongo.Schema<CartLinkFromModel>(
 			type: String,
 			required: true,
 		},
+		vendorType: {
+			type: String,
+			required: true,
+		},
 		active: {
 			type: Boolean,
 			required: false,

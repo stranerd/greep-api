@@ -1,3 +1,4 @@
+import { UserVendorType } from '@modules/users'
 import { CartProductItem } from '../../domain/types'
 
 export interface CartLinkFromModel extends CartLinkToModel {
@@ -10,5 +11,6 @@ export interface CartLinkFromModel extends CartLinkToModel {
 export interface CartLinkToModel {
 	userId: string
 	vendorId: string
+	vendorType: UserVendorType
 	packs: CartProductItem[][]
 }

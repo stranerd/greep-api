@@ -26,7 +26,7 @@ export class CartRepository implements ICartRepository {
 			const vendorId = product.user.id
 			const cart = await Cart.findOneAndUpdate(
 				{ userId: data.userId, active: true, vendorId },
-				{ $setOnInsert: { userId: data.userId, active: true, vendorId, packs: [] } },
+				{ $setOnInsert: { userId: data.userId, active: true, vendorId, vendorType: product.data.type, packs: [] } },
 				{ upsert: true, new: true, ...(session ? { session } : {}) },
 			)
 
