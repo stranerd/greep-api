@@ -1,5 +1,6 @@
 import { Phone } from '@modules/auth'
 import { Currencies } from '@modules/payment'
+import { UserVendorType } from '@modules/users'
 import { Location } from '@utils/types'
 export type { EmbeddedUser } from '@modules/users'
 
@@ -109,3 +110,7 @@ export enum ProductMeta {
 }
 
 export type ProductMetaType = Record<ProductMeta, number>
+
+export type ProductData = {
+	type: UserVendorType
+}

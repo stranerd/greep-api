@@ -1,3 +1,4 @@
+import { UserVendorType } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { ProductMeta } from '../../domain/types'
 import { ProductDbChangeCallbacks } from '../../utils/changes/products'
@@ -38,6 +39,11 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			type: [String],
 			required: false,
 			default: [],
+		},
+		data: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
+			default: () => ({ type: UserVendorType.items }),
 		},
 		user: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,

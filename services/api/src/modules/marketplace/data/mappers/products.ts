@@ -13,6 +13,7 @@ export class ProductMapper extends BaseMapper<ProductFromModel, ProductToModel, 
 			price: param.price,
 			tagIds: param.tagIds,
 			inStock: param.inStock,
+			data: param.data,
 			user: param.user,
 			meta: param.meta,
 			createdAt: param.createdAt,
@@ -29,6 +30,7 @@ export class ProductMapper extends BaseMapper<ProductFromModel, ProductToModel, 
 			tagIds: param.tagIds,
 			inStock: param.inStock,
 			user: param.user,
+			data: param.data,
 		}
 	}
 }

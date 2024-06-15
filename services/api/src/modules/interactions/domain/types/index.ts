@@ -39,7 +39,8 @@ export enum CommentMeta {
 export type CommentMetaType = Record<CommentMeta, number>
 
 export enum TagMeta {
-	products = 'products',
+	productsItems = 'productsItems',
+	productsFoods = 'productsFoods',
 	orders = 'orders',
 
 	total = 'total',
@@ -48,5 +49,6 @@ export enum TagMeta {
 export type TagMetaType = Record<TagMeta, number>
 
 export enum TagTypes {
-	products = 'products',
+	productsItems = 'productsItems',
+	productsFoods = 'productsFoods',
 }
