@@ -32,7 +32,6 @@ const start = async () => {
 
 		.register('marketplace/carts', isMine)
 		.register('marketplace/cartLinks', isOpen)
-		.register('marketplace/deliveries', isMine)
 		.register('marketplace/orders', isMine)
 		.register('marketplace/products', isOpen)
 

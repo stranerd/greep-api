@@ -71,15 +71,4 @@ export class ProductRepository implements IProductRepository {
 		})
 		return res
 	}
-
-	async updateLikes(id: string, userId: string, like: boolean | undefined) {
-		const product = await Product.findByIdAndUpdate(
-			id,
-			{
-				[like !== undefined ? '$set' : '$unset']: { [`likes.${userId}`]: like ?? '' },
-			},
-			{ new: true },
-		)
-		return !!product
-	}
 }

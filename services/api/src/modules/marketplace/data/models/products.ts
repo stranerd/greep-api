@@ -1,6 +1,6 @@
 import { Currencies } from '@modules/payment'
 import { EmbeddedUser } from '@modules/users'
-import { Likes, Ratings } from '@utils/types'
+import { Ratings } from '@utils/types'
 import { MediaOutput } from 'equipped'
 import { ProductData, ProductMetaType } from '../../domain/types'
 
@@ -8,7 +8,6 @@ export interface ProductFromModel extends ProductToModel {
 	_id: string
 	meta: ProductMetaType
 	ratings: Ratings
-	likes: Likes
 	createdAt: number
 	updatedAt: number
 }

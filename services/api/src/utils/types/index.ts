@@ -23,8 +23,6 @@ export type Ratings = {
 	avg: number
 }
 
-export type Likes = Record<string, boolean>
-
 type Tz = {
 	id: string
 	name: string

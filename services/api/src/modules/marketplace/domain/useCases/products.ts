@@ -41,8 +41,4 @@ export class ProductUseCase {
 	async updateRatings(input: { id: string; ratings: number; add: boolean }) {
 		return await this.repository.updateRatings(input.id, input.ratings, input.add)
 	}
-
-	async updateLikes(input: { id: string; userId: string; like: boolean | undefined }) {
-		return await this.repository.updateLikes(input.id, input.userId, input.like)
-	}
 }

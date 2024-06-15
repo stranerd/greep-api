@@ -1,7 +1,7 @@
 import { TagMeta } from '@modules/interactions'
 import { Currencies } from '@modules/payment'
 import { UserVendorType, generateDefaultUser } from '@modules/users'
-import { Likes, Ratings } from '@utils/types'
+import { Ratings } from '@utils/types'
 import { BaseEntity, MediaOutput } from 'equipped'
 import { EmbeddedUser, ProductData, ProductMetaType } from '../types'
 
@@ -21,12 +21,13 @@ type ProductEntityProps = {
 	isAddOn: boolean
 	meta: ProductMetaType
 	ratings: Ratings
-	likes: Likes
 	createdAt: number
 	updatedAt: number
 }
 
-export class ProductEntity extends BaseEntity<ProductEntityProps> {
+export class ProductEntity extends BaseEntity<ProductEntityProps, 'likes'> {
+	__ignoreInJSON = ['likes' as const]
+
 	constructor(data: ProductEntityProps) {
 		data.user = generateDefaultUser(data.user)
 		super(data)
