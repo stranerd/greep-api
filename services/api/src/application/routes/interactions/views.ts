@@ -1,18 +1,26 @@
 import { isAuthenticated } from '@application/middlewares'
 import { InteractionEntities, ViewEntity, ViewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const router = new Router({ path: '/views', groups: ['Views'] })
 
 router.get<InteractionsViewsGetRouteDef>({ path: '/', key: 'interactions-views-get' })(async (req) => {
 	const query = req.query
+	const userId = req.authUser!.id
+	query.authType = QueryKeys.or
+	query.auth = [
+		{ field: 'entity.userId', value: userId },
+		{ field: 'user.id', value: userId },
+	]
 	return await ViewsUseCases.get(query)
 })
 
 router.get<InteractionsViewsFindRouteDef>({ path: '/:id', key: 'interactions-views-find' })(async (req) => {
 	const view = await ViewsUseCases.find(req.params.id)
+	const userId = req.authUser!.id
 	if (!view) throw new NotFoundError()
+	if (view.user.id !== userId && view.entity.userId !== userId) throw new NotFoundError()
 	return view
 })
 

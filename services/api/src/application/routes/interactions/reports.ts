@@ -1,18 +1,30 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { InteractionEntities, ReportEntity, ReportsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { ApiDef, AuthRole, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const router = new Router({ path: '/reports', groups: ['Reports'], middlewares: [isAuthenticated] })
 
 router.get<InteractionsReportsGetRouteDef>({ path: '/', key: 'interactions-reports-get', middlewares: [isAdmin] })(async (req) => {
 	const query = req.query
+	const userId = req.authUser!.id
+	const isAdmin = req.authUser!.roles[AuthRole.isAdmin]
+	if (!isAdmin) {
+		query.authType = QueryKeys.or
+		query.auth = [
+			{ field: 'entity.userId', value: userId },
+			{ field: 'user.id', value: userId },
+		]
+	}
 	return await ReportsUseCases.get(query)
 })
 
 router.get<InteractionsReportsFindRouteDef>({ path: '/:id', key: 'interactions-reports-find', middlewares: [isAdmin] })(async (req) => {
 	const report = await ReportsUseCases.find(req.params.id)
+	const userId = req.authUser!.id
+	const isAdmin = req.authUser!.roles[AuthRole.isAdmin]
 	if (!report) throw new NotFoundError()
+	if (!isAdmin && report.user.id !== userId && report.entity.userId !== userId) throw new NotFoundError()
 	return report
 })
 

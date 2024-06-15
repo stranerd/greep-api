@@ -1,18 +1,26 @@
 import { isAuthenticated } from '@application/middlewares'
 import { InteractionEntities, LikeEntity, LikesUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const router = new Router({ path: '/likes', groups: ['Likes'] })
 
 router.get<InteractionsLikesGetRouteDef>({ path: '/', key: 'interactions-likes-get' })(async (req) => {
 	const query = req.query
+	const userId = req.authUser!.id
+	query.authType = QueryKeys.or
+	query.auth = [
+		{ field: 'entity.userId', value: userId },
+		{ field: 'user.id', value: userId },
+	]
 	return await LikesUseCases.get(query)
 })
 
 router.get<InteractionsLikesFindRouteDef>({ path: '/:id', key: 'interactions-likes-find' })(async (req) => {
 	const like = await LikesUseCases.find(req.params.id)
+	const userId = req.authUser!.id
 	if (!like) throw new NotFoundError()
+	if (like.user.id !== userId && like.entity.userId !== userId) throw new NotFoundError()
 	return like
 })
 

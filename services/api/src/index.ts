@@ -17,18 +17,20 @@ const start = async () => {
 		}),
 	)
 
-	const isAdmin: OnJoinFn = async ({ channel, user }) => (user?.roles?.[AuthRole.isAdmin] ? channel : null)
+	// const isAdmin: OnJoinFn = async ({ channel, user }) => (user?.roles?.[AuthRole.isAdmin] ? channel : null)
+	const isAdminOrMine: OnJoinFn = async ({ channel, user }) =>
+		!user ? null : user.roles?.[AuthRole.isAdmin] ? channel : `${channel}/${user.id}`
 	const isMine: OnJoinFn = async ({ channel, user }) => (user ? `${channel}/${user.id}` : null)
 	const isOpen: OnJoinFn = async ({ channel }) => channel
 
 	appInstance.listener
 		.register('interactions/comments', isOpen)
-		.register('interactions/likes', isOpen)
+		.register('interactions/likes', isMine)
 		.register('interactions/media', isOpen)
-		.register('interactions/reports', isAdmin)
+		.register('interactions/reports', isAdminOrMine)
 		.register('interactions/reviews', isOpen)
 		.register('interactions/tags', isOpen)
-		.register('interactions/views', isOpen)
+		.register('interactions/views', isMine)
 
 		.register('marketplace/carts', isMine)
 		.register('marketplace/cartLinks', isOpen)
