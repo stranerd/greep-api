@@ -17,6 +17,12 @@ export type Time = [number, number]
 
 export const TimeSchema = () => Schema.tuple([Schema.number().int().gte(0).lte(23), Schema.number().int().gte(0).lte(59)])
 
+export type Ratings = {
+	total: number
+	count: number
+	avg: number
+}
+
 type Tz = {
 	id: string
 	name: string

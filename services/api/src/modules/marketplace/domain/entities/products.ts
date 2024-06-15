@@ -1,6 +1,7 @@
 import { TagMeta } from '@modules/interactions'
 import { Currencies } from '@modules/payment'
 import { UserVendorType, generateDefaultUser } from '@modules/users'
+import { Ratings } from '@utils/types'
 import { BaseEntity, MediaOutput } from 'equipped'
 import { EmbeddedUser, ProductData, ProductMetaType } from '../types'
 
@@ -19,6 +20,7 @@ type ProductEntityProps = {
 	inStock: boolean
 	isAddOn: boolean
 	meta: ProductMetaType
+	ratings: Ratings
 	createdAt: number
 	updatedAt: number
 }

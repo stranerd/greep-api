@@ -37,4 +37,8 @@ export class ProductUseCase {
 	async updateMeta(data: { ids: string[]; property: ProductMeta; value: 1 | -1 }) {
 		return await this.repository.updateMeta(data.ids, data.property, data.value)
 	}
+
+	async updateRatings(input: { id: string; ratings: number; add: boolean }) {
+		return await this.repository.updateRatings(input.id, input.ratings, input.add)
+	}
 }

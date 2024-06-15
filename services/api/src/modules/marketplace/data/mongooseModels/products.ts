@@ -68,6 +68,16 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 				},
 			]),
 		),
+		ratings: Object.fromEntries(
+			['total', 'avg', 'count'].map((key) => [
+				key,
+				{
+					type: Number,
+					required: false,
+					default: 0,
+				},
+			]),
+		),
 		createdAt: {
 			type: Number,
 			required: false,
