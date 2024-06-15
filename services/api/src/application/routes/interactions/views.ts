@@ -28,7 +28,7 @@ router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-vie
 			req.body,
 		)
 
-		const entity = await verifyInteraction(data.entity.type, data.entity.id, 'views')
+		const entity = await verifyInteraction(data.entity, 'views')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 

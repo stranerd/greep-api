@@ -34,7 +34,7 @@ router.post<InteractionsMediaCreateRouteDef>({ path: '/', key: 'interactions-med
 			{ ...req.body, file: req.files.file?.at(0) ?? null },
 		)
 
-		const entity = await verifyInteraction(data.entity.type, data.entity.id, 'media')
+		const entity = await verifyInteraction(data.entity, 'media')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 		if (entity.userId !== user.id) throw new NotAuthorizedError()
@@ -94,7 +94,7 @@ router.post<InteractionsMediaReorderRouteDef>({ path: '/reorder', key: 'interact
 			req.body,
 		)
 
-		const entity = await verifyInteraction(data.entity.type, data.entity.id, 'media')
+		const entity = await verifyInteraction(data.entity, 'media')
 		if (entity.userId !== req.authUser!.id) throw new NotAuthorizedError()
 
 		return await MediaUseCases.reorder({ entity, ids: data.ids })

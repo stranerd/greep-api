@@ -29,7 +29,7 @@ router.post<InteractionsLikesCreateRouteDef>({ path: '/', key: 'interactions-lik
 			req.body,
 		)
 
-		const entity = await verifyInteraction(data.entity.type, data.entity.id, data.value ? 'likes' : 'dislikes')
+		const entity = await verifyInteraction(data.entity, data.value ? 'likes' : 'dislikes')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 

@@ -46,7 +46,10 @@ const finders: { [K in InteractionEntities]: (id: string) => Promise<Interaction
 	},
 }
 
-export const verifyInteraction = async (type: InteractionEntities, id: string, interaction: Interactions): Promise<InteractionEntity> => {
+export const verifyInteraction = async (
+	{ type, id }: { type: InteractionEntities; id: string },
+	interaction: Interactions,
+): Promise<InteractionEntity> => {
 	const supported = InteractionsMappings[interaction]?.includes(type)
 	const finder = finders[type]
 	if (!supported || !finder) throw new BadRequestError(`${interaction} not supported for ${type}`)

@@ -32,7 +32,7 @@ router.post<InteractionsReportsCreateRouteDef>({ path: '/', key: 'interactions-r
 		req.body,
 	)
 
-	const entity = await verifyInteraction(data.entity.type, data.entity.id, 'reports')
+	const entity = await verifyInteraction(data.entity, 'reports')
 	const user = await UsersUseCases.find(req.authUser!.id)
 	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
