@@ -21,26 +21,51 @@ export class CartRepository implements ICartRepository {
 		await Cart.collection.conn.transaction(async (session) => {
 			const product = await Product.findById(data.productId)
 			if (!product) throw new Error('product not found')
-			if (product.isAddOn) throw new Error('product is an add-on')
+			if (data.add && !product.inStock) throw new Error('product not available')
+			if (data.addOnProductId && !product.isAddOn) throw new Error('product is not an add-on')
+			const vendorId = product.user.id
 			const cart = await Cart.findOneAndUpdate(
-				{ userId: data.userId, active: true, vendorId: product.user.id },
-				{ $setOnInsert: { userId: data.userId, active: true, vendorId: product.user.id, packs: [] } },
+				{ userId: data.userId, active: true, vendorId },
+				{ $setOnInsert: { userId: data.userId, active: true, vendorId, packs: [] } },
 				{ upsert: true, new: true, ...(session ? { session } : {}) },
 			)
 
 			const length = data.pack >= cart.packs.length ? data.pack + 1 : cart.packs.length
 			const packs = Array.from({ ...structuredClone(cart.packs), length }, (val) => val ?? [])
-			const productIndex = packs[data.pack].findIndex((p) => p.id === data.productId)
-			if (data.add) {
-				if (!product.inStock) throw new Error('product not available')
-				if (productIndex !== -1) {
-					packs[data.pack][productIndex].quantity += data.quantity
-					packs[data.pack][productIndex].amount = product.price.amount
-				} else packs[data.pack].push({ ...product.price, id: data.productId, quantity: data.quantity })
+
+			const index = packs[data.pack].findIndex((p) => p.id === (data.addOnProductId ?? data.productId))
+
+			if (data.addOnProductId) {
+				if (index < 0) throw new Error('base item not in cart')
+				const addOnIndex = packs[data.pack][index].addOns.findIndex((p) => p.id === data.productId)
+				if (data.add) {
+					if (addOnIndex !== -1) {
+						packs[data.pack][index].addOns[addOnIndex].quantity += data.quantity
+						packs[data.pack][index].addOns[addOnIndex].amount = product.price.amount
+					} else packs[data.pack][index].addOns.push({ ...product.price, id: data.productId, quantity: data.quantity })
+				} else {
+					if (addOnIndex !== -1) packs[data.pack][index].addOns[addOnIndex].quantity -= data.quantity
+				}
 			} else {
-				if (productIndex !== -1) packs[data.pack][productIndex].quantity -= data.quantity
+				if (data.add) {
+					if (index !== -1) {
+						packs[data.pack][index].quantity += data.quantity
+						packs[data.pack][index].amount = product.price.amount
+					} else packs[data.pack].push({ ...product.price, id: data.productId, quantity: data.quantity, addOns: [] })
+				} else {
+					if (index !== -1) packs[data.pack][index].quantity -= data.quantity
+				}
 			}
-			const filteredPacks = packs.map((pack) => pack.filter((pack) => pack.quantity > 0)).filter((pack) => pack.length > 0)
+			const filteredPacks = packs
+				.map((pack) =>
+					pack
+						.map((item) => ({
+							...item,
+							addOns: item.addOns.filter((addOn) => addOn.quantity > 0),
+						}))
+						.filter((item) => item.quantity > 0),
+				)
+				.filter((pack) => pack.length > 0)
 
 			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: { packs: filteredPacks } }, { new: true, session })
 			return (res = updatedCart)

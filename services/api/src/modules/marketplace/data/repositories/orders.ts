@@ -3,12 +3,13 @@ import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { OrderEntity } from '../../domain/entities/orders'
 import { IOrderRepository } from '../../domain/irepositories/orders'
 import { AcceptOrderInput, CheckoutInput, OrderStatus, OrderType } from '../../domain/types'
+import { resolvePacks } from '../../utils/carts'
 import { OrderMapper } from '../mappers/orders'
 import { OrderFromModel, OrderToModel } from '../models/orders'
+import { CartLink } from '../mongooseModels/cartLinks'
 import { Cart } from '../mongooseModels/carts'
 import { Order } from '../mongooseModels/orders'
 import { Product } from '../mongooseModels/products'
-import { CartLink } from '../mongooseModels/cartLinks'
 
 export class OrderRepository implements IOrderRepository {
 	private static instance: OrderRepository
@@ -33,7 +34,7 @@ export class OrderRepository implements IOrderRepository {
 			if (!cart || cart.userId !== data.userId) throw new Error('cart not found')
 			if (!cart.active) throw new Error('cart not active')
 
-			const allProductIds = cart.packs.flatMap((p) => p.map((p) => p.id))
+			const allProductIds = resolvePacks(cart.packs).map((item) => item.id)
 			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
 			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
 
@@ -48,7 +49,7 @@ export class OrderRepository implements IOrderRepository {
 			if (!cartLink) throw new Error('cart link not found')
 			if (!cartLink.active) throw new Error('cart link not active')
 
-			const allProductIds = cartLink.packs.flatMap((p) => p.map((p) => p.id))
+			const allProductIds = resolvePacks(cartLink.packs).map((item) => item.id)
 			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
 			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
 

@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { CartLinkEntity, CartLinksUseCases, ProductsUseCases } from '@modules/marketplace'
+import { CartLinkEntity, CartLinksUseCases, ProductsUseCases, resolvePacks } from '@modules/marketplace'
 import {
 	ApiDef,
 	BadRequestError,
@@ -19,14 +19,21 @@ const schema = () => ({
 			Schema.object({
 				id: Schema.string().min(1),
 				quantity: Schema.number().int().gte(1),
+				addOns: Schema.array(
+					Schema.object({
+						id: Schema.string().min(1),
+						quantity: Schema.number().int().gte(1),
+					}),
+				),
 			}),
 		).min(1),
 	).min(1),
 })
 
-const verifyPacks = async (packs: { id: string; quantity: number }[][]) => {
+const verifyPacks = async (packs: CartLinkBody['packs']) => {
+	const resolved = resolvePacks(packs)
 	const { results: products } = await ProductsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: packs.flatMap((p) => p.map((p) => p.id)) }],
+		where: [{ field: 'id', condition: Conditions.in, value: resolved.map((p) => p.id) }],
 		all: true,
 	})
 	const productsMap = new Map(products.map((p) => [p.id, p]))
@@ -42,6 +49,11 @@ const verifyPacks = async (packs: { id: string; quantity: number }[][]) => {
 							...productsMap.get(p.id)!.price,
 							id: p.id,
 							quantity: p.quantity,
+							addOns: p.addOns.map((a) => ({
+								...productsMap.get(a.id)!.price,
+								id: a.id,
+								quantity: a.quantity,
+							})),
 						}
 					: null!,
 			)
@@ -84,8 +96,9 @@ router.put<CartLinksUpdateRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-
 
 export default router
 
+type BaseItem = { id: string; quantity: number }
 type CartLinkBody = {
-	packs: { id: string; quantity: number }[][]
+	packs: (BaseItem & { addOns: BaseItem[] })[][]
 }
 
 type CartLinksGetRouteDef = ApiDef<{

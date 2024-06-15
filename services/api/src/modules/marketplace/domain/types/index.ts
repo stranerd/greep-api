@@ -9,14 +9,19 @@ export type AddToCartInput = {
 	quantity: number
 	userId: string
 	pack: number
+	addOnProductId?: string
 	add: boolean
 }
 
-export type CartProductItem = {
+type BaseCartProductItem = {
 	id: string
 	quantity: number
 	amount: number
 	currency: Currencies
+}
+
+export type CartProductItem = BaseCartProductItem & {
+	addOns: BaseCartProductItem[]
 }
 
 export enum OrderPayment {
