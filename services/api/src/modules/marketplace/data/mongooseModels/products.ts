@@ -78,6 +78,11 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 				},
 			]),
 		),
+		likes: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: () => ({}),
+		},
 		createdAt: {
 			type: Number,
 			required: false,

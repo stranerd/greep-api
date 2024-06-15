@@ -18,6 +18,7 @@ export class ProductMapper extends BaseMapper<ProductFromModel, ProductToModel, 
 			user: param.user,
 			meta: param.meta,
 			ratings: param.ratings,
+			likes: param.likes,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})

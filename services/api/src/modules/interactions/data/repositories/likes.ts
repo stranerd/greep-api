@@ -3,7 +3,7 @@ import { QueryParams } from 'equipped'
 import { ILikeRepository } from '../../domain/irepositories/likes'
 import { Interaction } from '../../domain/types'
 import { LikeMapper } from '../mappers/likes'
-import { LikeToModel } from '../models/likes'
+import { LikeFromModel, LikeToModel } from '../models/likes'
 import { Like } from '../mongooseModels/likes'
 
 export class LikeRepository implements ILikeRepository {
@@ -29,14 +29,21 @@ export class LikeRepository implements ILikeRepository {
 	}
 
 	async like(data: LikeToModel) {
-		let like = await Like.findOne({ 'user.id': data.user.id, entity: data.entity })
-		if (!like) like = new Like(data)
-		else if (like.value === data.value) {
-			await like.deleteOne()
-			return null
-		} else like.value = data.value
-		await like.save()
-		return this.mapper.mapFrom(like)
+		let res = null as LikeFromModel | null
+		await Like.collection.conn.transaction(async (session) => {
+			let like = await Like.findOne({ 'user.id': data.user.id, entity: data.entity }, {}, { session })
+
+			if (like?.value === data.value) {
+				await like.deleteOne({ session })
+				return null
+			}
+
+			like ??= new Like(data)
+			like.value = data.value
+			await like.save({ session })
+			return (res = like)
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async find(id: string) {

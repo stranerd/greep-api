@@ -10,6 +10,7 @@ export interface IProductRepository {
 	get(query: QueryParams): Promise<QueryResults<ProductEntity>>
 	find(id: string): Promise<ProductEntity | null>
 	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>
+	updateLikes(id: string, userId: string, like: boolean | undefined): Promise<boolean>
 	updateUserBio: (user: ProductToModel['user']) => Promise<boolean>
 	updateMeta: (ids: string[], property: ProductMeta, value: 1 | -1) => Promise<void>
 }
