@@ -62,25 +62,27 @@ router.get<ProductsFindRouteDef>({ path: '/:id', key: 'marketplace-products-find
 	return product
 })
 
-router.get<ProductsRecommendedProductsItemsRouteDef>({ path: '/recommendation/products/items', key: 'marketplace-products-recommended-products-items' })(
-	async (req) => {
-		const query: QueryParams = req.query
-		query.sort ??= []
-		query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
-		query.auth = [{ field: 'data.type', value: UserVendorType.items }]
-		return await ProductsUseCases.get(query)
-	},
-)
+router.get<ProductsRecommendedProductsItemsRouteDef>({
+	path: '/recommendation/products/items',
+	key: 'marketplace-products-recommended-products-items',
+})(async (req) => {
+	const query: QueryParams = req.query
+	query.sort ??= []
+	query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+	query.auth = [{ field: 'data.type', value: UserVendorType.items }]
+	return await ProductsUseCases.get(query)
+})
 
-router.get<ProductsRecommendedProductsFoodsRouteDef>({ path: '/recommendation/products/foods', key: 'marketplace-products-recommended-products-foods' })(
-	async (req) => {
-		const query: QueryParams = req.query
-		query.sort ??= []
-		query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
-		query.auth = [{ field: 'data.type', value: UserVendorType.foods }]
-		return await ProductsUseCases.get(query)
-	},
-)
+router.get<ProductsRecommendedProductsFoodsRouteDef>({
+	path: '/recommendation/products/foods',
+	key: 'marketplace-products-recommended-products-foods',
+})(async (req) => {
+	const query: QueryParams = req.query
+	query.sort ??= []
+	query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+	query.auth = [{ field: 'data.type', value: UserVendorType.foods }]
+	return await ProductsUseCases.get(query)
+})
 
 router.get<ProductsRecommendedTagsItemsRouteDef>({
 	path: '/recommendation/tags/items',
