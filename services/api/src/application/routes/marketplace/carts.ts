@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { CartEntity, CartsUseCases } from '@modules/marketplace'
+import { AddToCartInput, CartEntity, CartsUseCases } from '@modules/marketplace'
 import { ApiDef, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const router = new Router({ path: '/carts', groups: ['Carts'], middlewares: [isAuthenticated] })
@@ -22,6 +22,8 @@ router.post<CartsAddRouteDef>({ path: '/', key: 'marketplace-carts-add' })(async
 		{
 			productId: Schema.string().min(1),
 			quantity: Schema.number(),
+			pack: Schema.number().int().gte(0),
+			addOnProductId: Schema.string().optional(),
 			add: Schema.boolean(),
 		},
 		req.body,
@@ -55,7 +57,7 @@ type CartsFindRouteDef = ApiDef<{
 type CartsAddRouteDef = ApiDef<{
 	key: 'marketplace-carts-add'
 	method: 'post'
-	body: { productId: string; quantity: number; add: boolean }
+	body: AddToCartInput
 	response: CartEntity
 }>
 

@@ -1,3 +1,4 @@
+import { UserVendorType } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { ProductMeta } from '../../domain/types'
 import { ProductDbChangeCallbacks } from '../../utils/changes/products'
@@ -29,6 +30,11 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: false,
 		},
+		isAddOn: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 		description: {
 			type: String,
 			required: false,
@@ -37,7 +43,12 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 		tagIds: {
 			type: [String],
 			required: false,
-			default: [],
+			default: () => [],
+		},
+		data: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
+			default: () => ({ type: UserVendorType.items }),
 		},
 		user: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
@@ -49,6 +60,16 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 		},
 		meta: Object.fromEntries(
 			Object.values(ProductMeta).map((key) => [
+				key,
+				{
+					type: Number,
+					required: false,
+					default: 0,
+				},
+			]),
+		),
+		ratings: Object.fromEntries(
+			['total', 'avg', 'count'].map((key) => [
 				key,
 				{
 					type: Number,

@@ -4,6 +4,9 @@ const Ar = makeEnum('AuthRole', {
 	isAdmin: 'isAdmin',
 	isSuperAdmin: 'isSuperAdmin',
 	isDriver: 'isDriver',
+	isVendor: 'isVendor',
+	isVendorFoods: 'isVendorFoods',
+	isVendorItems: 'isVendorItems',
 } as const)
 
 const El = makeEnum('EmailsList', {

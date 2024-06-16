@@ -1,18 +1,30 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, ReportEntity, ReportsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, ReportEntity, ReportsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { ApiDef, AuthRole, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const router = new Router({ path: '/reports', groups: ['Reports'], middlewares: [isAuthenticated] })
 
 router.get<InteractionsReportsGetRouteDef>({ path: '/', key: 'interactions-reports-get', middlewares: [isAdmin] })(async (req) => {
 	const query = req.query
+	const userId = req.authUser!.id
+	const isAdmin = req.authUser!.roles[AuthRole.isAdmin]
+	if (!isAdmin) {
+		query.authType = QueryKeys.or
+		query.auth = [
+			{ field: 'entity.userId', value: userId },
+			{ field: 'user.id', value: userId },
+		]
+	}
 	return await ReportsUseCases.get(query)
 })
 
 router.get<InteractionsReportsFindRouteDef>({ path: '/:id', key: 'interactions-reports-find', middlewares: [isAdmin] })(async (req) => {
 	const report = await ReportsUseCases.find(req.params.id)
+	const userId = req.authUser!.id
+	const isAdmin = req.authUser!.roles[AuthRole.isAdmin]
 	if (!report) throw new NotFoundError()
+	if (!isAdmin && report.user.id !== userId && report.entity.userId !== userId) throw new NotFoundError()
 	return report
 })
 
@@ -21,24 +33,21 @@ router.delete<InteractionsReportsDeleteRouteDef>({ path: '/:id', key: 'interacti
 )
 
 router.post<InteractionsReportsCreateRouteDef>({ path: '/', key: 'interactions-reports-create' })(async (req) => {
-	const { entity, message } = validate(
+	const data = validate(
 		{
 			message: Schema.string().min(1),
-			entity: Schema.object({
-				id: Schema.string().min(1),
-				type: Schema.in(Object.values(InteractionEntities)),
-			}),
+			entity: EntitySchema(),
 		},
 		req.body,
 	)
 
-	const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'reports')
+	const entity = await verifyInteraction(data.entity, 'reports')
 	const user = await UsersUseCases.find(req.authUser!.id)
 	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 	return await ReportsUseCases.create({
-		message,
-		entity: { ...entity, userId },
+		...data,
+		entity,
 		user: user.getEmbedded(),
 	})
 })
@@ -69,6 +78,6 @@ type InteractionsReportsDeleteRouteDef = ApiDef<{
 type InteractionsReportsCreateRouteDef = ApiDef<{
 	key: 'interactions-reports-create'
 	method: 'post'
-	body: { message: string; entity: { id: string; type: InteractionEntities } }
+	body: { message: string; entity: Omit<InteractionEntity, 'userId'> }
 	response: ReportEntity
 }>

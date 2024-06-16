@@ -17,7 +17,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 		roles: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: {} as unknown as UserFromModel['roles'],
+			default: () => ({}) as unknown as UserFromModel['roles'],
 		},
 		dates: {
 			createdAt: {
@@ -35,7 +35,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 			connections: {
 				type: [String],
 				required: false,
-				default: [],
+				default: () => [],
 			},
 			lastUpdatedAt: {
 				type: Number,
@@ -79,17 +79,17 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 			trips: {
 				type: appInstance.dbs.mongo.Schema.Types.Mixed,
 				required: false,
-				default: {},
+				default: () => ({}),
 			},
 			location: {
-				type: [Number],
+				type: appInstance.dbs.mongo.Schema.Types.Mixed,
 				required: false,
 				default: null,
 			},
 			savedLocations: {
 				type: [appInstance.dbs.mongo.Schema.Types.Mixed],
 				required: false,
-				default: [],
+				default: () => [],
 			},
 			settings: {
 				notifications: {
@@ -110,9 +110,16 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 			default: null,
 		},
 		vendor: {
-			type: appInstance.dbs.mongo.Schema.Types.Mixed,
-			required: false,
-			default: null,
+			schedule: {
+				type: appInstance.dbs.mongo.Schema.Types.Mixed,
+				required: false,
+				default: null,
+			},
+			menu: {
+				type: [String],
+				required: false,
+				default: () => [],
+			},
 		},
 	},
 	{ minimize: false },

@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { ReviewsUseCases, InteractionEntities, verifyInteractionAndGetUserId, ReviewEntity } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, ReviewEntity, ReviewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -18,26 +18,22 @@ router.get<InteractionsReviewsFindRouteDef>({ path: '/:id', key: 'interactions-r
 
 router.post<InteractionsReviewsCreateRouteDef>({ path: '/', key: 'interactions-reviews-create', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { rating, message, entity } = validate(
+		const data = validate(
 			{
 				rating: Schema.number().round(0).gte(0).lte(5),
 				message: Schema.string(),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'reviews')
+		const entity = await verifyInteraction(data.entity, 'reviews')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ReviewsUseCases.add({
-			rating,
-			message,
-			entity: { ...entity, userId },
+			...data,
+			entity,
 			user: user.getEmbedded(),
 		})
 	},
@@ -62,6 +58,6 @@ type InteractionsReviewsFindRouteDef = ApiDef<{
 type InteractionsReviewsCreateRouteDef = ApiDef<{
 	key: 'interactions-reviews-create'
 	method: 'post'
-	body: { rating: number; message: string; entity: { id: string; type: InteractionEntities } }
+	body: { rating: number; message: string; entity: Omit<InteractionEntity, 'userId'> }
 	response: ReviewEntity
 }>

@@ -5,12 +5,42 @@ import { ReportEntity } from '../../domain/entities/reports'
 
 export const ReportDbChangeCallbacks: DbChangeCallbacks<ReportFromModel, ReportEntity> = {
 	created: async ({ after }) => {
-		await appInstance.listener.created(['interactions/reports', `interactions/reports/${after.id}`], after)
+		await appInstance.listener.created(
+			[after.user.id, after.entity.userId]
+				.map((uid) => [
+					'interactions/reports',
+					`interactions/reports/${uid}`,
+					`interactions/reports/${after.id}`,
+					`interactions/reports/${after.id}/${uid}`,
+				])
+				.flat(),
+			after,
+		)
 	},
 	updated: async ({ after }) => {
-		await appInstance.listener.updated(['interactions/reports', `interactions/reports/${after.id}`], after)
+		await appInstance.listener.updated(
+			[after.user.id, after.entity.userId]
+				.map((uid) => [
+					'interactions/reports',
+					`interactions/reports/${uid}`,
+					`interactions/reports/${after.id}`,
+					`interactions/reports/${after.id}/${uid}`,
+				])
+				.flat(),
+			after,
+		)
 	},
 	deleted: async ({ before }) => {
-		await appInstance.listener.deleted(['interactions/reports', `interactions/reports/${before.id}`], before)
+		await appInstance.listener.deleted(
+			[before.user.id, before.entity.userId]
+				.map((uid) => [
+					'interactions/reports',
+					`interactions/reports/${uid}`,
+					`interactions/reports/${before.id}`,
+					`interactions/reports/${before.id}/${uid}`,
+				])
+				.flat(),
+			before,
+		)
 	},
 }

@@ -11,5 +11,5 @@ export interface UserToModel {
 	status: UserStatus
 	type: UserTypeData
 	account: UserAccount
-	vendor: UserVendorData | null
+	vendor: UserVendorData
 }

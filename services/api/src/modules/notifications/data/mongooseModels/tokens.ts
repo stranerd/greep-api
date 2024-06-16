@@ -16,7 +16,7 @@ const Schema = new appInstance.dbs.mongo.Schema<TokenFromModel>(
 		tokens: {
 			type: [String],
 			required: false,
-			default: [],
+			default: () => [],
 		},
 		createdAt: {
 			type: Number,

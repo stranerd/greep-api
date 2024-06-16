@@ -1,7 +1,9 @@
+import { TagMeta } from '@modules/interactions'
 import { Currencies } from '@modules/payment'
-import { generateDefaultUser } from '@modules/users'
+import { UserVendorType, generateDefaultUser } from '@modules/users'
+import { Ratings } from '@utils/types'
 import { BaseEntity, MediaOutput } from 'equipped'
-import { EmbeddedUser, ProductMetaType } from '../types'
+import { EmbeddedUser, ProductData, ProductMetaType } from '../types'
 
 type ProductEntityProps = {
 	id: string
@@ -10,19 +12,28 @@ type ProductEntityProps = {
 		amount: number
 		currency: Currencies
 	}
+	data: ProductData
 	user: EmbeddedUser
 	banner: MediaOutput
 	description: string
 	tagIds: string[]
 	inStock: boolean
+	isAddOn: boolean
 	meta: ProductMetaType
+	ratings: Ratings
 	createdAt: number
 	updatedAt: number
 }
 
-export class ProductEntity extends BaseEntity<ProductEntityProps> {
+export class ProductEntity extends BaseEntity<ProductEntityProps, 'likes'> {
+	__ignoreInJSON = ['likes' as const]
+
 	constructor(data: ProductEntityProps) {
 		data.user = generateDefaultUser(data.user)
 		super(data)
+	}
+
+	getTagMetaType() {
+		return this.data.type === UserVendorType.foods ? TagMeta.productsFoods : TagMeta.productsItems
 	}
 }

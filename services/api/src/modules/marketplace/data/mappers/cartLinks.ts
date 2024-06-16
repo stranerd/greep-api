@@ -1,11 +1,11 @@
 import { BaseMapper } from 'equipped'
-import { CartEntity } from '../../domain/entities/carts'
-import { CartFromModel, CartToModel } from '../models/carts'
+import { CartLinkEntity } from '../../domain/entities/cartLinks'
+import { CartLinkFromModel, CartLinkToModel } from '../models/cartLinks'
 
-export class CartMapper extends BaseMapper<CartFromModel, CartToModel, CartEntity> {
-	mapFrom(param: CartFromModel | null) {
+export class CartLinkMapper extends BaseMapper<CartLinkFromModel, CartLinkToModel, CartLinkEntity> {
+	mapFrom(param: CartLinkFromModel | null) {
 		if (!param) return null
-		return new CartEntity({
+		return new CartLinkEntity({
 			id: param._id,
 			packs: param.packs,
 			userId: param.userId,
@@ -17,13 +17,12 @@ export class CartMapper extends BaseMapper<CartFromModel, CartToModel, CartEntit
 		})
 	}
 
-	mapTo(param: CartEntity) {
+	mapTo(param: CartLinkEntity) {
 		return {
 			userId: param.userId,
 			vendorId: param.vendorId,
 			vendorType: param.vendorType,
 			packs: param.packs,
-			active: param.active,
 		}
 	}
 }

@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { CommentEntity, CommentsUseCases, InteractionEntities, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { CommentEntity, CommentsUseCases, EntitySchema, InteractionEntity, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -22,24 +22,21 @@ router.get<InteractionsCommentsFindRouteDef>({ path: '/:id', key: 'interactions-
 
 router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-comments-create', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { body, entity } = validate(
+		const data = validate(
 			{
 				...schema(),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'comments')
+		const entity = await verifyInteraction(data.entity, 'comments')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await CommentsUseCases.create({
-			body,
-			entity: { ...entity, userId },
+			...data,
+			entity,
 			user: user.getEmbedded(),
 		})
 	},
@@ -47,12 +44,12 @@ router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-
 
 router.put<InteractionsCommentsUpdateRouteDef>({ path: '/:id', key: 'interactions-comments-update', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { body } = validate(schema(), req.body)
+		const data = validate(schema(), req.body)
 
 		const updated = await CommentsUseCases.update({
 			id: req.params.id,
 			userId: req.authUser!.id,
-			data: { body },
+			data,
 		})
 		if (updated) return updated
 		throw new NotAuthorizedError()
@@ -91,7 +88,7 @@ type InteractionsCommentsFindRouteDef = ApiDef<{
 type InteractionsCommentsCreateRouteDef = ApiDef<{
 	key: 'interactions-comments-create'
 	method: 'post'
-	body: CommentBody & { entity: { id: string; type: InteractionEntities } }
+	body: CommentBody & { entity: Omit<InteractionEntity, 'userId'> }
 	response: CommentEntity
 }>
 

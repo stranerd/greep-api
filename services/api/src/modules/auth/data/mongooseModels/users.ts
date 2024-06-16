@@ -51,12 +51,12 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>({
 		type: [String],
 		set: (types: string[]) => Array.from(new Set(types)),
 		required: false,
-		default: [],
+		default: () => [],
 	},
 	roles: {
 		type: appInstance.dbs.mongo.Schema.Types.Mixed,
 		required: false,
-		default: {} as unknown as UserFromModel['roles'],
+		default: () => ({}) as unknown as UserFromModel['roles'],
 	},
 	referrer: {
 		type: String,

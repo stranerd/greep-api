@@ -5,10 +5,6 @@ export class TagEntity extends BaseEntity<TagConstructorArgs> {
 	constructor(data: TagConstructorArgs) {
 		super(data)
 	}
-
-	isProducts() {
-		return this.type === TagTypes.products
-	}
 }
 
 type TagConstructorArgs = {

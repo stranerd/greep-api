@@ -21,26 +21,53 @@ export class CartRepository implements ICartRepository {
 		await Cart.collection.conn.transaction(async (session) => {
 			const product = await Product.findById(data.productId)
 			if (!product) throw new Error('product not found')
+			if (data.add && !product.inStock) throw new Error('product not available')
+			if (data.addOnProductId && !product.isAddOn) throw new Error('product is not an add-on')
+			const vendorId = product.user.id
 			const cart = await Cart.findOneAndUpdate(
-				{ userId: data.userId, active: true, vendorId: product.user.id },
-				{ $setOnInsert: { userId: data.userId, active: true, vendorId: product.user.id, products: [] } },
+				{ userId: data.userId, active: true, vendorId },
+				{ $setOnInsert: { userId: data.userId, active: true, vendorId, vendorType: product.data.type, packs: [] } },
 				{ upsert: true, new: true, ...(session ? { session } : {}) },
 			)
 
-			const products = [...cart.products]
-			const productIndex = cart.products.findIndex((p) => p.id === data.productId)
-			if (data.add) {
-				if (!product.inStock) throw new Error('product not available')
-				if (productIndex !== -1) {
-					products[productIndex].quantity += data.quantity
-					products[productIndex].amount = product.price.amount
-				} else products.push({ ...product.price, id: data.productId, quantity: data.quantity })
-			} else {
-				if (productIndex !== -1) products[productIndex].quantity -= data.quantity
-			}
-			const filteredProducts = products.filter((p) => p.quantity > 0)
+			const length = data.pack >= cart.packs.length ? data.pack + 1 : cart.packs.length
+			const packs = Array.from({ ...structuredClone(cart.packs), length }, (val) => val ?? [])
 
-			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: { products: filteredProducts } }, { new: true, session })
+			const index = packs[data.pack].findIndex((p) => p.id === (data.addOnProductId ?? data.productId))
+
+			if (data.addOnProductId) {
+				if (index < 0) throw new Error('base item not in cart')
+				const addOnIndex = packs[data.pack][index].addOns.findIndex((p) => p.id === data.productId)
+				if (data.add) {
+					if (addOnIndex !== -1) {
+						packs[data.pack][index].addOns[addOnIndex].quantity += data.quantity
+						packs[data.pack][index].addOns[addOnIndex].amount = product.price.amount
+					} else packs[data.pack][index].addOns.push({ ...product.price, id: data.productId, quantity: data.quantity })
+				} else {
+					if (addOnIndex !== -1) packs[data.pack][index].addOns[addOnIndex].quantity -= data.quantity
+				}
+			} else {
+				if (data.add) {
+					if (index !== -1) {
+						packs[data.pack][index].quantity += data.quantity
+						packs[data.pack][index].amount = product.price.amount
+					} else packs[data.pack].push({ ...product.price, id: data.productId, quantity: data.quantity, addOns: [] })
+				} else {
+					if (index !== -1) packs[data.pack][index].quantity -= data.quantity
+				}
+			}
+			const filteredPacks = packs
+				.map((pack) =>
+					pack
+						.map((item) => ({
+							...item,
+							addOns: item.addOns.filter((addOn) => addOn.quantity > 0),
+						}))
+						.filter((item) => item.quantity > 0),
+				)
+				.filter((pack) => pack.length > 0)
+
+			const updatedCart = await Cart.findByIdAndUpdate(cart.id, { $set: { packs: filteredPacks } }, { new: true, session })
 			return (res = updatedCart)
 		})
 		return this.mapper.mapFrom(res)!

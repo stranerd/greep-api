@@ -25,7 +25,7 @@ const Schema = new appInstance.dbs.mongo.Schema<ChatFromModel>(
 		links: {
 			type: [appInstance.dbs.mongo.Schema.Types.Mixed] as unknown as ChatFromModel['links'],
 			required: false,
-			default: [],
+			default: () => [],
 		},
 		media: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
@@ -39,7 +39,7 @@ const Schema = new appInstance.dbs.mongo.Schema<ChatFromModel>(
 		readAt: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed as unknown as ChatFromModel['readAt'],
 			required: false,
-			default: {},
+			default: () => ({}),
 		},
 		createdAt: {
 			type: Number,

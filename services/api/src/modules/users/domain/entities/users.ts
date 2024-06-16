@@ -1,10 +1,27 @@
 import { BaseEntity, Validation } from 'equipped'
-import { EmbeddedUser, UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserType, UserTypeData, UserVendorData } from '../types'
+import {
+	EmbeddedUser,
+	UserAccount,
+	UserBio,
+	UserDates,
+	UserRoles,
+	UserStatus,
+	UserType,
+	UserTypeData,
+	UserVendorData,
+	UserVendorType,
+} from '../types'
 
 export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'bio.phone'> {
 	__ignoreInJSON = ['bio.email' as const, 'bio.phone' as const]
 
 	constructor(data: UserConstructorArgs) {
+		if (Array.isArray(data.account.location))
+			data.account.location = {
+				coords: data.account.location as any,
+				location: '',
+				description: '',
+			}
 		super(data)
 		this.bio = generateDefaultBio(data.bio ?? {})
 		this.roles = generateDefaultRoles(data.roles)
@@ -22,12 +39,25 @@ export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'b
 		return this.type?.type === UserType.driver
 	}
 
+	isVendor() {
+		return this.type?.type === UserType.vendor
+	}
+
+	isVendorFoods() {
+		return this.type?.type === UserType.vendor && this.type.vendorType === UserVendorType.foods
+	}
+
+	isVendorItems() {
+		return this.type?.type === UserType.vendor && this.type.vendorType === UserVendorType.items
+	}
+
 	isCustomer() {
 		return this.type?.type === UserType.customer
 	}
 
 	get publicName() {
-		return this.vendor?.name ?? this.bio.name.full
+		if (this.type?.type === UserType.vendor) return this.type.name
+		return this.bio.name.full
 	}
 
 	getEmbedded(): EmbeddedUser {
@@ -48,7 +78,7 @@ type UserConstructorArgs = {
 	status: UserStatus
 	account: UserAccount
 	type: UserTypeData
-	vendor: UserVendorData | null
+	vendor: UserVendorData
 }
 
 const generateDefaultBio = (bio: Partial<UserBio>): UserBio => {

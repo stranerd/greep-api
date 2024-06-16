@@ -1,3 +1,4 @@
+import { Location } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IUserRepository } from '../i-repositories/users'
 import { UserAccount, UserBio, UserRoles, UserTypeData, UserVendorData } from '../types'
@@ -74,12 +75,8 @@ export class UsersUseCase {
 		return await this.repository.updateDebt(data)
 	}
 
-	async updateLocation(data: { userId: string; location: [number, number] }) {
+	async updateLocation(data: { userId: string; location: Location }) {
 		return await this.repository.updateLocation(data)
-	}
-
-	async updateVendor(data: { userId: string; data: UserVendorData }) {
-		return await this.repository.updateVendor(data)
 	}
 
 	async updateSettings(params: { userId: string; settings: Partial<UserAccount['settings']> }) {
@@ -88,5 +85,9 @@ export class UsersUseCase {
 
 	async updateSavedLocations(params: { userId: string; savedLocations: UserAccount['savedLocations'] }) {
 		return await this.repository.updateSavedLocations(params.userId, params.savedLocations)
+	}
+
+	async updateVendor<Key extends keyof UserVendorData>(params: { userId: string; type: Key; data: UserVendorData[Key] }) {
+		return await this.repository.updateVendor(params.userId, params.type, params.data)
 	}
 }

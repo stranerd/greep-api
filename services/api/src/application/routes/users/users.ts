@@ -1,8 +1,21 @@
-import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '@application/middlewares'
-import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
-import { UserEntity, UserType, UsersUseCases } from '@modules/users'
-import { Location, LocationSchema } from '@utils/types'
+import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified, isVendor } from '@application/middlewares'
+import { TagTypes, TagsUseCases } from '@modules/interactions'
 import { StorageUseCases } from '@modules/storage'
+import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
+import { Location, LocationSchema, TimeSchema, timezones } from '@utils/types'
+import {
+	ApiDef,
+	BadRequestError,
+	Conditions,
+	MediaOutput,
+	NotAuthorizedError,
+	NotFoundError,
+	QueryParams,
+	QueryResults,
+	Router,
+	Schema,
+	validate,
+} from 'equipped'
 
 const router = new Router({ path: '/users', groups: ['Users'] })
 
@@ -20,53 +33,76 @@ router.get<UsersFindRouteDef>({ path: '/:id', key: 'users-users-find' })(async (
 
 router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-type', middlewares: [isAuthenticatedButIgnoreVerified] })(
 	async (req) => {
-		const license = req.files.license?.at(0)
-		const passport = req.files.passport?.at(0)
-		const studentId = req.files.studentId?.at(0)
-		const residentPermit = req.files.residentPermit?.at(0)
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user) throw new NotFoundError('user not found')
+		const type = user.type
 
 		const { data } = validate(
 			{
 				data: Schema.discriminate((v) => v.type, {
 					[UserType.driver]: Schema.object({
 						type: Schema.is(UserType.driver as const),
-						license: Schema.file().image(),
+						license: Schema.file().image().nullish(),
+					}),
+					[UserType.vendor]: Schema.object({
+						type: Schema.is(UserType.vendor as const),
+						vendorType: Schema.in('vendorType' in type ? [type.vendorType] : Object.values(UserVendorType)),
+						name: Schema.string().min(1),
+						banner: Schema.file().image().nullish(),
+						email: Schema.string().email().nullable(),
+						website: Schema.string().url().nullable(),
+						location: LocationSchema(),
 					}),
 					[UserType.customer]: Schema.object({
 						type: Schema.is(UserType.customer as const),
-						passport: Schema.file()
-							.image()
-							.requiredIf(() => !studentId && !residentPermit),
-						studentId: Schema.file()
-							.image()
-							.requiredIf(() => !passport && !residentPermit),
-						residentPermit: Schema.file()
-							.image()
-							.requiredIf(() => !passport && !studentId),
+						passport: Schema.file().image().nullish(),
+						studentId: Schema.file().image().nullish(),
+						residentPermit: Schema.file().image().nullish(),
 					}),
 				}),
 			},
 			{
 				data: {
 					...req.body,
-					license,
-					passport,
-					studentId,
-					residentPermit,
+					license: req.files.license?.at(0),
+					banner: req.files.license?.at(0),
+					passport: req.files.passport?.at(0),
+					studentId: req.files.studentId?.at(0),
+					residentPermit: req.files.residentPermit?.at(0),
 				},
 			},
 		)
 
+		if (type && data.type !== type.type) throw new BadRequestError('cannot change user type')
+
+		const getFileValue = async (key: string, uploadPath: string) => {
+			if (data[key] && Buffer.isBuffer(data[key].data)) return StorageUseCases.upload(uploadPath, data[key])
+			if (data[key] === null) return null
+			if (type[key]) return type[key] as MediaOutput
+			return null
+		}
+
 		if (data.type === UserType.driver) {
-			const license = await StorageUseCases.upload('users/drivers/licenses', data.license)
+			const license = await getFileValue('license', 'users/drivers/licenses')
+			if (!license) throw new BadRequestError('license file is required')
+
 			const updated = await UsersUseCases.updateType({ userId: req.authUser!.id, data: { ...data, license } })
 			if (updated) return updated
+		} else if (data.type === UserType.vendor) {
+			const banner = await getFileValue('banner', 'users/vendors/banners')
+
+			const updated = await UsersUseCases.updateType({
+				userId: req.authUser!.id,
+				data: { ...data, banner },
+			})
+			if (updated) return updated
 		} else if (data.type === UserType.customer) {
-			const passport = data.passport ? await StorageUseCases.upload('users/customers/passport', data.passport) : null
-			const studentId = data.studentId ? await StorageUseCases.upload('users/customers/studentId', data.studentId) : null
-			const residentPermit = data.residentPermit
-				? await StorageUseCases.upload('users/customers/residentPermit', data.residentPermit)
-				: null
+			const passport = await getFileValue('passport', 'users/customers/passport')
+			const studentId = await getFileValue('studentId', 'users/customers/studentId')
+			const residentPermit = await getFileValue('residentPermit', 'users/customers/residentPermit')
+			if (!passport && !studentId && !residentPermit)
+				throw new BadRequestError('at least one of the passport, studentId, residentPermit is required')
+
 			const updated = await UsersUseCases.updateType({
 				userId: req.authUser!.id,
 				data: { ...data, passport, studentId, residentPermit },
@@ -74,7 +110,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 			if (updated) return updated
 		}
 
-		throw new NotAuthorizedError('cannot update user type')
+		throw new BadRequestError('cannot update user type')
 	},
 )
 
@@ -97,7 +133,7 @@ router.post<UsersUpdateApplicationRouteDef>({ path: '/application', key: 'users-
 
 router.post<UsersUpdateLocationRouteDef>({ path: '/location', key: 'users-users-update-location', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { location } = validate({ location: Schema.tuple([Schema.number(), Schema.number()]) }, req.body)
+		const { location } = validate({ location: LocationSchema() }, req.body)
 
 		const updated = await UsersUseCases.updateLocation({ userId: req.authUser!.id, location })
 		if (updated) return updated
@@ -115,24 +151,6 @@ router.post<UsersUpdateDriverAvailabilityRouteDef>({
 	return !!user
 })
 
-router.post<UsersUpdateVendorRouteDef>({ path: '/vendor', key: 'users-users-update-vendor', middlewares: [isAuthenticated] })(
-	async (req) => {
-		const data = validate(
-			{
-				name: Schema.string().min(1),
-				email: Schema.string().email().nullable(),
-				website: Schema.string().url().nullable(),
-				location: LocationSchema(),
-			},
-			req.body,
-		)
-
-		const user = await UsersUseCases.updateVendor({ userId: req.authUser!.id, data })
-		if (user) return user
-		throw new NotAuthorizedError('cannot update user vendor details')
-	},
-)
-
 router.post<UsersUpdateSavedLocationsRouteDef>({
 	path: '/savedLocations',
 	key: 'users-users-update-saved-locations',
@@ -143,6 +161,51 @@ router.post<UsersUpdateSavedLocationsRouteDef>({
 	const user = await UsersUseCases.updateSavedLocations({ userId: req.authUser!.id, savedLocations })
 	if (user) return user
 	throw new NotAuthorizedError('cannot update user saved locations')
+})
+
+router.get<UsersGetSupportedTimezonesRouteDef>({
+	path: '/vendors/timezones',
+	key: 'users-users-timezones',
+})(() => timezones)
+
+router.post<UsersUpdateVendorScheduleRouteDef>({
+	path: '/vendors/schedule',
+	key: 'users-users-update-vendor-schedule',
+	middlewares: [isAuthenticated, isVendor],
+})(async (req) => {
+	const { schedule } = validate(
+		{
+			schedule: Schema.object({
+				timezone: Schema.string().in(timezones.map((tz) => tz.id)),
+				schedule: Schema.array(Schema.object({ from: TimeSchema(), to: TimeSchema() }).nullable()).has(7),
+			}).nullable(),
+		},
+		req.body,
+	)
+
+	const user = await UsersUseCases.updateVendor({ userId: req.authUser!.id, type: 'schedule', data: schedule })
+	if (user) return user
+	throw new NotAuthorizedError('cannot update user schedule')
+})
+
+router.post<UsersUpdateVendorMenuRouteDef>({
+	path: '/vendors/menu',
+	key: 'users-users-update-vendor-menu',
+	middlewares: [isAuthenticated, isVendor],
+})(async (req) => {
+	const { menu } = validate({ menu: Schema.array(Schema.string().min(1)) }, req.body)
+
+	const { results: tags } = await TagsUseCases.get({
+		where: [
+			{ field: 'id', condition: Conditions.in, value: menu },
+			{ field: 'type', value: TagTypes.productsFoods },
+		],
+		all: true,
+	})
+
+	const user = await UsersUseCases.updateVendor({ userId: req.authUser!.id, type: 'menu', data: tags.map((t) => t.id) })
+	if (user) return user
+	throw new NotAuthorizedError('cannot update user menu')
 })
 
 export default router
@@ -164,8 +227,17 @@ type UsersFindRouteDef = ApiDef<{
 type UsersUpdateTypeRouteDef = ApiDef<{
 	key: 'users-users-update-type'
 	method: 'post'
-	body: { type: UserType }
-	files: { license?: false; passport?: false; studentId?: false; residentPermit?: false }
+	body:
+		| { type: UserType.driver | UserType.customer }
+		| {
+				type: UserType.vendor
+				vendorType: UserVendorType
+				name: string
+				email: string | null
+				website: string | null
+				location: Location
+		  }
+	files: { license?: false; banner?: false; passport?: false; studentId?: false; residentPermit?: false }
 	response: UserEntity
 }>
 
@@ -179,7 +251,7 @@ type UsersUpdateApplicationRouteDef = ApiDef<{
 type UsersUpdateLocationRouteDef = ApiDef<{
 	key: 'users-users-update-location'
 	method: 'post'
-	body: { location: [number, number] }
+	body: { location: Location }
 	response: boolean
 }>
 
@@ -190,16 +262,29 @@ type UsersUpdateDriverAvailabilityRouteDef = ApiDef<{
 	response: boolean
 }>
 
-type UsersUpdateVendorRouteDef = ApiDef<{
-	key: 'users-users-update-vendor'
-	method: 'post'
-	body: { name: string; email: string | null; website: string | null; location: Location }
-	response: UserEntity
-}>
-
 type UsersUpdateSavedLocationsRouteDef = ApiDef<{
 	key: 'users-users-update-saved-locations'
 	method: 'post'
 	body: { locations: Location[] }
+	response: UserEntity
+}>
+
+type UsersGetSupportedTimezonesRouteDef = ApiDef<{
+	key: 'users-users-timezones'
+	method: 'get'
+	response: typeof timezones
+}>
+
+type UsersUpdateVendorScheduleRouteDef = ApiDef<{
+	key: 'users-users-update-vendor-schedule'
+	method: 'post'
+	body: { schedule: BusinessTime }
+	response: UserEntity
+}>
+
+type UsersUpdateVendorMenuRouteDef = ApiDef<{
+	key: 'users-users-update-vendor-menu'
+	method: 'post'
+	body: { menu: string[] }
 	response: UserEntity
 }>

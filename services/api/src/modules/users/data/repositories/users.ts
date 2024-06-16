@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/environment'
+import { Location } from '@utils/types'
 import { IUserRepository } from '../../domain/i-repositories/users'
 import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData, UserVendorData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
@@ -144,14 +145,9 @@ export class UserRepository implements IUserRepository {
 		return !!user
 	}
 
-	async updateLocation({ userId, location }: { userId: string; location: [number, number] }) {
+	async updateLocation({ userId, location }: { userId: string; location: Location }) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { ['account.location']: location } }, { new: true })
 		return !!user
-	}
-
-	async updateVendor({ userId, data }: { userId: string; data: UserVendorData }) {
-		const user = await User.findByIdAndUpdate(userId, { $set: { vendor: data } }, { new: true })
-		return this.mapper.mapFrom(user)
 	}
 
 	async updateSettings(userId: string, settings: Partial<UserAccount['settings']>) {
@@ -162,6 +158,11 @@ export class UserRepository implements IUserRepository {
 
 	async updateSavedLocations(userId: string, savedLocations: UserAccount['savedLocations']) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { 'account.savedLocations': savedLocations } }, { new: true })
+		return this.mapper.mapFrom(user)
+	}
+
+	async updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]) {
+		const user = await User.findByIdAndUpdate(userId, { $set: { [`vendor.${type}`]: data } }, { new: true })
 		return this.mapper.mapFrom(user)
 	}
 }

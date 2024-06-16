@@ -2,22 +2,15 @@ import { Currencies, FlutterwavePayment } from '@modules/payment'
 import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
-import { DeliveryTime, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderType } from '../types'
+import { resolvePacks } from '../../utils/carts'
+import { OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
 
-type OrderEntityProps = {
+type OrderEntityProps = OrderToModelBase & {
 	id: string
-	userId: string
-	email: string
 	driverId: string | null
 	status: OrderStatusType
 	done: boolean
-	from: Location
-	to: Location
-	dropoffNote: string
 	data: OrderData
-	time: DeliveryTime
-	discount: number
-	payment: OrderPayment
 	fee: OrderFee
 	createdAt: number
 	updatedAt: number
@@ -33,11 +26,11 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 	getMembers() {
 		const members = [this.userId]
 		if (this.driverId) members.push(this.driverId)
-		if (this.data.type === OrderType.cart) members.push(this.data.vendorId)
+		if ('vendorId' in this.data) members.push(this.data.vendorId)
 		return members
 	}
 
-	get currentStatus() {
+	getCurrentStatus() {
 		if (this.status[OrderStatus.completed]) return OrderStatus.completed
 		if (this.status[OrderStatus.cancelled]) return OrderStatus.cancelled
 		if (this.status[OrderStatus.rejected]) return OrderStatus.rejected
@@ -45,18 +38,27 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		return null
 	}
 
-	get paid() {
+	getPaid() {
 		return !!this.status[OrderStatus.paid]
+	}
+
+	getProducts() {
+		return resolvePacks('packs' in this.data ? this.data.packs : [])
+	}
+
+	getVendor() {
+		if ('vendorId' in this.data) return this.data.vendorId
+		return null
 	}
 
 	get timeline() {
 		const statuses = [OrderStatus.created]
 		if (this.status[OrderStatus.rejected]) {
 			statuses.push(OrderStatus.rejected)
-			if (this.paid) statuses.push(OrderStatus.refunded)
+			if (this.getPaid()) statuses.push(OrderStatus.refunded)
 		} else if (this.status[OrderStatus.cancelled]) {
 			statuses.push(OrderStatus.cancelled)
-			if (this.paid) statuses.push(OrderStatus.refunded)
+			if (this.getPaid()) statuses.push(OrderStatus.refunded)
 		} else statuses.push(OrderStatus.accepted, OrderStatus.shipped, OrderStatus.completed)
 		return statuses
 			.map((status) => ({
@@ -74,10 +76,10 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		from: Location
 		to: Location
 		discount: number
-		time: DeliveryTime
+		time: number
 		payment: OrderPayment
 	}): Promise<OrderFee> {
-		const items = data.data.type === OrderType.cart ? data.data.products : []
+		const items = resolvePacks('packs' in data.data ? data.data.packs : [])
 		const currency = Currencies.TRY
 		const convertedItems = await Promise.all(
 			items.map((item) => FlutterwavePayment.convertAmount(item.amount * item.quantity, item.currency, currency)),

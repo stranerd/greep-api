@@ -1,16 +1,16 @@
 import { appInstance } from '@utils/environment'
-import { CartDbChangeCallbacks } from '../../utils/changes/carts'
-import { CartMapper } from '../mappers/carts'
-import { CartFromModel } from '../models/carts'
+import { CartLinkDbChangeCallbacks } from '../../utils/changes/cartLinks'
+import { CartLinkMapper } from '../mappers/cartLinks'
+import { CartLinkFromModel } from '../models/cartLinks'
 
-const Schema = new appInstance.dbs.mongo.Schema<CartFromModel>(
+const Schema = new appInstance.dbs.mongo.Schema<CartLinkFromModel>(
 	{
 		_id: {
 			type: String,
 			default: () => appInstance.dbs.mongo.Id.toString(),
 		},
 		packs: {
-			type: [appInstance.dbs.mongo.Schema.Types.Mixed as unknown] as CartFromModel['packs'],
+			type: [appInstance.dbs.mongo.Schema.Types.Mixed as unknown] as CartLinkFromModel['packs'],
 			required: false,
 			default: () => [],
 		},
@@ -45,6 +45,6 @@ const Schema = new appInstance.dbs.mongo.Schema<CartFromModel>(
 	{ timestamps: { currentTime: Date.now }, minimize: false },
 )
 
-export const Cart = appInstance.dbs.mongo.use().model('MarketplaceCart', Schema)
+export const CartLink = appInstance.dbs.mongo.use().model('MarketplaceCartLink', Schema)
 
-export const CartChange = appInstance.dbs.mongo.change(Cart, CartDbChangeCallbacks, new CartMapper().mapFrom)
+export const CartLinkChange = appInstance.dbs.mongo.change(CartLink, CartLinkDbChangeCallbacks, new CartLinkMapper().mapFrom)

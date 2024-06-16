@@ -2,7 +2,7 @@ import { UserVendorType } from '@modules/users'
 import { BaseEntity } from 'equipped'
 import { CartProductItem } from '../types'
 
-type CartEntityProps = {
+type CartLinkEntityProps = {
 	id: string
 	active: boolean
 	packs: CartProductItem[][]
@@ -13,8 +13,8 @@ type CartEntityProps = {
 	updatedAt: number
 }
 
-export class CartEntity extends BaseEntity<CartEntityProps> {
-	constructor(data: CartEntityProps) {
+export class CartLinkEntity extends BaseEntity<CartLinkEntityProps> {
+	constructor(data: CartLinkEntityProps) {
 		super(data)
 	}
 }

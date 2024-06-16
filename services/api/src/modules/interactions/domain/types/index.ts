@@ -3,14 +3,35 @@ export type { EmbeddedUser } from '@modules/users'
 export enum InteractionEntities {
 	comments = 'comments',
 	products = 'products',
+	vendors = 'vendors',
 }
 
-export type Interaction = {
-	type: InteractionEntities
+type BaseInteractionEntity = {
 	id: string
+	userId: string
 }
 
-export type InteractionEntity = Interaction & { userId: string }
+export type InteractionEntity = BaseInteractionEntity &
+	(
+		| {
+				type: InteractionEntities.comments
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.products
+				relations: {
+					orderId?: string
+				}
+		  }
+		| {
+				type: InteractionEntities.vendors
+				relations: {
+					orderId?: string
+				}
+		  }
+	)
+
+export type Interaction = Omit<InteractionEntity, 'userId' | 'relations'>
 
 export enum CommentMeta {
 	comments = 'comments',
@@ -20,7 +41,8 @@ export enum CommentMeta {
 export type CommentMetaType = Record<CommentMeta, number>
 
 export enum TagMeta {
-	products = 'products',
+	productsItems = 'productsItems',
+	productsFoods = 'productsFoods',
 	orders = 'orders',
 
 	total = 'total',
@@ -29,5 +51,6 @@ export enum TagMeta {
 export type TagMetaType = Record<TagMeta, number>
 
 export enum TagTypes {
-	products = 'products',
+	productsItems = 'productsItems',
+	productsFoods = 'productsFoods',
 }

@@ -12,9 +12,12 @@ export class ProductMapper extends BaseMapper<ProductFromModel, ProductToModel, 
 			banner: param.banner,
 			price: param.price,
 			tagIds: param.tagIds,
+			isAddOn: param.isAddOn,
 			inStock: param.inStock,
+			data: param.data,
 			user: param.user,
 			meta: param.meta,
+			ratings: param.ratings,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})
@@ -27,8 +30,10 @@ export class ProductMapper extends BaseMapper<ProductFromModel, ProductToModel, 
 			banner: param.banner,
 			price: param.price,
 			tagIds: param.tagIds,
+			isAddOn: param.isAddOn,
 			inStock: param.inStock,
 			user: param.user,
+			data: param.data,
 		}
 	}
 }

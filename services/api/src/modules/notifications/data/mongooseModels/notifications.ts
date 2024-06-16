@@ -31,7 +31,7 @@ const NotificationSchema = new appInstance.dbs.mongo.Schema<NotificationFromMode
 		data: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
-			default: {},
+			default: () => ({}),
 		},
 		userId: {
 			type: String,

@@ -1,5 +1,5 @@
 import { Phone } from '@modules/auth'
-import { Location } from '@utils/types'
+import { Location, Time } from '@utils/types'
 import { AuthRoles, MediaOutput } from 'equipped'
 import { UserMeta } from './activities'
 
@@ -50,7 +50,7 @@ export type UserAccount = {
 			debt: number
 		}
 	>
-	location: [number, number] | null
+	location: Location | null
 	savedLocations: Location[]
 	settings: {
 		notifications: boolean
@@ -68,12 +68,32 @@ export enum UserRankings {
 export enum UserType {
 	driver = 'driver',
 	customer = 'customer',
+	vendor = 'vendor',
 }
+
+export enum UserVendorType {
+	foods = 'foods',
+	items = 'items',
+}
+
+export type BusinessTime = {
+	timezone: string
+	schedule: ({ from: Time; to: Time } | null)[]
+} | null
 
 export type UserTypeData =
 	| {
 			type: UserType.driver
 			license: MediaOutput
+	  }
+	| {
+			type: UserType.vendor
+			vendorType: UserVendorType
+			name: string
+			banner: MediaOutput | null
+			email: string | null
+			website: string | null
+			location: Location
 	  }
 	| {
 			type: UserType.customer
@@ -83,8 +103,6 @@ export type UserTypeData =
 	  }
 
 export type UserVendorData = {
-	name: string
-	email: string | null
-	website: string | null
-	location: Location
+	schedule: BusinessTime
+	menu: string[]
 }

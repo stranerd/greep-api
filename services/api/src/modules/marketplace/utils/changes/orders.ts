@@ -49,7 +49,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 		const failed = closed && !after.status[OrderStatus.completed]
 		const successful = closed && !!after.status[OrderStatus.completed]
 		if (failed) {
-			if (after.paid)
+			if (after.getPaid())
 				await TransactionsUseCases.create({
 					title: `Payment refund for order #${after.id}`,
 					status: TransactionStatus.fulfilled,
@@ -72,8 +72,8 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 					},
 				})
 		}
-		if (successful && after.data.type === OrderType.cart) {
-			const productIds = after.data.products.map((p) => p.id)
+		if (successful) {
+			const productIds = after.getProducts().map((p) => p.id)
 			const { results: products } = await ProductsUseCases.get({
 				where: [{ field: 'id', condition: Conditions.in, value: productIds }],
 			})

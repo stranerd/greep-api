@@ -30,7 +30,7 @@ const TripSchema = new appInstance.dbs.mongo.Schema<TripFromModel>(
 		data: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: {},
+			default: () => ({}),
 		},
 		from: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,

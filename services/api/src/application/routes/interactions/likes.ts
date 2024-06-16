@@ -1,41 +1,46 @@
 import { isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, LikeEntity, LikesUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, LikeEntity, LikesUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const router = new Router({ path: '/likes', groups: ['Likes'] })
 
 router.get<InteractionsLikesGetRouteDef>({ path: '/', key: 'interactions-likes-get' })(async (req) => {
 	const query = req.query
+	const userId = req.authUser!.id
+	query.authType = QueryKeys.or
+	query.auth = [
+		{ field: 'entity.userId', value: userId },
+		{ field: 'user.id', value: userId },
+	]
 	return await LikesUseCases.get(query)
 })
 
 router.get<InteractionsLikesFindRouteDef>({ path: '/:id', key: 'interactions-likes-find' })(async (req) => {
 	const like = await LikesUseCases.find(req.params.id)
+	const userId = req.authUser!.id
 	if (!like) throw new NotFoundError()
+	if (like.user.id !== userId && like.entity.userId !== userId) throw new NotFoundError()
 	return like
 })
 
 router.post<InteractionsLikesCreateRouteDef>({ path: '/', key: 'interactions-likes-create', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { entity, value } = validate(
+		const data = validate(
 			{
 				value: Schema.boolean(),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, value ? 'likes' : 'dislikes')
+		const entity = await verifyInteraction(data.entity, data.value ? 'likes' : 'dislikes')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await LikesUseCases.like({
-			value,
-			entity: { ...entity, userId },
+			...data,
+			entity,
 			user: user.getEmbedded(),
 		})
 	},
@@ -60,6 +65,6 @@ type InteractionsLikesFindRouteDef = ApiDef<{
 type InteractionsLikesCreateRouteDef = ApiDef<{
 	key: 'interactions-likes-create'
 	method: 'post'
-	body: { value: boolean; entity: { id: string; type: InteractionEntities } }
-	response: LikeEntity
+	body: { value: boolean; entity: Omit<InteractionEntity, 'userId'> }
+	response: LikeEntity | null
 }>

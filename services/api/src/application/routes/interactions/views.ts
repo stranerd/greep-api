@@ -1,39 +1,44 @@
 import { isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, ViewEntity, ViewsUseCases, verifyInteractionAndGetUserId } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, ViewEntity, ViewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, validate } from 'equipped'
 
 const router = new Router({ path: '/views', groups: ['Views'] })
 
 router.get<InteractionsViewsGetRouteDef>({ path: '/', key: 'interactions-views-get' })(async (req) => {
 	const query = req.query
+	const userId = req.authUser!.id
+	query.authType = QueryKeys.or
+	query.auth = [
+		{ field: 'entity.userId', value: userId },
+		{ field: 'user.id', value: userId },
+	]
 	return await ViewsUseCases.get(query)
 })
 
 router.get<InteractionsViewsFindRouteDef>({ path: '/:id', key: 'interactions-views-find' })(async (req) => {
 	const view = await ViewsUseCases.find(req.params.id)
+	const userId = req.authUser!.id
 	if (!view) throw new NotFoundError()
+	if (view.user.id !== userId && view.entity.userId !== userId) throw new NotFoundError()
 	return view
 })
 
 router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-views-create', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const { entity } = validate(
+		const data = validate(
 			{
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
 
-		const userId = await verifyInteractionAndGetUserId(entity.type, entity.id, 'views')
+		const entity = await verifyInteraction(data.entity, 'views')
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 		return await ViewsUseCases.create({
-			entity: { ...entity, userId },
+			entity,
 			user: user.getEmbedded(),
 		})
 	},
@@ -58,6 +63,6 @@ type InteractionsViewsFindRouteDef = ApiDef<{
 type InteractionsViewsCreateRouteDef = ApiDef<{
 	key: 'interactions-views-create'
 	method: 'post'
-	request: { entity: { id: string; type: InteractionEntities } }
+	request: { entity: Omit<InteractionEntity, 'userId'> }
 	response: ViewEntity
 }>

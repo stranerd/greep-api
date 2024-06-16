@@ -1,3 +1,4 @@
+import { Location } from '@utils/types'
 import { QueryParams, QueryResults } from 'equipped'
 import { UserEntity } from '../entities/users'
 import { UserAccount, UserBio, UserRoles, UserTypeData, UserVendorData } from '../types'
@@ -33,11 +34,11 @@ export interface IUserRepository {
 
 	updateDebt(data: { driverId: string; userId: string; count: number }): Promise<boolean>
 
-	updateLocation(data: { userId: string; location: [number, number] }): Promise<boolean>
-
-	updateVendor(data: { userId: string; data: UserVendorData }): Promise<UserEntity | null>
+	updateLocation(data: { userId: string; location: Location }): Promise<boolean>
 
 	updateSettings(userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
 
 	updateSavedLocations(userId: string, savedLocations: UserAccount['savedLocations']): Promise<UserEntity | null>
+
+	updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]): Promise<UserEntity | null>
 }

@@ -1,11 +1,12 @@
-import { isAuthenticated } from '@application/middlewares'
+import { isAuthenticated, isVendor } from '@application/middlewares'
 import { TagEntity, TagMeta, TagTypes, TagsUseCases } from '@modules/interactions'
 import { ProductEntity, ProductMeta, ProductsUseCases } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
 import { StorageUseCases } from '@modules/storage'
-import { UsersUseCases } from '@modules/users'
+import { UserVendorType, UsersUseCases } from '@modules/users'
 import {
 	ApiDef,
+	AuthUser,
 	BadRequestError,
 	Conditions,
 	NotAuthorizedError,
@@ -17,13 +18,30 @@ import {
 	validate,
 } from 'equipped'
 
-const schema = (bannerRequired: boolean) => ({
+const schema = (bannerRequired: boolean, authUser: AuthUser) => ({
 	title: Schema.string().min(1),
 	description: Schema.string().min(1),
 	price: Schema.object({
 		amount: Schema.number().gt(0),
 		currency: Schema.in(Object.values(Currencies)),
 	}),
+	data: Schema.discriminate((v) => v.type, {
+		[UserVendorType.foods]: Schema.object({
+			type: Schema.is(UserVendorType.foods as const),
+		}),
+		[UserVendorType.items]: Schema.object({
+			type: Schema.is(UserVendorType.items as const),
+		}),
+	}).custom(
+		(v) =>
+			authUser.roles.isVendorFoods
+				? v.type === UserVendorType.foods
+				: authUser.roles.isVendorItems
+					? v.type === UserVendorType.items
+					: false,
+		'invalid data type',
+	),
+	isAddOn: Schema.boolean(),
 	inStock: Schema.boolean(),
 	tagIds: Schema.array(Schema.string().min(1)),
 	banner: Schema.file()
@@ -44,70 +62,107 @@ router.get<ProductsFindRouteDef>({ path: '/:id', key: 'marketplace-products-find
 	return product
 })
 
-router.get<ProductsRecommendedProductsRouteDef>({ path: '/recommendation/products', key: 'marketplace-products-recommended-products' })(
-	async (req) => {
-		const query: QueryParams = req.query
-		query.sort ??= []
-		query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
-		return await ProductsUseCases.get(query)
-	},
-)
+router.get<ProductsRecommendedProductsItemsRouteDef>({
+	path: '/recommendation/products/items',
+	key: 'marketplace-products-recommended-products-items',
+})(async (req) => {
+	const query: QueryParams = req.query
+	query.sort ??= []
+	query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+	query.auth = [{ field: 'data.type', value: UserVendorType.items }]
+	return await ProductsUseCases.get(query)
+})
 
-router.get<ProductsRecommendedTagsRouteDef>({ path: '/recommendation/tags', key: 'marketplace-products-recommended-tags' })(async (req) => {
+router.get<ProductsRecommendedProductsFoodsRouteDef>({
+	path: '/recommendation/products/foods',
+	key: 'marketplace-products-recommended-products-foods',
+})(async (req) => {
+	const query: QueryParams = req.query
+	query.sort ??= []
+	query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+	query.auth = [{ field: 'data.type', value: UserVendorType.foods }]
+	return await ProductsUseCases.get(query)
+})
+
+router.get<ProductsRecommendedTagsItemsRouteDef>({
+	path: '/recommendation/tags/items',
+	key: 'marketplace-products-recommended-tags-items',
+})(async (req) => {
 	const query = req.query
-	query.auth = [{ field: 'type', value: TagTypes.products }]
+	query.auth = [{ field: 'type', value: TagTypes.productsItems }]
 	query.sort ??= []
 	query.sort.unshift({ field: `meta.${TagMeta.orders}`, desc: true })
 	query.limit = 10
 	return await TagsUseCases.get(query)
 })
 
-router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-create', middlewares: [isAuthenticated] })(async (req) => {
-	const data = validate(schema(true), { ...req.body, banner: req.files.banner?.at(0) ?? null })
-
-	const { results: tags } = await TagsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: data.tagIds }],
-	})
-
-	const user = await UsersUseCases.find(req.authUser!.id)
-	if (!user || user.isDeleted()) throw new BadRequestError('user not found')
-	if (!user.vendor?.location)
-		throw new BadRequestError('you must set your vendor location before you can list products on the marketplace')
-
-	const banner = await StorageUseCases.upload('marketplace/banners', data.banner!)
-
-	return await ProductsUseCases.create({
-		...data,
-		tagIds: tags.map((t) => t.id),
-		user: user.getEmbedded(),
-		banner,
-	})
+router.get<ProductsRecommendedTagsFoodsRouteDef>({
+	path: '/recommendation/tags/foods',
+	key: 'marketplace-products-recommended-tags-foods',
+})(async (req) => {
+	const query = req.query
+	query.auth = [{ field: 'type', value: TagTypes.productsFoods }]
+	query.sort ??= []
+	query.sort.unshift({ field: `meta.${TagMeta.orders}`, desc: true })
+	query.limit = 10
+	return await TagsUseCases.get(query)
 })
 
-router.put<ProductsUpdateeRouteDef>({ path: '/:id', key: 'marketplace-products-update', middlewares: [isAuthenticated] })(async (req) => {
+router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-create', middlewares: [isAuthenticated, isVendor] })(
+	async (req) => {
+		const data = validate(schema(true, req.authUser!), { ...req.body, banner: req.files.banner?.at(0) ?? null })
+
+		const { results: tags } = await TagsUseCases.get({
+			where: [
+				{ field: 'id', condition: Conditions.in, value: data.tagIds },
+				{ field: 'type', value: req.authUser!.roles.isVendorFoods ? TagTypes.productsFoods : TagTypes.productsItems },
+			],
+			all: true,
+		})
+
+		const user = await UsersUseCases.find(req.authUser!.id)
+		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+
+		const banner = await StorageUseCases.upload('marketplace/banners', data.banner!)
+
+		return await ProductsUseCases.create({
+			...data,
+			tagIds: tags.map((t) => t.id),
+			user: user.getEmbedded(),
+			banner,
+		})
+	},
+)
+
+router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-update', middlewares: [isAuthenticated] })(async (req) => {
 	const uploadedBanner = req.files.banner?.at(0) ?? null
 	const changedBanner = !!uploadedBanner
 
-	const { title, description, price, tagIds } = validate(schema(false), { ...req.body, banner: uploadedBanner })
+	const { title, description, price, tagIds, data } = validate(schema(false, req.authUser!), { ...req.body, banner: uploadedBanner })
 
 	const { results: tags } = await TagsUseCases.get({
-		where: [{ field: 'id', condition: Conditions.in, value: tagIds }],
+		where: [
+			{ field: 'id', condition: Conditions.in, value: tagIds },
+			{ field: 'type', value: req.authUser!.roles.isVendorFoods ? TagTypes.productsFoods : TagTypes.productsItems },
+		],
+		all: true,
 	})
 
 	const banner = uploadedBanner ? await StorageUseCases.upload('marketplace/banners', uploadedBanner) : undefined
 
-	const updatedBanner = await ProductsUseCases.update({
+	const updatedProduct = await ProductsUseCases.update({
 		id: req.params.id,
 		userId: req.authUser!.id,
 		data: {
 			title,
 			description,
 			price,
+			data,
 			tagIds: tags.map((t) => t.id),
-			...(changedBanner ? { photo: banner } : {}),
+			...(changedBanner ? { banner } : {}),
 		},
 	})
-	if (updatedBanner) return updatedBanner
+	if (updatedProduct) return updatedProduct
 	throw new NotAuthorizedError()
 })
 
@@ -133,45 +188,56 @@ type ProductsFindRouteDef = ApiDef<{
 	response: ProductEntity
 }>
 
-type ProductsRecommendedProductsRouteDef = ApiDef<{
-	key: 'marketplace-products-recommended-products'
+type ProductsRecommendedProductsItemsRouteDef = ApiDef<{
+	key: 'marketplace-products-recommended-products-items'
 	method: 'get'
 	query: QueryParams
 	response: QueryResults<ProductEntity>
 }>
 
-type ProductsRecommendedTagsRouteDef = ApiDef<{
-	key: 'marketplace-products-recommended-tags'
+type ProductsRecommendedProductsFoodsRouteDef = ApiDef<{
+	key: 'marketplace-products-recommended-products-foods'
+	method: 'get'
+	query: QueryParams
+	response: QueryResults<ProductEntity>
+}>
+
+type ProductsRecommendedTagsItemsRouteDef = ApiDef<{
+	key: 'marketplace-products-recommended-tags-items'
 	method: 'get'
 	query: QueryParams
 	response: QueryResults<TagEntity>
 }>
 
+type ProductsRecommendedTagsFoodsRouteDef = ApiDef<{
+	key: 'marketplace-products-recommended-tags-foods'
+	method: 'get'
+	query: QueryParams
+	response: QueryResults<TagEntity>
+}>
+
+type ProductBody = {
+	title: string
+	description: string
+	price: { amount: number; currency: Currencies }
+	isAddOn: boolean
+	inStock: boolean
+	tagIds: string[]
+}
+
 type ProductsCreateRouteDef = ApiDef<{
 	key: 'marketplace-products-create'
 	method: 'post'
-	body: {
-		title: string
-		description: string
-		price: { amount: number; currency: Currencies }
-		inStock: boolean
-		tagIds: string[]
-	}
+	body: ProductBody
 	files: { banner: false }
 	response: ProductEntity
 }>
 
-type ProductsUpdateeRouteDef = ApiDef<{
+type ProductsUpdateRouteDef = ApiDef<{
 	key: 'marketplace-products-update'
 	method: 'put'
 	params: { id: string }
-	body: {
-		title: string
-		description: string
-		price: { amount: number; currency: Currencies }
-		inStock: boolean
-		tagIds: string[]
-	}
+	body: ProductBody
 	files: { banner?: false }
 	response: ProductEntity
 }>
