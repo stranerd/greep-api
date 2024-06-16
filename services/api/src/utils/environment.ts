@@ -39,5 +39,6 @@ Instance.initialize({
 	debeziumUrl: getEnvOrFail('DEBEZIUM_URL'),
 	eventColumnName: 'Greep',
 	server: 'fastify',
+	openapiDocsBaseUrl: ['/api'],
 })
 export const appInstance = Instance.get()
