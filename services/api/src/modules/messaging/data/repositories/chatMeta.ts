@@ -21,14 +21,14 @@ export class ChatMetaRepository implements IChatMetaRepository {
 		return ChatMetaRepository.instance
 	}
 
-	async create(data: ChatMetaToModel) {
-		const { data: dataType, members, ...rest } = data
+	async create(model: ChatMetaToModel) {
+		const { data, members, ...rest } = model
 		const chat = await ChatMeta.findOneAndUpdate(
 			{
-				data: dataType,
+				data,
 				members: { $all: members.map((val) => ({ $elemMatch: { $eq: val } })) },
 			},
-			{ $setOnInsert: data, $set: rest },
+			{ $setOnInsert: { data, members }, $set: rest },
 			{ upsert: true, new: true },
 		)
 		return this.mapper.mapFrom(chat)!

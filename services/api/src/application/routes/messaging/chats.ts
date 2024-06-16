@@ -43,18 +43,14 @@ router.post<MessagingChatsCreateRouteDef>({ path: '/', key: 'messaging-chats-cre
 	const from = req.authUser!.id
 	let members: string[] = []
 
-	if (type === ChatType.personal) {
-		const user = await UsersUseCases.find(to)
-		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
-		members = [from, to]
-	}
-
-	if (type === ChatType.support) {
-		const chatMeta = await ChatMetasUseCases.find(to)
-		if (!chatMeta || chatMeta.data.type !== ChatType.support || !chatMeta.members.includes(from))
-			throw new BadRequestError('support chat not found')
-		members = chatMeta.members
-	}
+	const chatMeta = await ChatMetasUseCases.find(to)
+	if (!chatMeta || !chatMeta.members.includes(from)) {
+		if (type === ChatType.personal) {
+			const user = await UsersUseCases.find(to)
+			if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+			members = [from, to]
+		} else throw new BadRequestError('chat meta not found')
+	} else members = chatMeta.members
 
 	return await ChatsUseCases.add({
 		body,
