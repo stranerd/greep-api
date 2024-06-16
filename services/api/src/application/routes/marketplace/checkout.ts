@@ -17,7 +17,7 @@ const schema = () => ({
 	to: LocationSchema(),
 	dropoffNote: Schema.string(),
 	time: Schema.undefined()
-		.requiredIf(() => false)
+		.optional()
 		.transform(() => Date.now()),
 	// time: Schema.time().min(Date.now()).asStamp(),
 	discount: Schema.number().gte(0),

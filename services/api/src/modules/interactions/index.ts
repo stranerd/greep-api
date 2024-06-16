@@ -29,8 +29,8 @@ export const ReviewsUseCases = new ReviewsUseCase(reviewRepository)
 export const ViewsUseCases = new ViewsUseCase(viewRepository)
 export const TagsUseCases = new TagsUseCase(tagRepository)
 
-export { CommentMeta, InteractionEntities, TagMeta, TagTypes } from './domain/types'
-export { verifyInteraction } from './utils'
+export { CommentMeta, InteractionEntities, TagMeta, TagTypes, InteractionEntity } from './domain/types'
+export { EntitySchema, verifyInteraction } from './utils'
 
 export { CommentEntity } from './domain/entities/comments'
 export { LikeEntity } from './domain/entities/likes'

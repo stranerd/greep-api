@@ -6,11 +6,30 @@ export enum InteractionEntities {
 	vendors = 'vendors',
 }
 
-export type InteractionEntity = {
+type BaseInteractionEntity = {
 	id: string
 	userId: string
-	type: InteractionEntities
 }
+
+export type InteractionEntity = BaseInteractionEntity &
+	(
+		| {
+				type: InteractionEntities.comments
+				relations: {}
+		  }
+		| {
+				type: InteractionEntities.products
+				relations: {
+					orderId?: string
+				}
+		  }
+		| {
+				type: InteractionEntities.vendors
+				relations: {
+					orderId?: string
+				}
+		  }
+	)
 
 export type Interaction = Omit<InteractionEntity, 'userId' | 'relations'>
 

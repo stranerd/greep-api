@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, ReviewEntity, ReviewsUseCases, verifyInteraction } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, ReviewEntity, ReviewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -22,10 +22,7 @@ router.post<InteractionsReviewsCreateRouteDef>({ path: '/', key: 'interactions-r
 			{
 				rating: Schema.number().round(0).gte(0).lte(5),
 				message: Schema.string(),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
@@ -61,6 +58,6 @@ type InteractionsReviewsFindRouteDef = ApiDef<{
 type InteractionsReviewsCreateRouteDef = ApiDef<{
 	key: 'interactions-reviews-create'
 	method: 'post'
-	body: { rating: number; message: string; entity: { id: string; type: InteractionEntities } }
+	body: { rating: number; message: string; entity: Omit<InteractionEntity, 'userId'> }
 	response: ReviewEntity
 }>

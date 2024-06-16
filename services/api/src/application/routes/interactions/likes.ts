@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, LikeEntity, LikesUseCases, verifyInteraction } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, LikeEntity, LikesUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -29,10 +29,7 @@ router.post<InteractionsLikesCreateRouteDef>({ path: '/', key: 'interactions-lik
 		const data = validate(
 			{
 				value: Schema.boolean(),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
@@ -68,6 +65,6 @@ type InteractionsLikesFindRouteDef = ApiDef<{
 type InteractionsLikesCreateRouteDef = ApiDef<{
 	key: 'interactions-likes-create'
 	method: 'post'
-	body: { value: boolean; entity: { id: string; type: InteractionEntities } }
+	body: { value: boolean; entity: Omit<InteractionEntity, 'userId'> }
 	response: LikeEntity | null
 }>

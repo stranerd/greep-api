@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, MediaEntity, MediaUseCases, verifyInteraction } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, MediaEntity, MediaUseCases, verifyInteraction } from '@modules/interactions'
 import { StorageUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
@@ -26,10 +26,7 @@ router.post<InteractionsMediaCreateRouteDef>({ path: '/', key: 'interactions-med
 		const data = validate(
 			{
 				...schema(true),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			{ ...req.body, file: req.files.file?.at(0) ?? null },
 		)
@@ -85,10 +82,7 @@ router.post<InteractionsMediaReorderRouteDef>({ path: '/reorder', key: 'interact
 	async (req) => {
 		const data = validate(
 			{
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 				ids: Schema.array(Schema.string().min(1)),
 			},
 			req.body,
@@ -120,7 +114,7 @@ type InteractionsMediaFindRouteDef = ApiDef<{
 type InteractionsMediaCreateRouteDef = ApiDef<{
 	key: 'interactions-media-create'
 	method: 'post'
-	body: { entity: { id: string; type: InteractionEntities } }
+	body: { entity: Omit<InteractionEntity, 'userId'> }
 	files: { file: false }
 	response: MediaEntity
 }>
@@ -144,6 +138,6 @@ type InteractionsMediaDeleteRouteDef = ApiDef<{
 type InteractionsMediaReorderRouteDef = ApiDef<{
 	key: 'interactions-media-reorder'
 	method: 'post'
-	body: { entity: { id: string; type: InteractionEntities }; ids: string[] }
+	body: { entity: Omit<InteractionEntity, 'userId'>; ids: string[] }
 	response: MediaEntity[]
 }>

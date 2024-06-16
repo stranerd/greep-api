@@ -1,5 +1,5 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, ReportEntity, ReportsUseCases, verifyInteraction } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, ReportEntity, ReportsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, AuthRole, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -36,10 +36,7 @@ router.post<InteractionsReportsCreateRouteDef>({ path: '/', key: 'interactions-r
 	const data = validate(
 		{
 			message: Schema.string().min(1),
-			entity: Schema.object({
-				id: Schema.string().min(1),
-				type: Schema.in(Object.values(InteractionEntities)),
-			}),
+			entity: EntitySchema(),
 		},
 		req.body,
 	)
@@ -81,6 +78,6 @@ type InteractionsReportsDeleteRouteDef = ApiDef<{
 type InteractionsReportsCreateRouteDef = ApiDef<{
 	key: 'interactions-reports-create'
 	method: 'post'
-	body: { message: string; entity: { id: string; type: InteractionEntities } }
+	body: { message: string; entity: Omit<InteractionEntity, 'userId'> }
 	response: ReportEntity
 }>

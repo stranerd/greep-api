@@ -1,7 +1,7 @@
 import { isAuthenticated } from '@application/middlewares'
-import { InteractionEntities, ViewEntity, ViewsUseCases, verifyInteraction } from '@modules/interactions'
+import { EntitySchema, InteractionEntity, ViewEntity, ViewsUseCases, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, validate } from 'equipped'
 
 const router = new Router({ path: '/views', groups: ['Views'] })
 
@@ -28,10 +28,7 @@ router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-vie
 	async (req) => {
 		const data = validate(
 			{
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
@@ -66,6 +63,6 @@ type InteractionsViewsFindRouteDef = ApiDef<{
 type InteractionsViewsCreateRouteDef = ApiDef<{
 	key: 'interactions-views-create'
 	method: 'post'
-	request: { entity: { id: string; type: InteractionEntities } }
+	request: { entity: Omit<InteractionEntity, 'userId'> }
 	response: ViewEntity
 }>

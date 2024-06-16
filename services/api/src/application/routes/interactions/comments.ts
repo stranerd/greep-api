@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { CommentEntity, CommentsUseCases, InteractionEntities, verifyInteraction } from '@modules/interactions'
+import { CommentEntity, CommentsUseCases, EntitySchema, InteractionEntity, verifyInteraction } from '@modules/interactions'
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -25,10 +25,7 @@ router.post<InteractionsCommentsCreateRouteDef>({ path: '/', key: 'interactions-
 		const data = validate(
 			{
 				...schema(),
-				entity: Schema.object({
-					id: Schema.string().min(1),
-					type: Schema.in(Object.values(InteractionEntities)),
-				}),
+				entity: EntitySchema(),
 			},
 			req.body,
 		)
@@ -91,7 +88,7 @@ type InteractionsCommentsFindRouteDef = ApiDef<{
 type InteractionsCommentsCreateRouteDef = ApiDef<{
 	key: 'interactions-comments-create'
 	method: 'post'
-	body: CommentBody & { entity: { id: string; type: InteractionEntities } }
+	body: CommentBody & { entity: Omit<InteractionEntity, 'userId'> }
 	response: CommentEntity
 }>
 
