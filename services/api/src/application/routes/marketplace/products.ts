@@ -62,11 +62,22 @@ router.get<ProductsFindRouteDef>({ path: '/:id', key: 'marketplace-products-find
 	return product
 })
 
-router.get<ProductsRecommendedProductsRouteDef>({ path: '/recommendation/products', key: 'marketplace-products-recommended-products' })(
+router.get<ProductsRecommendedProductsItemsRouteDef>({ path: '/recommendation/products/items', key: 'marketplace-products-recommended-products-items' })(
 	async (req) => {
 		const query: QueryParams = req.query
 		query.sort ??= []
 		query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+		query.auth = [{ field: 'data.type', value: UserVendorType.items }]
+		return await ProductsUseCases.get(query)
+	},
+)
+
+router.get<ProductsRecommendedProductsFoodsRouteDef>({ path: '/recommendation/products/foods', key: 'marketplace-products-recommended-products-foods' })(
+	async (req) => {
+		const query: QueryParams = req.query
+		query.sort ??= []
+		query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+		query.auth = [{ field: 'data.type', value: UserVendorType.foods }]
 		return await ProductsUseCases.get(query)
 	},
 )
@@ -175,8 +186,15 @@ type ProductsFindRouteDef = ApiDef<{
 	response: ProductEntity
 }>
 
-type ProductsRecommendedProductsRouteDef = ApiDef<{
-	key: 'marketplace-products-recommended-products'
+type ProductsRecommendedProductsItemsRouteDef = ApiDef<{
+	key: 'marketplace-products-recommended-products-items'
+	method: 'get'
+	query: QueryParams
+	response: QueryResults<ProductEntity>
+}>
+
+type ProductsRecommendedProductsFoodsRouteDef = ApiDef<{
+	key: 'marketplace-products-recommended-products-foods'
 	method: 'get'
 	query: QueryParams
 	response: QueryResults<ProductEntity>
