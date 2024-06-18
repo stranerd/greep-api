@@ -31,7 +31,8 @@ export class CartRepository implements ICartRepository {
 			)
 
 			const length = data.pack >= cart.packs.length ? data.pack + 1 : cart.packs.length
-			const packs = Array.from({ ...structuredClone(cart.packs), length }, (val) => val ?? [])
+			const cloned: typeof cart.packs = JSON.parse(JSON.stringify(cart.packs))
+			const packs = Array.from({ ...cloned, length }, (val) => val ?? [])
 
 			const index = packs[data.pack].findIndex((p) => p.id === (data.addOnProductId ?? data.productId))
 
