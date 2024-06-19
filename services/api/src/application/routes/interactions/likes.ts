@@ -3,7 +3,7 @@ import { EntitySchema, InteractionEntity, LikeEntity, LikesUseCases, verifyInter
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
-const router = new Router({ path: '/likes', groups: ['Likes'] })
+const router = new Router({ path: '/likes', groups: ['Likes'], middlewares: [isAuthenticated] })
 
 router.get<InteractionsLikesGetRouteDef>({ path: '/', key: 'interactions-likes-get' })(async (req) => {
 	const query = req.query
@@ -24,27 +24,25 @@ router.get<InteractionsLikesFindRouteDef>({ path: '/:id', key: 'interactions-lik
 	return like
 })
 
-router.post<InteractionsLikesCreateRouteDef>({ path: '/', key: 'interactions-likes-create', middlewares: [isAuthenticated] })(
-	async (req) => {
-		const data = validate(
-			{
-				value: Schema.boolean(),
-				entity: EntitySchema(),
-			},
-			req.body,
-		)
+router.post<InteractionsLikesCreateRouteDef>({ path: '/', key: 'interactions-likes-create' })(async (req) => {
+	const data = validate(
+		{
+			value: Schema.boolean(),
+			entity: EntitySchema(),
+		},
+		req.body,
+	)
 
-		const entity = await verifyInteraction(data.entity, data.value ? 'likes' : 'dislikes')
-		const user = await UsersUseCases.find(req.authUser!.id)
-		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+	const entity = await verifyInteraction(data.entity, data.value ? 'likes' : 'dislikes')
+	const user = await UsersUseCases.find(req.authUser!.id)
+	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-		return await LikesUseCases.like({
-			...data,
-			entity,
-			user: user.getEmbedded(),
-		})
-	},
-)
+	return await LikesUseCases.like({
+		...data,
+		entity,
+		user: user.getEmbedded(),
+	})
+})
 
 export default router
 

@@ -3,7 +3,7 @@ import { EntitySchema, InteractionEntity, ViewEntity, ViewsUseCases, verifyInter
 import { UsersUseCases } from '@modules/users'
 import { ApiDef, BadRequestError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, validate } from 'equipped'
 
-const router = new Router({ path: '/views', groups: ['Views'] })
+const router = new Router({ path: '/views', groups: ['Views'], middlewares: [isAuthenticated] })
 
 router.get<InteractionsViewsGetRouteDef>({ path: '/', key: 'interactions-views-get' })(async (req) => {
 	const query = req.query
@@ -24,25 +24,23 @@ router.get<InteractionsViewsFindRouteDef>({ path: '/:id', key: 'interactions-vie
 	return view
 })
 
-router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-views-create', middlewares: [isAuthenticated] })(
-	async (req) => {
-		const data = validate(
-			{
-				entity: EntitySchema(),
-			},
-			req.body,
-		)
+router.post<InteractionsViewsCreateRouteDef>({ path: '/', key: 'interactions-views-create' })(async (req) => {
+	const data = validate(
+		{
+			entity: EntitySchema(),
+		},
+		req.body,
+	)
 
-		const entity = await verifyInteraction(data.entity, 'views')
-		const user = await UsersUseCases.find(req.authUser!.id)
-		if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
+	const entity = await verifyInteraction(data.entity, 'views')
+	const user = await UsersUseCases.find(req.authUser!.id)
+	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
-		return await ViewsUseCases.create({
-			entity,
-			user: user.getEmbedded(),
-		})
-	},
-)
+	return await ViewsUseCases.create({
+		entity,
+		user: user.getEmbedded(),
+	})
+})
 
 export default router
 

@@ -1,4 +1,4 @@
-import { isAdmin } from '@application/middlewares'
+import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { TagEntity, TagTypes, TagsUseCases } from '@modules/interactions'
 import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
@@ -19,7 +19,7 @@ router.get<InteractionsTagsFindRouteDef>({ path: '/:id', key: 'interactions-tags
 	return tag
 })
 
-router.post<InteractionsTagsCreateRouteDef>({ path: '/', key: 'interactions-tags-create' })(async (req) => {
+router.post<InteractionsTagsCreateRouteDef>({ path: '/', key: 'interactions-tags-create', middlewares: [isAuthenticated] })(async (req) => {
 	const data = validate({ ...schema(), type: Schema.in(Object.values(TagTypes)) }, req.body)
 
 	// if (data.parent !== null) throw new BadRequestError('no tag type can have children')
@@ -27,19 +27,23 @@ router.post<InteractionsTagsCreateRouteDef>({ path: '/', key: 'interactions-tags
 	return await TagsUseCases.add({ ...data, parent: null })
 })
 
-router.put<InteractionsTagsUpdateRouteDef>({ path: '/:id', key: 'interactions-tags-update', middlewares: [isAdmin] })(async (req) => {
-	const data = validate(schema(), req.body)
+router.put<InteractionsTagsUpdateRouteDef>({ path: '/:id', key: 'interactions-tags-update', middlewares: [isAuthenticated, isAdmin] })(
+	async (req) => {
+		const data = validate(schema(), req.body)
 
-	const updatedTag = await TagsUseCases.update({ id: req.params.id, data })
-	if (updatedTag) return updatedTag
-	throw new NotAuthorizedError()
-})
+		const updatedTag = await TagsUseCases.update({ id: req.params.id, data })
+		if (updatedTag) return updatedTag
+		throw new NotAuthorizedError()
+	},
+)
 
-router.delete<InteractionsTagsDeleteRouteDef>({ path: '/:id', key: 'interactions-tags-delete', middlewares: [isAdmin] })(async (req) => {
-	const isDeleted = await TagsUseCases.delete({ id: req.params.id })
-	if (isDeleted) return isDeleted
-	throw new NotAuthorizedError()
-})
+router.delete<InteractionsTagsDeleteRouteDef>({ path: '/:id', key: 'interactions-tags-delete', middlewares: [isAuthenticated, isAdmin] })(
+	async (req) => {
+		const isDeleted = await TagsUseCases.delete({ id: req.params.id })
+		if (isDeleted) return isDeleted
+		throw new NotAuthorizedError()
+	},
+)
 
 export default router
 
