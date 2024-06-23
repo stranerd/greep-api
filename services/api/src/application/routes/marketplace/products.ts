@@ -41,7 +41,6 @@ const schema = (bannerRequired: boolean, authUser: AuthUser) => ({
 					: false,
 		'invalid data type',
 	),
-	isAddOn: Schema.boolean(),
 	inStock: Schema.boolean(),
 	tagIds: Schema.array(Schema.string().min(1)),
 	banner: Schema.file()
@@ -110,7 +109,10 @@ router.get<ProductsRecommendedTagsFoodsRouteDef>({
 
 router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-create', middlewares: [isAuthenticated, isVendor] })(
 	async (req) => {
-		const data = validate(schema(true, req.authUser!), { ...req.body, banner: req.files.banner?.at(0) ?? null })
+		const data = validate(
+			{ ...schema(true, req.authUser!), addOnId: Schema.string().nullable() },
+			{ ...req.body, banner: req.files.banner?.at(0) ?? null },
+		)
 
 		const { results: tags } = await TagsUseCases.get({
 			where: [
@@ -122,6 +124,11 @@ router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-crea
 
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
+
+		if (data.addOnId) {
+			const product = await ProductsUseCases.find(data.addOnId)
+			if (!product || product.user.id !== user.id || product.data.type !== data.data.type) throw new BadRequestError('invalid add-on')
+		}
 
 		const banner = await StorageUseCases.upload('marketplace/banners', data.banner!)
 
@@ -220,7 +227,6 @@ type ProductBody = {
 	title: string
 	description: string
 	price: { amount: number; currency: Currencies }
-	isAddOn: boolean
 	inStock: boolean
 	tagIds: string[]
 }
@@ -228,7 +234,7 @@ type ProductBody = {
 type ProductsCreateRouteDef = ApiDef<{
 	key: 'marketplace-products-create'
 	method: 'post'
-	body: ProductBody
+	body: ProductBody & { addOnId: string | null }
 	files: { banner: false }
 	response: ProductEntity
 }>

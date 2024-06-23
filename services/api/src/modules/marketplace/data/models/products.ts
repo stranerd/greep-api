@@ -23,6 +23,6 @@ export interface ProductToModel {
 	description: string
 	banner: MediaOutput
 	tagIds: string[]
-	isAddOn: boolean
+	addOnId: string | null
 	inStock: boolean
 }

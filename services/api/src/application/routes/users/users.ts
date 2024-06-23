@@ -2,7 +2,7 @@ import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified, isVendor } 
 import { TagTypes, TagsUseCases } from '@modules/interactions'
 import { StorageUseCases } from '@modules/storage'
 import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
-import { Location, LocationSchema, TimeSchema, timezones } from '@utils/types'
+import { Location, LocationSchema, TimeSchema, Tz, timezones } from '@utils/types'
 import {
 	ApiDef,
 	BadRequestError,
@@ -114,22 +114,24 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 	},
 )
 
-router.post<UsersUpdateApplicationRouteDef>({ path: '/application', key: 'users-users-update-application', middlewares: [isAdmin] })(
-	async (req) => {
-		const { userId, accepted, message } = validate(
-			{
-				userId: Schema.string(),
-				accepted: Schema.boolean(),
-				message: Schema.string(),
-			},
-			req.body,
-		)
+router.post<UsersUpdateApplicationRouteDef>({
+	path: '/application',
+	key: 'users-users-update-application',
+	middlewares: [isAuthenticated, isAdmin],
+})(async (req) => {
+	const { userId, accepted, message } = validate(
+		{
+			userId: Schema.string(),
+			accepted: Schema.boolean(),
+			message: Schema.string(),
+		},
+		req.body,
+	)
 
-		const updated = await UsersUseCases.updateApplication({ userId, data: { accepted, message } })
-		if (updated) return updated
-		throw new NotAuthorizedError('cannot update user application')
-	},
-)
+	const updated = await UsersUseCases.updateApplication({ userId, data: { accepted, message } })
+	if (updated) return updated
+	throw new NotAuthorizedError('cannot update user application')
+})
 
 router.post<UsersUpdateLocationRouteDef>({ path: '/location', key: 'users-users-update-location', middlewares: [isAuthenticated] })(
 	async (req) => {
@@ -272,7 +274,7 @@ type UsersUpdateSavedLocationsRouteDef = ApiDef<{
 type UsersGetSupportedTimezonesRouteDef = ApiDef<{
 	key: 'users-users-timezones'
 	method: 'get'
-	response: typeof timezones
+	response: Tz[]
 }>
 
 type UsersUpdateVendorScheduleRouteDef = ApiDef<{

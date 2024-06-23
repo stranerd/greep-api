@@ -23,7 +23,7 @@ export type Ratings = {
 	avg: number
 }
 
-type Tz = {
+export type Tz = {
 	id: string
 	name: string
 	offset: string

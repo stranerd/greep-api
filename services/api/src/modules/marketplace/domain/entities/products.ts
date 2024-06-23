@@ -18,16 +18,14 @@ type ProductEntityProps = {
 	description: string
 	tagIds: string[]
 	inStock: boolean
-	isAddOn: boolean
+	addOnId: string | null
 	meta: ProductMetaType
 	ratings: Ratings
 	createdAt: number
 	updatedAt: number
 }
 
-export class ProductEntity extends BaseEntity<ProductEntityProps, 'likes'> {
-	__ignoreInJSON = ['likes' as const]
-
+export class ProductEntity extends BaseEntity<ProductEntityProps> {
 	constructor(data: ProductEntityProps) {
 		data.user = generateDefaultUser(data.user)
 		super(data)

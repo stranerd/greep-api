@@ -30,10 +30,10 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: false,
 		},
-		isAddOn: {
-			type: Boolean,
+		addOnId: {
+			type: String,
 			required: false,
-			default: false,
+			default: null,
 		},
 		description: {
 			type: String,
