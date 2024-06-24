@@ -46,7 +46,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 					}),
 					[UserType.vendor]: Schema.object({
 						type: Schema.is(UserType.vendor as const),
-						vendorType: Schema.in('vendorType' in type ? [type.vendorType] : Object.values(UserVendorType)),
+						vendorType: Schema.in(type && 'vendorType' in type ? [type.vendorType] : Object.values(UserVendorType)),
 						name: Schema.string().min(1),
 						banner: Schema.file().image().nullish(),
 						email: Schema.string().email().nullable(),
@@ -78,7 +78,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 		const getFileValue = async (key: string, uploadPath: string) => {
 			if (data[key] && Buffer.isBuffer(data[key].data)) return StorageUseCases.upload(uploadPath, data[key])
 			if (data[key] === null) return null
-			if (type[key]) return type[key] as MediaOutput
+			if (type?.[key]) return type[key] as MediaOutput
 			return null
 		}
 

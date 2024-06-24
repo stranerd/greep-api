@@ -77,7 +77,7 @@ type UserConstructorArgs = {
 	dates: UserDates
 	status: UserStatus
 	account: UserAccount
-	type: UserTypeData
+	type: UserTypeData | null
 	vendor: UserVendorData
 }
 

@@ -9,7 +9,7 @@ export interface UserToModel {
 	roles: UserRoles
 	dates: UserDates
 	status: UserStatus
-	type: UserTypeData
+	type: UserTypeData | null
 	account: UserAccount
 	vendor: UserVendorData
 }

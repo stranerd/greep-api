@@ -26,7 +26,7 @@ const schema = () => ({
 
 const getVendorLocation = async (vendorId: string) => {
 	const vendor = await UsersUseCases.find(vendorId)
-	if (!vendor || vendor.type.type !== UserType.vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
+	if (!vendor || vendor.type?.type !== UserType.vendor || vendor.isDeleted()) throw new BadRequestError('vendor not found')
 	if (!isVendorOpen(vendor.vendor.schedule)) throw new BadRequestError('vendor is closed at the moment')
 	return vendor.type.location
 }
