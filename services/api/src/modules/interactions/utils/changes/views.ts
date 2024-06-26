@@ -12,12 +12,12 @@ export const ViewDbChangeCallbacks: DbChangeCallbacks<ViewFromModel, ViewEntity>
 			after,
 		)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[after.user.id, after.entity.userId]
 				.map((uid) => [`interactions/views/${uid}`, `interactions/views/${after.id}/${uid}`])
 				.flat(),
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

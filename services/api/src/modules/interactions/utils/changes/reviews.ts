@@ -13,7 +13,7 @@ export const ReviewDbChangeCallbacks: DbChangeCallbacks<ReviewFromModel, ReviewE
 			await ProductsUseCases.updateRatings({ id: after.entity.id, ratings: after.rating, add: true })
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['interactions/reviews', `interactions/reviews/${after.id}`], after)
+		await appInstance.listener.updated(['interactions/reviews', `interactions/reviews/${after.id}`], { after, before })
 
 		if (changes.rating) {
 			if (after.entity.type === InteractionEntities.products)

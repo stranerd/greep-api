@@ -17,7 +17,7 @@ export const ReportDbChangeCallbacks: DbChangeCallbacks<ReportFromModel, ReportE
 			after,
 		)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[after.user.id, after.entity.userId]
 				.map((uid) => [
@@ -27,7 +27,7 @@ export const ReportDbChangeCallbacks: DbChangeCallbacks<ReportFromModel, ReportE
 					`interactions/reports/${after.id}/${uid}`,
 				])
 				.flat(),
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

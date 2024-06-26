@@ -10,8 +10,11 @@ export const ActivityDbChangeCallbacks: DbChangeCallbacks<ActivityFromModel, Act
 
 		await UsersUseCases.updateScore({ userId: after.userId, amount: after.score })
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated([`users/activities/${after.userId}`, `users/activities/${after.id}/${after.userId}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated([`users/activities/${after.userId}`, `users/activities/${after.id}/${after.userId}`], {
+			after,
+			before,
+		})
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([`users/activities/${before.userId}`, `users/activities/${before.id}/${before.userId}`], before)

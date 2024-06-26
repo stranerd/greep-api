@@ -38,13 +38,13 @@ export const TripDbChangeCallbacks: DbChangeCallbacks<TripFromModel, TripEntity>
 				},
 			})
 	},
-	updated: async ({ after, changes }) => {
+	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(
 			[after.customerId, after.driverId!, after.requestedDriverId!]
 				.filter(Boolean)
 				.map((c) => [`trips/trips/${c}`, `trips/trips/${after.id}/${c}`])
 				.flat(),
-			after,
+			{ after, before },
 		)
 
 		if (changes.status && after.status === TripStatus.cancelled)

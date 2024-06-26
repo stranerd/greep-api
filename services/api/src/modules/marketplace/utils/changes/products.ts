@@ -11,7 +11,7 @@ export const ProductDbChangeCallbacks: DbChangeCallbacks<ProductFromModel, Produ
 		await TagsUseCases.updateMeta({ ids: after.tagIds, property: after.getTagMetaType(), value: 1 })
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['marketplace/products', `marketplace/products/${after.id}`], after)
+		await appInstance.listener.updated(['marketplace/products', `marketplace/products/${after.id}`], { after, before })
 		if (changes.banner && before.banner) await publishers.DELETEFILE.publish(before.banner)
 	},
 	deleted: async ({ before }) => {

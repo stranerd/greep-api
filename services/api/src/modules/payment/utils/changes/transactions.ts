@@ -15,10 +15,10 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 		if (after.status === TransactionStatus.fulfilled) await settleTransaction(after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(
-			[`payment/transactions/${after.userId}`, `payment/transactions/${after.id}/${after.userId}`],
+		await appInstance.listener.updated([`payment/transactions/${after.userId}`, `payment/transactions/${after.id}/${after.userId}`], {
 			after,
-		)
+			before,
+		})
 
 		if (changes.status) {
 			if (before.status === TransactionStatus.initialized && after.status === TransactionStatus.fulfilled)

@@ -7,8 +7,8 @@ export const CartLinkDbChangeCallbacks: DbChangeCallbacks<CartFromModel, CartEnt
 	created: async ({ after }) => {
 		await appInstance.listener.created([`marketplace/cartLinks`, `marketplace/cartLinks/${after.id}`], after)
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated([`marketplace/cartLinks`, `marketplace/cartLinks/${after.id}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated([`marketplace/cartLinks`, `marketplace/cartLinks/${after.id}`], { after, before })
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([`marketplace/cartLinks`, `marketplace/cartLinks/${before.id}`], before)

@@ -17,7 +17,7 @@ export const RequestDbChangeCallbacks: DbChangeCallbacks<RequestFromModel, Reque
 			after,
 		)
 	},
-	updated: async ({ after, changes }) => {
+	updated: async ({ after, before, changes }) => {
 		await appInstance.listener.updated(
 			[
 				`payment/requests/${after.from}`,
@@ -25,7 +25,7 @@ export const RequestDbChangeCallbacks: DbChangeCallbacks<RequestFromModel, Reque
 				`payment/requests/${after.id}/${after.from}`,
 				`payment/requests/${after.id}/${after.to}`,
 			],
-			after,
+			{ after, before },
 		)
 
 		if (changes.status && [RequestStatus.paid, RequestStatus.rejected].includes(after.status)) {

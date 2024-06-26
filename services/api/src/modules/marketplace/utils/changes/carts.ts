@@ -7,8 +7,11 @@ export const CartDbChangeCallbacks: DbChangeCallbacks<CartFromModel, CartEntity>
 	created: async ({ after }) => {
 		await appInstance.listener.created([`marketplace/carts/${after.userId}`, `marketplace/carts/${after.id}/${after.userId}`], after)
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated([`marketplace/carts/${after.userId}`, `marketplace/carts/${after.id}/${after.userId}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated([`marketplace/carts/${after.userId}`, `marketplace/carts/${after.id}/${after.userId}`], {
+			after,
+			before,
+		})
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(

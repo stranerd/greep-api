@@ -12,12 +12,12 @@ export const LikeDbChangeCallbacks: DbChangeCallbacks<LikeFromModel, LikeEntity>
 			after,
 		)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[after.user.id, after.entity.userId]
 				.map((uid) => [`interactions/likes/${uid}`, `interactions/likes/${after.id}/${uid}`])
 				.flat(),
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

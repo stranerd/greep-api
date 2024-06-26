@@ -37,7 +37,7 @@ export const TransactionDbChangeCallbacks: DbChangeCallbacks<TransactionFromMode
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[after.driverId, `${after.id}/${after.driverId}`].map((c) => `trips/transactions/${c}`),
-			after,
+			{ after, before },
 		)
 
 		if (

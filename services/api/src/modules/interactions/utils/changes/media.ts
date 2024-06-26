@@ -9,7 +9,7 @@ export const MediaDbChangeCallbacks: DbChangeCallbacks<MediaFromModel, MediaEnti
 		await appInstance.listener.created(['interactions/media', `interactions/media/${after.id}`], after)
 	},
 	updated: async ({ after, before, changes }) => {
-		await appInstance.listener.updated(['interactions/medias', `interactions/media/${after.id}`], after)
+		await appInstance.listener.updated(['interactions/medias', `interactions/media/${after.id}`], { after, before })
 		if (changes.file && before.file) await publishers.DELETEFILE.publish(before.file)
 	},
 	deleted: async ({ before }) => {

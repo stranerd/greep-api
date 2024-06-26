@@ -24,8 +24,11 @@ export const ReferralDbChangeCallbacks: DbChangeCallbacks<ReferralFromModel, Ref
 			}),
 		])
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated([`users/referrals/${after.userId}`, `users/referrals/${after.id}/${after.userId}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated([`users/referrals/${after.userId}`, `users/referrals/${after.id}/${after.userId}`], {
+			after,
+			before,
+		})
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted([`users/referrals/${before.userId}`, `users/referrals/${before.id}/${before.userId}`], before)

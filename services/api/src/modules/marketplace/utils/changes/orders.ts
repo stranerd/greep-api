@@ -1,3 +1,4 @@
+import { TagMeta, TagsUseCases } from '@modules/interactions'
 import { TransactionStatus, TransactionType, TransactionsUseCases } from '@modules/payment'
 import { ActivitiesUseCases, ActivityType, mergeWithUsers } from '@modules/users'
 import { appInstance } from '@utils/environment'
@@ -6,7 +7,6 @@ import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
-import { TagMeta, TagsUseCases } from '@modules/interactions'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -42,7 +42,10 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				.getMembers()
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
 				.flat(),
-			(await mergeWithUsers([after], (e) => e.getMembers()))[0],
+			{
+				after: (await mergeWithUsers([after], (e) => e.getMembers()))[0],
+				before: (await mergeWithUsers([before], (e) => e.getMembers()))[0],
+			},
 		)
 
 		const closed = !before.done && after.done

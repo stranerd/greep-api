@@ -1,9 +1,9 @@
+import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
 import { CommentsUseCases } from '../..'
 import { CommentFromModel } from '../../data/models/comments'
 import { CommentEntity } from '../../domain/entities/comments'
 import { CommentMeta, InteractionEntities } from '../../domain/types'
-import { appInstance } from '@utils/environment'
 
 export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, CommentEntity> = {
 	created: async ({ after }) => {
@@ -16,8 +16,8 @@ export const CommentDbChangeCallbacks: DbChangeCallbacks<CommentFromModel, Comme
 				value: 1,
 			})
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated(['interactions/comments', `interactions/comments/${after.id}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated(['interactions/comments', `interactions/comments/${after.id}`], { after, before })
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['interactions/comments', `interactions/comments/${before.id}`], before)

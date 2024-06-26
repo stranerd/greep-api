@@ -7,8 +7,8 @@ export const TagDbChangeCallbacks: DbChangeCallbacks<TagFromModel, TagEntity> = 
 	created: async ({ after }) => {
 		await appInstance.listener.created(['interactions/tags', `interactions/tags/${after.id}`], after)
 	},
-	updated: async ({ after }) => {
-		await appInstance.listener.updated(['interactions/tags', `interactions/tags/${after.id}`], after)
+	updated: async ({ after, before }) => {
+		await appInstance.listener.updated(['interactions/tags', `interactions/tags/${after.id}`], { after, before })
 	},
 	deleted: async ({ before }) => {
 		await appInstance.listener.deleted(['interactions/tags', `interactions/tags/${before.id}`], before)

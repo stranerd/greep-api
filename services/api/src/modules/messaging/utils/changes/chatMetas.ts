@@ -15,13 +15,13 @@ export const ChatMetaDbChangeCallbacks: DbChangeCallbacks<ChatMetaFromModel, Cha
 			}),
 		)
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await Promise.all(
 			after.members.map(async (userId) => {
-				await appInstance.listener.updated(
-					[`messaging/chatMetas/${userId}`, `messaging/chatMetas/${after.id}/${userId}`],
-					(await mergeWithUsers([after], (e) => e.members))[0],
-				)
+				await appInstance.listener.updated([`messaging/chatMetas/${userId}`, `messaging/chatMetas/${after.id}/${userId}`], {
+					after: (await mergeWithUsers([after], (e) => e.members))[0],
+					before: (await mergeWithUsers([before], (e) => e.members))[0],
+				})
 			}),
 		)
 	},

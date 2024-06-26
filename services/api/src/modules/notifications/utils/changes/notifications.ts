@@ -1,10 +1,10 @@
+import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/environment'
+import { publishers } from '@utils/events'
 import { DbChangeCallbacks, EmailsList, readEmailFromPug } from 'equipped'
 import { NotificationFromModel } from '../../data/models/notifications'
 import { NotificationEntity } from '../../domain/entities/notifications'
 import { sendPushNotification } from '../push'
-import { UsersUseCases } from '@modules/users'
-import { publishers } from '@utils/events'
 
 export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromModel, NotificationEntity> = {
 	created: async ({ after }) => {
@@ -37,10 +37,10 @@ export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromMo
 			}
 		}
 	},
-	updated: async ({ after }) => {
+	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
 			[`notifications/notifications/${after.userId}`, `notifications/notifications/${after.id}/${after.userId}`],
-			after,
+			{ after, before },
 		)
 	},
 	deleted: async ({ before }) => {

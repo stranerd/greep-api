@@ -2,8 +2,8 @@ import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
 import { WithdrawalFromModel } from '../../data/models/withdrawals'
 import { WithdrawalEntity } from '../../domain/entities/withdrawals'
-import { processCompletedWithdrawal, processCreatedWithdrawal, processFailedWithdrawal, processInProgressWithdrawal } from '../withdrawals'
 import { WithdrawalStatus } from '../../domain/types'
+import { processCompletedWithdrawal, processCreatedWithdrawal, processFailedWithdrawal, processInProgressWithdrawal } from '../withdrawals'
 
 export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel, WithdrawalEntity> = {
 	created: async ({ after }) => {
@@ -25,7 +25,7 @@ export const WithdrawalDbChangeCallbacks: DbChangeCallbacks<WithdrawalFromModel,
 				`payment/withdrawals/${after.id}/${after.userId}`,
 				...(after.agentId ? [`payment/withdrawals/${after.agentId}`, `payment/withdrawals/${after.id}/${after.agentId}`] : []),
 			],
-			after,
+			{ after, before },
 		)
 
 		if (changes.status) {
