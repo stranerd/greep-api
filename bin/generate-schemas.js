@@ -6,7 +6,7 @@ const paths = process.argv.slice(2)
 
 paths.forEach((path) => {
 	try {
-		console.log('Starting schema generation')
+		console.log(`Starting schema generation for ${path} service`)
 
 		const entry = resolve(__dirname, `../services/${path}/src/application`)
 		const outputFile = join(entry, `schema.json`)
@@ -18,7 +18,7 @@ paths.forEach((path) => {
 			.map((file) => join(routesEntry, file.toString()))
 
 		const jsonSchema = generateJSONSchema([/RouteDef$/], routesFiles, {
-			tsConfigPath: resolve(__dirname, `../services/${path}/tsconfig.json`),
+			tsConfig: resolve(__dirname, `../services/${path}/tsconfig.json`),
 			options: {
 				ignoreErrors: true,
 			},
