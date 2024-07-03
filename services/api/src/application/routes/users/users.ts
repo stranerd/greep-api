@@ -37,39 +37,35 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 		if (!user) throw new NotFoundError('user not found')
 		const type = user.type
 
-		const { data } = validate(
-			{
-				data: Schema.discriminate((v) => v.type, {
-					[UserType.driver]: Schema.object({
-						type: Schema.is(UserType.driver as const),
-						license: Schema.file().image().nullish(),
-					}),
-					[UserType.vendor]: Schema.object({
-						type: Schema.is(UserType.vendor as const),
-						vendorType: Schema.in(type && 'vendorType' in type ? [type.vendorType] : Object.values(UserVendorType)),
-						name: Schema.string().min(1),
-						banner: Schema.file().image().nullish(),
-						email: Schema.string().email().nullable(),
-						website: Schema.string().url().nullable(),
-						location: LocationSchema(),
-					}),
-					[UserType.customer]: Schema.object({
-						type: Schema.is(UserType.customer as const),
-						passport: Schema.file().image().nullish(),
-						studentId: Schema.file().image().nullish(),
-						residentPermit: Schema.file().image().nullish(),
-					}),
+		const data = validate(
+			Schema.discriminate((v) => v.type, {
+				[UserType.driver]: Schema.object({
+					type: Schema.is(UserType.driver as const),
+					license: Schema.file().image().nullish(),
 				}),
-			},
+				[UserType.vendor]: Schema.object({
+					type: Schema.is(UserType.vendor as const),
+					vendorType: Schema.in(type && 'vendorType' in type ? [type.vendorType] : Object.values(UserVendorType)),
+					name: Schema.string().min(1),
+					banner: Schema.file().image().nullish(),
+					email: Schema.string().email().nullable(),
+					website: Schema.string().url().nullable(),
+					location: LocationSchema(),
+				}),
+				[UserType.customer]: Schema.object({
+					type: Schema.is(UserType.customer as const),
+					passport: Schema.file().image().nullish(),
+					studentId: Schema.file().image().nullish(),
+					residentPermit: Schema.file().image().nullish(),
+				}),
+			}),
 			{
-				data: {
-					...req.body,
-					license: req.files.license?.at(0),
-					banner: req.files.license?.at(0),
-					passport: req.files.passport?.at(0),
-					studentId: req.files.studentId?.at(0),
-					residentPermit: req.files.residentPermit?.at(0),
-				},
+				...req.body,
+				license: req.files.license?.at(0),
+				banner: req.files.license?.at(0),
+				passport: req.files.passport?.at(0),
+				studentId: req.files.studentId?.at(0),
+				residentPermit: req.files.residentPermit?.at(0),
 			},
 		)
 
@@ -230,7 +226,8 @@ type UsersUpdateTypeRouteDef = ApiDef<{
 	key: 'users-users-update-type'
 	method: 'post'
 	body:
-		| { type: UserType.driver | UserType.customer }
+		| { type: UserType.driver }
+		| { type: UserType.customer }
 		| {
 				type: UserType.vendor
 				vendorType: UserVendorType
