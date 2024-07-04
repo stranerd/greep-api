@@ -6,6 +6,7 @@ import {
 	AuthRole,
 	AuthRoles,
 	BadRequestError,
+	FileSchema,
 	NotFoundError,
 	Router,
 	Schema,
@@ -116,8 +117,7 @@ type GetAuthUserRouteDef = ApiDef<{
 type UpdateAuthUserRouteDef = ApiDef<{
 	key: 'user-update'
 	method: 'put'
-	body: { firstName: string; lastName: string; username: string; phone: Phone | null; photo?: null }
-	files: { photo: false }
+	body: { firstName: string; lastName: string; username: string; phone: Phone | null; photo?: FileSchema | null }
 	response: AuthUserEntity
 }>
 

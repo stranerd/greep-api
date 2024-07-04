@@ -2,7 +2,18 @@ import { isAuthenticated } from '@application/middlewares'
 import { EntitySchema, InteractionEntity, MediaEntity, MediaUseCases, verifyInteraction } from '@modules/interactions'
 import { StorageUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import {
+	ApiDef,
+	BadRequestError,
+	FileSchema,
+	NotAuthorizedError,
+	NotFoundError,
+	QueryParams,
+	QueryResults,
+	Router,
+	Schema,
+	validate,
+} from 'equipped'
 
 const schema = (fileRequired: boolean) => ({
 	file: Schema.file().requiredIf(() => fileRequired),
@@ -114,8 +125,7 @@ type InteractionsMediaFindRouteDef = ApiDef<{
 type InteractionsMediaCreateRouteDef = ApiDef<{
 	key: 'interactions-media-create'
 	method: 'post'
-	body: { entity: Omit<InteractionEntity, 'userId'> }
-	files: { file: false }
+	body: { entity: Omit<InteractionEntity, 'userId'>; file: FileSchema }
 	response: MediaEntity
 }>
 
@@ -123,8 +133,7 @@ type InteractionsMediaUpdateRouteDef = ApiDef<{
 	key: 'interactions-media-update'
 	method: 'put'
 	params: { id: string }
-	body: {}
-	files: { file?: false }
+	body: { file?: FileSchema }
 	response: MediaEntity
 }>
 

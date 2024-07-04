@@ -7,6 +7,7 @@ import {
 	ApiDef,
 	BadRequestError,
 	Conditions,
+	FileSchema,
 	MediaOutput,
 	NotAuthorizedError,
 	NotFoundError,
@@ -61,10 +62,15 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 			}),
 			{
 				...req.body,
+				// @ts-ignore
 				license: req.files.license?.at(0),
+				// @ts-ignore
 				banner: req.files.license?.at(0),
+				// @ts-ignore
 				passport: req.files.passport?.at(0),
+				// @ts-ignore
 				studentId: req.files.studentId?.at(0),
+				// @ts-ignore
 				residentPermit: req.files.residentPermit?.at(0),
 			},
 		)
@@ -226,17 +232,17 @@ type UsersUpdateTypeRouteDef = ApiDef<{
 	key: 'users-users-update-type'
 	method: 'post'
 	body:
-		| { type: UserType.driver }
-		| { type: UserType.customer }
+		| { type: UserType.driver; license: FileSchema }
+		| { type: UserType.customer; passport?: FileSchema; studentId?: FileSchema; residentPermit?: FileSchema }
 		| {
 				type: UserType.vendor
 				vendorType: UserVendorType
 				name: string
+				banner?: FileSchema | null
 				email: string | null
 				website: string | null
 				location: Location
 		  }
-	files: { license?: false; banner?: false; passport?: false; studentId?: false; residentPermit?: false }
 	response: UserEntity
 }>
 

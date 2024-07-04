@@ -121,7 +121,6 @@ type CartLinksCreateRouteDef = ApiDef<{
 	key: 'marketplace-cartlinks-create'
 	method: 'post'
 	body: CartLinkBody
-	files: { banner: false }
 	response: CartLinkEntity
 }>
 
@@ -130,6 +129,5 @@ type CartLinksUpdateRouteDef = ApiDef<{
 	method: 'put'
 	params: { id: string }
 	body: CartLinkBody
-	files: { banner?: false }
 	response: CartLinkEntity
 }>

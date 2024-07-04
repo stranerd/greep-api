@@ -9,6 +9,7 @@ import {
 	AuthUser,
 	BadRequestError,
 	Conditions,
+	FileSchema,
 	NotAuthorizedError,
 	NotFoundError,
 	QueryParams,
@@ -229,13 +230,13 @@ type ProductBody = {
 	price: { amount: number; currency: Currencies }
 	inStock: boolean
 	tagIds: string[]
+	banner: FileSchema
 }
 
 type ProductsCreateRouteDef = ApiDef<{
 	key: 'marketplace-products-create'
 	method: 'post'
 	body: ProductBody & { addOnId: string | null }
-	files: { banner: false }
 	response: ProductEntity
 }>
 
@@ -244,7 +245,6 @@ type ProductsUpdateRouteDef = ApiDef<{
 	method: 'put'
 	params: { id: string }
 	body: ProductBody
-	files: { banner?: false }
 	response: ProductEntity
 }>
 

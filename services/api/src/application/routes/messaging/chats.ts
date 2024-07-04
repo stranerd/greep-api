@@ -2,7 +2,18 @@ import { isAuthenticated } from '@application/middlewares'
 import { ChatEntity, ChatMetasUseCases, ChatType, ChatsUseCases } from '@modules/messaging'
 import { StorageUseCases } from '@modules/storage'
 import { UsersUseCases } from '@modules/users'
-import { ApiDef, BadRequestError, NotFoundError, QueryParams, QueryResults, Router, Schema, Validation, validate } from 'equipped'
+import {
+	ApiDef,
+	BadRequestError,
+	FileSchema,
+	NotFoundError,
+	QueryParams,
+	QueryResults,
+	Router,
+	Schema,
+	Validation,
+	validate,
+} from 'equipped'
 
 const router = new Router({ path: '/chats', groups: ['Chats'], middlewares: [isAuthenticated] })
 
@@ -91,8 +102,7 @@ type MessagingChatsFindRouteDef = ApiDef<{
 type MessagingChatsCreateRouteDef = ApiDef<{
 	key: 'messaging-chats-create'
 	method: 'post'
-	body: { body: string; to: string; type: ChatType }
-	files: { media?: false }
+	body: { body: string; to: string; type: ChatType; media?: FileSchema }
 	response: ChatEntity
 }>
 
