@@ -27,7 +27,7 @@ router.get<GetAuthUserRouteDef>({ path: '/', key: 'user-get', middlewares: [isAu
 
 router.put<UpdateAuthUserRouteDef>({ path: '/', key: 'user-update', middlewares: [isAuthenticated] })(async (req) => {
 	const userId = req.authUser!.id
-	const uploadedPhoto = req.files.photo?.[0] ?? null
+	const uploadedPhoto = req.body.photo?.[0] ?? null
 	const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
 	req.body.username = req.body.username?.toLowerCase() ?? ''

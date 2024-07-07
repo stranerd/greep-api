@@ -46,7 +46,7 @@ router.post<MessagingChatsCreateRouteDef>({ path: '/', key: 'messaging-chats-cre
 		},
 		{
 			...req.body,
-			media: req.files.media?.[0] ?? null,
+			media: req.body.media?.[0] ?? null,
 		},
 	)
 

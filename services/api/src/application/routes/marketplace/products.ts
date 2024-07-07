@@ -112,7 +112,7 @@ router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-crea
 	async (req) => {
 		const data = validate(
 			{ ...schema(true, req.authUser!), addOnId: Schema.string().nullable() },
-			{ ...req.body, banner: req.files.banner?.at(0) ?? null },
+			{ ...req.body, banner: req.body.banner?.at(0) ?? null },
 		)
 
 		const { results: tags } = await TagsUseCases.get({
@@ -143,7 +143,7 @@ router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-crea
 )
 
 router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-update', middlewares: [isAuthenticated] })(async (req) => {
-	const uploadedBanner = req.files.banner?.at(0) ?? null
+	const uploadedBanner = req.body.banner?.at(0) ?? null
 	const changedBanner = !!uploadedBanner
 
 	const { title, description, price, tagIds, data } = validate(schema(false, req.authUser!), { ...req.body, banner: uploadedBanner })
