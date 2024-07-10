@@ -1,3 +1,4 @@
+import { MediaOutput } from 'equipped'
 import { TagMetaType, TagTypes } from '../../domain/types'
 
 export interface TagFromModel extends TagToModel {
@@ -11,4 +12,5 @@ export interface TagToModel {
 	type: TagTypes
 	title: string
 	parent: string | null
+	photo: MediaOutput | null
 }

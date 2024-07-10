@@ -5,12 +5,13 @@ import { TagFromModel, TagToModel } from '../models/tags'
 export class TagMapper extends BaseMapper<TagFromModel, TagToModel, TagEntity> {
 	mapFrom(model: TagFromModel | null) {
 		if (!model) return null
-		const { _id, type, title, parent, meta, createdAt, updatedAt } = model
+		const { _id, type, title, parent, photo, meta, createdAt, updatedAt } = model
 		return new TagEntity({
 			id: _id.toString(),
 			type,
 			title,
 			parent,
+			photo,
 			meta,
 			createdAt,
 			updatedAt,
@@ -22,6 +23,7 @@ export class TagMapper extends BaseMapper<TagFromModel, TagToModel, TagEntity> {
 			type: entity.type,
 			title: entity.title,
 			parent: entity.parent,
+			photo: entity.photo,
 		}
 	}
 }

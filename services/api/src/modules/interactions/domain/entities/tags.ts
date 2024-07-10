@@ -1,4 +1,4 @@
-import { BaseEntity } from 'equipped'
+import { BaseEntity, MediaOutput } from 'equipped'
 import { TagMetaType, TagTypes } from '../types'
 
 export class TagEntity extends BaseEntity<TagConstructorArgs> {
@@ -12,6 +12,7 @@ type TagConstructorArgs = {
 	type: TagTypes
 	title: string
 	parent: string | null
+	photo: MediaOutput | null
 	meta: TagMetaType
 	createdAt: number
 	updatedAt: number

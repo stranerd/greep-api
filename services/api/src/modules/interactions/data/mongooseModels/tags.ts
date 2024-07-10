@@ -23,6 +23,11 @@ const Schema = new appInstance.dbs.mongo.Schema<TagFromModel>(
 			required: false,
 			default: null,
 		},
+		photo: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: null,
+		},
 		meta: Object.fromEntries(
 			Object.values(TagMeta).map((key) => [
 				key,

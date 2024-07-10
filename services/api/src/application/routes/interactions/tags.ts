@@ -1,9 +1,11 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
 import { TagEntity, TagTypes, TagsUseCases } from '@modules/interactions'
-import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import { StorageUseCases } from '@modules/storage'
+import { ApiDef, FileSchema, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const schema = () => ({
 	title: Schema.string().min(1),
+	photo: Schema.file().image().nullable(),
 })
 
 const router = new Router({ path: '/tags', groups: ['Tags'] })
@@ -20,18 +22,31 @@ router.get<InteractionsTagsFindRouteDef>({ path: '/:id', key: 'interactions-tags
 })
 
 router.post<InteractionsTagsCreateRouteDef>({ path: '/', key: 'interactions-tags-create', middlewares: [isAuthenticated] })(async (req) => {
-	const data = validate({ ...schema(), type: Schema.in(Object.values(TagTypes)) }, req.body)
+	const data = validate({ ...schema(), type: Schema.in(Object.values(TagTypes)) }, { ...req.body, photo: req.body.photo?.at(0) ?? null })
 
 	// if (data.parent !== null) throw new BadRequestError('no tag type can have children')
 
-	return await TagsUseCases.add({ ...data, parent: null })
+	const photo = data.photo ? await StorageUseCases.upload('interactions/tags', data.photo) : null
+
+	return await TagsUseCases.add({ ...data, photo, parent: null })
 })
 
 router.put<InteractionsTagsUpdateRouteDef>({ path: '/:id', key: 'interactions-tags-update', middlewares: [isAuthenticated, isAdmin] })(
 	async (req) => {
-		const data = validate(schema(), req.body)
+		const uploadedPhoto = req.body.photo?.[0] ?? null
+		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const updatedTag = await TagsUseCases.update({ id: req.params.id, data })
+		const { title } = validate(schema(), { ...req.body, photo: uploadedPhoto })
+
+		const photo = uploadedPhoto ? await StorageUseCases.upload('interactions/tags', uploadedPhoto) : undefined
+
+		const updatedTag = await TagsUseCases.update({
+			id: req.params.id,
+			data: {
+				title,
+				...(changedPhoto ? { photo } : {}),
+			},
+		})
 		if (updatedTag) return updatedTag
 		throw new NotAuthorizedError()
 	},
@@ -66,7 +81,7 @@ type InteractionsTagsFindRouteDef = ApiDef<{
 type InteractionsTagsCreateRouteDef = ApiDef<{
 	key: 'interactions-tags-create'
 	method: 'post'
-	body: TagsBody & { type: TagTypes }
+	body: TagsBody & { type: TagTypes; photo: FileSchema | null }
 	response: TagEntity
 }>
 
@@ -74,7 +89,7 @@ type InteractionsTagsUpdateRouteDef = ApiDef<{
 	key: 'interactions-tags-update'
 	method: 'put'
 	params: { id: string }
-	body: TagsBody
+	body: TagsBody & { photo?: FileSchema | null }
 	response: TagEntity
 }>
 
