@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/environment'
+import { RatingsSchema } from '@utils/types'
 import { UserMeta, UserRankings } from '../../domain/types'
 import { UserDbChangeCallbacks } from '../../utils/changes/users'
 import { UserMapper } from '../mappers/users'
@@ -71,6 +72,7 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 					},
 				]),
 			),
+			ratings: RatingsSchema,
 			application: {
 				type: appInstance.dbs.mongo.Schema.Types.Mixed,
 				required: false,

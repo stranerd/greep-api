@@ -21,6 +21,33 @@ export type Ratings = {
 	total: number
 	count: number
 	avg: number
+	distribution: Record<number, number>
+}
+
+const NumberSchema = {
+	type: Number,
+	required: false,
+	default: 0,
+}
+
+export const RatingsSchema = {
+	total: NumberSchema,
+	avg: NumberSchema,
+	count: NumberSchema,
+	distribution: Object.fromEntries([1, 2, 3, 4, 5].map((i) => [i.toString(), NumberSchema])),
+}
+
+export const updateRatings = (ratings: Ratings, rating: number, add: boolean) => {
+	const update = {
+		...ratings,
+		distribution: { ...ratings.distribution },
+	}
+	update.count += add ? 1 : -1
+	update.distribution[rating] += add ? 1 : -1
+	if (update.distribution[rating] < 0) update.distribution[rating] = 0
+	update.total += (add ? 1 : -1) * rating
+	update.avg = Number((update.total / update.count).toFixed(2))
+	return update
 }
 
 export type Tz = {

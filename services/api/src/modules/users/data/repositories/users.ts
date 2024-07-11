@@ -1,5 +1,5 @@
 import { appInstance } from '@utils/environment'
-import { Location } from '@utils/types'
+import { Location, updateRatings } from '@utils/types'
 import { IUserRepository } from '../../domain/i-repositories/users'
 import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData, UserVendorData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
@@ -164,5 +164,20 @@ export class UserRepository implements IUserRepository {
 	async updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { [`vendor.${type}`]: data } }, { new: true })
 		return this.mapper.mapFrom(user)
+	}
+
+	async updateRatings(id: string, rating: number, add: boolean) {
+		let res = false
+		await User.collection.conn.transaction(async (session) => {
+			const user = await User.findById(id, {}, { session })
+			if (!user) return res
+			res = !!(await User.findByIdAndUpdate(
+				id,
+				{ $set: { 'account.ratings': updateRatings(user.account.ratings, rating, add) } },
+				{ session },
+			))
+			return res
+		})
+		return res
 	}
 }

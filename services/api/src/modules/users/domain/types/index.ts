@@ -1,5 +1,5 @@
 import { Phone } from '@modules/auth'
-import { Location, Time } from '@utils/types'
+import { Location, Ratings, Time } from '@utils/types'
 import { AuthRoles, MediaOutput } from 'equipped'
 import { UserMeta } from './activities'
 
@@ -39,6 +39,7 @@ export type EmbeddedUser = {
 export type UserAccount = {
 	rankings: Record<UserRankings, { value: number; lastUpdatedAt: number }>
 	meta: Record<UserMeta, number>
+	ratings: Ratings
 	application: {
 		accepted: boolean
 		message: string

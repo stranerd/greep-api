@@ -1,5 +1,6 @@
 import { InteractionEntities } from '@modules/interactions'
 import { ProductsUseCases } from '@modules/marketplace'
+import { UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { DbChangeCallbacks } from 'equipped'
 import { ReviewFromModel } from '../../data/models/reviews'
@@ -20,6 +21,10 @@ export const ReviewDbChangeCallbacks: DbChangeCallbacks<ReviewFromModel, ReviewE
 				await ProductsUseCases.updateRatings({ id: after.entity.id, ratings: before.rating, add: false }).then(() =>
 					ProductsUseCases.updateRatings({ id: after.entity.id, ratings: after.rating, add: true }),
 				)
+			if (after.entity.type === InteractionEntities.vendors)
+				await UsersUseCases.updateRatings({ id: after.entity.id, ratings: before.rating, add: false }).then(() =>
+					UsersUseCases.updateRatings({ id: after.entity.id, ratings: after.rating, add: true }),
+				)
 		}
 	},
 	deleted: async ({ before }) => {
@@ -27,5 +32,7 @@ export const ReviewDbChangeCallbacks: DbChangeCallbacks<ReviewFromModel, ReviewE
 
 		if (before.entity.type === InteractionEntities.products)
 			await ProductsUseCases.updateRatings({ id: before.entity.id, ratings: before.rating, add: false })
+		if (before.entity.type === InteractionEntities.vendors)
+			await UsersUseCases.updateRatings({ id: before.entity.id, ratings: before.rating, add: false })
 	},
 }

@@ -41,4 +41,6 @@ export interface IUserRepository {
 	updateSavedLocations(userId: string, savedLocations: UserAccount['savedLocations']): Promise<UserEntity | null>
 
 	updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]): Promise<UserEntity | null>
+
+	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>
 }

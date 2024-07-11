@@ -1,4 +1,5 @@
 import { appInstance } from '@utils/environment'
+import { updateRatings } from '@utils/types'
 import { QueryParams } from 'equipped'
 import { IProductRepository } from '../../domain/irepositories/products'
 import { ProductMeta } from '../../domain/types'
@@ -58,15 +59,12 @@ export class ProductRepository implements IProductRepository {
 		)
 	}
 
-	async updateRatings(id: string, ratings: number, add: boolean) {
+	async updateRatings(id: string, rating: number, add: boolean) {
 		let res = false
 		await Product.collection.conn.transaction(async (session) => {
-			const quiz = await Product.findById(id, {}, { session })
-			if (!quiz) return res
-			quiz.ratings.total += (add ? 1 : -1) * ratings
-			quiz.ratings.count += add ? 1 : -1
-			quiz.ratings.avg = Number((quiz.ratings.total / quiz.ratings.count).toFixed(2))
-			res = !!(await quiz.save({ session }))
+			const product = await Product.findById(id, {}, { session })
+			if (!product) return res
+			res = !!(await Product.findByIdAndUpdate(id, { $set: { ratings: updateRatings(product.ratings, rating, add) } }, { session }))
 			return res
 		})
 		return res

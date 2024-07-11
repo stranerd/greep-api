@@ -1,5 +1,6 @@
 import { UserVendorType } from '@modules/users'
 import { appInstance } from '@utils/environment'
+import { RatingsSchema } from '@utils/types'
 import { ProductMeta } from '../../domain/types'
 import { ProductDbChangeCallbacks } from '../../utils/changes/products'
 import { ProductMapper } from '../mappers/products'
@@ -68,16 +69,7 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 				},
 			]),
 		),
-		ratings: Object.fromEntries(
-			['total', 'avg', 'count'].map((key) => [
-				key,
-				{
-					type: Number,
-					required: false,
-					default: 0,
-				},
-			]),
-		),
+		ratings: RatingsSchema,
 		createdAt: {
 			type: Number,
 			required: false,

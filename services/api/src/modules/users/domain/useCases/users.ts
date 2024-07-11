@@ -90,4 +90,8 @@ export class UsersUseCase {
 	async updateVendor<Key extends keyof UserVendorData>(params: { userId: string; type: Key; data: UserVendorData[Key] }) {
 		return await this.repository.updateVendor(params.userId, params.type, params.data)
 	}
+
+	async updateRatings(input: { id: string; ratings: number; add: boolean }) {
+		return await this.repository.updateRatings(input.id, input.ratings, input.add)
+	}
 }
