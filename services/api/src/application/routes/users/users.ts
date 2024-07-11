@@ -1,12 +1,10 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified, isVendor } from '@application/middlewares'
-import { TagTypes, TagsUseCases } from '@modules/interactions'
 import { StorageUseCases } from '@modules/storage'
 import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
 import { Location, LocationSchema, TimeSchema, Tz, timezones } from '@utils/types'
 import {
 	ApiDef,
 	BadRequestError,
-	Conditions,
 	FileSchema,
 	MediaOutput,
 	NotAuthorizedError,
@@ -192,26 +190,6 @@ router.post<UsersUpdateVendorScheduleRouteDef>({
 	throw new NotAuthorizedError('cannot update user schedule')
 })
 
-router.post<UsersUpdateVendorMenuRouteDef>({
-	path: '/vendors/menu',
-	key: 'users-users-update-vendor-menu',
-	middlewares: [isAuthenticated, isVendor],
-})(async (req) => {
-	const { menu } = validate({ menu: Schema.array(Schema.string().min(1)) }, req.body)
-
-	const { results: tags } = await TagsUseCases.get({
-		where: [
-			{ field: 'id', condition: Conditions.in, value: menu },
-			{ field: 'type', value: TagTypes.productsFoods },
-		],
-		all: true,
-	})
-
-	const user = await UsersUseCases.updateVendor({ userId: req.authUser!.id, type: 'menu', data: tags.map((t) => t.id) })
-	if (user) return user
-	throw new NotAuthorizedError('cannot update user menu')
-})
-
 export default router
 
 type UsersGetRouteDef = ApiDef<{
@@ -284,12 +262,5 @@ type UsersUpdateVendorScheduleRouteDef = ApiDef<{
 	key: 'users-users-update-vendor-schedule'
 	method: 'post'
 	body: { schedule: BusinessTime }
-	response: UserEntity
-}>
-
-type UsersUpdateVendorMenuRouteDef = ApiDef<{
-	key: 'users-users-update-vendor-menu'
-	method: 'post'
-	body: { menu: string[] }
 	response: UserEntity
 }>

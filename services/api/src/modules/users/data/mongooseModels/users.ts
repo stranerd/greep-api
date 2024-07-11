@@ -117,11 +117,6 @@ const UserSchema = new appInstance.dbs.mongo.Schema<UserFromModel>(
 				required: false,
 				default: null,
 			},
-			menu: {
-				type: [String],
-				required: false,
-				default: () => [],
-			},
 		},
 	},
 	{ minimize: false },
