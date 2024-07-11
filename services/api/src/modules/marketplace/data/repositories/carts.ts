@@ -92,7 +92,7 @@ export class CartRepository implements ICartRepository {
 	}
 
 	async clear(id: string, userId: string) {
-		const cart = await Cart.findOneAndUpdate({ _id: id, userId }, { $set: { products: [] } }, { new: true })
+		const cart = await Cart.findOneAndUpdate({ _id: id, userId }, { $set: { packs: [] } }, { new: true })
 		return this.mapper.mapFrom(cart)
 	}
 }

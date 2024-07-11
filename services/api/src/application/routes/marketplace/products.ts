@@ -227,6 +227,7 @@ type ProductsRecommendedTagsFoodsRouteDef = ApiDef<{
 type ProductBody = {
 	title: string
 	description: string
+	data: { type: UserVendorType }
 	price: { amount: number; currency: Currencies }
 	inStock: boolean
 	tagIds: string[]
