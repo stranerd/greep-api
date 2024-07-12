@@ -70,12 +70,12 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 			.sort((a, b) => (a.at ?? Number.MAX_SAFE_INTEGER) - (b.at ?? Number.MAX_SAFE_INTEGER))
 	}
 
-	get state() {
-		if (this.done) return 0
-		if (this.status[OrderStatus.shipped]) return 3
-		if (this.status[OrderStatus.accepted]) return 2
-		if (this.status[OrderStatus.created]) return 1
-		return 0
+	get activeStatus() {
+		if (this.done) return null
+		if (this.status[OrderStatus.shipped]) return OrderStatus.shipped
+		if (this.status[OrderStatus.accepted]) return OrderStatus.accepted
+		if (this.status[OrderStatus.created]) return OrderStatus.created
+		return null
 	}
 
 	static async calculateFees(data: {

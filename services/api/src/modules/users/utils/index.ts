@@ -1,6 +1,6 @@
 import { UsersUseCases } from '@modules/users'
 import { BaseEntity, Conditions } from 'equipped'
-import { BusinessTime } from '../domain/types'
+import { BusinessTime, EmbeddedUser } from '../domain/types'
 
 export const mergeWithUsers = async <T extends BaseEntity<any, any>>(entities: T[], getUsers: (e: T) => string[]) => {
 	const userIds = [...new Set(entities.flatMap((e) => getUsers(e)))]
@@ -8,7 +8,9 @@ export const mergeWithUsers = async <T extends BaseEntity<any, any>>(entities: T
 	const usersMap = new Map(users.map((u) => [u.id, u.getEmbedded()]))
 	return entities.map((e) => {
 		const users = getUsers(e).map((id) => usersMap.get(id)!)
-		return { ...e, users }
+		// @ts-ignore
+		e.users = users
+		return e as T & { users: EmbeddedUser[] }
 	})
 }
 
