@@ -15,7 +15,7 @@ export const ActivitiesUseCases = new ActivitiesUseCase(activityRepository)
 
 export { ActivityEntity } from './domain/entities/activities'
 export { ReferralEntity } from './domain/entities/referrals'
-export { UserEntity, generateDefaultUser } from './domain/entities/users'
-export { ActivityType, UserMeta, UserRankings, UserType, UserVendorType } from './domain/types'
+export { generateDefaultUser, UserEntity } from './domain/entities/users'
+export { ActivityType, UserMeta, UserRankings, UserType, UserVendorBusinessDays, UserVendorType } from './domain/types'
 export type { BusinessTime, EmbeddedUser } from './domain/types'
 export { isVendorOpen, mergeWithUsers } from './utils'

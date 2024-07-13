@@ -77,9 +77,19 @@ export enum UserVendorType {
 	items = 'items',
 }
 
+export enum UserVendorBusinessDays {
+	sun = 'sun',
+	mon = 'mon',
+	tue = 'tue',
+	wed = 'wed',
+	thu = 'thu',
+	fri = 'fri',
+	sat = 'sat',
+}
+
 export type BusinessTime = {
 	timezone: string
-	schedule: ({ from: Time; to: Time } | null)[]
+	schedule: Record<UserVendorBusinessDays, { from: Time; to: Time } | null>
 } | null
 
 export type UserTypeData =

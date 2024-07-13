@@ -13,9 +13,13 @@ export const LocationSchema = () =>
 		description: Schema.string().min(1),
 	})
 
-export type Time = [number, number]
+export type Time = { hr: number; min: number }
 
-export const TimeSchema = () => Schema.tuple([Schema.number().int().gte(0).lte(23), Schema.number().int().gte(0).lte(59)])
+export const TimeSchema = () =>
+	Schema.object({
+		hr: Schema.number().int().gte(0).lte(23),
+		min: Schema.number().int().gte(0).lte(59),
+	})
 
 export type Ratings = {
 	total: number

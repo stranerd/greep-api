@@ -1,6 +1,6 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified, isVendor } from '@application/middlewares'
 import { StorageUseCases } from '@modules/storage'
-import { BusinessTime, UserEntity, UserType, UserVendorType, UsersUseCases } from '@modules/users'
+import { BusinessTime, UserEntity, UserType, UserVendorBusinessDays, UserVendorType, UsersUseCases } from '@modules/users'
 import { Location, LocationSchema, TimeSchema, Tz, timezones } from '@utils/types'
 import {
 	ApiDef,
@@ -175,11 +175,20 @@ router.post<UsersUpdateVendorScheduleRouteDef>({
 	key: 'users-users-update-vendor-schedule',
 	middlewares: [isAuthenticated, isVendor],
 })(async (req) => {
+	const scheduleSchema = Schema.object({ from: TimeSchema(), to: TimeSchema() }).nullable()
 	const { schedule } = validate(
 		{
 			schedule: Schema.object({
 				timezone: Schema.string().in(timezones.map((tz) => tz.id)),
-				schedule: Schema.array(Schema.object({ from: TimeSchema(), to: TimeSchema() }).nullable()).has(7),
+				schedule: Schema.object({
+					[UserVendorBusinessDays.sun]: scheduleSchema,
+					[UserVendorBusinessDays.mon]: scheduleSchema,
+					[UserVendorBusinessDays.tue]: scheduleSchema,
+					[UserVendorBusinessDays.wed]: scheduleSchema,
+					[UserVendorBusinessDays.thu]: scheduleSchema,
+					[UserVendorBusinessDays.fri]: scheduleSchema,
+					[UserVendorBusinessDays.sat]: scheduleSchema,
+				}),
 			}).nullable(),
 		},
 		req.body,

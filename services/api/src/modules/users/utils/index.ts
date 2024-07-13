@@ -1,6 +1,6 @@
 import { UsersUseCases } from '@modules/users'
 import { BaseEntity, Conditions } from 'equipped'
-import { BusinessTime, EmbeddedUser } from '../domain/types'
+import { BusinessTime, EmbeddedUser, UserVendorBusinessDays } from '../domain/types'
 
 export const mergeWithUsers = async <T extends BaseEntity<any, any>>(entities: T[], getUsers: (e: T) => string[]) => {
 	const userIds = [...new Set(entities.flatMap((e) => getUsers(e)))]
@@ -14,10 +14,14 @@ export const mergeWithUsers = async <T extends BaseEntity<any, any>>(entities: T
 	})
 }
 
+const days = Object.values(UserVendorBusinessDays)
+
 export const isVendorOpen = (time: BusinessTime) => {
 	if (!time) return false
 	const nowAtTimezone = new Date(new Date().toLocaleString('en-US', { timeZone: time.timezone }))
-	const timeSlot = time.schedule[(nowAtTimezone.getDay() + 6) % 7] // schedule starts from monday not sunday
+	const day = days[nowAtTimezone.getDay()]
+	if (!day) return false
+	const timeSlot = time.schedule[day]
 	if (!timeSlot) return false
 	const { from, to } = timeSlot
 	const hour = nowAtTimezone.getHours()
