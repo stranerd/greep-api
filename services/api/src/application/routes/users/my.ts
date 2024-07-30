@@ -1,7 +1,8 @@
 import { isAuthenticated } from '@application/middlewares'
 import { TransactionType, TransactionsUseCases } from '@modules/payment'
 import { UserEntity, UserType, UsersUseCases } from '@modules/users'
-import { ApiDef, Conditions, QueryKeys, QueryParams, QueryResults, Router } from 'equipped'
+import { getCoordsHashSlice } from '@utils/types'
+import { ApiDef, AuthRole, Conditions, QueryKeys, QueryParams, QueryResults, Router } from 'equipped'
 
 const router = new Router({ path: '/my', groups: ['My'], middlewares: [isAuthenticated] })
 
@@ -32,6 +33,21 @@ router.get<MyDriversGetRouteDef>({ path: '/drivers', key: 'users-my-drivers' })(
 	return await UsersUseCases.get(query)
 })
 
+router.get<MyVendorsNearMeGetRouteDef>({ path: '/vendors/near-me', key: 'users-my-vendors-near-me' })(async (req) => {
+	const user = await UsersUseCases.find(req.authUser!.id)
+	if (!user) throw new Error('Profile not found')
+	const hashSlice = getCoordsHashSlice(user.account.location?.hash ?? '', 1500)
+	const query = req.query
+	query.authType = QueryKeys.and
+	query.auth = [
+		{ field: 'type.type', value: UserType.vendor },
+		{ field: `roles.${AuthRole.isVendor}`, value: true },
+		{ field: 'dates.deletedAt', value: null },
+		{ field: 'type.location.hash', value: new RegExp(`^${hashSlice}`) },
+	]
+	return await UsersUseCases.get(query)
+})
+
 export default router
 
 type MyQuickSendGetRouteDef = ApiDef<{
@@ -43,6 +59,13 @@ type MyQuickSendGetRouteDef = ApiDef<{
 
 type MyDriversGetRouteDef = ApiDef<{
 	key: 'users-my-drivers'
+	method: 'get'
+	query: QueryParams
+	response: QueryResults<UserEntity>
+}>
+
+type MyVendorsNearMeGetRouteDef = ApiDef<{
+	key: 'users-my-vendors-near-me'
 	method: 'get'
 	query: QueryParams
 	response: QueryResults<UserEntity>

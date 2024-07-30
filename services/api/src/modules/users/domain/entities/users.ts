@@ -21,6 +21,7 @@ export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'b
 				coords: data.account.location as any,
 				location: '',
 				description: '',
+				hash: '',
 			}
 		super(data)
 		this.bio = generateDefaultBio(data.bio ?? {})

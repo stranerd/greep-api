@@ -1,7 +1,7 @@
 import { isAuthenticated } from '@application/middlewares'
 import { Currencies, TransactionEntity, WalletEntity, WalletsUseCases, WithdrawalEntity } from '@modules/payment'
 import { UsersUseCases } from '@modules/users'
-import { Location, LocationSchema } from '@utils/types'
+import { LocationInput, LocationSchema } from '@utils/types'
 import { ApiDef, BadRequestError, Router, Schema, ValidationError, validate } from 'equipped'
 
 const router = new Router({ path: '/wallets', groups: ['Wallets'], middlewares: [isAuthenticated] })
@@ -138,7 +138,7 @@ type PaymentWalletsWithdrawRouteDef = ApiDef<{
 	body: {
 		pin: number
 		amount: number
-		location: Location
+		location: LocationInput
 	}
 	response: WithdrawalEntity
 }>

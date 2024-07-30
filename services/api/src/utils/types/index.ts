@@ -1,17 +1,38 @@
-import { Schema } from 'equipped'
+import { Schema, Validation } from 'equipped'
 
-export type Location = {
+export type LocationInput = {
 	coords: [number, number]
 	location: string
 	description: string
 }
 
+export type Location = LocationInput & {
+	hash: string
+}
+
 export const LocationSchema = () =>
 	Schema.object({
-		coords: Schema.tuple([Schema.number(), Schema.number()]), //.nullable().default(null),
+		coords: Schema.tuple([Schema.number(), Schema.number()]),
 		location: Schema.string().min(1),
 		description: Schema.string().min(1),
-	})
+	}).transform((data) => ({
+		...data,
+		hash: Validation.Geohash.encode(data.coords),
+	}))
+
+export const getCoordsHashSlice = (hash: string, radiusInM: number) => {
+	if (radiusInM < 0) return hash.slice(0, 11)
+	if (radiusInM < 1) return hash.slice(0, 10)
+	if (radiusInM < 5) return hash.slice(0, 9)
+	if (radiusInM < 40) return hash.slice(0, 8)
+	if (radiusInM < 150) return hash.slice(0, 7)
+	if (radiusInM < 1_200) return hash.slice(0, 6)
+	if (radiusInM < 5_000) return hash.slice(0, 5)
+	if (radiusInM < 40_000) return hash.slice(0, 4)
+	if (radiusInM < 160_000) return hash.slice(0, 3)
+	if (radiusInM < 1_200_000) return hash.slice(0, 2)
+	return hash
+}
 
 export type Time = { hr: number; min: number }
 

@@ -1,7 +1,7 @@
 import { isAuthenticated, isDriver } from '@application/middlewares'
 import { PaymentType, TransactionEntity, TransactionType, TripEntity, TripStatus, TripsUseCases } from '@modules/trips'
 import { ActivityEntity, ActivityType, UsersUseCases } from '@modules/users'
-import { Location, LocationSchema } from '@utils/types'
+import { LocationInput, LocationSchema } from '@utils/types'
 import {
 	ApiDef,
 	BadRequestError,
@@ -207,7 +207,7 @@ type TripsFindRouteDef = ApiDef<{
 type TripsCreateRouteDef = ApiDef<{
 	key: 'trips-trips-create'
 	method: 'post'
-	body: { requestedDriverId: string | null; from: Location; to: Location; discount: number }
+	body: { requestedDriverId: string | null; from: LocationInput; to: LocationInput; discount: number }
 	response: TripEntity
 }>
 

@@ -10,7 +10,7 @@ import {
 	OrdersUseCases,
 } from '@modules/marketplace'
 import { ActivityEntity, ActivityType, EmbeddedUser, UserType, UsersUseCases, isVendorOpen, mergeWithUsers } from '@modules/users'
-import { Location, LocationSchema } from '@utils/types'
+import { LocationInput, LocationSchema } from '@utils/types'
 import { ApiDef, BadRequestError, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
 
 const schema = () => ({
@@ -180,7 +180,7 @@ export default router
 type Order = OrderEntity & { users: EmbeddedUser[] }
 
 type CreateOrderBase = {
-	to: Location
+	to: LocationInput
 	dropoffNote: string
 	time: number
 	discount: number
@@ -189,7 +189,7 @@ type CreateOrderBase = {
 type CheckoutCartOrder = CreateOrderBase & { cardId: string }
 type CheckoutCartLinkOrder = CreateOrderBase & { cardLinkId: string }
 type DispatchOrder = CreateOrderBase & {
-	from: Location
+	from: LocationInput
 	data: {
 		deliveryType: OrderDispatchDeliveryType
 		description: string

@@ -1,7 +1,7 @@
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified, isVendor } from '@application/middlewares'
 import { StorageUseCases } from '@modules/storage'
 import { BusinessTime, UserEntity, UserType, UserVendorBusinessDays, UserVendorType, UsersUseCases } from '@modules/users'
-import { Location, LocationSchema, TimeSchema, Tz, timezones } from '@utils/types'
+import { LocationInput, LocationSchema, TimeSchema, Tz, timezones } from '@utils/types'
 import {
 	ApiDef,
 	BadRequestError,
@@ -228,7 +228,7 @@ type UsersUpdateTypeRouteDef = ApiDef<{
 				banner?: FileSchema | null
 				email: string | null
 				website: string | null
-				location: Location
+				location: LocationInput
 		  }
 	response: UserEntity
 }>
@@ -243,7 +243,7 @@ type UsersUpdateApplicationRouteDef = ApiDef<{
 type UsersUpdateLocationRouteDef = ApiDef<{
 	key: 'users-users-update-location'
 	method: 'post'
-	body: { location: Location }
+	body: { location: LocationInput }
 	response: boolean
 }>
 
@@ -257,7 +257,7 @@ type UsersUpdateDriverAvailabilityRouteDef = ApiDef<{
 type UsersUpdateSavedLocationsRouteDef = ApiDef<{
 	key: 'users-users-update-saved-locations'
 	method: 'post'
-	body: { locations: Location[] }
+	body: { locations: LocationInput[] }
 	response: UserEntity
 }>
 
