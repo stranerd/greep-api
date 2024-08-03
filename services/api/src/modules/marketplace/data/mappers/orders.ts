@@ -1,5 +1,5 @@
-import { OrderEntity } from '@modules/marketplace/domain/entities/orders'
 import { BaseMapper } from 'equipped'
+import { OrderEntity } from '../../domain/entities/orders'
 import { OrderFromModel, OrderToModel } from '../models/orders'
 
 export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderEntity> {
@@ -20,6 +20,7 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 			data: param.data,
 			fee: param.fee,
 			done: param.done,
+			offers: param.offers,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})
@@ -35,6 +36,7 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 			time: param.time,
 			discount: param.discount,
 			payment: param.payment,
+			offers: param.offers,
 			data: param.data,
 		}
 	}

@@ -3,6 +3,7 @@ import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { resolvePacks } from '../../utils/carts'
+import { offers } from '../../utils/offers'
 import { OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
 
 type OrderEntityProps = OrderToModelBase & {
@@ -86,7 +87,17 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		discount: number
 		time: number
 		payment: OrderPayment
+		offers: string[]
 	}): Promise<OrderFee> {
+		const allOffers = offers.filter((offer) => data.offers.includes(offer.id))
+
+		const vendorId = 'vendorId' in data.data ? data.data.vendorId : null
+		const deliveryOffers = allOffers.filter(
+			(offer) => offer.data.type === 'delivery-discount' && (offer.data.vendors?.includes(vendorId!) ?? true),
+		)
+		let deliveryDiscount = deliveryOffers.reduce((acc, offer) => acc + offer.data.discountPercentage, 0) / 100
+		if (deliveryDiscount > 1) deliveryDiscount = 1
+
 		const items = resolvePacks('packs' in data.data ? data.data.packs : [])
 		const currency = Currencies.TRY
 		const convertedItems = await Promise.all(
@@ -97,7 +108,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		const vat = subTotal * vatPercentage
 		const distance = calculateDistanceBetween(data.from.coords, data.to.coords)
 		const feePerMeters = 15 / 1000
-		const fee = distance * feePerMeters
+		const fee = distance * feePerMeters * (1 - deliveryDiscount)
 		const total = subTotal + vat + fee
 		const discountedOff = data.discount * 10
 		const payable = Math.max(total - discountedOff, 0)

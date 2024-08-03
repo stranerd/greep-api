@@ -72,6 +72,11 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},
+		offers: {
+			type: [String],
+			required: false,
+			default: () => [],
+		},
 		createdAt: {
 			type: Number,
 			required: false,

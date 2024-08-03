@@ -34,3 +34,4 @@ export {
 	ProductMeta,
 } from './domain/types'
 export { resolvePacks } from './utils/carts'
+export * from './utils/offers'

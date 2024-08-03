@@ -96,6 +96,7 @@ export type OrderToModelBase = {
 	time: number
 	discount: number
 	payment: OrderPayment
+	offers: string[]
 }
 
 export type CheckoutInput = OrderToModelBase & ({ cartId: string } | { cartLinkId: string })

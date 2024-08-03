@@ -22,6 +22,7 @@ const schema = () => ({
 	// time: Schema.time().min(Date.now()).asStamp(),
 	discount: Schema.number().gte(0),
 	payment: Schema.in(Object.values(OrderPayment)),
+	offers: Schema.array(Schema.string()).default([]),
 })
 
 const getVendorLocation = async (vendorId: string) => {
