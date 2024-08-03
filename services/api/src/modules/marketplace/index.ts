@@ -1,9 +1,9 @@
-import { CartRepository } from './data/repositories/carts'
 import { CartLinkRepository } from './data/repositories/cartLinks'
+import { CartRepository } from './data/repositories/carts'
 import { OrderRepository } from './data/repositories/orders'
 import { ProductRepository } from './data/repositories/products'
-import { CartUseCase } from './domain/useCases/carts'
 import { CartLinkUseCase } from './domain/useCases/cartLinks'
+import { CartUseCase } from './domain/useCases/carts'
 import { OrderUseCase } from './domain/useCases/orders'
 import { ProductUseCase } from './domain/useCases/products'
 
@@ -19,9 +19,18 @@ export const ProductsUseCases = new ProductUseCase(productRepository)
 const orderRepository = OrderRepository.getInstance()
 export const OrdersUseCases = new OrderUseCase(orderRepository)
 
-export { CartEntity } from './domain/entities/carts'
 export { CartLinkEntity } from './domain/entities/cartLinks'
+export { CartEntity } from './domain/entities/carts'
 export { OrderEntity } from './domain/entities/orders'
 export { ProductEntity } from './domain/entities/products'
-export { OrderDispatchDeliveryType, OrderFee, OrderPayment, OrderStatus, OrderType, ProductMeta, AddToCartInput } from './domain/types'
+export {
+	AddToCartInput,
+	OrderDispatchDeliveryType,
+	OrderFee,
+	OrderPayment,
+	OrderStatus,
+	OrderType,
+	ProductAddOn,
+	ProductMeta,
+} from './domain/types'
 export { resolvePacks } from './utils/carts'

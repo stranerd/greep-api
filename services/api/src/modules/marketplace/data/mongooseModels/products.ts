@@ -31,8 +31,8 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: false,
 		},
-		addOnId: {
-			type: String,
+		addOn: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
 			default: null,
 		},

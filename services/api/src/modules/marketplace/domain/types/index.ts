@@ -121,3 +121,9 @@ export type ProductMetaType = Record<ProductMeta, number>
 export type ProductData = {
 	type: UserVendorType
 }
+
+export type ProductAddOn = {
+	id: string
+	group: string
+	required: boolean
+}

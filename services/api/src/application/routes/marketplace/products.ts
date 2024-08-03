@@ -1,6 +1,6 @@
 import { isAuthenticated, isVendor } from '@application/middlewares'
 import { TagEntity, TagMeta, TagTypes, TagsUseCases } from '@modules/interactions'
-import { ProductEntity, ProductMeta, ProductsUseCases } from '@modules/marketplace'
+import { ProductAddOn, ProductEntity, ProductMeta, ProductsUseCases } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
 import { StorageUseCases } from '@modules/storage'
 import { UserVendorType, UsersUseCases } from '@modules/users'
@@ -111,7 +111,14 @@ router.get<ProductsRecommendedTagsFoodsRouteDef>({
 router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-create', middlewares: [isAuthenticated, isVendor] })(
 	async (req) => {
 		const data = validate(
-			{ ...schema(true, req.authUser!), addOnId: Schema.string().nullable() },
+			{
+				...schema(true, req.authUser!),
+				addOn: Schema.object({
+					id: Schema.string().min(1),
+					group: Schema.string().min(1),
+					required: Schema.boolean(),
+				}).nullable(),
+			},
 			{ ...req.body, banner: req.body.banner?.at(0) ?? null },
 		)
 
@@ -126,8 +133,8 @@ router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-crea
 		const user = await UsersUseCases.find(req.authUser!.id)
 		if (!user || user.isDeleted()) throw new BadRequestError('user not found')
 
-		if (data.addOnId) {
-			const product = await ProductsUseCases.find(data.addOnId)
+		if (data.addOn) {
+			const product = await ProductsUseCases.find(data.addOn.id)
 			if (!product || product.user.id !== user.id || product.data.type !== data.data.type) throw new BadRequestError('invalid add-on')
 		}
 
@@ -237,7 +244,7 @@ type ProductBody = {
 type ProductsCreateRouteDef = ApiDef<{
 	key: 'marketplace-products-create'
 	method: 'post'
-	body: ProductBody & { addOnId: string | null }
+	body: ProductBody & { addOn: ProductAddOn | null }
 	response: ProductEntity
 }>
 

@@ -23,8 +23,8 @@ export class CartRepository implements ICartRepository {
 			if (!product) throw new Error('product not found')
 			if (data.add && !product.inStock) throw new Error('product not available')
 			if (data.addOnProductId) {
-				if (!product.addOnId) throw new Error('product is not an add-on')
-				if (product.addOnId !== data.productId) throw new Error('product is not an add-on')
+				if (!product.addOn) throw new Error('product is not an add-on')
+				if (product.addOn.id !== data.productId) throw new Error('product is not an add-on')
 			}
 			const vendorId = product.user.id
 			const cart = await Cart.findOneAndUpdate(

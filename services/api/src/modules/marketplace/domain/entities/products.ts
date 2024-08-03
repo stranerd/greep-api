@@ -3,7 +3,7 @@ import { Currencies } from '@modules/payment'
 import { UserVendorType, generateDefaultUser } from '@modules/users'
 import { Ratings } from '@utils/types'
 import { BaseEntity, MediaOutput } from 'equipped'
-import { EmbeddedUser, ProductData, ProductMetaType } from '../types'
+import { EmbeddedUser, ProductAddOn, ProductData, ProductMetaType } from '../types'
 
 type ProductEntityProps = {
 	id: string
@@ -18,7 +18,7 @@ type ProductEntityProps = {
 	description: string
 	tagIds: string[]
 	inStock: boolean
-	addOnId: string | null
+	addOn: ProductAddOn | null
 	meta: ProductMetaType
 	ratings: Ratings
 	createdAt: number
