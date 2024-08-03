@@ -36,7 +36,7 @@ export class OrderRepository implements IOrderRepository {
 
 			const allProductIds = resolvePacks(cart.packs).map((item) => item.id)
 			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
-			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
+			if (products.some((p) => !p.inStock || p.disabled)) throw new Error('some products are not available')
 
 			return {
 				type: OrderType.cart,
@@ -52,7 +52,7 @@ export class OrderRepository implements IOrderRepository {
 
 			const allProductIds = resolvePacks(cartLink.packs).map((item) => item.id)
 			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
-			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
+			if (products.some((p) => !p.inStock || p.disabled)) throw new Error('some products are not available')
 
 			return {
 				type: OrderType.cartLink,

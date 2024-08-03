@@ -26,10 +26,6 @@ export class ProductUseCase {
 		return this.repository.update(input.id, input.data, input.userId)
 	}
 
-	async delete(input: { id: string; userId: string }) {
-		return this.repository.delete(input.id, input.userId)
-	}
-
 	async updateUserBio(user: ProductToModel['user']) {
 		return await this.repository.updateUserBio(user)
 	}

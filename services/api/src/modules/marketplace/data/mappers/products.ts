@@ -18,6 +18,7 @@ export class ProductMapper extends BaseMapper<ProductFromModel, ProductToModel, 
 			user: param.user,
 			meta: param.meta,
 			ratings: param.ratings,
+			disabled: param.disabled,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})
@@ -34,6 +35,7 @@ export class ProductMapper extends BaseMapper<ProductFromModel, ProductToModel, 
 			inStock: param.inStock,
 			user: param.user,
 			data: param.data,
+			disabled: param.disabled,
 		}
 	}
 }

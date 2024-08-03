@@ -25,4 +25,5 @@ export interface ProductToModel {
 	tagIds: string[]
 	addOn: ProductAddOn | null
 	inStock: boolean
+	disabled: boolean
 }

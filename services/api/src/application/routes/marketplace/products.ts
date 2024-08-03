@@ -145,6 +145,7 @@ router.post<ProductsCreateRouteDef>({ path: '/', key: 'marketplace-products-crea
 			tagIds: tags.map((t) => t.id),
 			user: user.getEmbedded(),
 			banner,
+			disabled: false,
 		})
 	},
 )
@@ -181,9 +182,14 @@ router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-up
 	throw new NotAuthorizedError()
 })
 
-router.delete<ProductsDeleteRouteDef>({ path: '/:id', key: 'marketplace-products-delete', middlewares: [isAuthenticated] })(async (req) => {
-	const deleted = await ProductsUseCases.delete({ id: req.params.id, userId: req.authUser!.id })
-	if (deleted) return deleted
+router.post<ProductsToggleDisableRouteDef>({
+	path: '/:id/disable',
+	key: 'marketplace-products-toggle-disable',
+	middlewares: [isAuthenticated],
+})(async (req) => {
+	const { disabled } = validate({ disabled: Schema.boolean() }, req.body)
+	const updated = await ProductsUseCases.update({ id: req.params.id, userId: req.authUser!.id, data: { disabled } })
+	if (updated) return updated
 	throw new NotAuthorizedError()
 })
 
@@ -256,9 +262,10 @@ type ProductsUpdateRouteDef = ApiDef<{
 	response: ProductEntity
 }>
 
-type ProductsDeleteRouteDef = ApiDef<{
-	key: 'marketplace-products-delete'
-	method: 'delete'
+type ProductsToggleDisableRouteDef = ApiDef<{
+	key: 'marketplace-products-toggle-disable'
+	method: 'post'
 	params: { id: string }
-	response: boolean
+	body: { disabled: boolean }
+	response: ProductEntity
 }>

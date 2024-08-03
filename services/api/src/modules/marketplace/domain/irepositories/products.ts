@@ -5,7 +5,6 @@ import { ProductMeta } from '../types'
 
 export interface IProductRepository {
 	update(id: string, data: Partial<ProductToModel>, userId: string): Promise<ProductEntity | null>
-	delete(id: string, userId: string): Promise<boolean>
 	create(data: ProductToModel): Promise<ProductEntity>
 	get(query: QueryParams): Promise<QueryResults<ProductEntity>>
 	find(id: string): Promise<ProductEntity | null>
