@@ -3,6 +3,7 @@ import { Location, updateRatings } from '@utils/types'
 import { IUserRepository } from '../../domain/i-repositories/users'
 import { UserAccount, UserBio, UserMeta, UserRankings, UserRoles, UserTypeData, UserVendorData } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
+import { UserFromModel } from '../models/users'
 import { User } from '../mongooseModels/users'
 
 export class UserRepository implements IUserRepository {
@@ -164,6 +165,21 @@ export class UserRepository implements IUserRepository {
 	async updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]) {
 		const user = await User.findByIdAndUpdate(userId, { $set: { [`vendor.${type}`]: data } }, { new: true })
 		return this.mapper.mapFrom(user)
+	}
+
+	async updateVendorTags(userId: string, tagIds: string[], add: boolean) {
+		let res: UserFromModel | null = null
+		await User.collection.conn.transaction(async (session) => {
+			const user = await User.findById(userId, {}, { session })
+			if (!user) return res
+			tagIds.forEach((tagId) => {
+				user.vendor.tags[tagId] ??= 0
+				user.vendor.tags[tagId] += add ? 1 : -1
+			})
+			user.vendor.tags = Object.fromEntries(Object.entries(user.vendor.tags).filter(([_, value]) => value > 0))
+			return (res = await user.save({ session }))
+		})
+		return this.mapper.mapFrom(res)
 	}
 
 	async updateRatings(id: string, rating: number, add: boolean) {

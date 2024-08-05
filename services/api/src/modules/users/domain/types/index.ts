@@ -115,4 +115,5 @@ export type UserTypeData =
 
 export type UserVendorData = {
 	schedule: BusinessTime
+	tags: Record<string, number>
 }

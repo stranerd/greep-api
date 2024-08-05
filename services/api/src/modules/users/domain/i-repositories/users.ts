@@ -42,5 +42,7 @@ export interface IUserRepository {
 
 	updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]): Promise<UserEntity | null>
 
+	updateVendorTags(userId: string, tagIds: string[], add: boolean): Promise<UserEntity | null>
+
 	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>
 }

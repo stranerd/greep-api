@@ -91,6 +91,10 @@ export class UsersUseCase {
 		return await this.repository.updateVendor(params.userId, params.type, params.data)
 	}
 
+	async updateVendorTags(input: { id: string; tagIds: string[]; add: boolean }) {
+		return await this.repository.updateVendorTags(input.id, input.tagIds, input.add)
+	}
+
 	async updateRatings(input: { id: string; ratings: number; add: boolean }) {
 		return await this.repository.updateRatings(input.id, input.ratings, input.add)
 	}
