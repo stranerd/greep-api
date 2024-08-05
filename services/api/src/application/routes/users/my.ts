@@ -33,10 +33,10 @@ router.get<MyDriversGetRouteDef>({ path: '/drivers', key: 'users-my-drivers' })(
 	return await UsersUseCases.get(query)
 })
 
-router.get<MyVendorsNearMeGetRouteDef>({ path: '/vendors/near-me', key: 'users-my-vendors-near-me' })(async (req) => {
+router.get<MyVendorsGetRouteDef>({ path: '/vendors', key: 'users-my-vendors' })(async (req) => {
 	const user = await UsersUseCases.find(req.authUser!.id)
 	if (!user) throw new Error('Profile not found')
-	const hashSlice = getCoordsHashSlice(user.account.location?.hash ?? '', 1500)
+	const hashSlice = getCoordsHashSlice(user.account.location?.hash ?? '', req.query.nearby ? 1500 : 10000)
 	const query = req.query
 	query.authType = QueryKeys.and
 	query.auth = [
@@ -64,9 +64,9 @@ type MyDriversGetRouteDef = ApiDef<{
 	response: QueryResults<UserEntity>
 }>
 
-type MyVendorsNearMeGetRouteDef = ApiDef<{
-	key: 'users-my-vendors-near-me'
+type MyVendorsGetRouteDef = ApiDef<{
+	key: 'users-my-vendors'
 	method: 'get'
-	query: QueryParams
+	query: QueryParams & { nearby?: boolean }
 	response: QueryResults<UserEntity>
 }>
