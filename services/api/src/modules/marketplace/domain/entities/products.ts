@@ -21,7 +21,6 @@ type ProductEntityProps = {
 	addOn: ProductAddOn | null
 	meta: ProductMetaType
 	ratings: Ratings
-	disabled: boolean
 	createdAt: number
 	updatedAt: number
 }

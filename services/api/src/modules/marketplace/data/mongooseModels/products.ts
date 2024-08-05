@@ -70,11 +70,6 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			]),
 		),
 		ratings: RatingsSchema,
-		disabled: {
-			type: Boolean,
-			required: false,
-			default: false,
-		},
 		createdAt: {
 			type: Number,
 			required: false,

@@ -45,19 +45,21 @@ const verifyPacks = async (packs: CartLinkBody['packs']) => {
 
 	const verified = packs.map((pack) =>
 		pack
-			.filter((p) => productsMap.has(p.id) && !productsMap.get(p.id)!.disabled)
-			.map((p) => ({
-				...productsMap.get(p.id)!.price,
-				id: p.id,
-				quantity: p.quantity,
-				addOns: p.addOns
-					.filter((a) => productsMap.has(a.id) && !productsMap.get(a.id)!.disabled)
-					.map((a) => ({
-						...productsMap.get(a.id)!.price,
-						id: a.id,
-						quantity: a.quantity,
-					})),
-			})),
+			.map((p) =>
+				productsMap.has(p.id)
+					? {
+							...productsMap.get(p.id)!.price,
+							id: p.id,
+							quantity: p.quantity,
+							addOns: p.addOns.map((a) => ({
+								...productsMap.get(a.id)!.price,
+								id: a.id,
+								quantity: a.quantity,
+							})),
+						}
+					: null!,
+			)
+			.filter(Boolean),
 	)
 
 	return { vendorId, vendorType, packs: verified }

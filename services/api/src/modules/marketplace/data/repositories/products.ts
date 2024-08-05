@@ -40,6 +40,11 @@ export class ProductRepository implements IProductRepository {
 		return this.mapper.mapFrom(product)
 	}
 
+	async delete(id: string, userId: string) {
+		const product = await Product.findOneAndDelete({ _id: id, 'user.id': userId })
+		return !!product
+	}
+
 	async updateUserBio(user: ProductToModel['user']) {
 		const products = await Product.updateMany({ 'user.id': user.id }, { $set: { user } })
 		return !!products.acknowledged
