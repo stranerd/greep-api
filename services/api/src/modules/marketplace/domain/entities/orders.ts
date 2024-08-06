@@ -106,7 +106,9 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		const items = resolvePacks('packs' in data.data ? data.data.packs : [])
 		const currency = Currencies.TRY
 		const convertedItems = await Promise.all(
-			items.map((item) => FlutterwavePayment.convertAmount(item.amount * item.quantity, item.currency, currency)),
+			items
+				.flatMap((item) => [...Object.values(item.addOns), item])
+				.map((item) => FlutterwavePayment.convertAmount(item.price.amount * item.quantity, item.price.currency, currency)),
 		)
 		const subTotal = convertedItems.reduce((acc, item) => acc + item, 0)
 		const vatPercentage = 0.05

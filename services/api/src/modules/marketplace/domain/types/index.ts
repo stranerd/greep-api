@@ -9,19 +9,29 @@ export type AddToCartInput = {
 	quantity: number
 	userId: string
 	pack: number
-	addOnProductId?: string
+	addOn: {
+		groupName: string
+		itemName: string
+	} | null
 	add: boolean
 }
 
-type BaseCartProductItem = {
+export type CartProductItem = {
 	id: string
 	quantity: number
-	amount: number
-	currency: Currencies
-}
-
-export type CartProductItem = BaseCartProductItem & {
-	addOns: BaseCartProductItem[]
+	price: {
+		amount: number
+		currency: Currencies
+	}
+	addOns: {
+		groupName: string
+		itemName: string
+		quantity: number
+		price: {
+			amount: number
+			currency: Currencies
+		}
+	}[]
 }
 
 export enum OrderPayment {
@@ -123,8 +133,11 @@ export type ProductData = {
 	type: UserVendorType
 }
 
-export type ProductAddOn = {
-	id: string
-	group: string
-	required: boolean
-}
+export type ProductAddOns = Record<
+	string,
+	{
+		minSelection: number | null
+		maxSelection: number | null
+		items: Record<string, { price: { amount: number; currency: Currencies }; inStock: boolean }>
+	}
+>

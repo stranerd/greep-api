@@ -22,10 +22,6 @@ export class CartRepository implements ICartRepository {
 			const product = await Product.findById(data.productId)
 			if (!product) throw new Error('product not found')
 			if (data.add && !product.inStock) throw new Error('product not available')
-			if (data.addOnProductId) {
-				if (!product.addOn) throw new Error('product is not an add-on')
-				if (product.addOn.id !== data.productId) throw new Error('product is not an add-on')
-			}
 			const vendorId = product.user.id
 			const cart = await Cart.findOneAndUpdate(
 				{ userId: data.userId, active: true, vendorId },
@@ -37,16 +33,19 @@ export class CartRepository implements ICartRepository {
 			const cloned: typeof cart.packs = JSON.parse(JSON.stringify(cart.packs))
 			const packs = Array.from({ ...cloned, length }, (val) => val ?? [])
 
-			const index = packs[data.pack].findIndex((p) => p.id === (data.addOnProductId ?? data.productId))
+			const index = packs[data.pack].findIndex((p) => p.id === data.productId)
 
-			if (data.addOnProductId) {
+			if (data.addOn) {
+				const addOn = data.addOn
 				if (index < 0) throw new Error('base item not in cart')
-				const addOnIndex = packs[data.pack][index].addOns.findIndex((p) => p.id === data.productId)
+				const addOnIndex = packs[data.pack][index].addOns.findIndex(
+					(p) => p.groupName === addOn.groupName && p.itemName === addOn.itemName,
+				)
 				if (data.add) {
 					if (addOnIndex !== -1) {
 						packs[data.pack][index].addOns[addOnIndex].quantity += data.quantity
-						packs[data.pack][index].addOns[addOnIndex].amount = product.price.amount
-					} else packs[data.pack][index].addOns.push({ ...product.price, id: data.productId, quantity: data.quantity })
+						packs[data.pack][index].addOns[addOnIndex].price.amount = product.price.amount
+					} else packs[data.pack][index].addOns.push({ ...addOn, price: product.price, quantity: data.quantity })
 				} else {
 					if (addOnIndex !== -1) packs[data.pack][index].addOns[addOnIndex].quantity -= data.quantity
 				}
@@ -54,8 +53,8 @@ export class CartRepository implements ICartRepository {
 				if (data.add) {
 					if (index !== -1) {
 						packs[data.pack][index].quantity += data.quantity
-						packs[data.pack][index].amount = product.price.amount
-					} else packs[data.pack].push({ ...product.price, id: data.productId, quantity: data.quantity, addOns: [] })
+						packs[data.pack][index].price.amount = product.price.amount
+					} else packs[data.pack].push({ id: data.productId, price: product.price, quantity: data.quantity, addOns: [] })
 				} else {
 					if (index !== -1) packs[data.pack][index].quantity -= data.quantity
 				}

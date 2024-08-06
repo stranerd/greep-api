@@ -23,7 +23,10 @@ router.post<CartsAddRouteDef>({ path: '/', key: 'marketplace-carts-add' })(async
 			productId: Schema.string().min(1),
 			quantity: Schema.number(),
 			pack: Schema.number().int().gte(0),
-			addOnProductId: Schema.string().optional(),
+			addOn: Schema.object({
+				groupName: Schema.string().min(1),
+				itemName: Schema.string().min(1),
+			}).nullable(),
 			add: Schema.boolean(),
 		},
 		req.body,

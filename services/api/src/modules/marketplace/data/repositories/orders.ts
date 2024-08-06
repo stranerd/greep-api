@@ -2,9 +2,10 @@ import { appInstance } from '@utils/environment'
 import { NotAuthorizedError, QueryParams, Random } from 'equipped'
 import { OrderEntity } from '../../domain/entities/orders'
 import { IOrderRepository } from '../../domain/irepositories/orders'
-import { AcceptOrderInput, CheckoutInput, OrderStatus, OrderType } from '../../domain/types'
+import { AcceptOrderInput, CheckoutInput, OrderData, OrderStatus, OrderType } from '../../domain/types'
 import { resolvePacks } from '../../utils/carts'
 import { OrderMapper } from '../mappers/orders'
+import { ProductMapper } from '../mappers/products'
 import { OrderFromModel, OrderToModel } from '../models/orders'
 import { CartLink } from '../mongooseModels/cartLinks'
 import { Cart } from '../mongooseModels/carts'
@@ -14,6 +15,7 @@ import { Product } from '../mongooseModels/products'
 export class OrderRepository implements IOrderRepository {
 	private static instance: OrderRepository
 	private mapper = new OrderMapper()
+	private productMapper = new ProductMapper()
 
 	static getInstance(): OrderRepository {
 		if (!OrderRepository.instance) OrderRepository.instance = new OrderRepository()
@@ -28,39 +30,56 @@ export class OrderRepository implements IOrderRepository {
 		return this.mapper.mapFrom(order)!
 	}
 
-	private async getOrderData(data: CheckoutInput, session): Promise<OrderToModel['data']> {
+	private async resolve(data: OrderData, session: any): Promise<OrderData> {
+		if (!('packs' in data)) return data
+		const resolved = resolvePacks(data.packs)
+		const products = (await Product.find({ _id: { $in: resolved.map((item) => item.id) } }, {}, { session })).map(
+			(product) => this.productMapper.mapFrom(product)!,
+		)
+		const productsMap = new Map(products.map((p) => [p.id, p]))
+		resolved.forEach((p) => {
+			const product = productsMap.get(p.id)
+			if (!product) throw new Error('some products not found')
+			if (!product || !product.inStock) throw new Error('some products are not available')
+			Object.values(p.addOns).forEach((a) => {
+				const addOn = product.getAddOn(a.groupName, a.itemName)
+				if (!addOn || !addOn.inStock) throw new Error('some addOns are not available')
+			})
+		})
+		return data
+	}
+
+	private async getOrderData(data: CheckoutInput, session): Promise<OrderData> {
 		if ('cartId' in data) {
 			const cart = await Cart.findById(data.cartId, {}, { session })
 			if (!cart || cart.userId !== data.userId) throw new Error('cart not found')
 			if (!cart.active) throw new Error('cart not active')
 
-			const allProductIds = resolvePacks(cart.packs).map((item) => item.id)
-			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
-			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
-
-			return {
-				type: OrderType.cart,
-				cartId: cart.id,
-				vendorId: cart.vendorId,
-				vendorType: cart.vendorType,
-				packs: cart.packs,
-			}
+			return await this.resolve(
+				{
+					type: OrderType.cart,
+					cartId: cart.id,
+					vendorId: cart.vendorId,
+					vendorType: cart.vendorType,
+					packs: cart.packs,
+				},
+				session,
+			)
 		} else if ('cartLinkId' in data) {
 			const cartLink = await CartLink.findById(data.cartLinkId, {}, { session })
 			if (!cartLink) throw new Error('cart link not found')
 			if (!cartLink.active) throw new Error('cart link not active')
 
-			const allProductIds = resolvePacks(cartLink.packs).map((item) => item.id)
-			const products = await Product.find({ _id: { $in: allProductIds } }, {}, { session })
-			if (products.some((p) => !p.inStock)) throw new Error('some products are not available')
-
-			return {
-				type: OrderType.cartLink,
-				cartLinkId: cartLink.id,
-				vendorId: cartLink.vendorId,
-				vendorType: cartLink.vendorType,
-				packs: cartLink.packs,
-			}
+			return await this.resolve(
+				{
+					type: OrderType.cartLink,
+					cartLinkId: cartLink.id,
+					vendorId: cartLink.vendorId,
+					vendorType: cartLink.vendorType,
+					packs: cartLink.packs,
+				},
+				session,
+			)
 		}
 
 		throw new Error('invalid data')

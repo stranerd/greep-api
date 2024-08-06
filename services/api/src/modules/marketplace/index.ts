@@ -25,12 +25,13 @@ export { OrderEntity } from './domain/entities/orders'
 export { ProductEntity } from './domain/entities/products'
 export {
 	AddToCartInput,
+	CartProductItem,
 	OrderDispatchDeliveryType,
 	OrderFee,
 	OrderPayment,
 	OrderStatus,
 	OrderType,
-	ProductAddOn,
+	ProductAddOns,
 	ProductMeta,
 } from './domain/types'
 export { resolvePacks } from './utils/carts'

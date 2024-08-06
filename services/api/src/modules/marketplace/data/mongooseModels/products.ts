@@ -31,10 +31,10 @@ const Schema = new appInstance.dbs.mongo.Schema<ProductFromModel>(
 			required: false,
 			default: false,
 		},
-		addOn: {
+		addOns: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
-			default: null,
+			default: () => ({}),
 		},
 		description: {
 			type: String,
