@@ -89,11 +89,16 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		payment: OrderPayment
 		offers: string[]
 	}): Promise<OrderFee> {
-		const allOffers = offers.filter((offer) => data.offers.includes(offer.id))
-
 		const vendorId = 'vendorId' in data.data ? data.data.vendorId : null
-		const deliveryOffers = allOffers.filter(
-			(offer) => offer.data.type === 'delivery-discount' && (offer.data.vendors?.includes(vendorId!) ?? true),
+		const vendorType = 'vendorType' in data.data ? data.data.vendorType : null
+		const deliveryOffers = offers.filter((offer) =>
+			[
+				offer.active,
+				data.offers.includes(offer.id),
+				offer.vendors?.includes(vendorId!) ?? true,
+				offer.vendorType?.includes(vendorType!) ?? true,
+				offer.data.type === 'delivery-discount',
+			].every(Boolean),
 		)
 		let deliveryDiscount = deliveryOffers.reduce((acc, offer) => acc + offer.data.discountPercentage, 0) / 100
 		if (deliveryDiscount > 1) deliveryDiscount = 1
