@@ -34,6 +34,6 @@ export {
 	ProductAddOns,
 	ProductMeta,
 } from './domain/types'
+export * from './utils'
 export { resolvePacks } from './utils/carts'
 export * from './utils/offers'
-export { mergeOrdersData } from './utils/orders'

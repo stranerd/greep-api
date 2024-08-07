@@ -1,5 +1,6 @@
 import { UsersUseCases, UserVendorType } from '@modules/users'
-import { ProductsUseCases } from '../'
+import { BaseEntity, Conditions } from 'equipped'
+import { EmbeddedProduct, ProductsUseCases } from '../'
 
 export const calculateVendorAveragePrepTime = async (vendorId: string) => {
 	const products = await ProductsUseCases.get({
@@ -32,5 +33,24 @@ export const calculateVendorAveragePrepTime = async (vendorId: string) => {
 		userId: vendorId,
 		type: 'averagePrepTimeInMins',
 		data: avg,
+	})
+}
+
+export const mergeWithProducts = async <T extends BaseEntity<{ products: Record<string, EmbeddedProduct | null> }, any>>(
+	entities: T[],
+	getIds: (e: T) => string[],
+) => {
+	const ids = [...new Set(entities.flatMap((e) => getIds(e)))]
+	const { results } = await ProductsUseCases.get({ where: [{ field: 'id', condition: Conditions.in, value: ids }] })
+	const map = new Map(results.map((i) => [i.id, i.getEmbedded()]))
+	return entities.map((e) => {
+		e.products = getIds(e).reduce(
+			(acc, id) => {
+				acc[id] = map.get(id) ?? null
+				return acc
+			},
+			{} as Record<string, EmbeddedProduct | null>,
+		)
+		return e
 	})
 }

@@ -1,5 +1,12 @@
 import { isAuthenticated } from '@application/middlewares'
-import { CartLinkEntity, CartLinksUseCases, CartProductItem, ProductsUseCases, resolvePacks } from '@modules/marketplace'
+import {
+	CartLinkEntity,
+	CartLinksUseCases,
+	CartProductItem,
+	mergeCartLinksData,
+	ProductsUseCases,
+	resolvePacks,
+} from '@modules/marketplace'
 import {
 	ApiDef,
 	BadRequestError,
@@ -69,19 +76,24 @@ const router = new Router({ path: '/cartLinks', groups: ['Cart Links'] })
 
 router.get<CartLinksGetRouteDef>({ path: '/', key: 'marketplace-cartlinks-get' })(async (req) => {
 	const query = req.query
-	return await CartLinksUseCases.get(query)
+	const result = await CartLinksUseCases.get(query)
+	return {
+		...result,
+		results: await mergeCartLinksData(result.results),
+	}
 })
 
 router.get<CartLinksFindRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-find' })(async (req) => {
-	const cartlink = await CartLinksUseCases.find(req.params.id)
-	if (!cartlink) throw new NotFoundError()
-	return cartlink
+	const cartLink = await CartLinksUseCases.find(req.params.id)
+	if (!cartLink) throw new NotFoundError()
+	return await mergeCartLinksData([cartLink]).then((res) => res[0])
 })
 
 router.post<CartLinksCreateRouteDef>({ path: '/', key: 'marketplace-cartlinks-create', middlewares: [isAuthenticated] })(async (req) => {
 	const data = validate(schema(), req.body)
 	const verified = await verifyPacks(data.packs)
-	return await CartLinksUseCases.create({ ...verified, userId: req.authUser!.id })
+	const cartLink = await CartLinksUseCases.create({ ...verified, userId: req.authUser!.id })
+	return await mergeCartLinksData([cartLink]).then((res) => res[0])
 })
 
 router.put<CartLinksUpdateRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-update', middlewares: [isAuthenticated] })(async (req) => {
@@ -92,7 +104,7 @@ router.put<CartLinksUpdateRouteDef>({ path: '/:id', key: 'marketplace-cartlinks-
 		userId: req.authUser!.id,
 		data: verified,
 	})
-	if (updatedCartLink) return updatedCartLink
+	if (updatedCartLink) return await mergeCartLinksData([updatedCartLink]).then((res) => res[0])
 	throw new NotAuthorizedError()
 })
 

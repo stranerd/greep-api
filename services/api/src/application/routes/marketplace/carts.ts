@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
-import { AddToCartInput, CartEntity, CartsUseCases } from '@modules/marketplace'
+import { AddToCartInput, CartEntity, CartsUseCases, mergeCartsData } from '@modules/marketplace'
 import { ApiDef, NotAuthorizedError, NotFoundError, QueryKeys, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
 
 const router = new Router({ path: '/carts', groups: ['Carts'], middlewares: [isAuthenticated] })
@@ -8,13 +8,17 @@ router.get<CartsGetRouteDef>({ path: '/', key: 'marketplace-carts-get' })(async 
 	const query = req.query
 	query.authType = QueryKeys.and
 	query.auth = [{ field: 'userId', value: req.authUser!.id }]
-	return await CartsUseCases.get(query)
+	const result = await CartsUseCases.get(query)
+	return {
+		...result,
+		results: await mergeCartsData(result.results),
+	}
 })
 
 router.get<CartsFindRouteDef>({ path: '/:id', key: 'marketplace-carts-find' })(async (req) => {
 	const cart = await CartsUseCases.find(req.params.id)
 	if (!cart || cart.userId !== req.authUser!.id) throw new NotFoundError()
-	return cart
+	return await mergeCartsData([cart]).then((res) => res[0])
 })
 
 router.post<CartsAddRouteDef>({ path: '/', key: 'marketplace-carts-add' })(async (req) => {
@@ -32,12 +36,13 @@ router.post<CartsAddRouteDef>({ path: '/', key: 'marketplace-carts-add' })(async
 		req.body,
 	)
 
-	return await CartsUseCases.add({ ...data, userId: req.authUser!.id })
+	const cart = await CartsUseCases.add({ ...data, userId: req.authUser!.id })
+	return await mergeCartsData([cart]).then((res) => res[0])
 })
 
 router.post<CartsClearRouteDef>({ path: '/:id/clear', key: 'marketplace-carts-clear' })(async (req) => {
 	const updatedCart = await CartsUseCases.clear({ id: req.params.id, userId: req.authUser!.id })
-	if (updatedCart) return updatedCart
+	if (updatedCart) return await mergeCartsData([updatedCart]).then((res) => res[0])
 	throw new NotAuthorizedError()
 })
 

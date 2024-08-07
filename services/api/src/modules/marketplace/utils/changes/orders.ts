@@ -3,11 +3,11 @@ import { TransactionStatus, TransactionsUseCases, TransactionType } from '@modul
 import { ActivitiesUseCases, ActivityType } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { Conditions, DbChangeCallbacks } from 'equipped'
+import { mergeOrdersData } from '..'
 import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
-import { mergeOrdersData } from '../orders'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
