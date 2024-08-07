@@ -29,6 +29,10 @@ const schema = (bannerRequired: boolean, authUser: AuthUser) => ({
 	data: Schema.discriminate((v) => v.type, {
 		[UserVendorType.foods]: Schema.object({
 			type: Schema.is(UserVendorType.foods as const),
+			prepTimeInMins: Schema.object({
+				from: Schema.number().int().gte(0),
+				to: Schema.number().int().gte(0),
+			}).custom((val) => val.to >= val.from, 'to cannot be less than from'),
 		}),
 		[UserVendorType.items]: Schema.object({
 			type: Schema.is(UserVendorType.items as const),
@@ -238,7 +242,7 @@ type ProductsRecommendedTagsFoodsRouteDef = ApiDef<{
 type ProductBody = {
 	title: string
 	description: string
-	data: { type: UserVendorType }
+	data: ProductEntity['data']
 	price: { amount: number; currency: Currencies }
 	inStock: boolean
 	tagIds: string[]

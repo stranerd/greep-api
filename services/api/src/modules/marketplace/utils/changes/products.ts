@@ -5,6 +5,7 @@ import { publishers } from '@utils/events'
 import { DbChangeCallbacks } from 'equipped'
 import { ProductFromModel } from '../../data/models/products'
 import { ProductEntity } from '../../domain/entities/products'
+import { calculateVendorAveragePrepTime } from '../products'
 
 export const ProductDbChangeCallbacks: DbChangeCallbacks<ProductFromModel, ProductEntity> = {
 	created: async ({ after }) => {
@@ -16,6 +17,7 @@ export const ProductDbChangeCallbacks: DbChangeCallbacks<ProductFromModel, Produ
 				add: true,
 			}),
 			TagsUseCases.updateMeta({ ids: after.tagIds, property: after.getTagMetaType(), value: 1 }),
+			calculateVendorAveragePrepTime(after.user.id),
 		])
 	},
 	updated: async ({ after, before, changes }) => {
@@ -36,6 +38,7 @@ export const ProductDbChangeCallbacks: DbChangeCallbacks<ProductFromModel, Produ
 					tagIds: addedTags,
 					add: true,
 				}),
+			calculateVendorAveragePrepTime(after.user.id),
 		])
 	},
 	deleted: async ({ before }) => {
@@ -48,6 +51,7 @@ export const ProductDbChangeCallbacks: DbChangeCallbacks<ProductFromModel, Produ
 			}),
 			TagsUseCases.updateMeta({ ids: before.tagIds, property: before.getTagMetaType(), value: -1 }),
 			publishers.DELETEFILE.publish(before.banner),
+			calculateVendorAveragePrepTime(before.user.id),
 		])
 	},
 }

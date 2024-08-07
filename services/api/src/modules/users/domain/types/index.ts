@@ -116,4 +116,5 @@ export type UserTypeData =
 export type UserVendorData = {
 	schedule: BusinessTime
 	tags: Record<string, number>
+	averagePrepTimeInMins: { from: number; to: number } | null
 }

@@ -129,9 +129,14 @@ export enum ProductMeta {
 
 export type ProductMetaType = Record<ProductMeta, number>
 
-export type ProductData = {
-	type: UserVendorType
-}
+export type ProductData =
+	| {
+			type: UserVendorType.items
+	  }
+	| {
+			type: UserVendorType.foods
+			prepTimeInMins: { from: number; to: number }
+	  }
 
 export type ProductAddOns = Record<
 	string,
