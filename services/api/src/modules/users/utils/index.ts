@@ -2,22 +2,21 @@ import { UsersUseCases } from '@modules/users'
 import { BaseEntity, Conditions } from 'equipped'
 import { BusinessTime, EmbeddedUser, UserVendorBusinessDays } from '../domain/types'
 
-export const mergeWithUsers = async <T extends BaseEntity<{ users: Record<string, EmbeddedUser> }, any>>(
+export const mergeWithUsers = async <T extends BaseEntity<{ users: Record<string, EmbeddedUser | null> }, any>>(
 	entities: T[],
-	getUsers: (e: T) => string[],
+	getIds: (e: T) => string[],
 ) => {
-	const userIds = [...new Set(entities.flatMap((e) => getUsers(e)))]
-	const { results: users } = await UsersUseCases.get({ where: [{ field: 'id', condition: Conditions.in, value: userIds }] })
-	const usersMap = new Map(users.map((u) => [u.id, u.getEmbedded()]))
+	const ids = [...new Set(entities.flatMap((e) => getIds(e)))]
+	const { results } = await UsersUseCases.get({ where: [{ field: 'id', condition: Conditions.in, value: ids }] })
+	const map = new Map(results.map((u) => [u.id, u.getEmbedded()]))
 	return entities.map((e) => {
-		const users = getUsers(e).reduce(
+		e.users = getIds(e).reduce(
 			(acc, id) => {
-				if (usersMap.has(id)) acc[id] = usersMap.get(id)!
+				acc[id] = map.get(id) ?? null
 				return acc
 			},
-			{} as Record<string, EmbeddedUser>,
+			{} as Record<string, EmbeddedUser | null>,
 		)
-		e.users = users
 		return e
 	})
 }

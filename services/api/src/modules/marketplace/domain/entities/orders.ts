@@ -5,6 +5,7 @@ import { BaseEntity } from 'equipped'
 import { resolvePacks } from '../../utils/carts'
 import { offers } from '../../utils/offers'
 import { EmbeddedUser, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
+import { EmbeddedProduct } from './products'
 
 type OrderEntityProps = OrderToModelBase & {
 	id: string
@@ -19,7 +20,8 @@ type OrderEntityProps = OrderToModelBase & {
 
 export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 	__ignoreInJSON = ['email' as const]
-	public users: Record<string, EmbeddedUser> = {}
+	public users: Record<string, EmbeddedUser | null> = {}
+	public products: Record<string, EmbeddedProduct | null> = {}
 
 	constructor(data: OrderEntityProps) {
 		super(data)
@@ -44,8 +46,8 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		return !!this.status[OrderStatus.paid]
 	}
 
-	getProducts() {
-		return resolvePacks('packs' in this.data ? this.data.packs : [])
+	getProductIds() {
+		return resolvePacks('packs' in this.data ? this.data.packs : []).map((p) => p.id)
 	}
 
 	getVendor() {

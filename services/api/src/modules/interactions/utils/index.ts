@@ -1,8 +1,8 @@
 import { OrdersUseCases, ProductsUseCases } from '@modules/marketplace'
+import { UsersUseCases } from '@modules/users'
 import { BadRequestError, Schema } from 'equipped'
 import { CommentsUseCases } from '..'
 import { InteractionEntities, InteractionEntity } from '../domain/types'
-import { UsersUseCases } from '@modules/users'
 
 type Interactions = 'comments' | 'likes' | 'dislikes' | 'reports' | 'reviews' | 'views' | 'media'
 
@@ -36,14 +36,7 @@ const finders: {
 		if (!product) return undefined
 		if (relations.orderId) {
 			const order = await OrdersUseCases.find(relations.orderId)
-			if (
-				!order ||
-				!order
-					.getProducts()
-					.map((p) => p.id)
-					.includes(product.id)
-			)
-				return undefined
+			if (!order || !order.getProductIds().includes(product.id)) return undefined
 		}
 		return {
 			type: InteractionEntities.products,

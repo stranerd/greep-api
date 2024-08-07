@@ -22,7 +22,7 @@ export const OrdersUseCases = new OrderUseCase(orderRepository)
 export { CartLinkEntity } from './domain/entities/cartLinks'
 export { CartEntity } from './domain/entities/carts'
 export { OrderEntity } from './domain/entities/orders'
-export { ProductEntity } from './domain/entities/products'
+export { EmbeddedProduct, ProductEntity } from './domain/entities/products'
 export {
 	AddToCartInput,
 	CartProductItem,
@@ -36,3 +36,4 @@ export {
 } from './domain/types'
 export { resolvePacks } from './utils/carts'
 export * from './utils/offers'
+export { mergeOrdersData } from './utils/orders'

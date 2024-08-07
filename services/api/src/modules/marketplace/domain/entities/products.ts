@@ -25,6 +25,8 @@ type ProductEntityProps = {
 	updatedAt: number
 }
 
+export type EmbeddedProduct = Pick<ProductEntityProps, 'id' | 'title' | 'price' | 'banner' | 'user' | 'addOns'>
+
 export class ProductEntity extends BaseEntity<ProductEntityProps> {
 	constructor(data: ProductEntityProps) {
 		data.user = generateDefaultUser(data.user)
@@ -51,5 +53,16 @@ export class ProductEntity extends BaseEntity<ProductEntityProps> {
 
 	getAddOn(groupName: string, itemName: string) {
 		return this.addOnsMap[this.buildAddonKey(groupName, itemName)]
+	}
+
+	getEmbedded(): EmbeddedProduct {
+		return {
+			id: this.id,
+			title: this.title,
+			price: this.price,
+			banner: this.banner,
+			user: this.user,
+			addOns: this.addOns,
+		}
 	}
 }

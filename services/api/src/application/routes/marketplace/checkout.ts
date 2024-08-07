@@ -8,8 +8,9 @@ import {
 	OrderPayment,
 	OrderType,
 	OrdersUseCases,
+	mergeOrdersData,
 } from '@modules/marketplace'
-import { ActivityEntity, ActivityType, UserType, UsersUseCases, isVendorOpen, mergeWithUsers } from '@modules/users'
+import { ActivityEntity, ActivityType, UserType, UsersUseCases, isVendorOpen } from '@modules/users'
 import { LocationInput, LocationSchema } from '@utils/types'
 import { ApiDef, BadRequestError, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
 
@@ -58,7 +59,7 @@ router.post<OrdersCheckoutCartRouteDef>({ path: '/checkout', key: 'marketplace-o
 		userId: user.id,
 		email: user.bio.email,
 	})
-	return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
+	return await mergeOrdersData([order]).then((res) => res[0])
 })
 
 router.post<OrdersCheckoutCartFeeRouteDef>({ path: '/checkout/fee', key: 'marketplace-orders-checkout-cart-fee' })(async (req) => {
@@ -95,7 +96,7 @@ router.post<OrdersCheckoutCartLinkRouteDef>({ path: '/checkout/links', key: 'mar
 		userId: user.id,
 		email: user.bio.email,
 	})
-	return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
+	return await mergeOrdersData([order]).then((res) => res[0])
 })
 
 router.post<OrdersCheckoutCartLinkFeeRouteDef>({ path: '/checkout/links/fee', key: 'marketplace-orders-checkout-cart-link-fee' })(
@@ -147,7 +148,7 @@ router.post<OrdersDispatchRouteDef>({ path: '/dispatch', key: 'marketplace-order
 			type: OrderType.dispatch,
 		},
 	})
-	return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
+	return await mergeOrdersData([order]).then((res) => res[0])
 })
 
 router.post<OrdersDispatchFeeRouteDef>({ path: '/dispatch/fee', key: 'marketplace-orders-dispatch-fee' })(async (req) => {

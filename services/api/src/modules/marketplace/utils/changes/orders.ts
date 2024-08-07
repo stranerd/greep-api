@@ -1,12 +1,13 @@
 import { TagMeta, TagsUseCases } from '@modules/interactions'
-import { TransactionStatus, TransactionType, TransactionsUseCases } from '@modules/payment'
-import { ActivitiesUseCases, ActivityType, mergeWithUsers } from '@modules/users'
+import { TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
+import { ActivitiesUseCases, ActivityType } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { Conditions, DbChangeCallbacks } from 'equipped'
 import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
+import { mergeOrdersData } from '../orders'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -15,7 +16,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				.getMembers()
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
 				.flat(),
-			(await mergeWithUsers([after], (e) => e.getMembers()))[0],
+			await mergeOrdersData([after]).then((res) => res[0]),
 		)
 
 		if (after.data.type === OrderType.dispatch)
@@ -43,8 +44,8 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${after.id}/${d}`])
 				.flat(),
 			{
-				after: (await mergeWithUsers([after], (e) => e.getMembers()))[0],
-				before: (await mergeWithUsers([before], (e) => e.getMembers()))[0],
+				after: await mergeOrdersData([after]).then((res) => res[0]),
+				before: await mergeOrdersData([before]).then((res) => res[0]),
 			},
 		)
 
@@ -76,7 +77,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				})
 		}
 		if (successful) {
-			const productIds = after.getProducts().map((p) => p.id)
+			const productIds = after.getProductIds()
 			const { results: products } = await ProductsUseCases.get({
 				where: [{ field: 'id', condition: Conditions.in, value: productIds }],
 			})
@@ -91,7 +92,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				.getMembers()
 				.map((d) => [`marketplace/orders/${d}`, `marketplace/orders/${before.id}/${d}`])
 				.flat(),
-			(await mergeWithUsers([before], (e) => e.getMembers()))[0],
+			await mergeOrdersData([before]).then((res) => res[0]),
 		)
 	},
 }

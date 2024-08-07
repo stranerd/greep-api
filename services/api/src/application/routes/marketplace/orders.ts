@@ -1,7 +1,6 @@
 import { isAuthenticated, isDriver } from '@application/middlewares'
-import { OrderEntity, OrderPayment, OrderStatus, OrdersUseCases } from '@modules/marketplace'
-import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
-import { mergeWithUsers } from '@modules/users'
+import { mergeOrdersData, OrderEntity, OrderPayment, OrderStatus, OrdersUseCases } from '@modules/marketplace'
+import { TransactionStatus, TransactionsUseCases, TransactionType, WalletsUseCases } from '@modules/payment'
 import {
 	ApiDef,
 	Conditions,
@@ -36,14 +35,14 @@ router.get<OrdersGetRouteDef>({ path: '/', key: 'marketplace-orders-get' })(asyn
 	const result = await OrdersUseCases.get(query)
 	return {
 		...result,
-		results: await mergeWithUsers(result.results, (e) => e.getMembers()),
+		results: await mergeOrdersData(result.results),
 	}
 })
 
 router.get<OrdersFindRouteDef>({ path: '/:id', key: 'marketplace-orders-find' })(async (req) => {
 	const order = await OrdersUseCases.find(req.params.id)
 	if (!order || !order.getMembers().includes(req.authUser!.id)) throw new NotFoundError()
-	return (await mergeWithUsers([order], (e) => e.getMembers()))[0]
+	return await mergeOrdersData([order]).then((res) => res[0])
 })
 
 router.post<OrdersAcceptRouteDef>({ path: '/:id/accept', key: 'marketplace-orders-accept' })(async (req) => {
@@ -61,7 +60,7 @@ router.post<OrdersAcceptRouteDef>({ path: '/:id/accept', key: 'marketplace-order
 		userId: req.authUser!.id,
 	})
 
-	if (accepted) return (await mergeWithUsers([accepted], (e) => e.getMembers()))[0]
+	if (accepted) return await mergeOrdersData([accepted]).then((res) => res[0])
 	throw new NotAuthorizedError()
 })
 
@@ -81,7 +80,7 @@ router.post<OrdersCompleteRouteDef>({ path: '/:id/complete', key: 'marketplace-o
 		userId: req.authUser!.id,
 		token,
 	})
-	if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
+	if (updated) return await mergeOrdersData([updated]).then((res) => res[0])
 	throw new NotAuthorizedError()
 })
 
@@ -124,7 +123,7 @@ router.post<OrdersAssignDriverRouteDef>({ path: '/:id/assignDriver', key: 'marke
 			id: req.params.id,
 			driverId: req.authUser!.id,
 		})
-		if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
+		if (updated) return await mergeOrdersData([updated]).then((res) => res[0])
 		throw new NotAuthorizedError()
 	},
 )
@@ -135,7 +134,7 @@ router.post<OrdersMarkPaidRouteDef>({ path: '/:id/markPaid', key: 'marketplace-o
 			id: req.params.id,
 			driverId: req.authUser!.id,
 		})
-		if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
+		if (updated) return await mergeOrdersData([updated]).then((res) => res[0])
 		throw new NotAuthorizedError()
 	},
 )
@@ -145,7 +144,7 @@ router.post<OrdersMarkShippedRouteDef>({ path: '/:id/markShipped', key: 'marketp
 		id: req.params.id,
 		userId: req.authUser!.id,
 	})
-	if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
+	if (updated) return await mergeOrdersData([updated]).then((res) => res[0])
 	throw new NotAuthorizedError()
 })
 
@@ -154,7 +153,7 @@ router.post<OrdersCancelRouteDef>({ path: '/:id/cancel', key: 'marketplace-order
 		id: req.params.id,
 		userId: req.authUser!.id,
 	})
-	if (updated) return (await mergeWithUsers([updated], (e) => e.getMembers()))[0]
+	if (updated) return await mergeOrdersData([updated]).then((res) => res[0])
 	throw new NotAuthorizedError()
 })
 
