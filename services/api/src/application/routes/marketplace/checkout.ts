@@ -9,7 +9,7 @@ import {
 	OrderType,
 	OrdersUseCases,
 } from '@modules/marketplace'
-import { ActivityEntity, ActivityType, EmbeddedUser, UserType, UsersUseCases, isVendorOpen, mergeWithUsers } from '@modules/users'
+import { ActivityEntity, ActivityType, UserType, UsersUseCases, isVendorOpen, mergeWithUsers } from '@modules/users'
 import { LocationInput, LocationSchema } from '@utils/types'
 import { ApiDef, BadRequestError, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
 
@@ -178,8 +178,6 @@ router.post<OrdersDispatchFeeRouteDef>({ path: '/dispatch/fee', key: 'marketplac
 
 export default router
 
-type Order = OrderEntity & { users: EmbeddedUser[] }
-
 type CreateOrderBase = {
 	to: LocationInput
 	dropoffNote: string
@@ -204,7 +202,7 @@ type OrdersCheckoutCartRouteDef = ApiDef<{
 	key: 'marketplace-orders-checkout-cart'
 	method: 'post'
 	body: CheckoutCartOrder
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersCheckoutCartFeeRouteDef = ApiDef<{
@@ -218,7 +216,7 @@ type OrdersCheckoutCartLinkRouteDef = ApiDef<{
 	key: 'marketplace-orders-checkout-cart-link'
 	method: 'post'
 	body: CheckoutCartLinkOrder
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersCheckoutCartLinkFeeRouteDef = ApiDef<{
@@ -232,7 +230,7 @@ type OrdersDispatchRouteDef = ApiDef<{
 	key: 'marketplace-orders-dispatch'
 	method: 'post'
 	body: DispatchOrder
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersDispatchFeeRouteDef = ApiDef<{

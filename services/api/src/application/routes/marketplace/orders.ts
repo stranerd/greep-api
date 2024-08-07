@@ -1,7 +1,7 @@
 import { isAuthenticated, isDriver } from '@application/middlewares'
 import { OrderEntity, OrderPayment, OrderStatus, OrdersUseCases } from '@modules/marketplace'
 import { TransactionStatus, TransactionType, TransactionsUseCases, WalletsUseCases } from '@modules/payment'
-import { EmbeddedUser, mergeWithUsers } from '@modules/users'
+import { mergeWithUsers } from '@modules/users'
 import {
 	ApiDef,
 	Conditions,
@@ -160,20 +160,18 @@ router.post<OrdersCancelRouteDef>({ path: '/:id/cancel', key: 'marketplace-order
 
 export default router
 
-type Order = OrderEntity & { users: EmbeddedUser[] }
-
 type OrdersGetRouteDef = ApiDef<{
 	key: 'marketplace-orders-get'
 	method: 'get'
 	query: QueryParams
-	response: QueryResults<Order>
+	response: QueryResults<OrderEntity>
 }>
 
 type OrdersFindRouteDef = ApiDef<{
 	key: 'marketplace-orders-find'
 	method: 'get'
 	params: { id: string }
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersAcceptRouteDef = ApiDef<{
@@ -181,7 +179,7 @@ type OrdersAcceptRouteDef = ApiDef<{
 	method: 'post'
 	params: { id: string }
 	body: { accepted: boolean; message: string }
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersGenerateTokenRouteDef = ApiDef<{
@@ -196,7 +194,7 @@ type OrdersCompleteRouteDef = ApiDef<{
 	method: 'post'
 	params: { id: string }
 	body: { token: string }
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersPayRouteDef = ApiDef<{
@@ -211,26 +209,26 @@ type OrdersAssignDriverRouteDef = ApiDef<{
 	method: 'post'
 	params: { id: string }
 	body: { driverId: string }
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersMarkPaidRouteDef = ApiDef<{
 	key: 'marketplace-orders-mark-paid'
 	method: 'post'
 	params: { id: string }
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersMarkShippedRouteDef = ApiDef<{
 	key: 'marketplace-orders-mark-shipped'
 	method: 'post'
 	params: { id: string }
-	response: Order
+	response: OrderEntity
 }>
 
 type OrdersCancelRouteDef = ApiDef<{
 	key: 'marketplace-orders-cancel'
 	method: 'post'
 	params: { id: string }
-	response: Order
+	response: OrderEntity
 }>

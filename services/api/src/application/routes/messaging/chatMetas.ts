@@ -1,7 +1,7 @@
 import { isAuthenticated } from '@application/middlewares'
-import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router } from 'equipped'
 import { ChatMetaEntity, ChatMetasUseCases } from '@modules/messaging'
-import { EmbeddedUser, mergeWithUsers } from '@modules/users'
+import { mergeWithUsers } from '@modules/users'
+import { ApiDef, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router } from 'equipped'
 
 const router = new Router({ path: '/chatMetas', groups: ['Chat metas'], middlewares: [isAuthenticated] })
 
@@ -29,20 +29,18 @@ router.delete<MessagingChatMetasDeleteRouteDef>({ path: '/:id', key: 'messaging-
 
 export default router
 
-type ChatMeta = ChatMetaEntity & { users: EmbeddedUser[] }
-
 type MessagingChatMetasGetRouteDef = ApiDef<{
 	key: 'messaging-chat-metas-get'
 	method: 'get'
 	query: QueryParams
-	response: QueryResults<ChatMeta>
+	response: QueryResults<ChatMetaEntity>
 }>
 
 type MessagingChatMetasFindRouteDef = ApiDef<{
 	key: 'messaging-chat-metas-find'
 	method: 'get'
 	params: { id: string }
-	response: ChatMeta
+	response: ChatMetaEntity
 }>
 
 type MessagingChatMetasDeleteRouteDef = ApiDef<{

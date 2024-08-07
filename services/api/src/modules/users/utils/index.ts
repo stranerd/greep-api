@@ -2,15 +2,23 @@ import { UsersUseCases } from '@modules/users'
 import { BaseEntity, Conditions } from 'equipped'
 import { BusinessTime, EmbeddedUser, UserVendorBusinessDays } from '../domain/types'
 
-export const mergeWithUsers = async <T extends BaseEntity<any, any>>(entities: T[], getUsers: (e: T) => string[]) => {
+export const mergeWithUsers = async <T extends BaseEntity<{ users: Record<string, EmbeddedUser> }, any>>(
+	entities: T[],
+	getUsers: (e: T) => string[],
+) => {
 	const userIds = [...new Set(entities.flatMap((e) => getUsers(e)))]
 	const { results: users } = await UsersUseCases.get({ where: [{ field: 'id', condition: Conditions.in, value: userIds }] })
 	const usersMap = new Map(users.map((u) => [u.id, u.getEmbedded()]))
 	return entities.map((e) => {
-		const users = getUsers(e).map((id) => usersMap.get(id)!)
-		// @ts-ignore
+		const users = getUsers(e).reduce(
+			(acc, id) => {
+				if (usersMap.has(id)) acc[id] = usersMap.get(id)!
+				return acc
+			},
+			{} as Record<string, EmbeddedUser>,
+		)
 		e.users = users
-		return e as T & { users: EmbeddedUser[] }
+		return e
 	})
 }
 

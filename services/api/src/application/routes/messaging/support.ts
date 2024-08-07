@@ -1,6 +1,7 @@
 import { isAdmin, isAuthenticated } from '@application/middlewares'
+import { OrdersUseCases } from '@modules/marketplace'
 import { ChatMetaEntity, ChatMetasUseCases, ChatSupportType, ChatType } from '@modules/messaging'
-import { EmbeddedUser, mergeWithUsers } from '@modules/users'
+import { mergeWithUsers } from '@modules/users'
 import {
 	ApiDef,
 	BadRequestError,
@@ -13,7 +14,6 @@ import {
 	Schema,
 	validate,
 } from 'equipped'
-import { OrdersUseCases } from '@modules/marketplace'
 
 const router = new Router({ path: '/support', groups: ['Support'], middlewares: [isAuthenticated] })
 
@@ -72,32 +72,30 @@ router.post<MessagingSupportAssignRouteDef>({ path: '/:id/assign', key: 'messagi
 
 export default router
 
-type Support = ChatMetaEntity & { users: EmbeddedUser[] }
-
 type MessagingSupportGetRouteDef = ApiDef<{
 	key: 'messaging-support-get'
 	method: 'get'
 	query: QueryParams
-	response: QueryResults<Support>
+	response: QueryResults<ChatMetaEntity>
 }>
 
 type MessagingSupportFindRouteDef = ApiDef<{
 	key: 'messaging-support-find'
 	method: 'get'
 	params: { id: string }
-	response: Support
+	response: ChatMetaEntity
 }>
 
 type MessagingSupportCreateRouteDef = ApiDef<{
 	key: 'messaging-support-create'
 	method: 'post'
 	body: { data: { type: ChatSupportType; orderId: string } }
-	response: Support
+	response: ChatMetaEntity
 }>
 
 type MessagingSupportAssignRouteDef = ApiDef<{
 	key: 'messaging-support-assign'
 	method: 'post'
 	params: { id: string }
-	response: Support
+	response: ChatMetaEntity
 }>

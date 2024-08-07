@@ -4,7 +4,7 @@ import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { resolvePacks } from '../../utils/carts'
 import { offers } from '../../utils/offers'
-import { OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
+import { EmbeddedUser, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
 
 type OrderEntityProps = OrderToModelBase & {
 	id: string
@@ -19,6 +19,7 @@ type OrderEntityProps = OrderToModelBase & {
 
 export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 	__ignoreInJSON = ['email' as const]
+	public users: Record<string, EmbeddedUser> = {}
 
 	constructor(data: OrderEntityProps) {
 		super(data)

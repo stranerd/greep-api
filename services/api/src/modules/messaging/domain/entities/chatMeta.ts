@@ -4,15 +4,10 @@ import { ChatMetaData } from '../types'
 import { ChatEntity } from './chat'
 
 export class ChatMetaEntity extends BaseEntity<ChatMetaConstructorArgs> {
-	public users: Record<string, EmbeddedUser | null> = {}
+	public users: Record<string, EmbeddedUser> = {}
 
 	constructor(data: ChatMetaConstructorArgs) {
 		super(data)
-	}
-
-	withUsers(users: Record<string, EmbeddedUser | null>) {
-		this.users = users
-		return this
 	}
 }
 
