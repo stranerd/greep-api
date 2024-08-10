@@ -36,7 +36,7 @@ router.get<MyDriversGetRouteDef>({ path: '/drivers', key: 'users-my-drivers' })(
 router.get<MyVendorsGetRouteDef>({ path: '/vendors', key: 'users-my-vendors' })(async (req) => {
 	const user = await UsersUseCases.find(req.authUser!.id)
 	if (!user) throw new Error('Profile not found')
-	const hashSlice = getCoordsHashSlice(user.account.location?.hash ?? '', req.query.nearby ? 1500 : 10000)
+	const hashSlice = getCoordsHashSlice(user.account.location?.hash ?? '', req.query.nearby ? 2500 : 10000)
 	const query = req.query
 	query.authType = QueryKeys.and
 	query.auth = [

@@ -3,9 +3,12 @@ import { TagEntity, TagMeta, TagTypes, TagsUseCases } from '@modules/interaction
 import { ProductAddOns, ProductEntity, ProductMeta, ProductsUseCases } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
 import { StorageUseCases } from '@modules/storage'
-import { UserVendorType, UsersUseCases } from '@modules/users'
+import { UserType, UserVendorType, UsersUseCases } from '@modules/users'
+import { appInstance } from '@utils/environment'
+import { getCoordsHashSlice } from '@utils/types'
 import {
 	ApiDef,
+	AuthRole,
 	AuthUser,
 	BadRequestError,
 	Conditions,
@@ -72,6 +75,29 @@ const router = new Router({ path: '/products', groups: ['Products'] })
 
 router.get<ProductsGetRouteDef>({ path: '/', key: 'marketplace-products-get' })(async (req) => {
 	const query = req.query
+	if (query.nearby && req.authUser) {
+		const user = await UsersUseCases.find(req.authUser.id)
+		if (user && user.account.location) {
+			const sliced = getCoordsHashSlice(user.account.location.hash, 2500)
+			const vendorIds = await appInstance.cache.getOrSet(
+				`nearby-vendors-in-${sliced}`,
+				async () => {
+					const result = await UsersUseCases.get({
+						auth: [
+							{ field: 'type.type', value: UserType.vendor },
+							{ field: `roles.${AuthRole.isVendor}`, value: true },
+							{ field: 'dates.deletedAt', value: null },
+							{ field: 'type.location.hash', value: new RegExp(`^${sliced}`) },
+						],
+						all: true,
+					})
+					return result.results.map((u) => u.id)
+				},
+				60 * 60,
+			)
+			query.auth = [{ field: 'user.id', condition: Conditions.in, value: vendorIds }]
+		}
+	}
 	return await ProductsUseCases.get(query)
 })
 
@@ -200,7 +226,7 @@ export default router
 type ProductsGetRouteDef = ApiDef<{
 	key: 'marketplace-products-get'
 	method: 'get'
-	query: QueryParams
+	query: QueryParams & { nearby?: boolean }
 	response: QueryResults<ProductEntity>
 }>
 
