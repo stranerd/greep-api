@@ -22,7 +22,10 @@ router.get<InteractionsTagsFindRouteDef>({ path: '/:id', key: 'interactions-tags
 })
 
 router.post<InteractionsTagsCreateRouteDef>({ path: '/', key: 'interactions-tags-create', middlewares: [isAuthenticated] })(async (req) => {
-	const data = validate({ ...schema(), type: Schema.in(Object.values(TagTypes)) }, { ...req.body, photo: req.body.photo?.at(0) ?? null })
+	const data = validate(
+		{ ...schema(), type: Schema.in(Object.values(TagTypes)) },
+		{ ...req.body, photo: req.body.photo?.at?.(0) ?? null },
+	)
 
 	// if (data.parent !== null) throw new BadRequestError('no tag type can have children')
 

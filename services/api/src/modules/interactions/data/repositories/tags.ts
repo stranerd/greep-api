@@ -67,7 +67,7 @@ export class TagRepository implements ITagRepository {
 					title = title.toLowerCase().trim()
 					return await Tag.findOneAndUpdate(
 						{ type, title: new RegExp(`^${title}$`, 'i') },
-						{ $setOnInsert: { type, title, parent: null } },
+						{ $setOnInsert: { type, title, parent: null, photo: null } },
 						{ session, upsert: true, new: true },
 					)
 				}),

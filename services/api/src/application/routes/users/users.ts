@@ -61,15 +61,15 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 			{
 				...req.body,
 				// @ts-ignore
-				license: req.body.license?.at(0),
+				license: req.body.license?.at?.(0),
 				// @ts-ignore
-				banner: req.body.license?.at(0),
+				banner: req.body.license?.at?.(0),
 				// @ts-ignore
-				passport: req.body.passport?.at(0),
+				passport: req.body.passport?.at?.(0),
 				// @ts-ignore
-				studentId: req.body.studentId?.at(0),
+				studentId: req.body.studentId?.at?.(0),
 				// @ts-ignore
-				residentPermit: req.body.residentPermit?.at(0),
+				residentPermit: req.body.residentPermit?.at?.(0),
 			},
 		)
 

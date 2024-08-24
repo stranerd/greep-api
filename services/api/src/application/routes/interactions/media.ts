@@ -39,7 +39,7 @@ router.post<InteractionsMediaCreateRouteDef>({ path: '/', key: 'interactions-med
 				...schema(true),
 				entity: EntitySchema(),
 			},
-			{ ...req.body, file: req.body.file?.at(0) ?? null },
+			{ ...req.body, file: req.body.file?.at?.(0) ?? null },
 		)
 
 		const entity = await verifyInteraction(data.entity, 'media')
@@ -59,7 +59,7 @@ router.post<InteractionsMediaCreateRouteDef>({ path: '/', key: 'interactions-med
 
 router.put<InteractionsMediaUpdateRouteDef>({ path: '/:id', key: 'interactions-media-update', middlewares: [isAuthenticated] })(
 	async (req) => {
-		const uploadedFile = req.body.file?.at(0) ?? null
+		const uploadedFile = req.body.file?.at?.(0) ?? null
 		const changedFile = !!uploadedFile
 
 		validate(schema(false), { ...req.body, file: uploadedFile })
