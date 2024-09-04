@@ -183,7 +183,7 @@ router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-up
 	const uploadedBanner = req.body.banner?.at?.(0) ?? null
 	const changedBanner = !!uploadedBanner
 
-	const { title, description, price, tagIds, data, addOns } = validate(schema(false, req.authUser!), {
+	const { title, description, price, tagIds, data, addOns, inStock } = validate(schema(false, req.authUser!), {
 		...req.body,
 		banner: uploadedBanner,
 	})
@@ -207,6 +207,7 @@ router.put<ProductsUpdateRouteDef>({ path: '/:id', key: 'marketplace-products-up
 			price,
 			data,
 			addOns,
+			inStock,
 			tagIds: tags.map((t) => t.id),
 			...(changedBanner ? { banner } : {}),
 		},
