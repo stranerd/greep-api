@@ -105,6 +105,8 @@ export type UserTypeData =
 			email: string | null
 			website: string | null
 			location: Location
+			passport: MediaOutput | null
+			residentPermit: MediaOutput | null
 	  }
 	| {
 			type: UserType.customer

@@ -50,6 +50,8 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 					email: Schema.string().email().nullable(),
 					website: Schema.string().url().nullable(),
 					location: LocationSchema(),
+					passport: Schema.file().image().nullish(),
+					residentPermit: Schema.file().image().nullish(),
 				}),
 				[UserType.customer]: Schema.object({
 					type: Schema.is(UserType.customer as const),
@@ -90,10 +92,12 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 			if (updated) return updated
 		} else if (data.type === UserType.vendor) {
 			const banner = await getFileValue('banner', 'users/vendors/banners')
+			const passport = await getFileValue('passport', 'users/vendors/passport')
+			const residentPermit = await getFileValue('residentPermit', 'users/vendors/residentPermit')
 
 			const updated = await UsersUseCases.updateType({
 				userId: req.authUser!.id,
-				data: { ...data, banner },
+				data: { ...data, banner, passport, residentPermit },
 			})
 			if (updated) return updated
 		} else if (data.type === UserType.customer) {
@@ -229,6 +233,8 @@ type UsersUpdateTypeRouteDef = ApiDef<{
 				email: string | null
 				website: string | null
 				location: LocationInput
+				passport?: FileSchema | null
+				residentPermit?: FileSchema | null
 		  }
 	response: UserEntity
 }>
