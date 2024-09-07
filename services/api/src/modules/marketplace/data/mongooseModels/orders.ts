@@ -72,7 +72,7 @@ const Schema = new appInstance.dbs.mongo.Schema<OrderFromModel>(
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
 		},
-		offers: {
+		promotionIds: {
 			type: [String],
 			required: false,
 			default: () => [],

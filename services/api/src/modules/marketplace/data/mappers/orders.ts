@@ -20,7 +20,7 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 			data: param.data,
 			fee: param.fee,
 			done: param.done,
-			offers: param.offers,
+			promotionIds: param.promotionIds,
 			createdAt: param.createdAt,
 			updatedAt: param.updatedAt,
 		})
@@ -36,7 +36,7 @@ export class OrderMapper extends BaseMapper<OrderFromModel, OrderToModel, OrderE
 			time: param.time,
 			discount: param.discount,
 			payment: param.payment,
-			offers: param.offers,
+			promotionIds: param.promotionIds,
 			data: param.data,
 		}
 	}

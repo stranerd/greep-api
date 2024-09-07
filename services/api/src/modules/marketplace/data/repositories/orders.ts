@@ -6,16 +6,19 @@ import { AcceptOrderInput, CheckoutInput, OrderData, OrderStatus, OrderType } fr
 import { resolvePacks } from '../../utils/carts'
 import { OrderMapper } from '../mappers/orders'
 import { ProductMapper } from '../mappers/products'
+import { PromotionMapper } from '../mappers/promotions'
 import { OrderFromModel, OrderToModel } from '../models/orders'
 import { CartLink } from '../mongooseModels/cartLinks'
 import { Cart } from '../mongooseModels/carts'
 import { Order } from '../mongooseModels/orders'
 import { Product } from '../mongooseModels/products'
+import { Promotion } from '../mongooseModels/promotions'
 
 export class OrderRepository implements IOrderRepository {
 	private static instance: OrderRepository
 	private mapper = new OrderMapper()
 	private productMapper = new ProductMapper()
+	private promotionMapper = new PromotionMapper()
 
 	static getInstance(): OrderRepository {
 		if (!OrderRepository.instance) OrderRepository.instance = new OrderRepository()
@@ -23,9 +26,12 @@ export class OrderRepository implements IOrderRepository {
 	}
 
 	async create(data: OrderToModel) {
+		const promotions = await Promotion.find({ _id: { $in: data.promotionIds } }).then((promos) =>
+			promos.map((p) => this.promotionMapper.mapFrom(p)!),
+		)
 		const order = await new Order({
 			...data,
-			fee: await OrderEntity.calculateFees(data),
+			fee: await OrderEntity.calculateFees(data, promotions),
 		}).save()
 		return this.mapper.mapFrom(order)!
 	}
@@ -89,10 +95,13 @@ export class OrderRepository implements IOrderRepository {
 		let res = null as OrderFromModel | null
 		await Order.collection.conn.transaction(async (session) => {
 			const orderData = await this.getOrderData(data, session)
+			const promotions = await Promotion.find({ _id: { $in: data.promotionIds } }, {}, { session }).then((promos) =>
+				promos.map((p) => this.promotionMapper.mapFrom(p)!),
+			)
 			const order = await new Order({
 				...data,
 				data: orderData,
-				fee: await OrderEntity.calculateFees({ ...data, data: orderData }),
+				fee: await OrderEntity.calculateFees({ ...data, data: orderData }, promotions),
 			}).save({ session })
 			if ('cartId' in data) await Cart.findByIdAndUpdate(data.cartId, { $set: { active: false } }, { session })
 			if ('cartLinkId' in data) await CartLink.findByIdAndUpdate(data.cartLinkId, { $set: { active: false } }, { session })

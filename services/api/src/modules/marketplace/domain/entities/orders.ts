@@ -3,9 +3,9 @@ import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { resolvePacks } from '../../utils/carts'
-import { offers } from '../../utils/offers'
-import { EmbeddedUser, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase } from '../types'
+import { EmbeddedUser, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase, PromotionType } from '../types'
 import { EmbeddedProduct } from './products'
+import { PromotionEntity } from './promotions'
 
 type OrderEntityProps = OrderToModelBase & {
 	id: string
@@ -82,29 +82,46 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		return null
 	}
 
-	static async calculateFees(data: {
-		userId: string
-		data: OrderData
-		from: Location
-		to: Location
-		discount: number
-		time: number
-		payment: OrderPayment
-		offers: string[]
-	}): Promise<OrderFee> {
+	static async calculateFees(
+		data: {
+			userId: string
+			data: OrderData
+			from: Location
+			to: Location
+			discount: number
+			time: number
+			payment: OrderPayment
+			promotionIds: string[]
+		},
+		promotions: PromotionEntity[],
+	): Promise<OrderFee> {
 		const vendorId = 'vendorId' in data.data ? data.data.vendorId : null
 		const vendorType = 'vendorType' in data.data ? data.data.vendorType : null
-		const deliveryOffers = offers.filter((offer) =>
+		const activePromotions = promotions.filter((promo) =>
 			[
-				offer.active,
-				data.offers.includes(offer.id),
-				offer.vendors?.includes(vendorId!) ?? true,
-				offer.vendorType?.includes(vendorType!) ?? true,
-				offer.data.type === 'delivery-discount',
+				promo.active,
+				data.promotionIds.includes(promo.id),
+				promo.vendorIds?.includes(vendorId!) ?? true,
+				promo.vendorType?.includes(vendorType!) ?? true,
 			].every(Boolean),
 		)
-		let deliveryDiscount = deliveryOffers.reduce((acc, offer) => acc + offer.data.discountPercentage, 0) / 100
-		if (deliveryDiscount > 1) deliveryDiscount = 1
+		const hasFreeDelivery = activePromotions.some((promo) => promo.data.type === PromotionType.freeDelivery)
+
+		const percentageDiscount = Math.min(
+			activePromotions
+				.map((promo) => (promo.data.type === PromotionType.percentageAmountDiscount ? promo.data.percentage : 0))
+				.reduce((acc, price) => acc + price, 0) / 100,
+			1,
+		)
+		const fixedAmountDiscount = (
+			await Promise.all(
+				activePromotions.map((promo) =>
+					promo.data.type === PromotionType.fixedAmountDiscount
+						? FlutterwavePayment.convertAmount(promo.data.amount, promo.data.currency, Currencies.TRY)
+						: 0,
+				),
+			)
+		).reduce((acc, price) => acc + price, 0)
 
 		const items = resolvePacks('packs' in data.data ? data.data.packs : [])
 		const currency = Currencies.TRY
@@ -113,19 +130,28 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 				.flatMap((item) => [...Object.values(item.addOns), item])
 				.map((item) => FlutterwavePayment.convertAmount(item.price.amount * item.quantity, item.price.currency, currency)),
 		)
-		const subTotal = convertedItems.reduce((acc, item) => acc + item, 0)
+		const preSubTotal = convertedItems.reduce((acc, item) => acc + item, 0)
+		const subTotal = Math.max(preSubTotal - fixedAmountDiscount, 0) * (1 - percentageDiscount)
+
 		const vatPercentage = 0.05
-		const vat = subTotal * vatPercentage
+		const vatCap = 25
+		const vat = Math.min(subTotal * vatPercentage, vatCap)
+
 		const distance = calculateDistanceBetween(data.from.coords, data.to.coords)
 		const feePerMeters = 15 / 1000
-		const fee = distance * feePerMeters * (1 - deliveryDiscount)
+		const preFee = distance * feePerMeters
+		const fee = hasFreeDelivery ? 0 : preFee
+
 		const total = subTotal + vat + fee
 		const discountedOff = data.discount * 10
 		const payable = Math.max(total - discountedOff, 0)
+
 		return {
 			vatPercentage,
 			vat,
+			preFee,
 			fee,
+			preSubTotal,
 			subTotal,
 			total,
 			payable,

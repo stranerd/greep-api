@@ -8,11 +8,12 @@ import {
 	OrderPayment,
 	OrderType,
 	OrdersUseCases,
+	PromotionsUseCases,
 	mergeOrdersData,
 } from '@modules/marketplace'
 import { ActivityEntity, ActivityType, UserType, UsersUseCases, isVendorOpen } from '@modules/users'
 import { LocationInput, LocationSchema } from '@utils/types'
-import { ApiDef, BadRequestError, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
+import { ApiDef, BadRequestError, Conditions, NotAuthorizedError, Router, Schema, Validation, validate } from 'equipped'
 
 const schema = () => ({
 	to: LocationSchema(),
@@ -23,7 +24,7 @@ const schema = () => ({
 	// time: Schema.time().min(Date.now()).asStamp(),
 	discount: Schema.number().gte(0),
 	payment: Schema.in(Object.values(OrderPayment)),
-	offers: Schema.array(Schema.string()).default([]),
+	promotionIds: Schema.array(Schema.string()).default([]),
 })
 
 const getVendorLocation = async (vendorId: string) => {
@@ -32,6 +33,12 @@ const getVendorLocation = async (vendorId: string) => {
 	if (!isVendorOpen(vendor.vendor.schedule)) throw new BadRequestError('vendor is closed at the moment')
 	return vendor.type.location
 }
+
+const getPromotions = async (promotionIds: string[]) =>
+	PromotionsUseCases.get({
+		where: [{ field: 'id', condition: Conditions.in, value: promotionIds }],
+		all: true,
+	}).then((res) => res.results)
 
 const verifyUser = async (userId: string, discount: number) => {
 	const user = await UsersUseCases.find(userId)
@@ -68,18 +75,21 @@ router.post<OrdersCheckoutCartFeeRouteDef>({ path: '/checkout/fee', key: 'market
 	const cart = await CartsUseCases.find(data.cartId)
 	if (!cart || cart.userId !== req.authUser!.id || !cart.active) throw new NotAuthorizedError()
 
-	return await OrderEntity.calculateFees({
-		...data,
-		from: await getVendorLocation(cart.vendorId),
-		userId: cart.userId,
-		data: {
-			type: OrderType.cart,
-			cartId: cart.id,
-			packs: cart.packs,
-			vendorId: cart.vendorId,
-			vendorType: cart.vendorType,
+	return await OrderEntity.calculateFees(
+		{
+			...data,
+			from: await getVendorLocation(cart.vendorId),
+			userId: cart.userId,
+			data: {
+				type: OrderType.cart,
+				cartId: cart.id,
+				packs: cart.packs,
+				vendorId: cart.vendorId,
+				vendorType: cart.vendorType,
+			},
 		},
-	})
+		await getPromotions(data.promotionIds),
+	)
 })
 
 router.post<OrdersCheckoutCartLinkRouteDef>({ path: '/checkout/links', key: 'marketplace-orders-checkout-cart-link' })(async (req) => {
@@ -106,18 +116,21 @@ router.post<OrdersCheckoutCartLinkFeeRouteDef>({ path: '/checkout/links/fee', ke
 		const cartLink = await CartLinksUseCases.find(data.cartLinkId)
 		if (!cartLink || !cartLink.active) throw new NotAuthorizedError()
 
-		return await OrderEntity.calculateFees({
-			...data,
-			from: await getVendorLocation(cartLink.vendorId),
-			userId: req.authUser!.id,
-			data: {
-				type: OrderType.cartLink,
-				cartLinkId: cartLink.id,
-				packs: cartLink.packs,
-				vendorId: cartLink.vendorId,
-				vendorType: cartLink.vendorType,
+		return await OrderEntity.calculateFees(
+			{
+				...data,
+				from: await getVendorLocation(cartLink.vendorId),
+				userId: req.authUser!.id,
+				data: {
+					type: OrderType.cartLink,
+					cartLinkId: cartLink.id,
+					packs: cartLink.packs,
+					vendorId: cartLink.vendorId,
+					vendorType: cartLink.vendorType,
+				},
 			},
-		})
+			await getPromotions(data.promotionIds),
+		)
 	},
 )
 
@@ -167,14 +180,17 @@ router.post<OrdersDispatchFeeRouteDef>({ path: '/dispatch/fee', key: 'marketplac
 		req.body,
 	)
 
-	return await OrderEntity.calculateFees({
-		...data,
-		userId: req.authUser!.id,
-		data: {
-			...data.data,
-			type: OrderType.dispatch,
+	return await OrderEntity.calculateFees(
+		{
+			...data,
+			userId: req.authUser!.id,
+			data: {
+				...data.data,
+				type: OrderType.dispatch,
+			},
 		},
-	})
+		await getPromotions(data.promotionIds),
+	)
 })
 
 export default router

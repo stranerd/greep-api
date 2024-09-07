@@ -36,6 +36,7 @@ const start = async () => {
 		.register('marketplace/cartLinks', isOpen)
 		.register('marketplace/orders', isMine)
 		.register('marketplace/products', isOpen)
+		.register('marketplace/promotions', isOpen)
 
 		.register('messaging/chats', isMine)
 		.register('messaging/chatMetas', isMine)

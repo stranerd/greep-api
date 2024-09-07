@@ -106,7 +106,7 @@ export type OrderToModelBase = {
 	time: number
 	discount: number
 	payment: OrderPayment
-	offers: string[]
+	promotionIds: string[]
 }
 
 export type CheckoutInput = OrderToModelBase & ({ cartId: string } | { cartLinkId: string })
@@ -114,7 +114,9 @@ export type CheckoutInput = OrderToModelBase & ({ cartId: string } | { cartLinkI
 export type OrderFee = {
 	vatPercentage: number
 	vat: number
+	preFee: number
 	fee: number
+	preSubTotal: number
 	subTotal: number
 	total: number
 	currency: Currencies
@@ -146,3 +148,24 @@ export type ProductAddOns = Record<
 		items: Record<string, { price: { amount: number; currency: Currencies }; inStock: boolean }>
 	}
 >
+
+export enum PromotionType {
+	freeDelivery = 'freeDelivery',
+	fixedAmountDiscount = 'fixedAmountDiscount',
+	percentageAmountDiscount = 'percentageAmountDiscount',
+}
+
+export type PromotionData =
+	| {
+			type: PromotionType.freeDelivery
+	  }
+	| {
+			type: PromotionType.fixedAmountDiscount
+			amount: number
+			currency: Currencies
+			lowerLimit: number | null
+	  }
+	| {
+			type: PromotionType.percentageAmountDiscount
+			percentage: number
+	  }
