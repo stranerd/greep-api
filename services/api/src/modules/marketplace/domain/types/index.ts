@@ -121,6 +121,7 @@ export type OrderFee = {
 	total: number
 	currency: Currencies
 	payable: number
+	promotions: { id: string; data: PromotionData }[]
 }
 
 export enum ProductMeta {

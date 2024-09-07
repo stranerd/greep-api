@@ -156,6 +156,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 			total,
 			payable,
 			currency,
+			promotions: activePromotions.map((promo) => ({ id: promo.id, data: promo.data })),
 		}
 	}
 }
