@@ -65,7 +65,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 				// @ts-ignore
 				license: req.body.license?.at?.(0),
 				// @ts-ignore
-				banner: req.body.license?.at?.(0),
+				banner: req.body.banner?.at?.(0),
 				// @ts-ignore
 				passport: req.body.passport?.at?.(0),
 				// @ts-ignore
@@ -78,7 +78,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 		if (type && data.type !== type.type) throw new BadRequestError('cannot change user type')
 
 		const getFileValue = async (key: string, uploadPath: string) => {
-			if (data[key] && Buffer.isBuffer(data[key].data)) return StorageUseCases.upload(uploadPath, data[key])
+			if (data[key]?.data instanceof Uint8Array) return StorageUseCases.upload(uploadPath, data[key])
 			if (data[key] === null) return null
 			if (type?.[key]) return type[key] as MediaOutput
 			return null
