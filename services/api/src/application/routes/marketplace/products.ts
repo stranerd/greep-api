@@ -75,6 +75,8 @@ const router = new Router({ path: '/products', groups: ['Products'] })
 
 router.get<ProductsGetRouteDef>({ path: '/', key: 'marketplace-products-get' })(async (req) => {
 	const query = req.query
+	query.auth = []
+
 	if (query.nearby && req.authUser) {
 		const user = await UsersUseCases.find(req.authUser.id)
 		if (user && user.account.location) {
@@ -95,9 +97,17 @@ router.get<ProductsGetRouteDef>({ path: '/', key: 'marketplace-products-get' })(
 				},
 				60 * 60,
 			)
-			query.auth = [{ field: 'user.id', condition: Conditions.in, value: vendorIds }]
+			query.auth.push({ field: 'user.id', condition: Conditions.in, value: vendorIds })
 		}
 	}
+
+	const tags: TagEntity[] = []
+	if (query.byFoodTagNames && query.byFoodTagNames.length)
+		await TagsUseCases.autoCreate({ type: TagTypes.productsFoods, titles: query.byFoodTagNames }).then((res) => tags.push(...res))
+	if (query.byItemTagNames && query.byItemTagNames.length)
+		await TagsUseCases.autoCreate({ type: TagTypes.productsItems, titles: query.byItemTagNames }).then((res) => tags.push(...res))
+	if (tags.length) query.auth.push({ field: 'tagIds', condition: Conditions.in, value: tags.map((t) => t.id) })
+
 	return await ProductsUseCases.get(query)
 })
 
@@ -227,7 +237,7 @@ export default router
 type ProductsGetRouteDef = ApiDef<{
 	key: 'marketplace-products-get'
 	method: 'get'
-	query: QueryParams & { nearby?: boolean }
+	query: QueryParams & { nearby?: boolean; byFoodTagNames?: string[]; byItemTagNames?: string[] }
 	response: QueryResults<ProductEntity>
 }>
 

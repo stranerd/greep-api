@@ -1,4 +1,5 @@
 import { isAuthenticated } from '@application/middlewares'
+import { TagEntity, TagTypes, TagsUseCases } from '@modules/interactions'
 import { TransactionType, TransactionsUseCases } from '@modules/payment'
 import { UserEntity, UserType, UsersUseCases } from '@modules/users'
 import { getCoordsHashSlice } from '@utils/types'
@@ -45,6 +46,18 @@ router.get<MyVendorsGetRouteDef>({ path: '/vendors', key: 'users-my-vendors' })(
 		{ field: 'dates.deletedAt', value: null },
 		{ field: 'type.location.hash', value: new RegExp(`^${hashSlice}`) },
 	]
+
+	const tags: TagEntity[] = []
+	if (query.byFoodTagNames && query.byFoodTagNames.length)
+		await TagsUseCases.autoCreate({ type: TagTypes.productsFoods, titles: query.byFoodTagNames }).then((res) => tags.push(...res))
+	if (query.byItemTagNames && query.byItemTagNames.length)
+		await TagsUseCases.autoCreate({ type: TagTypes.productsItems, titles: query.byItemTagNames }).then((res) => tags.push(...res))
+	if (tags.length)
+		query.auth.push({
+			condition: QueryKeys.or,
+			value: tags.map((t) => ({ field: `vendors.tags.${t.id}`, condition: Conditions.gte, value: 1 })),
+		})
+
 	return await UsersUseCases.get(query)
 })
 
@@ -67,6 +80,6 @@ type MyDriversGetRouteDef = ApiDef<{
 type MyVendorsGetRouteDef = ApiDef<{
 	key: 'users-my-vendors'
 	method: 'get'
-	query: QueryParams & { nearby?: boolean }
+	query: QueryParams & { nearby?: boolean; byFoodTagNames?: string[]; byItemTagNames?: string[] }
 	response: QueryResults<UserEntity>
 }>
