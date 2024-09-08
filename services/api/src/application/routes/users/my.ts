@@ -1,9 +1,10 @@
 import { isAuthenticated } from '@application/middlewares'
-import { TagEntity, TagTypes, TagsUseCases } from '@modules/interactions'
+import { LikesUseCases, TagEntity, TagTypes, TagsUseCases } from '@modules/interactions'
+import { PromotionsUseCases } from '@modules/marketplace'
 import { TransactionType, TransactionsUseCases } from '@modules/payment'
 import { UserEntity, UserType, UsersUseCases } from '@modules/users'
 import { getCoordsHashSlice } from '@utils/types'
-import { ApiDef, AuthRole, Conditions, QueryKeys, QueryParams, QueryResults, Router } from 'equipped'
+import { ApiDef, AuthRole, Conditions, QueryKeys, QueryParams, QueryResults, QueryWhere, Router } from 'equipped'
 
 const router = new Router({ path: '/my', groups: ['My'], middlewares: [isAuthenticated] })
 
@@ -35,28 +36,57 @@ router.get<MyDriversGetRouteDef>({ path: '/drivers', key: 'users-my-drivers' })(
 })
 
 router.get<MyVendorsGetRouteDef>({ path: '/vendors', key: 'users-my-vendors' })(async (req) => {
-	const user = await UsersUseCases.find(req.authUser!.id)
-	if (!user) throw new Error('Profile not found')
-	const hashSlice = getCoordsHashSlice(user.account.location?.hash ?? '', req.query.nearby ? 2500 : 10000)
 	const query = req.query
 	query.authType = QueryKeys.and
 	query.auth = [
 		{ field: 'type.type', value: UserType.vendor },
 		{ field: `roles.${AuthRole.isVendor}`, value: true },
 		{ field: 'dates.deletedAt', value: null },
-		{ field: 'type.location.hash', value: new RegExp(`^${hashSlice}`) },
 	]
+	query.sort ??= []
+	query.sort.push({ field: `account.ratings.avg`, desc: true })
+
+	const user = await UsersUseCases.find(req.authUser!.id)
+	if (user && user.account.location) {
+		const hashSlice = getCoordsHashSlice(user.account.location.hash ?? '', req.query.nearby ? 2500 : 10000)
+		query.auth.push({ field: 'type.location.hash', value: new RegExp(`^${hashSlice}`) })
+	}
 
 	const tags: TagEntity[] = []
-	if (query.byFoodTagNames && query.byFoodTagNames.length)
-		await TagsUseCases.autoCreate({ type: TagTypes.productsFoods, titles: query.byFoodTagNames }).then((res) => tags.push(...res))
-	if (query.byItemTagNames && query.byItemTagNames.length)
-		await TagsUseCases.autoCreate({ type: TagTypes.productsItems, titles: query.byItemTagNames }).then((res) => tags.push(...res))
+	if (query.byFoodsTagNames && query.byFoodsTagNames.length)
+		await TagsUseCases.autoCreate({ type: TagTypes.productsFoods, titles: query.byFoodsTagNames }).then((res) => tags.push(...res))
+	if (query.byItemsTagNames && query.byItemsTagNames.length)
+		await TagsUseCases.autoCreate({ type: TagTypes.productsItems, titles: query.byItemsTagNames }).then((res) => tags.push(...res))
 	if (tags.length)
 		query.auth.push({
 			condition: QueryKeys.or,
 			value: tags.map((t) => ({ field: `vendors.tags.${t.id}`, condition: Conditions.gte, value: 1 })),
 		})
+
+	if (query.favorite) {
+		const likes = await LikesUseCases.get({
+			where: [
+				{ field: 'user.id', value: req.authUser!.id },
+				{ field: 'value', value: true },
+			],
+			all: true,
+		})
+		const vendors = likes.results.map((like) => like.entity.id)
+		query.auth.push({ field: 'id', condition: Conditions.in, value: vendors })
+	}
+
+	if (query.quick) {
+		const promotions = await PromotionsUseCases.get({ all: true })
+		const promoQueries = promotions.results
+			.filter((p) => p.active)
+			.map((p) => {
+				const query: QueryWhere<unknown>[] = []
+				if (p.vendorIds?.length) query.push({ field: 'id', condition: Conditions.in, value: p.vendorIds })
+				if (p.vendorType?.length) query.push({ field: 'type.vendorType', condition: Conditions.in, value: p.vendorType })
+				return { condition: QueryKeys.and, value: query }
+			})
+		if (promoQueries.length) query.auth.push({ condition: QueryKeys.or, value: promoQueries as any })
+	}
 
 	return await UsersUseCases.get(query)
 })
@@ -80,6 +110,6 @@ type MyDriversGetRouteDef = ApiDef<{
 type MyVendorsGetRouteDef = ApiDef<{
 	key: 'users-my-vendors'
 	method: 'get'
-	query: QueryParams & { nearby?: boolean; byFoodTagNames?: string[]; byItemTagNames?: string[] }
+	query: QueryParams & { nearby?: boolean; byFoodsTagNames?: string[]; byItemsTagNames?: string[]; favorite?: boolean; quick?: boolean }
 	response: QueryResults<UserEntity>
 }>

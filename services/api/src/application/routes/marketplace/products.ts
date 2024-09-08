@@ -75,60 +75,64 @@ const schema = (bannerRequired: boolean, authUser: AuthUser) => ({
 
 const router = new Router({ path: '/products', groups: ['Products'] })
 
-router.get<ProductsGetRouteDef>({ path: '/', key: 'marketplace-products-get' })(async (req) => {
-	const query = req.query
-	query.auth = []
-	query.sort ??= []
+router.get<ProductsGetRouteDef>({ path: '/', key: 'marketplace-products-get' })(async (req) => await ProductsUseCases.get(req.query))
 
-	if (query.nearby && req.authUser) {
-		const user = await UsersUseCases.find(req.authUser.id)
-		if (user && user.account.location) {
-			const sliced = getCoordsHashSlice(user.account.location.hash, 2500)
-			const vendorIds = await appInstance.cache.getOrSet(
-				`nearby-vendors-in-${sliced}`,
-				async () => {
-					const result = await UsersUseCases.get({
-						auth: [
-							{ field: 'type.type', value: UserType.vendor },
-							{ field: `roles.${AuthRole.isVendor}`, value: true },
-							{ field: 'dates.deletedAt', value: null },
-							{ field: 'type.location.hash', value: new RegExp(`^${sliced}`) },
-						],
-						all: true,
-					})
-					return result.results.map((u) => u.id)
-				},
-				60 * 60,
-			)
-			query.auth.push({ field: 'user.id', condition: Conditions.in, value: vendorIds })
+router.get<ProductsRecommendedRouteDef>({ path: '/recommended', key: 'marketplace-products-recommended', middlewares: [isAuthenticated] })(
+	async (req) => {
+		const query = req.query
+		query.auth = []
+		query.sort ??= []
+		query.sort.push({ field: `ratings.avg`, desc: true }, { field: `meta.${ProductMeta.orders}`, desc: true })
+
+		if (query.by) query.auth.push({ field: 'user.id', condition: Conditions.in, value: query.by })
+		else {
+			const user = await UsersUseCases.find(req.authUser!.id)
+			if (user && user.account.location) {
+				const sliced = getCoordsHashSlice(user.account.location.hash ?? '', query.nearby ? 2500 : 10000)
+				const vendorIds = await appInstance.cache.getOrSet(
+					`nearby-vendors-in-${sliced}`,
+					async () => {
+						const result = await UsersUseCases.get({
+							auth: [
+								{ field: 'type.type', value: UserType.vendor },
+								{ field: `roles.${AuthRole.isVendor}`, value: true },
+								{ field: 'dates.deletedAt', value: null },
+								{ field: 'type.location.hash', value: new RegExp(`^${sliced}`) },
+							],
+							all: true,
+						})
+						return result.results.map((u) => u.id)
+					},
+					60 * 60,
+				)
+				query.auth.push({ field: 'user.id', condition: Conditions.in, value: vendorIds })
+			}
 		}
-	}
 
-	if (query.recommended) query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
+		if (query.quick) {
+			const promotions = await PromotionsUseCases.get({ all: true })
+			const promoQueries = promotions.results
+				.filter((p) => p.active)
+				.map((p) => {
+					const query: QueryWhere<unknown>[] = []
+					if (p.vendorIds?.length) query.push({ field: 'user.id', condition: Conditions.in, value: p.vendorIds })
+					if (p.productIds?.length) query.push({ field: 'id', condition: Conditions.in, value: p.productIds })
+					if (p.vendorType?.length) query.push({ field: 'data.type', condition: Conditions.in, value: p.vendorType })
+					return { condition: QueryKeys.and, value: query }
+				})
+			if (promoQueries.length) query.auth.push({ condition: QueryKeys.or, value: promoQueries as any })
+		}
 
-	if (query.quick) {
-		const promotions = await PromotionsUseCases.get({ all: true })
-		const promoQueries = promotions.results
-			.filter((p) => p.active)
-			.map((p) => {
-				const query: QueryWhere<unknown>[] = []
-				if (p.vendorIds?.length) query.push({ field: 'user.id', condition: Conditions.in, value: p.vendorIds })
-				if (p.productIds?.length) query.push({ field: 'id', condition: Conditions.in, value: p.productIds })
-				if (p.vendorType?.length) query.push({ field: 'data.type', condition: Conditions.in, value: p.vendorType })
-				return { condition: QueryKeys.and, value: query }
-			})
-		if (promoQueries.length) query.auth.push({ condition: QueryKeys.or, value: promoQueries as any })
-	}
+		const tags: TagEntity[] = []
+		if (query.byFoodsTagNames && query.byFoodsTagNames.length)
+			await TagsUseCases.autoCreate({ type: TagTypes.productsFoods, titles: query.byFoodsTagNames }).then((res) => tags.push(...res))
+		if (query.byItemsTagNames && query.byItemsTagNames.length)
+			await TagsUseCases.autoCreate({ type: TagTypes.productsItems, titles: query.byItemsTagNames }).then((res) => tags.push(...res))
+		if (tags.length) query.auth.push({ field: 'tagIds', condition: Conditions.in, value: tags.map((t) => t.id) })
 
-	const tags: TagEntity[] = []
-	if (query.byFoodTagNames && query.byFoodTagNames.length)
-		await TagsUseCases.autoCreate({ type: TagTypes.productsFoods, titles: query.byFoodTagNames }).then((res) => tags.push(...res))
-	if (query.byItemTagNames && query.byItemTagNames.length)
-		await TagsUseCases.autoCreate({ type: TagTypes.productsItems, titles: query.byItemTagNames }).then((res) => tags.push(...res))
-	if (tags.length) query.auth.push({ field: 'tagIds', condition: Conditions.in, value: tags.map((t) => t.id) })
-
-	return await ProductsUseCases.get(query)
-})
+		return await ProductsUseCases.get(query)
+	},
+)
 
 router.get<ProductsFindRouteDef>({ path: '/:id', key: 'marketplace-products-find' })(async (req) => {
 	const product = await ProductsUseCases.find(req.params.id)
@@ -205,7 +209,14 @@ export default router
 type ProductsGetRouteDef = ApiDef<{
 	key: 'marketplace-products-get'
 	method: 'get'
-	query: QueryParams & { nearby?: boolean; byFoodTagNames?: string[]; byItemTagNames?: string[]; recommended?: boolean; quick?: boolean }
+	query: QueryParams
+	response: QueryResults<ProductEntity>
+}>
+
+type ProductsRecommendedRouteDef = ApiDef<{
+	key: 'marketplace-products-recommended'
+	method: 'get'
+	query: QueryParams & { nearby?: boolean; byFoodsTagNames?: string[]; byItemsTagNames?: string[]; quick?: boolean; by?: string[] }
 	response: QueryResults<ProductEntity>
 }>
 

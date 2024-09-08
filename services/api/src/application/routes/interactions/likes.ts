@@ -25,15 +25,16 @@ router.get<InteractionsLikesFindRouteDef>({ path: '/:id', key: 'interactions-lik
 })
 
 router.post<InteractionsLikesCreateRouteDef>({ path: '/', key: 'interactions-likes-create' })(async (req) => {
-	const data = validate(
+	const { action, ...data } = validate(
 		{
 			value: Schema.boolean(),
 			entity: EntitySchema(),
+			action: Schema.in(['likes' as const, 'dislikes' as const]).default('likes'),
 		},
 		req.body,
 	)
 
-	const entity = await verifyInteraction(data.entity, data.value ? 'likes' : 'dislikes')
+	const entity = await verifyInteraction(data.entity, action)
 	const user = await UsersUseCases.find(req.authUser!.id)
 	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
@@ -63,6 +64,6 @@ type InteractionsLikesFindRouteDef = ApiDef<{
 type InteractionsLikesCreateRouteDef = ApiDef<{
 	key: 'interactions-likes-create'
 	method: 'post'
-	body: { value: boolean; entity: Omit<InteractionEntity, 'userId'> }
+	body: { value: boolean; entity: Omit<InteractionEntity, 'userId'>; action: 'likes' | 'dislikes' }
 	response: LikeEntity | null
 }>
