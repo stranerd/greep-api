@@ -18,11 +18,6 @@ const Schema = new appInstance.dbs.mongo.Schema<PromotionFromModel>(
 			required: false,
 			default: '',
 		},
-		active: {
-			type: Boolean,
-			required: false,
-			default: true,
-		},
 		vendorIds: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,
@@ -36,6 +31,15 @@ const Schema = new appInstance.dbs.mongo.Schema<PromotionFromModel>(
 		data: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: true,
+		},
+		banner: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: true,
+		},
+		validity: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: null,
 		},
 		createdBy: {
 			type: String,

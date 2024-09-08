@@ -170,3 +170,8 @@ export type PromotionData =
 			type: PromotionType.percentageAmountDiscount
 			percentage: number
 	  }
+
+export type PromotionValidity = {
+	from: number
+	to: number
+}

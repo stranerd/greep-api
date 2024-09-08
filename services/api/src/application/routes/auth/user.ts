@@ -34,7 +34,7 @@ router.put<UpdateAuthUserRouteDef>({ path: '/', key: 'user-update', middlewares:
 	const users = await AuthUsersUseCases.findUsersByEmailorUsername(req.body.username)
 	const usernameUser = users.find((u) => u.username === req.body.username)
 
-	const data = validate(
+	const { photo: _, ...data } = validate(
 		{
 			firstName: Schema.string().min(1),
 			lastName: Schema.string().min(1),

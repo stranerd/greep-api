@@ -39,14 +39,14 @@ router.put<InteractionsTagsUpdateRouteDef>({ path: '/:id', key: 'interactions-ta
 		const uploadedPhoto = req.body.photo?.[0] ?? null
 		const changedPhoto = !!uploadedPhoto || req.body.photo === null
 
-		const { title } = validate(schema(), { ...req.body, photo: uploadedPhoto })
+		const { photo: _, ...data } = validate(schema(), { ...req.body, photo: uploadedPhoto })
 
 		const photo = uploadedPhoto ? await StorageUseCases.upload('interactions/tags', uploadedPhoto) : undefined
 
 		const updatedTag = await TagsUseCases.update({
 			id: req.params.id,
 			data: {
-				title,
+				...data,
 				...(changedPhoto ? { photo } : {}),
 			},
 		})
