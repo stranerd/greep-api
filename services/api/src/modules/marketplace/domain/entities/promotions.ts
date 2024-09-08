@@ -8,6 +8,7 @@ type PromotionEntityProps = {
 	description: string
 	vendorIds: string[] | null
 	vendorType: UserVendorType[] | null
+	productIds: string[] | null
 	validity: PromotionValidity | null
 	banner: MediaOutput
 	data: PromotionData

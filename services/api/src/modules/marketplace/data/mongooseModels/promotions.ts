@@ -18,6 +18,11 @@ const Schema = new appInstance.dbs.mongo.Schema<PromotionFromModel>(
 			required: false,
 			default: '',
 		},
+		productIds: {
+			type: appInstance.dbs.mongo.Schema.Types.Mixed,
+			required: false,
+			default: null,
+		},
 		vendorIds: {
 			type: appInstance.dbs.mongo.Schema.Types.Mixed,
 			required: false,

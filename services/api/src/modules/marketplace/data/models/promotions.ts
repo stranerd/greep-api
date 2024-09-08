@@ -12,6 +12,7 @@ export interface PromotionToModel {
 	title: string
 	description: string
 	vendorIds: string[] | null
+	productIds: string[] | null
 	vendorType: UserVendorType[] | null
 	data: PromotionData
 	createdBy: string

@@ -1,6 +1,6 @@
 import { isAuthenticated, isVendor } from '@application/middlewares'
 import { TagEntity, TagTypes, TagsUseCases } from '@modules/interactions'
-import { ProductAddOns, ProductEntity, ProductMeta, ProductsUseCases } from '@modules/marketplace'
+import { ProductAddOns, ProductEntity, ProductMeta, ProductsUseCases, PromotionsUseCases } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
 import { StorageUseCases } from '@modules/storage'
 import { UserType, UserVendorType, UsersUseCases } from '@modules/users'
@@ -15,8 +15,10 @@ import {
 	FileSchema,
 	NotAuthorizedError,
 	NotFoundError,
+	QueryKeys,
 	QueryParams,
 	QueryResults,
+	QueryWhere,
 	Router,
 	Schema,
 	validate,
@@ -104,6 +106,20 @@ router.get<ProductsGetRouteDef>({ path: '/', key: 'marketplace-products-get' })(
 
 	if (query.recommended) query.sort.unshift({ field: `meta.${ProductMeta.orders}`, desc: true })
 
+	if (query.quick) {
+		const promotions = await PromotionsUseCases.get({ all: true })
+		const promoQueries = promotions.results
+			.filter((p) => p.active)
+			.map((p) => {
+				const query: QueryWhere<unknown>[] = []
+				if (p.vendorIds?.length) query.push({ field: 'user.id', condition: Conditions.in, value: p.vendorIds })
+				if (p.productIds?.length) query.push({ field: 'id', condition: Conditions.in, value: p.productIds })
+				if (p.vendorType?.length) query.push({ field: 'data.type', condition: Conditions.in, value: p.vendorType })
+				return { condition: QueryKeys.and, value: query }
+			})
+		if (promoQueries.length) query.auth.push({ condition: QueryKeys.or, value: promoQueries as any })
+	}
+
 	const tags: TagEntity[] = []
 	if (query.byFoodTagNames && query.byFoodTagNames.length)
 		await TagsUseCases.autoCreate({ type: TagTypes.productsFoods, titles: query.byFoodTagNames }).then((res) => tags.push(...res))
@@ -189,7 +205,7 @@ export default router
 type ProductsGetRouteDef = ApiDef<{
 	key: 'marketplace-products-get'
 	method: 'get'
-	query: QueryParams & { nearby?: boolean; byFoodTagNames?: string[]; byItemTagNames?: string[]; recommended?: boolean }
+	query: QueryParams & { nearby?: boolean; byFoodTagNames?: string[]; byItemTagNames?: string[]; recommended?: boolean; quick?: boolean }
 	response: QueryResults<ProductEntity>
 }>
 

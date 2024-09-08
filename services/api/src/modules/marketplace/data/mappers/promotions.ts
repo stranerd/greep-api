@@ -9,6 +9,7 @@ export class PromotionMapper extends BaseMapper<PromotionFromModel, PromotionToM
 			id: param._id,
 			title: param.title,
 			description: param.description,
+			productIds: param.productIds,
 			vendorIds: param.vendorIds,
 			vendorType: param.vendorType,
 			banner: param.banner,
@@ -24,6 +25,7 @@ export class PromotionMapper extends BaseMapper<PromotionFromModel, PromotionToM
 		return {
 			title: param.title,
 			description: param.description,
+			productIds: param.productIds,
 			vendorIds: param.vendorIds,
 			vendorType: param.vendorType,
 			banner: param.banner,

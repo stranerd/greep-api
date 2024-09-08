@@ -1,9 +1,20 @@
 import { isAuthenticated, isVendor } from '@application/middlewares'
-import { PromotionEntity, PromotionsUseCases, PromotionType } from '@modules/marketplace'
+import { ProductsUseCases, PromotionEntity, PromotionsUseCases, PromotionType } from '@modules/marketplace'
 import { Currencies } from '@modules/payment'
 import { StorageUseCases } from '@modules/storage'
 import { UserVendorType } from '@modules/users'
-import { ApiDef, FileSchema, NotAuthorizedError, NotFoundError, QueryParams, QueryResults, Router, Schema, validate } from 'equipped'
+import {
+	ApiDef,
+	Conditions,
+	FileSchema,
+	NotAuthorizedError,
+	NotFoundError,
+	QueryParams,
+	QueryResults,
+	Router,
+	Schema,
+	validate,
+} from 'equipped'
 
 const schema = (bannerRequired: boolean) => ({
 	title: Schema.string().min(1),
@@ -34,6 +45,7 @@ const schema = (bannerRequired: boolean) => ({
 	banner: Schema.file()
 		.image()
 		.requiredIf(() => bannerRequired),
+	productIds: Schema.array(Schema.string().min(1)).nullable(),
 })
 
 const router = new Router({ path: '/promotions', groups: ['Promotions'] })
@@ -52,11 +64,17 @@ router.post<PromotionsCreateRouteDef>({ path: '/', key: 'marketplace-promotions-
 
 		const banner = await StorageUseCases.upload('marketplace/promotions/banners', data.banner!)
 
+		const products = await ProductsUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: data.productIds }],
+			all: true,
+		})
+
 		return await PromotionsUseCases.create({
 			...data,
 			createdBy: req.authUser!.id,
 			vendorIds: [req.authUser!.id],
 			vendorType: [req.authUser!.roles.isVendorFoods ? UserVendorType.foods : UserVendorType.items],
+			productIds: products.results.map((p) => p.id),
 			banner,
 		})
 	},
@@ -71,11 +89,17 @@ router.put<PromotionsUpdateRouteDef>({ path: '/:id', key: 'marketplace-promotion
 
 		const banner = uploadedBanner ? await StorageUseCases.upload('marketplace/promotions/banners', uploadedBanner) : undefined
 
+		const products = await ProductsUseCases.get({
+			where: [{ field: 'id', condition: Conditions.in, value: data.productIds }],
+			all: true,
+		})
+
 		const updatedPromotion = await PromotionsUseCases.update({
 			id: req.params.id,
 			userId: req.authUser!.id,
 			data: {
 				...data,
+				productIds: products.results.map((p) => p.id),
 				...(changedBanner ? { banner } : {}),
 			},
 		})
@@ -105,6 +129,7 @@ type PromotionBody = {
 	description: string
 	data: PromotionEntity['data']
 	validity: { from: number; to: number } | null
+	productIds: string[] | null
 }
 
 type PromotionsCreateRouteDef = ApiDef<{
