@@ -50,7 +50,11 @@ const schema = (bannerRequired: boolean) => ({
 
 const router = new Router({ path: '/promotions', groups: ['Promotions'] })
 
-router.get<PromotionsGetRouteDef>({ path: '/', key: 'marketplace-promotions-get' })(async (req) => await PromotionsUseCases.get(req.query))
+router.get<PromotionsGetRouteDef>({ path: '/', key: 'marketplace-promotions-get' })(async (req) => {
+	const promos = await PromotionsUseCases.get(req.query)
+	if (req.query.active) promos.results = promos.results.filter((p) => p.active)
+	return promos
+})
 
 router.get<PromotionsFindRouteDef>({ path: '/:id', key: 'marketplace-promotions-find' })(async (req) => {
 	const promotion = await PromotionsUseCases.find(req.params.id)
@@ -113,7 +117,7 @@ export default router
 type PromotionsGetRouteDef = ApiDef<{
 	key: 'marketplace-promotions-get'
 	method: 'get'
-	query: QueryParams
+	query: QueryParams & { active?: boolean }
 	response: QueryResults<PromotionEntity>
 }>
 
