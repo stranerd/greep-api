@@ -169,6 +169,8 @@ export type PromotionData =
 	| {
 			type: PromotionType.percentageAmountDiscount
 			percentage: number
+			currency: Currencies
+			lowerLimit: number | null
 	  }
 
 export type PromotionValidity = {

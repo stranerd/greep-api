@@ -95,34 +95,6 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		},
 		promotions: PromotionEntity[],
 	): Promise<OrderFee> {
-		const vendorId = 'vendorId' in data.data ? data.data.vendorId : null
-		const vendorType = 'vendorType' in data.data ? data.data.vendorType : null
-		const activePromotions = promotions.filter((promo) =>
-			[
-				promo.active,
-				data.promotionIds.includes(promo.id),
-				promo.vendorIds?.includes(vendorId!) ?? true,
-				promo.vendorType?.includes(vendorType!) ?? true,
-			].every(Boolean),
-		)
-		const hasFreeDelivery = activePromotions.some((promo) => promo.data.type === PromotionType.freeDelivery)
-
-		const percentageDiscount = Math.min(
-			activePromotions
-				.map((promo) => (promo.data.type === PromotionType.percentageAmountDiscount ? promo.data.percentage : 0))
-				.reduce((acc, price) => acc + price, 0) / 100,
-			1,
-		)
-		const fixedAmountDiscount = (
-			await Promise.all(
-				activePromotions.map((promo) =>
-					promo.data.type === PromotionType.fixedAmountDiscount
-						? FlutterwavePayment.convertAmount(promo.data.amount, promo.data.currency, Currencies.TRY)
-						: 0,
-				),
-			)
-		).reduce((acc, price) => acc + price, 0)
-
 		const items = resolvePacks('packs' in data.data ? data.data.packs : [])
 		const currency = Currencies.TRY
 		const convertedItems = await Promise.all(
@@ -131,6 +103,43 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 				.map((item) => FlutterwavePayment.convertAmount(item.price.amount * item.quantity, item.price.currency, currency)),
 		)
 		const preSubTotal = convertedItems.reduce((acc, item) => acc + item, 0)
+
+		const vendorId = 'vendorId' in data.data ? data.data.vendorId : null
+		const vendorType = 'vendorType' in data.data ? data.data.vendorType : null
+		const activePromotions = (
+			await Promise.all(
+				promotions.map(async (promo) => {
+					const lowerLimit = 'lowerLimit' in promo.data ? (promo.data.lowerLimit ?? 0) : 0
+					const amount = 'amount' in promo.data ? promo.data.amount : 0
+					const promoCurrency = 'currency' in promo.data ? promo.data.currency : currency
+					return {
+						promo,
+						amount: await FlutterwavePayment.convertAmount(amount, promoCurrency, currency),
+						lowerLimit: await FlutterwavePayment.convertAmount(lowerLimit, promoCurrency, currency),
+					}
+				}),
+			)
+		).filter(({ promo, lowerLimit }) =>
+			[
+				promo.active,
+				data.promotionIds.includes(promo.id),
+				promo.vendorIds?.includes(vendorId!) ?? true,
+				promo.vendorType?.includes(vendorType!) ?? true,
+				lowerLimit ? preSubTotal > lowerLimit : true,
+			].every(Boolean),
+		)
+		const hasFreeDelivery = activePromotions.some(({ promo }) => promo.data.type === PromotionType.freeDelivery)
+
+		const percentageDiscount = Math.min(
+			activePromotions
+				.map(({ promo }) => (promo.data.type === PromotionType.percentageAmountDiscount ? promo.data.percentage : 0))
+				.reduce((acc, price) => acc + price, 0) / 100,
+			1,
+		)
+		const fixedAmountDiscount = activePromotions
+			.map(({ promo, amount }) => (promo.data.type === PromotionType.fixedAmountDiscount ? amount : 0))
+			.reduce((acc, price) => acc + price, 0)
+
 		const subTotal = Math.max(preSubTotal - fixedAmountDiscount, 0) * (1 - percentageDiscount)
 
 		const vatPercentage = 0.05
@@ -156,7 +165,7 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 			total,
 			payable,
 			currency,
-			promotions: activePromotions.map((promo) => ({ id: promo.id, data: promo.data })),
+			promotions: activePromotions.map(({ promo }) => ({ id: promo.id, data: promo.data })),
 		}
 	}
 }

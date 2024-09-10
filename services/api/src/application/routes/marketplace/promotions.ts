@@ -34,6 +34,8 @@ const schema = (bannerRequired: boolean) => ({
 		[PromotionType.percentageAmountDiscount]: Schema.object({
 			type: Schema.is(PromotionType.percentageAmountDiscount as const),
 			percentage: Schema.number().gt(0).lte(100),
+			currency: Schema.in(Object.values(Currencies)),
+			lowerLimit: Schema.number().nullable().default(null),
 		}),
 		[PromotionType.fixedAmountDiscount]: Schema.object({
 			type: Schema.is(PromotionType.fixedAmountDiscount as const),
