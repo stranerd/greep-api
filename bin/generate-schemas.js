@@ -19,7 +19,8 @@ paths.forEach((path) => {
 			.map((file) => join(routesEntry, file.toString()))
 
 		const jsonSchema = generateJSONSchema([/RouteDef$/], routesFiles, {
-			tsConfig: resolve(__dirname, `../services/${path}/tsconfig.json`),
+			tsConfig: join(root, `tsconfig.json`),
+			basePath: '/',
 			options: {
 				ignoreErrors: true,
 			},
