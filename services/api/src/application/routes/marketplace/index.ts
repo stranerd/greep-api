@@ -7,6 +7,7 @@ import products from './products'
 import promotions from './promotions'
 
 const router = new Router({ path: '/marketplace', groups: ['Marketplace'] })
-router.nest(checkout, carts, cartLinks, orders, products, promotions)
+orders.nest(checkout)
+router.nest(carts, cartLinks, orders, products, promotions)
 
 export default router
