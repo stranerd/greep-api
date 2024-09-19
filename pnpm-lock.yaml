@@ -51,8 +51,8 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2
       equipped:
-        specifier: 5.0.0-rc.5
-        version: 5.0.0-rc.5
+        specifier: 5.0.0-rc.6
+        version: 5.0.0-rc.6
       firebase-admin:
         specifier: ^12.3.0
         version: 12.3.0
@@ -1139,8 +1139,8 @@ packages:
   ent@2.2.0:
     resolution: {integrity: sha512-GHrMyVZQWvTIdDtpiEXdHZnFQKzeO09apj8Cbl4pKWy4i0Oprcq17usfDt5aO63swf0JOeMWjWQE/LzgSRuWpA==}
 
-  equipped@5.0.0-rc.5:
-    resolution: {integrity: sha512-S9FGzAzHLm8Agulq2Vxz3eEKTDQWGhHytfZNrp6mRe4T7tHCe5fIElOezI9S9G2fwkBvUhIIJHeiH8ievd8Whw==}
+  equipped@5.0.0-rc.6:
+    resolution: {integrity: sha512-sYUffw4YkWkyqdFOYlTZe0Q2ANbGp/PbPIFNv4ay+BIrzHwcksa4xM0+k4SjOGjaC/7j/4Yos3csy65v8wOmiw==}
 
   es-define-property@1.0.0:
     resolution: {integrity: sha512-jxayLKShrEqqzJ0eumQbVhTYQM27CfT1T35+gCgDFoL82JLsXqTJ76zv6A0YLOgEnLUMvLzsDsGIrl8NFpT2gQ==}
@@ -3945,7 +3945,7 @@ snapshots:
   ent@2.2.0:
     optional: true
 
-  equipped@5.0.0-rc.5:
+  equipped@5.0.0-rc.6:
     dependencies:
       '@fastify/cookie': 9.4.0
       '@fastify/cors': 9.0.1
