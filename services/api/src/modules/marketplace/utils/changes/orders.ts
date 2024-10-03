@@ -1,6 +1,6 @@
 import { TagMeta, TagsUseCases } from '@modules/interactions'
 import { TransactionStatus, TransactionsUseCases, TransactionType } from '@modules/payment'
-import { ActivitiesUseCases, ActivityType } from '@modules/users'
+import { ActivitiesUseCases, ActivityType, UserMeta, UsersUseCases } from '@modules/users'
 import { appInstance } from '@utils/environment'
 import { Conditions, DbChangeCallbacks } from 'equipped'
 import { mergeOrdersData } from '..'
@@ -84,6 +84,24 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 			const allTags = [...new Set(products.map((p) => p.tagIds).flat())]
 			await ProductsUseCases.updateMeta({ ids: productIds, property: ProductMeta.orders, value: 1 })
 			await TagsUseCases.updateMeta({ ids: allTags, property: TagMeta.orders, value: 1 })
+			await UsersUseCases.incrementMeta({
+				id: after.userId,
+				value: 1,
+				property: UserMeta.customerOrders,
+			})
+			const vendorId = after.getVendor()
+			if (vendorId)
+				await UsersUseCases.incrementMeta({
+					id: vendorId,
+					value: 1,
+					property: UserMeta.vendorOrders,
+				})
+			if (after.driverId)
+				await UsersUseCases.incrementMeta({
+					id: after.driverId,
+					value: 1,
+					property: UserMeta.driverOrders,
+				})
 		}
 	},
 	deleted: async ({ before }) => {
@@ -94,5 +112,27 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 				.flat(),
 			await mergeOrdersData([before]).then((res) => res[0]),
 		)
+		const closed = before.done
+		const successful = !!before.status[OrderStatus.completed]
+		if (closed && successful) {
+			await UsersUseCases.incrementMeta({
+				id: before.userId,
+				value: -1,
+				property: UserMeta.customerOrders,
+			})
+			const vendorId = before.getVendor()
+			if (vendorId)
+				await UsersUseCases.incrementMeta({
+					id: vendorId,
+					value: -1,
+					property: UserMeta.vendorOrders,
+				})
+			if (before.driverId)
+				await UsersUseCases.incrementMeta({
+					id: before.driverId,
+					value: -1,
+					property: UserMeta.driverOrders,
+				})
+		}
 	},
 }

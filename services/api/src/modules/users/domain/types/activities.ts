@@ -1,6 +1,9 @@
 export enum UserMeta {
 	referrals = 'referrals',
 	trips = 'trips',
+	customerOrders = 'customerOrders',
+	vendorOrders = 'vendorOrders',
+	driverOrders = 'driverOrders',
 	total = 'total',
 }
 
