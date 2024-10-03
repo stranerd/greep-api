@@ -26,6 +26,7 @@ export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'b
 		super(data)
 		this.bio = generateDefaultBio(data.bio ?? {})
 		this.roles = generateDefaultRoles(data.roles)
+		this.vendor.tags = Object.fromEntries(Object.entries(this.vendor.tags).filter(([_, val]) => val > 0))
 	}
 
 	isAdmin() {
