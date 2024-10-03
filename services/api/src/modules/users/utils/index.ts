@@ -31,7 +31,7 @@ export const isVendorOpen = (time: BusinessTime) => {
 	const timeSlot = time.schedule[day]
 	if (!timeSlot) return false
 	const { from, to } = timeSlot
-	const hour = nowAtTimezone.getHours()
-	const minute = nowAtTimezone.getMinutes()
-	return [hour >= from[0], hour <= to[0], minute >= from[1], minute <= to[1]].every(Boolean)
+	const start = new Date(nowAtTimezone.getFullYear(), nowAtTimezone.getMonth(), nowAtTimezone.getDate(), from.hr, from.min)
+	const end = new Date(nowAtTimezone.getFullYear(), nowAtTimezone.getMonth(), nowAtTimezone.getDate(), to.hr, to.min)
+	return nowAtTimezone >= start && nowAtTimezone <= end
 }
