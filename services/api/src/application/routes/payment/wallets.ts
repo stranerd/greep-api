@@ -92,23 +92,35 @@ router.post<PaymentWalletsResetPinRouteDef>({ path: '/pin/reset', key: 'payment-
 
 router.post<PaymentWalletsVerifyPinRouteDef>({ path: '/pin/verify', key: 'payment-wallets-verify-pin' })(async (req) => {
 	const wallet = await WalletsUseCases.get(req.authUser!.id)
+
 	if (!wallet.pin) throw new ValidationError([{ field: 'pin', messages: ['pin is not set'] }])
 
-	const { pin } = validate({ pin: Schema.string() }, req.body)
+	const { pin } = req.body
 
-	return wallet.pin === pin
+	const validatedPin = String(pin)
+
+	validate({ pin: Schema.string() }, { pin: validatedPin })
+
+	return wallet.pin === validatedPin
 })
 
 router.post<PaymentWalletsUpdatePinRouteDef>({ path: '/pin', key: 'payment-wallets-update-pin' })(async (req) => {
-	const { oldPin, pin } = validate(
+	const { oldPin, pin } = req.body
+
+	const data = {
+		oldPin: oldPin ? String(oldPin) : null,
+		pin: String(pin),
+	}
+
+	const { oldPin: validatedOldPin, pin: validatedPin } = validate(
 		{
 			oldPin: Schema.string().nullable().default(null),
 			pin: Schema.string().min(4).max(4),
 		},
-		req.body,
+		data,
 	)
 
-	return await WalletsUseCases.updatePin({ userId: req.authUser!.id, oldPin, pin })
+	return await WalletsUseCases.updatePin({ userId: req.authUser!.id, oldPin: validatedOldPin, pin: validatedPin })
 })
 
 export default router

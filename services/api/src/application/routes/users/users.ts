@@ -48,6 +48,7 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 					name: Schema.string().min(1),
 					banner: Schema.file().image().nullish(),
 					email: Schema.string().email().nullable(),
+					contactNumber: Schema.string().min(10),
 					website: Schema.string().url().nullable(),
 					location: LocationSchema(),
 					passport: Schema.file().image().nullish(),
@@ -231,6 +232,7 @@ type UsersUpdateTypeRouteDef = ApiDef<{
 				name: string
 				banner?: FileSchema | null
 				email: string | null
+				contactNumber: string | null
 				website: string | null
 				location: LocationInput
 				passport?: FileSchema | null
