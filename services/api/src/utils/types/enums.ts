@@ -10,7 +10,7 @@ const Ar = makeEnum('AuthRole', {
 } as const)
 
 const El = makeEnum('EmailsList', {
-	NO_REPLY: 'no-reply@stranerd.com',
+	NO_REPLY: 'admin@2gocash.com',
 } as const)
 
 const Ev = makeEnum('EventTypes', {

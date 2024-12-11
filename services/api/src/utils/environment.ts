@@ -22,6 +22,8 @@ export const emails = Object.fromEntries(
 	]),
 )
 
+export const sendGridApi = getEnvOrFail('SENDGRID_API_KEY')
+
 const flutterwave = JSON.parse(getEnvOrFail('FLUTTERWAVE') || '{}')
 export const flutterwaveConfig = {
 	secretKey: flutterwave.secretKey,
