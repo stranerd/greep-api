@@ -28,7 +28,7 @@ export const NotificationDbChangeCallbacks: DbChangeCallbacks<NotificationFromMo
 			if (user) {
 				const content = await readEmailFromPug('emails/newNotification.pug', { notification: after })
 				await publishers.SENDMAIL.publish({
-					from: EmailsList.NO_REPLY,
+					from: EmailsList.SUPPORT,
 					to: user.bio.email,
 					subject: after.title,
 					content,

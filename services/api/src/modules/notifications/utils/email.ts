@@ -5,7 +5,7 @@ import path from 'path'
 import { EmailErrorsUseCases } from '../'
 
 const sendMail = async (email: Email) => {
-	const { to, subject, content, from = EmailsList.NO_REPLY } = email
+	const { to, subject, content, from = EmailsList.SUPPORT } = email
 	const { clientId, privateKey } = emails[from]
 
 	const transporter = createTransport({

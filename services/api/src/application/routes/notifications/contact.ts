@@ -16,7 +16,7 @@ router.post<NotificationsContactSendRouteDef>({ path: '/', key: 'notifications-c
 	)
 	const content = await readEmailFromPug('emails/newFormMessage.pug', data)
 	await publishers.SENDMAIL.publish({
-		from: EmailsList.NO_REPLY,
+		from: EmailsList.SUPPORT,
 		to: 'support@greep.io', // TODO: change to contact email
 		subject: `New Contact Message: ${data.subject}`,
 		content,

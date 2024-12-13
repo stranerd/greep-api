@@ -138,7 +138,7 @@ export class WalletRepository implements IWalletRepository {
 		await publishers.SENDMAIL.publish({
 			to: email,
 			subject: 'Reset Your Transaction Pin',
-			from: EmailsList.NO_REPLY,
+			from: EmailsList.SUPPORT,
 			content: emailContent,
 			data: {},
 		})

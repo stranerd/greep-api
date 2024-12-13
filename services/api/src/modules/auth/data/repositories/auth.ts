@@ -65,7 +65,7 @@ export class AuthRepository implements IAuthRepository {
 		await publishers.SENDMAIL.publish({
 			to: email,
 			subject: 'Verify Your Email',
-			from: EmailsList.NO_REPLY,
+			from: EmailsList.SUPPORT,
 			content: emailContent,
 			data: {},
 		})
@@ -97,7 +97,7 @@ export class AuthRepository implements IAuthRepository {
 		await publishers.SENDMAIL.publish({
 			to: email,
 			subject: 'Reset Your Password',
-			from: EmailsList.NO_REPLY,
+			from: EmailsList.SUPPORT,
 			content: emailContent,
 			data: {},
 		})
