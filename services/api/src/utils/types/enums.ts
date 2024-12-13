@@ -6,7 +6,7 @@ const Ar = makeEnum('AuthRole', {
 } as const)
 
 const El = makeEnum('EmailsList', {
-	NO_REPLY: 'no-reply@stranerd.com'
+	SUPPORT: 'support@greep.io',
 } as const)
 
 const Ev = makeEnum('EventTypes', {
