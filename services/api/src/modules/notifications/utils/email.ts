@@ -24,7 +24,7 @@ const sendMail = async (email: Email) => {
 	})
 
 	await transporter.sendMail({
-		from: `Stranerd ${from}`,
+		from: `Greep ${from}`,
 		html: content,
 		to,
 		subject,
