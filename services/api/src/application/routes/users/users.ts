@@ -2,6 +2,7 @@ import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified, isVendor } 
 import { StorageUseCases } from '@modules/storage'
 import { BusinessTime, UserEntity, UserType, UserVendorBusinessDays, UserVendorType, UsersUseCases } from '@modules/users'
 import { LocationInput, LocationSchema, TimeSchema, Tz, timezones } from '@utils/types'
+import { Phone } from '@modules/auth'
 import {
 	ApiDef,
 	BadRequestError,
@@ -13,6 +14,7 @@ import {
 	QueryResults,
 	Router,
 	Schema,
+	Validation,
 	validate,
 } from 'equipped'
 
@@ -48,7 +50,8 @@ router.post<UsersUpdateTypeRouteDef>({ path: '/type', key: 'users-users-update-t
 					name: Schema.string().min(1),
 					banner: Schema.file().image().nullish(),
 					email: Schema.string().email().nullable(),
-					contactNumber: Schema.string().min(10),
+					contactNumber: Schema.any().addRule(Validation.isValidPhone()).nullable(),
+					description: Schema.string().nullable(),
 					website: Schema.string().url().nullable(),
 					location: LocationSchema(),
 					passport: Schema.file().image().nullish(),
@@ -232,7 +235,8 @@ type UsersUpdateTypeRouteDef = ApiDef<{
 				name: string
 				banner?: FileSchema | null
 				email: string | null
-				contactNumber: string | null
+				contactNumber: Phone | null
+				description: String | null
 				website: string | null
 				location: LocationInput
 				passport?: FileSchema | null

@@ -103,7 +103,8 @@ export type UserTypeData =
 			name: string
 			banner: MediaOutput | null
 			email: string | null
-			contactNumber: string | null
+			contactNumber: Phone | null
+			description: String | null
 			website: string | null
 			location: Location
 			passport: MediaOutput | null
