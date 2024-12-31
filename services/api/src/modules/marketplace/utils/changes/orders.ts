@@ -8,6 +8,7 @@ import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
+import { NotificationType, sendNotification } from '@modules/notifications'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -36,6 +37,28 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 					discount: after.discount,
 				},
 			})
+
+		if (after.data.type === OrderType.cartLink) {
+			const drivers = await UsersUseCases.get({
+				where: [{ field: 'roles.isDriver', condition: Conditions.eq, value: true }],
+			})
+
+			await Promise.all(
+				drivers.results.map(async (driver) => {
+					await sendNotification([driver.id], {
+						title: `New Order Created`,
+						body: `A new ${after.data.type} order #${after.id} has been created.`,
+						sendEmail: true,
+						data: {
+							type: NotificationType.OrderCreated,
+							orderId: after.id,
+							orderType: after.data.type,
+							message: 'A new order is available for delivery.',
+						},
+					})
+				}),
+			)
+		}
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
