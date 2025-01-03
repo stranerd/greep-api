@@ -45,7 +45,8 @@ const verifyUser = async (userId: string, discount: number) => {
 	if (!user || user.isDeleted()) throw new BadRequestError('profile not found')
 
 	const score = ActivityEntity.getScore({ type: ActivityType.orderDiscount, discount, orderId: '' })
-	if (user.account.rankings.overall.value + score < 0) throw new BadRequestError('not enough points for this discount')
+	// if (user.account.rankings.overall.value + score < 0) throw new BadRequestError('not enough points for this discount')
+	if (user.account.rankings.overall.value + score < 0) return { user }
 
 	return { user }
 }
