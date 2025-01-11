@@ -1,5 +1,5 @@
 import { Currencies, FlutterwavePayment } from '@modules/payment'
-import { calculateDistanceBetween } from '@utils/geo'
+// import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { resolvePacks } from '../../utils/carts'
@@ -146,9 +146,10 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 		const vatCap = 25
 		const vat = Math.min(subTotal * vatPercentage, vatCap)
 
-		const distance = calculateDistanceBetween(data.from.coords, data.to.coords)
-		const feePerMeters = 15 / 1000
-		const preFee = distance * feePerMeters
+		// const distance = calculateDistanceBetween(data.from.coords, data.to.coords)
+		// const feePerMeters = 15 / 1000
+		// const preFee = distance * feePerMeters
+		const preFee = 0
 		const fee = hasFreeDelivery ? 0 : preFee
 
 		const total = subTotal + vat + fee
