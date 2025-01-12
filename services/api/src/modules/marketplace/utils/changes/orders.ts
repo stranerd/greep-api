@@ -41,10 +41,15 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 		const drivers = await UsersUseCases.get({
 			where: [{ field: 'roles.isDriver', condition: Conditions.eq, value: true }],
 		})
-		const uniqueDrivers = [...new Map(drivers.results.map((driver) => [driver.id, driver])).values()]
+
+		const processedDrivers = new Set()
 
 		await Promise.all(
-			uniqueDrivers.map(async (driver) => {
+			drivers.results.map(async (driver) => {
+				if (processedDrivers.has(driver.id)) {
+					return
+				}
+				processedDrivers.add(driver.id)
 				await sendNotification([driver.id], {
 					title: `New Order Created`,
 					body: `A new ${after.data.type} order #${after.id} has been created.`,
@@ -56,7 +61,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 						message: 'A new order is available for delivery.',
 					},
 				})
-				await fetch('https://notifyneworder-vlghotkn6q-uc.a.run.app', {
+				await fetch('link', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
