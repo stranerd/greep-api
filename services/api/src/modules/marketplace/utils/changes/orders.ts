@@ -41,9 +41,10 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 		const drivers = await UsersUseCases.get({
 			where: [{ field: 'roles.isDriver', condition: Conditions.eq, value: true }],
 		})
+		const uniqueDrivers = [...new Map(drivers.results.map((driver) => [driver.id, driver])).values()]
 
 		await Promise.all(
-			drivers.results.map(async (driver) => {
+			uniqueDrivers.map(async (driver) => {
 				await sendNotification([driver.id], {
 					title: `New Order Created`,
 					body: `A new ${after.data.type} order #${after.id} has been created.`,
