@@ -61,7 +61,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 						message: 'A new order is available for delivery.',
 					},
 				})
-				await fetch('link', {
+				await fetch('https://notifyneworder-vlghotkn6q-uc.a.run.app', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
