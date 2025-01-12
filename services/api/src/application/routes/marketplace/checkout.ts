@@ -146,6 +146,7 @@ router.post<OrdersDispatchRouteDef>({ path: '/dispatch', key: 'marketplace-order
 				size: Schema.number().gte(0),
 				recipientName: Schema.string().min(1),
 				recipientPhone: Schema.any().addRule(Validation.isValidPhone()),
+				deliveryFee: Schema.number().gte(0),
 			}),
 		},
 		req.body,
@@ -176,6 +177,7 @@ router.post<OrdersDispatchFeeRouteDef>({ path: '/dispatch/fee', key: 'marketplac
 				size: Schema.number().gte(0),
 				recipientName: Schema.string().min(1),
 				recipientPhone: Schema.any().addRule(Validation.isValidPhone()),
+				deliveryFee: Schema.number().gte(0),
 			}),
 		},
 		req.body,
@@ -213,6 +215,7 @@ type DispatchOrder = CreateOrderBase & {
 		size: number
 		recipientName: string
 		recipientPhone: Phone
+		deliveryFee: number
 	}
 }
 
