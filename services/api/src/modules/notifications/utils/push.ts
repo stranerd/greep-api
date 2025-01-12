@@ -51,7 +51,7 @@ export const sendPushNotification = async (notification: PushNotification) => {
 	}
 }
 
-export const sendFetchRequest = async (data: OrderEntity, driverId: string) => {
+export const sendDriverNotification = async (data: OrderEntity) => {
 	try {
 		await fetch('https://notifyneworder-vlghotkn6q-uc.a.run.app', {
 			method: 'POST',
@@ -65,6 +65,6 @@ export const sendFetchRequest = async (data: OrderEntity, driverId: string) => {
 			}),
 		})
 	} catch (err) {
-		await appInstance.logger.error(`Error sending fetch request for driver ${driverId}:`, err)
+		await appInstance.logger.error(err)
 	}
 }

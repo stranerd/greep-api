@@ -8,7 +8,7 @@ import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
-import { sendFetchRequest } from '@modules/notifications/utils/push'
+import { sendDriverNotification } from '@modules/notifications/utils/push'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -37,14 +37,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 					discount: after.discount,
 				},
 			})
-
-		const drivers = await UsersUseCases.get({
-			where: [{ field: 'roles.isDriver', condition: Conditions.eq, value: true }],
-		})
-
-		for (const driver of drivers.results) {
-			await sendFetchRequest(after, driver.id)
-		}
+		await sendDriverNotification(after)
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
