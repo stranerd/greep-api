@@ -8,7 +8,7 @@ import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
-import { NotificationType, sendNotification } from '@modules/notifications'
+import { sendFetchRequest } from '@modules/notifications/utils/push'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -43,29 +43,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 		})
 
 		for (const driver of drivers.results) {
-			await sendNotification([driver.id], {
-				title: `New Order Created`,
-				body: `A new ${after.data.type} order #${after.id} has been created.`,
-				sendEmail: true,
-				data: {
-					type: NotificationType.OrderCreated,
-					orderId: after.id,
-					orderType: after.data.type,
-					message: 'A new order is available for delivery.',
-				},
-			})
-
-			await fetch('https://notifyneworder-vlghotkn6q-uc.a.run.app', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					id: after.id,
-					fromName: after.from.location,
-					toName: after.to.location,
-				}),
-			})
+			await sendFetchRequest(after, driver.id)
 		}
 	},
 	updated: async ({ after, before }) => {
