@@ -37,14 +37,20 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 					discount: after.discount,
 				},
 			})
-
+		const processedOrders = new Set()
 		const drivers = await UsersUseCases.get({
 			where: [{ field: 'roles.isDriver', condition: Conditions.eq, value: true }],
 		})
 
-		for (const driver of drivers.results) {
-			await sendFetchRequest(after, driver.id)
-		}
+		await Promise.all(
+			drivers.results.map(async (driver) => {
+				if (processedOrders.has(after.id)) {
+					return
+				}
+				processedOrders.add(after.id)
+				await sendFetchRequest(after, driver.id)
+			}),
+		)
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(
