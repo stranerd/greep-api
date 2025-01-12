@@ -95,6 +95,7 @@ export type OrderData =
 			size: number
 			recipientName: string
 			recipientPhone: Phone
+			deliveryFee: number
 	  }
 
 export type OrderToModelBase = {
