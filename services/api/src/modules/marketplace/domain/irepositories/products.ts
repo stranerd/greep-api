@@ -12,4 +12,5 @@ export interface IProductRepository {
 	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>
 	updateUserBio: (user: ProductToModel['user']) => Promise<boolean>
 	updateMeta: (ids: string[], property: ProductMeta, value: 1 | -1) => Promise<void>
+	get_total_products: () => Promise<number>
 }

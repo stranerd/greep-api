@@ -91,6 +91,24 @@ export class OrderRepository implements IOrderRepository {
 		throw new Error('invalid data')
 	}
 
+	async get_total_revenue() {
+		// Summ all order.fee.total
+		const total = await Order.aggregate([
+			{
+				$group: {
+					_id: null,
+					total: { $sum: '$fee.total' },
+				},
+			},
+		]).then((res) => res[0]?.total || 0)
+
+		return total
+	}
+
+	async get_total_orders() {
+		return await Order.countDocuments({})
+	}
+
 	async checkout(data: CheckoutInput) {
 		let res = null as OrderFromModel | null
 		await Order.collection.conn.transaction(async (session) => {

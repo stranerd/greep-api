@@ -35,6 +35,10 @@ export class ProductRepository implements IProductRepository {
 		return this.mapper.mapFrom(product)
 	}
 
+	async get_total_products() {
+		return await Product.countDocuments({})
+	}
+
 	async update(id: string, data: Partial<ProductToModel>, userId: string) {
 		const product = await Product.findOneAndUpdate({ _id: id, 'user.id': userId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(product)

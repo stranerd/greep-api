@@ -34,6 +34,18 @@ export class TripsUseCase {
 		return await this.repository.find(id)
 	}
 
+	async get_total_trips() {
+		return await this.repository.get_total_trips()
+	}
+
+	async get_total_completed_trips() {
+		return await this.repository.get_total_completed_trips()
+	}
+
+	async get_total_cancelled_trips() {
+		return await this.repository.get_total_cancelled_trips()
+	}
+
 	async accept(input: { driverId: string; id: string; requested: boolean; accepted: boolean }) {
 		return await this.repository.accept(input)
 	}
