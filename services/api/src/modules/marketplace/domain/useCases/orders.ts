@@ -26,6 +26,14 @@ export class OrderUseCase {
 		return await this.repository.find(id)
 	}
 
+	async get_total_revenue() {
+		return await this.repository.get_total_revenue()
+	}
+
+	async get_total_orders() {
+		return await this.repository.get_total_orders()
+	}
+
 	async accept(input: AcceptOrderInput) {
 		return await this.repository.accept(input)
 	}

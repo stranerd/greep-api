@@ -22,6 +22,10 @@ export class ProductUseCase {
 		return await this.repository.find(id)
 	}
 
+	async get_total_products() {
+		return await this.repository.get_total_products()
+	}
+
 	async update(input: { id: string; data: Partial<ProductToModel>; userId: string }) {
 		return this.repository.update(input.id, input.data, input.userId)
 	}

@@ -18,4 +18,10 @@ export interface ITripRepository {
 	detail(data: { id: string; driverId: string; data: TransactionToModel }): Promise<TransactionEntity | null>
 
 	accept(data: { id: string; driverId: string; requested: boolean; accepted: boolean }): Promise<TripEntity | null>
+
+	get_total_trips(): Promise<number>
+
+	get_total_completed_trips(): Promise<number>
+
+	get_total_cancelled_trips(): Promise<number>
 }

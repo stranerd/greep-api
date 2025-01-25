@@ -15,6 +15,8 @@ import {
 	verifyAccessToken,
 } from 'equipped'
 import { isAdmin, isAuthenticated, isAuthenticatedButIgnoreVerified } from '../../middlewares'
+import { OrdersUseCases, ProductsUseCases } from '@modules/marketplace'
+import { TripsUseCases } from '@modules/trips'
 
 const router = new Router({ path: '/user', groups: ['User'] })
 
@@ -106,7 +108,44 @@ router.get<SetSuperAdminRouteDef>({ path: '/superAdmin', key: 'user-super-admin'
 	})
 })
 
+router.get<GetDashboardSummaryRouteDef>({ path: '/dashboard-summary', key: 'dashboard-summary' })(async () => {
+	const totalRevenue = await OrdersUseCases.get_total_revenue()
+	const totalTrips = await TripsUseCases.get_total_trips()
+	const totalRiders = await AuthUsersUseCases.count_riders()
+	const totalVendors = await AuthUsersUseCases.count_vendors()
+	return { totalRevenue, totalTrips, totalRiders, totalVendors }
+})
+
+router.get<GetVendorsSummaryRouteDef>({ path: '/vendors-summary', key: 'vendors-summary' })(async () => {
+	const totalRevenue = await OrdersUseCases.get_total_revenue()
+	const totalVendors = await AuthUsersUseCases.count_vendors()
+	const totalProducts = await ProductsUseCases.get_total_products()
+	const totalOrders = await OrdersUseCases.get_total_orders()
+	const totalCompletedTrips = await TripsUseCases.get_total_completed_trips()
+	const totalCancelledTrips = await TripsUseCases.get_total_cancelled_trips()
+	return { totalRevenue, totalVendors, totalProducts, totalOrders, totalCompletedTrips, totalCancelledTrips }
+})
+
 export default router
+
+type GetVendorsSummaryRouteDef = ApiDef<{
+	key: 'vendors-summary'
+	method: 'get'
+	response: {
+		totalRevenue: number
+		totalVendors: number
+		totalProducts: number
+		totalOrders: number
+		totalCompletedTrips: number
+		totalCancelledTrips: number
+	}
+}>
+
+type GetDashboardSummaryRouteDef = ApiDef<{
+	key: 'dashboard-summary'
+	method: 'get'
+	response: { totalRevenue: number; totalTrips: number; totalRiders: number; totalVendors: number }
+}>
 
 type GetAuthUserRouteDef = ApiDef<{
 	key: 'user-get'

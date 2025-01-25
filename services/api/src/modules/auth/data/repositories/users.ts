@@ -27,6 +27,16 @@ export class UserRepository implements IUserRepository {
 		}
 	}
 
+	async count_riders() {
+		// Get a count of all users with roles.isDriver is true
+		return await User.countDocuments({ 'roles.isDriver': true })
+	}
+
+	async count_vendors() {
+		// Get a count of all users with roles.isVendor is true
+		return await User.countDocuments({ 'roles.isVendor': true })
+	}
+
 	async deleteUsers(userIds: string[]) {
 		const res = await User.deleteMany({ _id: { $in: userIds } })
 		return res.acknowledged

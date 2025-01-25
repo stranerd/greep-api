@@ -27,6 +27,19 @@ export class TripRepository implements ITripRepository {
 		}
 	}
 
+	async get_total_trips() {
+		// Get a count of all trips
+		return await Trip.countDocuments({})
+	}
+
+	async get_total_completed_trips() {
+		return await Trip.countDocuments({ status: TripStatus.ended })
+	}
+
+	async get_total_cancelled_trips() {
+		return await Trip.countDocuments({ status: TripStatus.cancelled })
+	}
+
 	async find(id: string) {
 		const trip = await Trip.findById(id)
 		return this.mapper.mapFrom(trip)

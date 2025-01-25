@@ -56,4 +56,12 @@ export class AuthUsersUseCase {
 	async updateRole(roleInput: RoleInput) {
 		return await this.repository.updateUserRole(roleInput)
 	}
+
+	async count_riders() {
+		return await this.repository.count_riders()
+	}
+
+	async count_vendors() {
+		return await this.repository.count_vendors()
+	}
 }

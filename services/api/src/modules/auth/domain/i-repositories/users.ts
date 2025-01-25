@@ -16,4 +16,8 @@ export interface IUserRepository {
 	updatePassword(userId: string, password: string): Promise<boolean>
 
 	deleteUsers(userIds: string[]): Promise<boolean>
+
+	count_riders(): Promise<number>
+
+	count_vendors(): Promise<number>
 }
