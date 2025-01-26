@@ -6,6 +6,7 @@ export enum NotificationType {
 	RequestPaid = 'RequestPaid',
 	RequestRejected = 'RequestRejected',
 	RequestAcknowledged = 'RequestAcknowledged',
+	OrderCreated = 'OrderCreated',
 }
 
 export type NotificationData =
@@ -48,4 +49,10 @@ export type NotificationData =
 			requestId: string
 			amount: number
 			currency: string
+	  }
+	| {
+			type: NotificationType.OrderCreated
+			orderId: string
+			orderType: string
+			message: string
 	  }

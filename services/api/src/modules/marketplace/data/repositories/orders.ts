@@ -199,17 +199,43 @@ export class OrderRepository implements IOrderRepository {
 		return this.mapper.mapFrom(completed)
 	}
 
+	// async markPaid(id: string, driverId: string | null) {
+	// 	const order = await Order.findOneAndUpdate(
+	// 		{
+	// 			_id: id,
+	// 			...(driverId ? { driverId } : {}),
+	// 			[`status.${OrderStatus.paid}`]: null,
+	// 		},
+	// 		{ $set: { [`status.${OrderStatus.paid}`]: { at: Date.now() } } },
+	// 		{ new: true },
+	// 	)
+	// 	return this.mapper.mapFrom(order)
+	// }
+
 	async markPaid(id: string, driverId: string | null) {
-		const order = await Order.findOneAndUpdate(
+		const order = this.mapper.mapFrom(await Order.findById(id))
+
+		if (!order || order.driverId !== driverId) {
+			throw new NotAuthorizedError()
+		}
+		if (order.getCurrentStatus() !== OrderStatus.driverAssigned) {
+			throw new NotAuthorizedError('Order delivery is not in progress')
+		}
+
+		const updatedOrder = await Order.findByIdAndUpdate(
+			id,
 			{
-				_id: id,
-				...(driverId ? { driverId } : {}),
-				[`status.${OrderStatus.paid}`]: null,
+				$set: {
+					[`status.${OrderStatus.paid}`]: { at: Date.now() },
+					[`status.${OrderStatus.shipped}`]: { at: Date.now() },
+					[`status.${OrderStatus.completed}`]: { at: Date.now() },
+					done: true,
+				},
 			},
-			{ $set: { [`status.${OrderStatus.paid}`]: { at: Date.now() } } },
 			{ new: true },
 		)
-		return this.mapper.mapFrom(order)
+
+		return this.mapper.mapFrom(updatedOrder)
 	}
 
 	async markRefunded(id: string) {

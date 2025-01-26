@@ -4,6 +4,7 @@ import { messaging } from 'firebase-admin'
 import { TokensUseCases } from '../'
 import { UsersUseCases } from '@modules/users'
 import { Validation } from 'equipped'
+import { OrderEntity } from '@modules/marketplace'
 
 export const sendPushNotification = async (notification: PushNotification) => {
 	try {
@@ -45,6 +46,24 @@ export const sendPushNotification = async (notification: PushNotification) => {
 					})
 			}),
 		)
+	} catch (err) {
+		await appInstance.logger.error(err)
+	}
+}
+
+export const sendDriverNotification = async (data: OrderEntity) => {
+	try {
+		await fetch('https://notifyneworder-vlghotkn6q-uc.a.run.app', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				id: data.id,
+				fromName: data.from.location,
+				toName: data.to.location,
+			}),
+		})
 	} catch (err) {
 		await appInstance.logger.error(err)
 	}
