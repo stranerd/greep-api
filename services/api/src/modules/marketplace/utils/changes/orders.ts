@@ -8,6 +8,7 @@ import { OrdersUseCases, ProductsUseCases } from '../..'
 import { OrderFromModel } from '../../data/models/orders'
 import { OrderEntity } from '../../domain/entities/orders'
 import { OrderStatus, OrderType, ProductMeta } from '../../domain/types'
+import { sendDriverNotification } from '@modules/notifications/utils/push'
 
 export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEntity> = {
 	created: async ({ after }) => {
@@ -36,6 +37,7 @@ export const OrderDbChangeCallbacks: DbChangeCallbacks<OrderFromModel, OrderEnti
 					discount: after.discount,
 				},
 			})
+		await sendDriverNotification(after)
 	},
 	updated: async ({ after, before }) => {
 		await appInstance.listener.updated(

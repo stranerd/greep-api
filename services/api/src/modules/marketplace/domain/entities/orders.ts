@@ -1,9 +1,19 @@
 import { Currencies, FlutterwavePayment } from '@modules/payment'
-import { calculateDistanceBetween } from '@utils/geo'
+// import { calculateDistanceBetween } from '@utils/geo'
 import { Location } from '@utils/types'
 import { BaseEntity } from 'equipped'
 import { resolvePacks } from '../../utils/carts'
-import { EmbeddedUser, OrderData, OrderFee, OrderPayment, OrderStatus, OrderStatusType, OrderToModelBase, PromotionType } from '../types'
+import {
+	EmbeddedUser,
+	OrderData,
+	OrderFee,
+	OrderPayment,
+	OrderStatus,
+	OrderStatusType,
+	OrderToModelBase,
+	OrderType,
+	PromotionType,
+} from '../types'
 import { EmbeddedProduct } from './products'
 import { PromotionEntity } from './promotions'
 
@@ -141,17 +151,19 @@ export class OrderEntity extends BaseEntity<OrderEntityProps, 'email'> {
 			.reduce((acc, price) => acc + price, 0)
 
 		const subTotal = Math.max(preSubTotal - fixedAmountDiscount, 0) * (1 - percentageDiscount)
+		const dispatchSubTotal = data.data.type === OrderType.dispatch ? Math.max(data.data.deliveryFee) : 0
 
 		const vatPercentage = 0.05
 		const vatCap = 25
 		const vat = Math.min(subTotal * vatPercentage, vatCap)
 
-		const distance = calculateDistanceBetween(data.from.coords, data.to.coords)
-		const feePerMeters = 15 / 1000
-		const preFee = distance * feePerMeters
+		// const distance = calculateDistanceBetween(data.from.coords, data.to.coords)
+		// const feePerMeters = 15 / 1000
+		// const preFee = distance * feePerMeters
+		const preFee = 0
 		const fee = hasFreeDelivery ? 0 : preFee
 
-		const total = subTotal + vat + fee
+		const total = data.data.type === OrderType.dispatch ? dispatchSubTotal : subTotal + vat + fee
 		const discountedOff = data.discount * 10
 		const payable = Math.max(total - discountedOff, 0)
 
