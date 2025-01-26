@@ -4,3 +4,7 @@ env.json
 
 docker/public
 services/*/credentials.json
+
+.DS_STORE
+
+node_modules

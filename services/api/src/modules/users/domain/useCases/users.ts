@@ -1,11 +1,12 @@
-import { IUserRepository } from '../i-repositories/users'
-import { UserBio, UserRoles } from '../types'
+import { Location } from '@utils/types'
 import { QueryParams } from 'equipped'
+import { IUserRepository } from '../i-repositories/users'
+import { UserAccount, UserBio, UserRoles, UserTypeData, UserVendorData } from '../types'
 
 export class UsersUseCase {
 	repository: IUserRepository
 
-	constructor (repo: IUserRepository) {
+	constructor(repo: IUserRepository) {
 		this.repository = repo
 	}
 
@@ -13,7 +14,12 @@ export class UsersUseCase {
 		return await this.repository.find(id)
 	}
 
-	async createUserWithBio(params: { id: string, data: UserBio, timestamp: number }) {
+	async findByUsername(username: string) {
+		const { results } = await this.repository.get({ where: [{ field: 'bio.username', value: username }] })
+		return results.at(0) ?? null
+	}
+
+	async createUserWithBio(params: { id: string; data: UserBio; timestamp: number }) {
 		return await this.repository.createUserWithBio(params.id, params.data, params.timestamp)
 	}
 
@@ -21,7 +27,7 @@ export class UsersUseCase {
 		return await this.repository.get(query)
 	}
 
-	async markUserAsDeleted(params: { id: string, timestamp: number }) {
+	async markUserAsDeleted(params: { id: string; timestamp: number }) {
 		return await this.repository.markUserAsDeleted(params.id, params.timestamp)
 	}
 
@@ -29,35 +35,67 @@ export class UsersUseCase {
 		return await this.repository.resetAllUsersStatus()
 	}
 
-	async updateUserStatus(input: { userId: string, socketId: string, add: boolean }) {
+	async updateUserStatus(input: { userId: string; socketId: string; add: boolean }) {
 		return await this.repository.updateUserStatus(input.userId, input.socketId, input.add)
 	}
 
-	async updateUserWithBio(params: { id: string, data: UserBio, timestamp: number }) {
+	async updateUserWithBio(params: { id: string; data: UserBio; timestamp: number }) {
 		return await this.repository.updateUserWithBio(params.id, params.data, params.timestamp)
 	}
 
-	async updateUserWithRoles(params: { id: string, data: UserRoles, timestamp: number }) {
+	async updateUserWithRoles(params: { id: string; data: UserRoles; timestamp: number }) {
 		return await this.repository.updateUserWithRoles(params.id, params.data, params.timestamp)
 	}
 
-	async requestAddDriver(data: { managerId: string, driverId: string, commission: number, add: boolean }) {
-		return await this.repository.requestAddDriver(data.managerId, data.driverId, data.commission, data.add)
+	async incrementMeta(params: { id: string; value: 1 | -1; property: keyof UserAccount['meta'] }) {
+		return await this.repository.incrementUserMetaProperty(params.id, params.property, params.value)
 	}
 
-	async acceptManager(data: { managerId: string, driverId: string, commission: number, accept: boolean }) {
-		return await this.repository.acceptManager(data.managerId, data.driverId, data.commission, data.accept)
+	async resetRankings(key: keyof UserAccount['rankings']) {
+		return await this.repository.resetRankings(key)
 	}
 
-	async updateDriverCommission(data: { managerId: string, driverId: string, commission: number }) {
-		return await this.repository.updateDriverCommission(data.managerId, data.driverId, data.commission)
+	async updateScore(params: { userId: string; amount: number }) {
+		return await this.repository.updateScore(params.userId, params.amount)
 	}
 
-	async removeDriver(data: { managerId: string, driverId: string }) {
-		return await this.repository.removeDriver(data.managerId, data.driverId)
+	async updateType(params: { userId: string; data: UserTypeData }) {
+		return await this.repository.updateType(params.userId, params.data)
 	}
 
-	async updatePushTokens(data: { userId: string, tokens: string[], add: boolean }) {
-		return await this.repository.updatePushTokens(data.userId, data.tokens, data.add)
+	async updateApplication(params: { userId: string; data: UserAccount['application'] }) {
+		return await this.repository.updateApplication(params.userId, params.data)
+	}
+
+	async updateTrip(data: { driverId: string; userId: string; count: number }) {
+		return await this.repository.updateTrip(data)
+	}
+
+	async updateDebt(data: { driverId: string; userId: string; count: number }) {
+		return await this.repository.updateDebt(data)
+	}
+
+	async updateLocation(data: { userId: string; location: Location }) {
+		return await this.repository.updateLocation(data)
+	}
+
+	async updateSettings(params: { userId: string; settings: Partial<UserAccount['settings']> }) {
+		return await this.repository.updateSettings(params.userId, params.settings)
+	}
+
+	async updateSavedLocations(params: { userId: string; savedLocations: UserAccount['savedLocations'] }) {
+		return await this.repository.updateSavedLocations(params.userId, params.savedLocations)
+	}
+
+	async updateVendor<Key extends keyof UserVendorData>(params: { userId: string; type: Key; data: UserVendorData[Key] }) {
+		return await this.repository.updateVendor(params.userId, params.type, params.data)
+	}
+
+	async updateVendorTags(input: { id: string; tagIds: string[]; add: boolean }) {
+		return await this.repository.updateVendorTags(input.id, input.tagIds, input.add)
+	}
+
+	async updateRatings(input: { id: string; ratings: number; add: boolean }) {
+		return await this.repository.updateRatings(input.id, input.ratings, input.add)
 	}
 }

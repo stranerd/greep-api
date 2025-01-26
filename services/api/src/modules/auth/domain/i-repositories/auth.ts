@@ -1,7 +1,7 @@
-import { Credential, PasswordResetInput } from '../types'
 import { AuthTypes, Enum } from 'equipped'
 import { UserToModel } from '../../data/models/users'
 import { AuthUserEntity } from '../entities/users'
+import { Credential, PasswordResetInput } from '../types'
 
 export interface IAuthRepository {
 	addNewUser(user: UserToModel, type: Enum<typeof AuthTypes>): Promise<AuthUserEntity>
@@ -16,7 +16,10 @@ export interface IAuthRepository {
 
 	resetPassword(input: PasswordResetInput): Promise<AuthUserEntity>
 
-	googleSignIn(tokenId: string): Promise<AuthUserEntity>
+	googleSignIn(tokenId: string, referrer: string | null): Promise<AuthUserEntity>
 
-	appleSignIn(data: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }): Promise<AuthUserEntity>
+	appleSignIn(
+		data: { idToken: string; email: string | null; firstName: string | null; lastName: string | null },
+		referrer: string | null,
+	): Promise<AuthUserEntity>
 }

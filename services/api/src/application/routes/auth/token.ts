@@ -1,18 +1,24 @@
-import { makeController, Route, StatusCodes } from 'equipped'
-import { TokenController } from '../../controllers/auth/token'
+import { AuthResponse, getNewTokens } from '@modules/auth'
+import { ApiDef, Router, requireRefreshUser } from 'equipped'
 
-const getNewTokens: Route = {
-	path: '/auth/token',
-	method: 'post',
-	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await TokenController.getNewTokens(req)
-			}
-		})
-	]
-}
+const router = new Router({ path: '/token', groups: ['Token'] })
 
-const routes: Route[] = [getNewTokens]
-export default routes
+router.post<ExchangeTokenRouteDef>({
+	path: '/',
+	key: 'token-exchange',
+	middlewares: [requireRefreshUser],
+	descriptions: ['Requires the Access-Token header even if expired'],
+	security: [{ AccessToken: [] }],
+})(async (req) => {
+	const accessToken = req.headers.AccessToken ?? ''
+	const refreshToken = req.headers.RefreshToken ?? ''
+	return await getNewTokens({ accessToken, refreshToken })
+})
+
+export default router
+
+type ExchangeTokenRouteDef = ApiDef<{
+	key: 'token-exchange'
+	method: 'post'
+	response: AuthResponse
+}>

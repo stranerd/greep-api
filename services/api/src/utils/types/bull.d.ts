@@ -1,6 +1,6 @@
-export { }
+export {}
 
 declare module 'equipped/lib/bull' {
-    interface DelayedJobEvents { }
-    interface CronLikeJobEvents { }
+	interface DelayedJobEvents {}
+	interface CronLikeJobEvents {}
 }

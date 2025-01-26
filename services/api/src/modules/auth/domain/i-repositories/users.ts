@@ -1,6 +1,6 @@
-import { RegisterInput, RoleInput, UserUpdateInput } from '../types'
 import { QueryParams, QueryResults } from 'equipped'
 import { AuthUserEntity } from '../entities/users'
+import { RegisterInput, RoleInput, UserUpdateInput } from '../types'
 
 export interface IUserRepository {
 	findUser(id: string): Promise<AuthUserEntity | null>
@@ -16,4 +16,8 @@ export interface IUserRepository {
 	updatePassword(userId: string, password: string): Promise<boolean>
 
 	deleteUsers(userIds: string[]): Promise<boolean>
+
+	count_riders(): Promise<number>
+
+	count_vendors(): Promise<number>
 }

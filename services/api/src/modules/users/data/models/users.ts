@@ -1,12 +1,4 @@
-import {
-	UserBio,
-	UserDates,
-	UserDrivers,
-	UserManager,
-	UserManagerRequests,
-	UserRoles,
-	UserStatus
-} from '../../domain/types'
+import { UserAccount, UserBio, UserDates, UserRoles, UserStatus, UserTypeData, UserVendorData } from '../../domain/types'
 
 export interface UserFromModel extends UserToModel {
 	_id: string
@@ -17,8 +9,7 @@ export interface UserToModel {
 	roles: UserRoles
 	dates: UserDates
 	status: UserStatus
-	drivers: UserDrivers
-	manager: UserManager | null
-	managerRequests: UserManagerRequests
-	pushTokens: string[]
+	type: UserTypeData | null
+	account: UserAccount
+	vendor: UserVendorData
 }

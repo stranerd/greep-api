@@ -1,6 +1,7 @@
-import { UserEntity } from '../entities/users'
-import { UserBio, UserRoles } from '../types'
+import { Location } from '@utils/types'
 import { QueryParams, QueryResults } from 'equipped'
+import { UserEntity } from '../entities/users'
+import { UserAccount, UserBio, UserRoles, UserTypeData, UserVendorData } from '../types'
 
 export interface IUserRepository {
 	get(query: QueryParams): Promise<QueryResults<UserEntity>>
@@ -19,13 +20,29 @@ export interface IUserRepository {
 
 	resetAllUsersStatus(): Promise<boolean>
 
-	requestAddDriver(managerId: string, driverId: string, commission: number, add: boolean): Promise<boolean>
+	incrementUserMetaProperty(userId: string, propertyName: keyof UserAccount['meta'], value: 1 | -1): Promise<void>
 
-	acceptManager(managerId: string, driverId: string, commission: number, accept: boolean): Promise<boolean>
+	updateScore(userId: string, amount: number): Promise<boolean>
 
-	updateDriverCommission(managerId: string, driverId: string, commission: number): Promise<boolean>
+	resetRankings(key: keyof UserAccount['rankings']): Promise<boolean>
 
-	removeDriver(managerId: string, driverId: string): Promise<boolean>
+	updateType(userId: string, data: UserTypeData): Promise<UserEntity | null>
 
-	updatePushTokens(userId: string, tokens: string[], add: boolean): Promise<boolean>
+	updateApplication(userId, data: UserAccount['application']): Promise<boolean>
+
+	updateTrip(data: { driverId: string; userId: string; count: number }): Promise<boolean>
+
+	updateDebt(data: { driverId: string; userId: string; count: number }): Promise<boolean>
+
+	updateLocation(data: { userId: string; location: Location }): Promise<boolean>
+
+	updateSettings(userId: string, settings: Partial<UserAccount['settings']>): Promise<UserEntity | null>
+
+	updateSavedLocations(userId: string, savedLocations: UserAccount['savedLocations']): Promise<UserEntity | null>
+
+	updateVendor<Type extends keyof UserVendorData>(userId: string, type: Type, data: UserVendorData[Type]): Promise<UserEntity | null>
+
+	updateVendorTags(userId: string, tagIds: string[], add: boolean): Promise<UserEntity | null>
+
+	updateRatings(id: string, ratings: number, add: boolean): Promise<boolean>
 }

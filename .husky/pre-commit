@@ -1,4 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env sh
 
-make lint-all && make build-all
+pnpm lint:staged && pnpm build

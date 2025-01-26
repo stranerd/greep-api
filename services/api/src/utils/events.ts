@@ -1,6 +1,6 @@
 import { Events, EventTypes } from 'equipped'
 import { appInstance } from '@utils/environment'
-import { sendMailAndCatchError } from '@utils/modules/emails'
+import { sendMailAndCatchError } from '@modules/notifications'
 import { StorageUseCases } from '@modules/storage'
 
 const eventBus = appInstance.eventBus
@@ -11,10 +11,10 @@ export const subscribers = {
 	}),
 	[EventTypes.DELETEFILE]: eventBus.createSubscriber<Events['DELETEFILE']>(EventTypes.DELETEFILE, async (data) => {
 		if (data?.path) await StorageUseCases.delete(data.path)
-	})
+	}),
 }
 
 export const publishers = {
 	[EventTypes.SENDMAIL]: eventBus.createPublisher<Events['SENDMAIL']>(EventTypes.SENDMAIL),
-	[EventTypes.DELETEFILE]: eventBus.createPublisher<Events['DELETEFILE']>(EventTypes.DELETEFILE)
+	[EventTypes.DELETEFILE]: eventBus.createPublisher<Events['DELETEFILE']>(EventTypes.DELETEFILE),
 }

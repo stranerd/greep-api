@@ -1,57 +1,117 @@
-import { makeController, Route, StatusCodes } from 'equipped'
-import { EmailsController } from '../../controllers/auth/emails'
+import { isAuthenticatedButIgnoreVerified } from '@application/middlewares'
+import { AuthResponse, AuthUseCases, AuthUsersUseCases, generateAuthOutput, verifyReferrer } from '@modules/auth'
+import { ApiDef, AuthTypes, Random, Router, Schema, Validation, ValidationError, validate } from 'equipped'
 
-const emailSignIn: Route = {
-	path: '/auth/emails/signin',
-	method: 'post',
-	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.signin(req)
-			}
-		})
-	]
-}
+const router = new Router({ path: '/emails', groups: ['Emails'] })
 
-const emailSignUp: Route = {
-	path: '/auth/emails/signup',
-	method: 'post',
-	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.signup(req)
-			}
-		})
-	]
-}
+router.post<SigninRouteDef>({ path: '/signin', key: 'emails-signin' })(async (req) => {
+	const validateData = validate(
+		{
+			email: Schema.string(),
+			password: Schema.string(),
+		},
+		req.body,
+	)
 
-const sendVerificationEmail: Route = {
-	path: '/auth/emails/verify/mail',
-	method: 'post',
-	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.sendVerificationMail(req)
-			}
-		})
-	]
-}
+	const data = await AuthUseCases.authenticateUser(validateData)
+	return await generateAuthOutput(data)
+})
 
-const verifyEmail: Route = {
-	path: '/auth/emails/verify',
-	method: 'post',
-	controllers: [
-		makeController(async (req) => {
-			return {
-				status: StatusCodes.Ok,
-				result: await EmailsController.verifyEmail(req)
-			}
-		})
-	]
-}
+router.post<SignupRouteDef>({ path: '/signup', key: 'emails-signup' })(async (req) => {
+	const userCredential = {
+		...req.body,
+		email: req.body.email ?? '',
+	}
 
-const routes: Route[] = [emailSignIn, emailSignUp, sendVerificationEmail, verifyEmail]
-export default routes
+	const users = await AuthUsersUseCases.findUsersByEmailorUsername(userCredential.email)
+	const emailUser = users.find((u) => u.email === userCredential.email)
+
+	const { email, password, referrer } = validate(
+		{
+			email: Schema.string()
+				.email()
+				.addRule((value) => {
+					const email = value as string
+					if (!emailUser) return Validation.isValid(email)
+					if (emailUser.authTypes.includes(AuthTypes.email))
+						return Validation.isInvalid(['this email already exists with a password attached'], email)
+					if (emailUser.authTypes.includes(AuthTypes.google))
+						return Validation.isInvalid(['this email is associated with a google account. Try signing in with google'], email)
+					if (emailUser.authTypes.includes(AuthTypes.apple))
+						return Validation.isInvalid(['this email is associated with an apple account. Try signing in with apple'], email)
+					return Validation.isInvalid(['email already in use'], email)
+				}),
+			password: Schema.string().min(8).max(16),
+			referrer: Schema.string().min(1).nullable().default(null),
+		},
+		userCredential,
+	)
+
+	const validateData = {
+		name: { first: '', last: '' },
+		username: Random.string(9),
+		email,
+		password,
+		photo: null,
+		referrer: await verifyReferrer(referrer),
+		phone: null,
+	}
+
+	const updatedUser = emailUser
+		? await AuthUsersUseCases.updateDetails({ userId: emailUser.id, data: validateData })
+		: await AuthUseCases.registerUser(validateData)
+
+	return await generateAuthOutput(updatedUser)
+})
+
+router.post<SendVerifyMailRouteDef>({
+	path: '/verify/mail',
+	key: 'emails-send-verify-mail',
+	middlewares: [isAuthenticatedButIgnoreVerified],
+})(async (req) => {
+	const user = await AuthUsersUseCases.findUserByEmail(req.authUser!.email)
+	if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
+
+	return await AuthUseCases.sendVerificationMail(user.email)
+})
+
+router.post<VerifyEmailRouteDef>({ path: '/verify', key: 'emails-verify-email' })(async (req) => {
+	const { token } = validate(
+		{
+			token: Schema.force.string(),
+		},
+		req.body,
+	)
+
+	const data = await AuthUseCases.verifyEmail(token)
+	return await generateAuthOutput(data)
+})
+
+export default router
+
+type SigninRouteDef = ApiDef<{
+	key: 'emails-signin'
+	method: 'post'
+	body: { email: string; password: string }
+	response: AuthResponse
+}>
+
+type SignupRouteDef = ApiDef<{
+	key: 'emails-signup'
+	method: 'post'
+	body: { email: string; password: string; referrer?: string | null }
+	response: AuthResponse
+}>
+
+type SendVerifyMailRouteDef = ApiDef<{
+	key: 'emails-send-verify-mail'
+	method: 'post'
+	response: boolean
+}>
+
+type VerifyEmailRouteDef = ApiDef<{
+	key: 'emails-verify-email'
+	method: 'post'
+	body: { token: string }
+	response: AuthResponse
+}>

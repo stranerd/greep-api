@@ -1,28 +1,21 @@
+import { ActivityRepository } from './data/repositories/activities'
+import { ReferralRepository } from './data/repositories/referrals'
 import { UserRepository } from './data/repositories/users'
-import { CustomerRepository } from './data/repositories/customers'
-import { TransactionRepository } from './data/repositories/transactions'
-import { TripRepository } from './data/repositories/trips'
+import { ActivitiesUseCase } from './domain/useCases/activities'
+import { ReferralsUseCase } from './domain/useCases/referrals'
 import { UsersUseCase } from './domain/useCases/users'
-import { CustomersUseCase } from './domain/useCases/customers'
-import { TransactionsUseCase } from './domain/useCases/transactions'
-import { TripsUseCase } from './domain/useCases/trips'
 
 const userRepository = UserRepository.getInstance()
-const customerRepository = CustomerRepository.getInstance()
-const transactionRepository = TransactionRepository.getInstance()
-const tripRepository = TripRepository.getInstance()
+const referralRepository = ReferralRepository.getInstance()
+const activityRepository = ActivityRepository.getInstance()
 
 export const UsersUseCases = new UsersUseCase(userRepository)
-export const CustomersUseCases = new CustomersUseCase(customerRepository)
-export const TransactionsUseCases = new TransactionsUseCase(transactionRepository)
-export const TripsUseCases = new TripsUseCase(tripRepository)
+export const ReferralsUseCases = new ReferralsUseCase(referralRepository)
+export const ActivitiesUseCases = new ActivitiesUseCase(activityRepository)
 
-export { UserFromModel } from './data/models/users'
-export { CustomerFromModel } from './data/models/customers'
-export { TransactionFromModel } from './data/models/transactions'
-export { TripFromModel } from './data/models/trips'
-export { UserEntity } from './domain/entities/users'
-export { CustomerEntity } from './domain/entities/customers'
-export { TransactionEntity } from './domain/entities/transactions'
-export { TripEntity } from './domain/entities/trips'
-export { EmbeddedUser, UserBio, UserRoles, TransactionType, PaymentType, TripStatus } from './domain/types'
+export { ActivityEntity } from './domain/entities/activities'
+export { ReferralEntity } from './domain/entities/referrals'
+export { generateDefaultUser, UserEntity } from './domain/entities/users'
+export { ActivityType, UserMeta, UserRankings, UserType, UserVendorBusinessDays, UserVendorType } from './domain/types'
+export type { BusinessTime, EmbeddedUser } from './domain/types'
+export { isVendorOpen, mergeWithUsers } from './utils'

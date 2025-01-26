@@ -1,4 +1,4 @@
-APPS = admin api
+APPS = api
 ALL_FOLDERS = ${APPS}
 args = $(filter-out $@,$(MAKECMDGOALS))
 
@@ -11,6 +11,7 @@ setup:
 	mkdir -p /c/data/docker/greep/kafka/data
 	chmod 777 /c/data/docker/greep/kafka/data
 	node bin/copy-envs.js $(APPS)
+	node bin/generate-schemas.js $(APPS)
 
 dev-start: setup
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build --remove-orphans
@@ -38,12 +39,3 @@ prod-stop:
 
 prod-watch-logs:
 	docker-compose -f docker-compose.yml logs
-
-install-all:
-	$(foreach folder, $(ALL_FOLDERS), yarn --cwd ./services/$(folder) &&) echo
-
-lint-all:
-	$(foreach folder, $(ALL_FOLDERS), yarn --cwd ./services/$(folder) lint &&) echo
-
-build-all:
-	$(foreach folder, $(ALL_FOLDERS), yarn --cwd ./services/$(folder) build &&) echo

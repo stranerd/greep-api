@@ -4,17 +4,18 @@ import { UserFromModel, UserToModel } from '../models/users'
 
 export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntity> {
 	mapFrom(param: UserFromModel | null) {
-		return !param ? null : new UserEntity({
-			id: param._id.toString(),
-			bio: param.bio,
-			dates: param.dates,
-			roles: param.roles,
-			drivers: param.drivers,
-			manager: param.manager,
-			managerRequests: param.managerRequests,
-			pushTokens: param.pushTokens,
-			status: param.status
-		})
+		return !param
+			? null
+			: new UserEntity({
+					id: param._id.toString(),
+					bio: param.bio,
+					dates: param.dates,
+					roles: param.roles,
+					status: param.status,
+					account: param.account,
+					type: param.type,
+					vendor: param.vendor,
+				})
 	}
 
 	mapTo(param: UserEntity) {
@@ -22,11 +23,10 @@ export class UserMapper extends BaseMapper<UserFromModel, UserToModel, UserEntit
 			bio: param.bio,
 			dates: param.dates,
 			roles: param.roles,
-			manager: param.manager,
-			drivers: param.drivers,
-			managerRequests: param.managerRequests,
-			pushTokens: param.pushTokens,
-			status: param.status
+			status: param.status,
+			account: param.account,
+			type: param.type,
+			vendor: param.vendor,
 		}
 	}
 }

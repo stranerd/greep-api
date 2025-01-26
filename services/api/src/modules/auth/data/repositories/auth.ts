@@ -1,7 +1,5 @@
-import { IAuthRepository } from '../../domain/i-repositories/auth'
-import { Credential, PasswordResetInput } from '../../domain/types'
-import User from '../mongooseModels/users'
-import { UserFromModel, UserToModel } from '../models/users'
+import { appInstance } from '@utils/environment'
+import { publishers } from '@utils/events'
 import {
 	AuthTypes,
 	BadRequestError,
@@ -10,14 +8,16 @@ import {
 	Hash,
 	MediaOutput,
 	Random,
+	ValidationError,
 	readEmailFromPug,
 	signinWithApple,
 	signinWithGoogle,
-	ValidationError
 } from 'equipped'
-import { appInstance } from '@utils/environment'
+import { IAuthRepository } from '../../domain/i-repositories/auth'
+import { Credential, PasswordResetInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
-import { publishers } from '@utils/events'
+import { UserFromModel, UserToModel } from '../models/users'
+import User from '../mongooseModels/users'
 
 const TOKENS_TTL_IN_SECS = 60 * 60
 
@@ -39,8 +39,8 @@ export class AuthRepository implements IAuthRepository {
 
 	async authenticateUser(details: Credential, passwordValidate: boolean, type: Enum<typeof AuthTypes>) {
 		details.email = details.email.toLowerCase()
-		const user = await User.findOne({ email: details.email })
-		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email exists'] }])
+		const user = await User.findOne({ $or: [{ email: details.email }, { username: details.email }] })
+		if (!user) throw new ValidationError([{ field: 'email', messages: ['No account with such email/username exists'] }])
 
 		const match = passwordValidate
 			? user.authTypes.includes(AuthTypes.email)
@@ -67,7 +67,7 @@ export class AuthRepository implements IAuthRepository {
 			subject: 'Verify Your Email',
 			from: EmailsList.SUPPORT,
 			content: emailContent,
-			data: {}
+			data: {},
 		})
 
 		return true
@@ -99,7 +99,7 @@ export class AuthRepository implements IAuthRepository {
 			subject: 'Reset Your Password',
 			from: EmailsList.SUPPORT,
 			content: emailContent,
-			data: {}
+			data: {},
 		})
 
 		return true
@@ -111,69 +111,91 @@ export class AuthRepository implements IAuthRepository {
 		if (!userEmail) throw new BadRequestError('Invalid token')
 		await appInstance.cache.delete('password-reset-token-' + input.token)
 
-		const user = await User.findOneAndUpdate({ email: userEmail }, {
-			$set: { password: await Hash.hash(input.password) },
-			$addToSet: { authTypes: AuthTypes.email }
-		}, { new: true })
+		const user = await User.findOneAndUpdate(
+			{ email: userEmail },
+			{
+				$set: { password: await Hash.hash(input.password) },
+				$addToSet: { authTypes: AuthTypes.email },
+			},
+			{ new: true },
+		)
 		if (!user) throw new BadRequestError('No account with saved email exists')
 
 		return this.mapper.mapFrom(user)!
 	}
 
-	async googleSignIn(idToken: string) {
+	async googleSignIn(idToken: string, referrer: string | null) {
 		const data = await signinWithGoogle(idToken)
 		const email = data.email!.toLowerCase()
 
-		const photo = data.picture ? {
-			link: data.picture
-		} as unknown as MediaOutput : null
+		const photo = data.picture ? ({ link: data.picture, type: 'image/png' } as unknown as MediaOutput) : null
 
 		return this.authorizeSocial(AuthTypes.google, {
-			email, photo, name: { first: data.first_name, last: data.last_name },
-			isVerified: data.email_verified === 'true'
+			email,
+			photo,
+			name: { first: data.first_name, last: data.last_name },
+			isVerified: data.email_verified === 'true',
+			referrer,
 		})
 	}
 
-	async appleSignIn({
-		idToken,
-		firstName,
-		lastName
-	}: { idToken: string, email: string | null, firstName: string | null, lastName: string | null }) {
+	async appleSignIn({ idToken, firstName, lastName }, referrer) {
 		const data = await signinWithApple(idToken).catch((e: any) => {
 			throw new BadRequestError(e.message)
 		})
 		const email = data.email?.toLowerCase()
-		if (!email) throw new BadRequestError('can\'t access your email. Signin another way')
+		if (!email) throw new BadRequestError('cant access your email. Signin another way')
 
 		return this.authorizeSocial(AuthTypes.apple, {
-			email, photo: null, name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
-			isVerified: data.email_verified === 'true'
+			email,
+			photo: null,
+			name: { first: firstName ?? 'Apple User', last: lastName ?? '' },
+			isVerified: data.email_verified === 'true',
+			referrer,
 		})
 	}
 
-	private async authorizeSocial(type: Enum<typeof AuthTypes>, data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified'>) {
+	private async authorizeSocial(
+		type: Enum<typeof AuthTypes>,
+		data: Pick<UserToModel, 'email' | 'name' | 'photo' | 'isVerified' | 'referrer'>,
+	) {
 		const userData = await User.findOne({ email: data.email })
 
-		if (!userData) return await this.addNewUser({
-			name: data.name,
-			email: data.email,
-			photo: data.photo,
-			authTypes: [type],
-			password: '',
-			isVerified: data.isVerified
-		}, type)
+		if (!userData)
+			return await this.addNewUser(
+				{
+					name: data.name,
+					username: Random.string(9),
+					email: data.email,
+					photo: data.photo,
+					phone: null,
+					authTypes: [type],
+					password: '',
+					isVerified: data.isVerified,
+					referrer: data.referrer,
+				},
+				type,
+			)
 
-		return await this.authenticateUser({
-			email: userData.email,
-			password: ''
-		}, false, type)
+		return await this.authenticateUser(
+			{
+				email: userData.email,
+				password: '',
+			},
+			false,
+			type,
+		)
 	}
 
 	private async signInUser(user: UserFromModel, type: Enum<typeof AuthTypes>) {
-		const userUpdated = await User.findByIdAndUpdate(user._id, {
-			$set: { lastSignedInAt: Date.now() },
-			$addToSet: { authTypes: [type] }
-		}, { new: true })
+		const userUpdated = await User.findByIdAndUpdate(
+			user._id,
+			{
+				$set: { lastSignedInAt: Date.now(), ...(user.username ? {} : { username: Random.string(9) }) },
+				$addToSet: { authTypes: [type] },
+			},
+			{ new: true },
+		)
 
 		return this.mapper.mapFrom(userUpdated)!
 	}

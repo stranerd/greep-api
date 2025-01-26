@@ -1,49 +1,33 @@
 {
 	"compilerOptions": {
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"removeComments": false,
 		"noImplicitAny": false,
-		"target": "ES2021",
+		"target": "ESNext",
 		"module": "commonjs",
-		"rootDir": "src",
-		"baseUrl": "./",
-		"outDir": "lib",
 		"moduleResolution": "Node",
-		"lib": [
-			"ESNext",
-			"ESNext.AsyncIterable"
-		],
+		"resolveJsonModule": true,
+		"lib": ["ESNext"],
 		"esModuleInterop": true,
 		"allowJs": false,
 		"sourceMap": false,
 		"strict": true,
 		"noEmit": false,
 		"experimentalDecorators": true,
+		"types": ["@types/node"],
 		"paths": {
-			"@application/*": [
-				"./src/application/*"
-			],
-			"@modules/*": [
-				"./src/modules/*"
-			],
-			"@utils/*": [
-				"./src/utils/*"
-			],
-			"@index": [
-				"./src/index"
-			]
+			"@application/*": ["./src/application/*"],
+			"@modules/*": ["./src/modules/*"],
+			"@utils/*": ["./src/utils/*"]
 		},
-		"types": [
-			"@types/node"
-		]
+		"baseUrl": "./",
+		"rootDir": "src",
+		"outDir": "lib"
 	},
-	"include": [
-		"src"
-	],
-	"exclude": [
-		"node_modules",
-		"lib"
-	]
+	"include": ["src"],
+	"exclude": ["node_modules", "lib"]
 }

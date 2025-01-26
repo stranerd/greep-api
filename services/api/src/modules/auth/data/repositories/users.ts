@@ -1,11 +1,5 @@
 import { appInstance } from '@utils/environment'
-import {
-	AuthTypes,
-	deleteCachedAccessToken,
-	Hash,
-	NotFoundError,
-	QueryParams
-} from 'equipped'
+import { AuthTypes, deleteCachedAccessToken, Hash, NotFoundError, QueryParams } from 'equipped'
 import { IUserRepository } from '../../domain/i-repositories/users'
 import { RegisterInput, RoleInput, UserUpdateInput } from '../../domain/types'
 import { UserMapper } from '../mappers/users'
@@ -15,70 +9,88 @@ export class UserRepository implements IUserRepository {
 	private static instance: UserRepository
 	private mapper = new UserMapper()
 
-	static getInstance (): UserRepository {
+	static getInstance(): UserRepository {
 		if (!UserRepository.instance) UserRepository.instance = new UserRepository()
 		return UserRepository.instance
 	}
 
-	async findUser (id: string) {
+	async findUser(id: string) {
 		const user = await User.findById(id)
 		return this.mapper.mapFrom(user)
 	}
 
-	async getUsers (query: QueryParams) {
+	async getUsers(query: QueryParams) {
 		const data = await appInstance.dbs.mongo.query(User, query)
 		return {
 			...data,
-			results: data.results.map((u) => this.mapper.mapFrom(u)!)
+			results: data.results.map((u) => this.mapper.mapFrom(u)!),
 		}
 	}
 
-	async deleteUsers (userIds: string[]) {
+	async count_riders() {
+		// Get a count of all users with roles.isDriver is true
+		return await User.countDocuments({ 'roles.isDriver': true })
+	}
+
+	async count_vendors() {
+		// Get a count of all users with roles.isVendor is true
+		return await User.countDocuments({ 'roles.isVendor': true })
+	}
+
+	async deleteUsers(userIds: string[]) {
 		const res = await User.deleteMany({ _id: { $in: userIds } })
 		return res.acknowledged
 	}
 
-	async updateUserProfile (userId: string, data: UserUpdateInput) {
+	async updateUserProfile(userId: string, data: UserUpdateInput) {
 		const user = await User.findOneAndUpdate({ _id: userId }, { $set: data }, { new: true })
 		return this.mapper.mapFrom(user)!
 	}
 
-	async updateDetails (userId: string, details: RegisterInput) {
+	async updateDetails(userId: string, details: RegisterInput) {
 		const user = await User.findByIdAndUpdate(
 			userId,
 			{
 				$set: {
 					...details,
 					password: await Hash.hash(details.password),
-					lastSignedInAt: Date.now()
+					lastSignedInAt: Date.now(),
 				},
 				$addToSet: {
-					authTypes: AuthTypes.email
-				}
+					authTypes: AuthTypes.email,
+				},
 			},
-			{ new: true }
+			{ new: true },
 		)
 		if (!user) throw new NotFoundError()
 
 		return this.mapper.mapFrom(user)!
-
 	}
 
-	async updateUserRole ({ userId, roles }: RoleInput) {
-		const set = Object.fromEntries(Object.entries(roles).filter((role) => role[1]).map((role) => [`roles.${role[0]}`, role[1]]))
-		const unset = Object.fromEntries(Object.entries(roles).filter((role) => !role[1]).map((role) => [`roles.${role[0]}`, role[1]]))
+	async updateUserRole({ userId, roles }: RoleInput) {
+		const set = Object.fromEntries(
+			Object.entries(roles)
+				.filter((role) => role[1])
+				.map((role) => [`roles.${role[0]}`, role[1]]),
+		)
+		const unset = Object.fromEntries(
+			Object.entries(roles)
+				.filter((role) => !role[1])
+				.map((role) => [`roles.${role[0]}`, role[1]]),
+		)
 		const user = await User.findByIdAndUpdate(userId, {
-			$set: set, $unset: unset
+			$set: set,
+			$unset: unset,
 		})
 		// clear accessToken
 		await deleteCachedAccessToken(userId)
 		return !!user
 	}
 
-	async updatePassword (userId: string, password: string) {
+	async updatePassword(userId: string, password: string) {
 		const user = await User.findByIdAndUpdate(userId, {
 			$set: { password: await Hash.hash(password) },
-			$addToSet: { authTypes: AuthTypes.email }
+			$addToSet: { authTypes: AuthTypes.email },
 		})
 		return !!user
 	}
