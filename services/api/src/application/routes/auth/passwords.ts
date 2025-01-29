@@ -50,7 +50,21 @@ router.post<UpdatePasswordRouteDef>({ path: '/update', key: 'passwords-update', 
 	return await AuthUsersUseCases.updatePassword({ userId, password })
 })
 
+// A route to generate a hashed password
+// router.get<GenerateHashedPasswordRouteDef>({ path: '/generate', key: 'passwords-generate' })(async (req) => {
+// 	const password = req.query.password as string
+// 	const hash = await Hash.hash(password)
+// 	return { hash }
+// })
+
 export default router
+
+// type GenerateHashedPasswordRouteDef = ApiDef<{
+// 	key: 'passwords-generate'
+// 	method: 'get'
+// 	query: { password: string }
+// 	response: { hash: string }
+// }>
 
 type SendPasswordResetMailRouteDef = ApiDef<{
 	key: 'passwords-send-reset-mail'

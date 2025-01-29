@@ -66,7 +66,13 @@ export class UserEntity extends BaseEntity<UserConstructorArgs, 'bio.email' | 'b
 	getEmbedded(): EmbeddedUser {
 		return {
 			id: this.id,
-			bio: { username: this.bio.username, name: this.bio.name, photo: this.bio.photo },
+			bio: {
+				username: this.bio.username,
+				name: this.bio.name,
+				photo: this.bio.photo,
+				email: this.bio.email,
+				phone: this.bio.phone,
+			},
 			publicName: this.publicName,
 			roles: this.roles,
 		}
@@ -104,7 +110,7 @@ export const generateDefaultUser = (user: Partial<EmbeddedUser>): EmbeddedUser =
 	const publicName = user.publicName ?? bio.name.full
 	return {
 		id,
-		bio: { name: bio.name, photo: bio.photo, username: bio.username },
+		bio: { name: bio.name, photo: bio.photo, username: bio.username, email: bio.email, phone: bio.phone },
 		roles,
 		publicName,
 	}
