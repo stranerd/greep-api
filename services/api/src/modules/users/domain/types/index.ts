@@ -31,7 +31,7 @@ export type UserStatus = {
 
 export type EmbeddedUser = {
 	id: string
-	bio: Omit<UserBio, 'email' | 'phone'>
+	bio: UserBio
 	roles: UserRoles
 	publicName: string
 }
